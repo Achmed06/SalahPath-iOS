@@ -1,4 +1,4 @@
-name: Build SalahPath v3
+name: Build SalahPath v3.1
 
 on:
   workflow_dispatch:
@@ -23,18 +23,19 @@ jobs:
           echo "b1d6608ea108341d12b22c45e1af5a6c27ee5701d2fa119c118cb0aad8567406  source.zip" | shasum -a 256 -c -
           unzip -oq source.zip
           rm v3.b64 source.zip
+          python3 v31-patch/apply_v31.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
-      - name: Build SalahPath v3 unsigned IPA
+      - name: Build SalahPath v3.1 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3 IPA
+      - name: Upload SalahPath v3.1 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3-unsigned-ipa
+          name: SalahPath-v3.1-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
