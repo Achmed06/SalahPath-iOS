@@ -1,0 +1,41 @@
+name: Build unsigned IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "project-src/**"
+      - ".github/workflows/build-unsigned-ipa.yml"
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore Xcode project
+        shell: bash
+        run: |
+          cat project-src/part-*.b64 > project.b64
+          base64 -D project.b64 > project.zip
+          unzip -q project.zip
+          rm project.b64 project.zip
+          chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
+
+      - name: Resolve Swift packages
+        working-directory: SalahZeit
+        run: |
+          xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
+
+      - name: Build unsigned IPA
+        working-directory: SalahZeit
+        run: ./scripts/build_unsigned_ipa.sh
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: SalahPath-unsigned-ipa
+          path: SalahZeit/SalahZeit-unsigned.ipa
+          if-no-files-found: error
