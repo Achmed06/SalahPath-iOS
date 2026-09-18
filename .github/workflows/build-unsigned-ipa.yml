@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           cat project-src/part-*.b64 > project.b64
-          base64 -D project.b64 > project.zip
+          base64 -D -i project.b64 -o project.zip
           unzip -q project.zip
           rm project.b64 project.zip
           chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
