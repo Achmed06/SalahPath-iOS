@@ -1,6 +1,19 @@
-# SalahPath v3.4
+# SalahPath v3.5
 
 Private iPhone prayer, Quran and daily worship companion built with SwiftUI.
+
+## v3.5
+
+- Rebuilt the Salah/Wudu learning flow for one-handed iPhone use.
+- Detailed German + Turkish instructions for every major prayer movement.
+- Explicit “what you do” and “what you say” sections.
+- Male/female Hanafi posture notes based on Diyanet guidance.
+- Clear Kavme sequence: rising phrase, complete upright pause, then transition to sujud.
+- Clear final Salam: first face right, repeat the Salam phrase, then face left and repeat it; no circular-arrow illustration.
+- Full 2-, 3-, 4-rak'ah and Hanafi Witr walkthrough.
+- Full core recitation text for Subhanaka, Fatiha, Tashahhud, Salli, Barik and Rabbana.
+- Rebuilt Wudu guide with the four Hanafi fard components marked separately.
+- Uses cropped artwork from the earlier user-approved SalahPath prayer/Wudu poster style rather than the later replacement sheet.
 
 ## v3.4
 
