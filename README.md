@@ -1,4 +1,4 @@
-# SalahZeit
+# SalahPath
 
 Private iPhone prayer-time app built with SwiftUI.
 
@@ -48,14 +48,14 @@ On a Mac with Xcode:
 Output:
 
 ```text
-SalahZeit-unsigned.ipa
+SalahPath-unsigned.ipa
 ```
 
 An unsigned IPA is not directly installable on a normal iPhone. It still has to be signed with a valid iOS development/distribution identity or by a sideloading tool that performs signing.
 
 ## GitHub Actions build
 
-The repository contains `.github/workflows/build-unsigned-ipa.yml`. When uploaded to GitHub, the workflow builds `SalahZeit-unsigned.ipa` on a macOS runner and provides it as a workflow artifact.
+The repository contains `.github/workflows/build-unsigned-ipa.yml`. When uploaded to GitHub, the workflow builds `SalahPath-unsigned.ipa` on a macOS runner and provides it as a workflow artifact.
 
 ## Privacy
 
