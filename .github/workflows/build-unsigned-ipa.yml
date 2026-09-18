@@ -29,6 +29,7 @@ jobs:
           python3 v31-patch/apply_v31.py
           python3 v32-patch/apply_v32.py
           python3 v33-patch/apply_v33.py
+          python3 v33-patch/apply_v33_hotfix.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
