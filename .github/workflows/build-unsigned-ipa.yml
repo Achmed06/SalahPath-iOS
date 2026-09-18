@@ -24,13 +24,14 @@ jobs:
           rm project.b64 project.zip
           chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
 
-      - name: Patch Swift source
+      - name: Patch source and SalahPath branding
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path("SalahZeit/SalahZeit/Views/SettingsView.swift")
-          s = p.read_text(encoding="utf-8")
+
+          settings = Path("SalahZeit/SalahZeit/Views/SettingsView.swift")
+          s = settings.read_text(encoding="utf-8")
           old = '''            Section("Manuelle Minutenkorrektur") {
                           offsetStepper("Fajr", value: $settings.fajrOffset)
                           offsetStepper("Dhuhr", value: $settings.dhuhrOffset)
@@ -61,7 +62,24 @@ jobs:
                       }'''
           if old not in s:
               raise SystemExit("Expected SettingsView block not found")
-          p.write_text(s.replace(old, new), encoding="utf-8")
+          settings.write_text(s.replace(old, new), encoding="utf-8")
+
+          for p in Path("SalahZeit/SalahZeit").rglob("*.swift"):
+              t = p.read_text(encoding="utf-8")
+              p.write_text(t.replace("SalahZeit", "SalahPath"), encoding="utf-8")
+
+          script = Path("SalahZeit/scripts/build_unsigned_ipa.sh")
+          t = script.read_text(encoding="utf-8")
+          t = t.replace("rm -rf build Payload SalahZeit-unsigned.ipa",
+                        "rm -rf build Payload SalahPath-unsigned.ipa")
+          t = t.replace('CODE_SIGN_IDENTITY="" \\\n  build',
+                        'CODE_SIGN_IDENTITY="" \\\n  PRODUCT_NAME="SalahPath" \\\n  PRODUCT_BUNDLE_IDENTIFIER="com.achmed06.salahpath" \\\n  INFOPLIST_KEY_CFBundleDisplayName="SalahPath" \\\n  build')
+          t = t.replace('APP_PATH="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/SalahZeit.app"',
+                        'APP_PATH="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/SalahPath.app"')
+          t = t.replace('echo "SalahZeit.app wurde nicht gefunden: $APP_PATH"',
+                        'echo "SalahPath.app wurde nicht gefunden: $APP_PATH"')
+          t = t.replace('SalahZeit-unsigned.ipa', 'SalahPath-unsigned.ipa')
+          script.write_text(t, encoding="utf-8")
           PY
 
       - name: Resolve Swift packages
@@ -77,5 +95,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SalahPath-unsigned-ipa
-          path: SalahZeit/SalahZeit-unsigned.ipa
+          path: SalahZeit/SalahPath-unsigned.ipa
           if-no-files-found: error
