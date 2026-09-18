@@ -1,58 +1,100 @@
-# SalahPath v3.6
+# SalahPath v3.7
 
-Native SwiftUI prayer, Quran and daily-worship companion for iPhone.
+Native SwiftUI prayer, Quran and daily worship companion for iPhone.
 
-## Release focus
+## v3.7
 
-- Native petrol/cream/gold SalahPath visual system inspired by the supplied reference designs.
-- German and Turkish as first-class app languages.
-- GPS prayer times, countdown, sunrise, calculation settings, Hanafi/standard Asr, manual offsets and local notifications.
-- Full daily rak'ah sequence shown in context (Fard, Sunnah and Hanafi Witr), not only obligatory rak'ah.
-- Qibla compass, Hijri date, middle of the night and last-third calculation.
-- Daily dua, prayer tracker, optional streak, Daily Deen goals and fasting tracker.
-- Morning/evening Adhkar and Dhikr/Tasbih.
-- Quran reader with Arabic text, DE/TR translation, bookmarks, last-read state and human recitation.
-- Short-surah learning with repetition.
-- Detailed Salah learning for male/female profiles with explicit Hanafi/Turkish labels where posture details differ.
-- Detailed Wudu learning with the four Hanafi fard components distinguished from sunnah/recommended steps.
-- Final Salam is shown as two separate actions: right first, then left; no circular head arrow.
+The current release follows the SalahPath visual direction: deep teal/petrol surfaces, cream cards, restrained gold accents, large readable cards and native iOS navigation.
 
-## Audio QA
+### Home
+- Current location name, Hijri date and notification state.
+- Next-prayer countdown and calculated prayer time.
+- Full Hanafi/Turkish learning sequence for Fard, Sunnah and Witr rather than showing only obligatory rak'ah.
+- Daily dua, five-prayer tracker, optional streak and Daily Deen goals.
+- Quick actions for Quran, Dua/Dhikr, Salah learning, Wudu, prayer times, Qibla and more.
+- Dedicated Today / 7 days / 30 days prayer-time view.
 
-Quran audio is resolved from the AlQuran.cloud / Islamic Network audio data. The CI release workflow makes a live HTTP/audio probe before building.
+### Salah learning
+- Separate male/female learning profiles.
+- Detailed vertical step-by-step flow.
+- Each major step separates “What do I do?” from “What do I say?”.
+- Arabic, transliteration and German/Turkish explanation where relevant.
+- Hanafi/Turkish posture details are labelled as Hanafi practice, not presented as universal rules.
+- Separate 2-, 3-, 4-rak'ah and Hanafi Witr walkthroughs.
+- Final Salam is shown as two explicit movements: own right shoulder first, then own left shoulder; no circular-arrow instruction.
 
-Live-verified reciters for this release:
+### Wudu
+- Step-by-step German/Turkish guide.
+- Repeat counts where relevant.
+- Hanafi Fard vs Sunnah classification.
+- Four Hanafi obligatory components are listed separately.
 
-- Mishary Rashid Alafasy
-- Mahmoud Khalil Al-Husary
-- Mohamed Siddiq al-Minshawi
+### Quran
+- Uthmani Arabic text from AlQuran.cloud.
+- German Bubenheim/Elyas and Turkish Diyanet editions exposed by AlQuran.cloud.
+- Optional transliteration.
+- Adjustable Arabic font size.
+- Translation on/off.
+- Surah search, bookmarks/favorites, last-read continuation and sharing.
+- Per-ayah and full-surah human recitation.
+- Previous/next controls, loading state and playback errors.
+- Current selectable live-audio editions:
+  - Mishary Rashid Alafasy — `ar.alafasy`
+  - Mahmoud Khalil Al-Husary — `ar.husary`
+  - Mohamed Siddiq al-Minshawi — `ar.minshawi`
+  - Abdul Rahman Al-Sudais — `ar.abdurrahmaansudais`
+  - Saud Al-Shuraim — `ar.saoodshuraym`
 
-Al-Sudais is intentionally not exposed in v3.6 because the current AlQuran API response did not provide the required per-ayah audio URL and the direct CDN fallback returned HTTP 403 during release QA. A non-working selector is not shipped.
+The GitHub release workflow probes the live API and the first returned audio stream for every listed reciter before compiling the IPA.
 
-Prayer-dua learning must not show a fake play control when no verified human recording is available. External Diyanet learning sources may be linked where appropriate.
+### Daily worship
+- Morning/evening Adhkar.
+- Dhikr/Tasbih.
+- Daily Deen goals.
+- Prayer tracker and neutral tracker pause.
+- Fasting tracker.
+- Hijri calendar.
+- Daily dua.
 
-## Religious presentation
+### Prayer calculation and Qibla
+- Adhan Swift by Batoul Apps.
+- GPS-based prayer calculations.
+- Standard/Hanafi Asr selection.
+- Calculation presets and manual minute adjustments.
+- Sunrise displayed separately.
+- Local prayer notifications.
+- Qibla using Core Location heading.
 
-The reference artwork is a design reference, not a religious authority. Hanafi/Turkish learning details are labelled as such and should be reviewed against reliable sources (including Diyanet) before public distribution. Quran text/translations are not machine-rewritten by SalahPath.
+Calculated prayer start times are intentionally treated separately from mosque iqamah/jama'ah times.
+
+## Languages
+German and Turkish are first-class app languages. Arabic religious/Quran text is shown where appropriate.
 
 ## Privacy
-
-- Precise coordinates are not intentionally persisted or displayed on the dashboard.
-- Daily worship tracking is local.
-- No account is required for the current prototype.
+Precise coordinates are not intentionally displayed on the home screen or retained as a location history. Worship tracking is stored locally on the device.
 
 ## Build
 
-Open `SalahZeit.xcodeproj` in Xcode or run:
+Requirements:
+- macOS with Xcode
+- iOS 17 or newer
+
+The Xcode project/scheme remains internally named `SalahZeit` for compatibility. The built application is branded `SalahPath`.
 
 ```bash
 ./scripts/build_unsigned_ipa.sh
 ```
 
-Output: `SalahPath-unsigned.ipa`.
+Output:
 
-The generated IPA is unsigned and must be signed before installation on a normal iPhone.
+```text
+SalahPath-unsigned.ipa
+```
 
-## Verification boundary
+The IPA generated by the repository workflow is unsigned and needs valid Apple signing before installation on a normal iPhone.
 
-The GitHub Actions release verifies source restoration, live Quran-audio reachability for the exposed reciters, Swift package resolution, Xcode compilation and IPA creation. Sensor behaviour, notification delivery and playback through iOS hardware/audio routes are **not practically verified on a real iPhone** by CI.
+## Verification status
+
+GitHub Actions verifies source restoration, live Quran audio availability, Swift package resolution, Xcode compilation and IPA creation.
+
+Runtime behavior that depends on real iPhone hardware or permissions — including actual speaker playback, compass heading, GPS permission behavior and notifications — is not practically verified on a physical iPhone by CI.
