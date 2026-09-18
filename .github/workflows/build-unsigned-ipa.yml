@@ -11,6 +11,8 @@ on:
       - "v33-patch/**"
       - "v34-patch/**"
       - "v35-patch/**"
+      - "v35-assets/**"
+      - "v35-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
