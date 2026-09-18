@@ -24,6 +24,46 @@ jobs:
           rm project.b64 project.zip
           chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
 
+      - name: Patch Swift source
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("SalahZeit/SalahZeit/Views/SettingsView.swift")
+          s = p.read_text(encoding="utf-8")
+          old = '''            Section("Manuelle Minutenkorrektur") {
+                          offsetStepper("Fajr", value: $settings.fajrOffset)
+                          offsetStepper("Dhuhr", value: $settings.dhuhrOffset)
+                          offsetStepper("Asr", value: $settings.asrOffset)
+                          offsetStepper("Maghrib", value: $settings.maghribOffset)
+                          offsetStepper("Isha", value: $settings.ishaOffset)
+
+                          Button("Korrekturen zurücksetzen") {
+                              settings.resetOffsets()
+                          }
+                      } footer: {
+                          Text("Nur verwenden, wenn du eine bestimmte lokale Referenz abgleichen möchtest. Die Korrektur wird nach der astronomischen Berechnung angewendet.")
+                      }'''
+          new = '''            Section {
+                          offsetStepper("Fajr", value: $settings.fajrOffset)
+                          offsetStepper("Dhuhr", value: $settings.dhuhrOffset)
+                          offsetStepper("Asr", value: $settings.asrOffset)
+                          offsetStepper("Maghrib", value: $settings.maghribOffset)
+                          offsetStepper("Isha", value: $settings.ishaOffset)
+
+                          Button("Korrekturen zurücksetzen") {
+                              settings.resetOffsets()
+                          }
+                      } header: {
+                          Text("Manuelle Minutenkorrektur")
+                      } footer: {
+                          Text("Nur verwenden, wenn du eine bestimmte lokale Referenz abgleichen möchtest. Die Korrektur wird nach der astronomischen Berechnung angewendet.")
+                      }'''
+          if old not in s:
+              raise SystemExit("Expected SettingsView block not found")
+          p.write_text(s.replace(old, new), encoding="utf-8")
+          PY
+
       - name: Resolve Swift packages
         working-directory: SalahZeit
         run: |
