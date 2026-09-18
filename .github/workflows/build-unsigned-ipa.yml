@@ -9,7 +9,8 @@ on:
       - "v31-patch/**"
       - "v32-patch/**"
       - "v33-patch/**"
-      - "v34-patch/**"\n      - "v35-patch/**"
+      - "v34-patch/**"
+      - "v35-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -32,6 +33,7 @@ jobs:
           python3 v33-patch/apply_v33.py
           python3 v33-patch/apply_v33_hotfix.py
           python3 v34-patch/apply_v34.py
+          python3 v35-patch/apply_v35.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
