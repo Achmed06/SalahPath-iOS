@@ -1,4 +1,4 @@
-name: Build SalahPath v3.2
+name: Build SalahPath v3.3
 
 on:
   workflow_dispatch:
@@ -6,6 +6,9 @@ on:
     branches: [ main ]
     paths:
       - "v3-source/**"
+      - "v31-patch/**"
+      - "v32-patch/**"
+      - "v33-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -15,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Restore SalahPath v3 source
+      - name: Restore SalahPath source
         shell: bash
         run: |
           cat             v3-source/part-01.b64             v3-source/part-02a.b64             v3-source/part-02b.b64             v3-source/part-03.b64             v3-source/part-04.b64             v3-source/part-05.b64             v3-source/part-06.b64             v3-source/part-07.b64             v3-source/part-08.b64 > v3.b64
@@ -25,18 +28,19 @@ jobs:
           rm v3.b64 source.zip
           python3 v31-patch/apply_v31.py
           python3 v32-patch/apply_v32.py
+          python3 v33-patch/apply_v33.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
-      - name: Build SalahPath v3.2 unsigned IPA
+      - name: Build SalahPath v3.3 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.2 IPA
+      - name: Upload SalahPath v3.3 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.2-unsigned-ipa
+          name: SalahPath-v3.3-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
