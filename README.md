@@ -1,45 +1,69 @@
-# SalahPath
+# SalahPath v3
 
-Private iPhone prayer-time app built with SwiftUI.
+Private iPhone prayer and learning companion built with SwiftUI.
 
-## Included
+## Core
 
-- Prayer start times from the iPhone's current GPS location
-- Offline astronomical calculation after the app is built
-- Calculation methods: Muslim World League, Moonsighting Committee, Diyanet/Turkey approximation, Egyptian, Karachi, Umm al-Qura, ISNA, Dubai, Qatar, Kuwait, Singapore, Tehran
-- Selectable Asr rule: standard (Shafi'i/Maliki/Hanbali) or Hanafi
-- Fajr, sunrise, Dhuhr, Asr, Maghrib, Isha
+- GPS-based Fajr, sunrise, Dhuhr, Asr, Maghrib and Isha
 - Countdown to the next prayer
-- Fard rak'ah count and a compact Sunni rak'ah guide
-- Friday/Jumu'ah note
 - Qibla compass
-- Hijri date (Umm al-Qura calendar)
-- Middle of the night and start of the last third
-- Local prayer notifications for the next 7 days
-- Per-prayer manual minute corrections
-- No mosque server and no hard-coded home address
+- Hijri date, middle of the night and start of the last third
+- Local prayer notifications
+- Calculation methods and manual minute corrections
+- Selectable Standard or Hanafi Asr rule
+
+## German + Turkish
+
+The learning interface is designed around German and Turkish. Language can be changed in Settings.
+
+## Prayer learning
+
+- Full Fard, Sunnah and Witr rak'ah overview
+- Step-by-step salah guide
+- Separate male and female learning profiles
+- Male/female posture notes are explicitly presented as Hanafi/Turkish teaching where relevant, not as universal differences
+- Child-friendly Muslim prayer illustrations instead of stick figures
+- Wudu guide
+- Arabic prayer formulas with transliteration and German/Turkish explanations
+- Dhikr and Tasbih counter
+
+## Quran
+
+SalahPath v3 includes a Quran browser with Arabic text plus German or Turkish translation.
+
+Prototype data:
+- Arabic: AlQuran.cloud `quran-uthmani`
+- German: `de.bubenheim`
+- Turkish: `tr.diyanet`
+- Human recitation: Mishary Rashid Alafasy via Islamic Network CDN
+
+For a public/commercial release, Quran text, translations, audio licenses, attribution and API terms must be reviewed again before distribution.
+
+## Dua audio
+
+The prototype contains streaming links for human-recorded prayer-learning audio. These are not AI-generated voices.
+
+Current external prototype recordings include:
+- Sübhaneke
+- Ettehiyyatü
+- Salli / Barik
+- Rabbena
+
+Rights for those external recordings have not been confirmed for public redistribution. They should be cleared or replaced with an explicitly licensed source before a public App Store release.
 
 ## Prayer calculation
 
-The project uses **Adhan Swift** by Batoul Apps through Swift Package Manager, version 1.5.0 or newer within the same major version.
+The project uses Adhan Swift by Batoul Apps through Swift Package Manager.
 
-Repository: https://github.com/batoulapps/adhan-swift
-License: MIT
-
-The Adhan documentation states that its Turkey method is an approximation of Diyanet and is less accurate outside Turkey. For that reason the app lets the user choose the calculation method instead of presenting one method as universally authoritative.
-
-## Open in Xcode
+## Build
 
 Requirements:
-
 - macOS with Xcode
-- iOS 17 or newer deployment target
+- iOS 17 or newer
 
-Open `SalahZeit.xcodeproj`. Xcode resolves the Adhan Swift package automatically. Select your Apple Development team under **Signing & Capabilities**, connect the iPhone, and Run.
+The Xcode project/scheme remains internally named `SalahZeit` for compatibility, while the built application is branded `SalahPath`.
 
-## Build an unsigned IPA
-
-On a Mac with Xcode:
+Run:
 
 ```bash
 ./scripts/build_unsigned_ipa.sh
@@ -51,21 +75,8 @@ Output:
 SalahPath-unsigned.ipa
 ```
 
-An unsigned IPA is not directly installable on a normal iPhone. It still has to be signed with a valid iOS development/distribution identity or by a sideloading tool that performs signing.
-
-## GitHub Actions build
-
-The repository contains `.github/workflows/build-unsigned-ipa.yml`. When uploaded to GitHub, the workflow builds `SalahPath-unsigned.ipa` on a macOS runner and provides it as a workflow artifact.
+The generated IPA is unsigned and cannot be installed directly on a normal iPhone until it is signed with an Apple development/distribution identity or a sideloading tool.
 
 ## Privacy
 
-The app requests location only while in use. Coordinates are used in memory to calculate prayer times and Qibla direction. The app does not intentionally upload or persist the current coordinates.
-
-## Lernen & Dhikr
-
-- Schritt-für-Schritt-Gebetsanleitung mit schematischen Körperhaltungs-Bildern
-- Arabisch, Transliteration und deutsche Bedeutung zentraler Formeln
-- Wudu-Anleitung mit visuellen Symbolen
-- Rakʿat-Übersicht und Begriffserklärungen
-- Dhikr nach dem Pflichtgebet
-- Integrierter Tasbih-Zähler mit 33er/3er-Vorgaben
+Location is requested while using the app for prayer-time and Qibla calculations. SalahPath does not intentionally persist the user's precise coordinates.
