@@ -39,6 +39,33 @@ jobs:
           python3 v36-patch/apply_v36_hotfix.py
           chmod +x scripts/build_unsigned_ipa.sh
 
+      - name: Probe Quran audio API
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          editions = ["ar.alafasy", "ar.husary", "ar.minshawi", "ar.sudais"]
+          for edition in editions:
+              api = f"https://api.alquran.cloud/v1/surah/1/{edition}"
+              with urllib.request.urlopen(api, timeout=25) as response:
+                  if response.status != 200:
+                      raise SystemExit(f"{edition}: API status {response.status}")
+                  payload = json.load(response)
+              audio = payload["data"]["ayahs"][0].get("audio")
+              if not audio:
+                  raise SystemExit(f"{edition}: no audio URL")
+              audio = audio.replace("http://", "https://")
+              request = urllib.request.Request(audio, headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.6"})
+              with urllib.request.urlopen(request, timeout=25) as response:
+                  if response.status not in (200, 206):
+                      raise SystemExit(f"{edition}: audio status {response.status}")
+                  ctype = response.headers.get("Content-Type", "")
+                  chunk = response.read(2048)
+                  if not chunk:
+                      raise SystemExit(f"{edition}: empty audio response")
+                  print(f"{edition}: OK {response.status} {ctype} {len(chunk)} bytes")
+          PY
+
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
