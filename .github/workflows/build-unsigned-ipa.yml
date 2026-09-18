@@ -1,11 +1,11 @@
-name: Build unsigned IPA
+name: Build SalahPath v3
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
     paths:
-      - "project-src/**"
+      - "v3-source/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -15,85 +15,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Restore Xcode project
+      - name: Restore SalahPath v3 source
         shell: bash
         run: |
-          cat             project-src/part-01.b64             project-src/part-02.b64             project-src/part-03.b64             project-src/part-04.b64             project-src/part-05a.b64             project-src/part-05b.b64             project-src/part-05c.b64 > project.b64
-          base64 -D -i project.b64 -o project.zip
-          unzip -q project.zip
-          rm project.b64 project.zip
+          cat             v3-source/part-01.b64             v3-source/part-02a.b64             v3-source/part-02b.b64             v3-source/part-03.b64             v3-source/part-04.b64             v3-source/part-05.b64             v3-source/part-06.b64             v3-source/part-07.b64             v3-source/part-08.b64 > v3.b64
+          base64 -D -i v3.b64 -o source.zip
+          echo "b1d6608ea108341d12b22c45e1af5a6c27ee5701d2fa119c118cb0aad8567406  source.zip" | shasum -a 256 -c -
+          unzip -q source.zip
+          rm v3.b64 source.zip
           chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
-
-      - name: Patch source and SalahPath branding
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          settings = Path("SalahZeit/SalahZeit/Views/SettingsView.swift")
-          s = settings.read_text(encoding="utf-8")
-          old = '''            Section("Manuelle Minutenkorrektur") {
-                          offsetStepper("Fajr", value: $settings.fajrOffset)
-                          offsetStepper("Dhuhr", value: $settings.dhuhrOffset)
-                          offsetStepper("Asr", value: $settings.asrOffset)
-                          offsetStepper("Maghrib", value: $settings.maghribOffset)
-                          offsetStepper("Isha", value: $settings.ishaOffset)
-
-                          Button("Korrekturen zurücksetzen") {
-                              settings.resetOffsets()
-                          }
-                      } footer: {
-                          Text("Nur verwenden, wenn du eine bestimmte lokale Referenz abgleichen möchtest. Die Korrektur wird nach der astronomischen Berechnung angewendet.")
-                      }'''
-          new = '''            Section {
-                          offsetStepper("Fajr", value: $settings.fajrOffset)
-                          offsetStepper("Dhuhr", value: $settings.dhuhrOffset)
-                          offsetStepper("Asr", value: $settings.asrOffset)
-                          offsetStepper("Maghrib", value: $settings.maghribOffset)
-                          offsetStepper("Isha", value: $settings.ishaOffset)
-
-                          Button("Korrekturen zurücksetzen") {
-                              settings.resetOffsets()
-                          }
-                      } header: {
-                          Text("Manuelle Minutenkorrektur")
-                      } footer: {
-                          Text("Nur verwenden, wenn du eine bestimmte lokale Referenz abgleichen möchtest. Die Korrektur wird nach der astronomischen Berechnung angewendet.")
-                      }'''
-          if old not in s:
-              raise SystemExit("Expected SettingsView block not found")
-          settings.write_text(s.replace(old, new), encoding="utf-8")
-
-          for p in Path("SalahZeit/SalahZeit").rglob("*.swift"):
-              t = p.read_text(encoding="utf-8")
-              p.write_text(t.replace("SalahZeit", "SalahPath"), encoding="utf-8")
-
-          script = Path("SalahZeit/scripts/build_unsigned_ipa.sh")
-          t = script.read_text(encoding="utf-8")
-          t = t.replace("rm -rf build Payload SalahZeit-unsigned.ipa",
-                        "rm -rf build Payload SalahPath-unsigned.ipa")
-          t = t.replace('CODE_SIGN_IDENTITY="" \\\n  build',
-                        'CODE_SIGN_IDENTITY="" \\\n  PRODUCT_NAME="SalahPath" \\\n  PRODUCT_BUNDLE_IDENTIFIER="com.achmed06.salahpath" \\\n  INFOPLIST_KEY_CFBundleDisplayName="SalahPath" \\\n  build')
-          t = t.replace('APP_PATH="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/SalahZeit.app"',
-                        'APP_PATH="$ROOT/build/DerivedData/Build/Products/Release-iphoneos/SalahPath.app"')
-          t = t.replace('echo "SalahZeit.app wurde nicht gefunden: $APP_PATH"',
-                        'echo "SalahPath.app wurde nicht gefunden: $APP_PATH"')
-          t = t.replace('SalahZeit-unsigned.ipa', 'SalahPath-unsigned.ipa')
-          script.write_text(t, encoding="utf-8")
-          PY
 
       - name: Resolve Swift packages
         working-directory: SalahZeit
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
-      - name: Build unsigned IPA
+      - name: Build SalahPath v3 unsigned IPA
         working-directory: SalahZeit
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload IPA
+      - name: Upload SalahPath v3 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-unsigned-ipa
+          name: SalahPath-v3-unsigned-ipa
           path: SalahZeit/SalahPath-unsigned.ipa
           if-no-files-found: error
