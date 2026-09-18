@@ -47,6 +47,7 @@ jobs:
           python3 v36-patch/apply_v36.py
           python3 v36-patch/apply_v36_hotfix.py
           python3 v36-patch/apply_v36_audiofallback.py
+          python3 v36-patch/apply_v36_reciterfix.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Probe Quran audio API and CDN
@@ -58,7 +59,6 @@ jobs:
               "ar.alafasy": 128,
               "ar.husary": 128,
               "ar.minshawi": 128,
-              "ar.sudais": 192,
           }
           for edition, bitrate in reciters.items():
               api = f"https://api.alquran.cloud/v1/surah/1/{edition}"
