@@ -165,7 +165,7 @@ replacement=r'''private struct QuranSurahView: View {
     }
 
     private func playAyah(at index: Int) {
-        guard let raw = audioSurah?.ayahs[safe: index].audio,
+        guard let raw = audioSurah?.ayahs[safe: index]?.audio,
               let url = secureURL(raw) else {
             audio.lastError = settings.t("Audio für diese Ayah nicht verfügbar.", "Bu ayet için ses mevcut değil.")
             return
