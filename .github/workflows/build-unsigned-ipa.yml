@@ -18,7 +18,7 @@ jobs:
       - name: Restore Xcode project
         shell: bash
         run: |
-          cat project-src/part-*.b64 > project.b64
+          cat             project-src/part-01.b64             project-src/part-02.b64             project-src/part-03.b64             project-src/part-04.b64             project-src/part-05a.b64             project-src/part-05b.b64             project-src/part-05c.b64 > project.b64
           base64 -D -i project.b64 -o project.zip
           unzip -q project.zip
           rm project.b64 project.zip
