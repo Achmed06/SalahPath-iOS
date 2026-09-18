@@ -21,7 +21,7 @@ jobs:
           cat             v3-source/part-01.b64             v3-source/part-02a.b64             v3-source/part-02b.b64             v3-source/part-03.b64             v3-source/part-04.b64             v3-source/part-05.b64             v3-source/part-06.b64             v3-source/part-07.b64             v3-source/part-08.b64 > v3.b64
           base64 -D -i v3.b64 -o source.zip
           echo "b1d6608ea108341d12b22c45e1af5a6c27ee5701d2fa119c118cb0aad8567406  source.zip" | shasum -a 256 -c -
-          unzip -q source.zip
+          unzip -oq source.zip
           rm v3.b64 source.zip
           chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
 
