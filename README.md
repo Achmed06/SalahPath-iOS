@@ -1,75 +1,79 @@
-# SalahPath v3.3
+# SalahPath v3.4
 
-Private iPhone prayer and learning companion built with SwiftUI.
+Private iPhone prayer, Quran and daily worship companion built with SwiftUI.
 
-## v3.3 additions
+## v3.4
 
-- Full Fard + Sunnah + Witr plan is visible instead of showing only obligatory rak'ah.
-- Daily prayer tracker, streak and Daily Deen mini-goals.
-- Daily dua card with source references.
-- Prayer duas and Quran surahs are separated clearly in the UI.
-- Short-surah learning screen with human recitation.
-- Quran audio URLs are resolved via the AlQuran.cloud audio edition API instead of relying only on hard-coded CDN paths.
-- Full-surah playback queues ayah recordings in sequence.
-- Male/female prayer-learning profile now uses CC0 Wikimedia Commons prayer photos instead of the former custom stick/cartoon figure.
-- German and Turkish remain first-class app languages.
+- Morning and evening Adhkar with daily progress counters and source references.
+- Daily Deen goals on the home dashboard.
+- Prayer tracker with streaks and a neutral tracker-pause option.
+- Optional tracker pause for situations such as menstruation without storing a reason.
+- Fasting tracker stored locally on device.
+- Umm al-Qura Hijri calendar with calculated Islamic dates and selected events.
+- Short-surah memorisation mode with 1×, 3× or 5× playback.
+- Quran audio URLs resolved from the AlQuran.cloud audio API rather than relying only on hard-coded CDN URLs.
+- Full-surah and per-ayah human recitation.
+- CC0 Wikimedia prayer photos plus a CC0 general salah-position reference.
+- Precise GPS coordinates are no longer printed on the home screen.
 
-## v3.1 additions
+## Prayer
 
-- Quran bookmarks and last-read tracking
-- Per-ayah human recitation playback
-- Reciter selector: Alafasy, Al-Husary, Al-Minshawi and Al-Sudais
-- Improved child-friendly prayer figures
-- SalahPath-branded bilingual location permission text
+- GPS-based Fajr, sunrise, Dhuhr, Asr, Maghrib and Isha.
+- Countdown to the next prayer.
+- Full Fard + Sunnah + Witr sequence instead of showing only obligatory rak'ah.
+- Selectable Standard or Hanafi Asr rule.
+- Calculation methods and manual minute corrections.
+- Local prayer notifications.
+- Qibla compass.
+- Middle of the night and start of the last third.
+- Separate male/female learning profile.
+- Hanafi-specific posture differences are labelled as Hanafi instead of being presented as universal.
+- Wudu and step-by-step Salah learning.
 
-## Core
+## Daily worship
 
-- GPS-based Fajr, sunrise, Dhuhr, Asr, Maghrib and Isha
-- Countdown to the next prayer
-- Qibla compass
-- Hijri date, middle of the night and start of the last third
-- Local prayer notifications
-- Calculation methods and manual minute corrections
-- Selectable Standard or Hanafi Asr rule
+- Prayer tracker.
+- Daily Deen mini-goals.
+- Daily dua.
+- Morning/evening Adhkar.
+- Dhikr/Tasbih counter.
+- Fasting tracker.
+- Tracker pause.
+- Hijri calendar.
 
-## German + Turkish
-
-The learning interface is designed around German and Turkish. Language can be changed in Settings.
-
-## Prayer learning
-
-- Full Fard, Sunnah and Witr rak'ah overview
-- Step-by-step salah guide
-- Separate male and female learning profiles
-- Male/female posture notes are explicitly presented as Hanafi/Turkish teaching where relevant, not as universal differences
-- Child-friendly Muslim prayer illustrations instead of stick figures
-- Wudu guide
-- Arabic prayer formulas with transliteration and German/Turkish explanations
-- Dhikr and Tasbih counter
+The Adhkar library intentionally shows references and does not claim that one list is the only complete form. Current references include Quran 2:255 and entries from Hisn al-Muslim / hadith collections such as Bukhari, Abu Dawud and Tirmidhi.
 
 ## Quran
 
-SalahPath v3 includes a Quran browser with Arabic text plus German or Turkish translation.
+- Arabic Quran text.
+- German translation: Bubenheim & Elyas edition exposed by AlQuran.cloud.
+- Turkish translation: Diyanet edition exposed by AlQuran.cloud.
+- Human recitation with selectable reciter.
+- Full-surah playback.
+- Per-ayah playback.
+- Bookmarks and last-read position.
+- Short-surah learning with repetition.
 
-Prototype data:
-- Arabic: AlQuran.cloud `quran-uthmani`
-- German: `de.bubenheim`
-- Turkish: `tr.diyanet`
-- Human recitation: Mishary Rashid Alafasy via Islamic Network CDN
+For public/commercial distribution, API terms, translation rights, audio rights and attribution should be reviewed again before App Store publication.
 
-For a public/commercial release, Quran text, translations, audio licenses, attribution and API terms must be reviewed again before distribution.
+## German + Turkish
 
-## Dua audio
+German and Turkish are first-class app languages throughout the learning and daily-use interface.
 
-The prototype contains streaming links for human-recorded prayer-learning audio. These are not AI-generated voices.
+## Prayer visuals
 
-Current external prototype recordings include:
-- Sübhaneke
-- Ettehiyyatü
-- Salli / Barik
-- Rabbena
+SalahPath uses openly licensed references rather than copying images from commercial apps.
 
-Rights for those external recordings have not been confirmed for public redistribution. They should be cleared or replaced with an explicitly licensed source before a public App Store release.
+Current visual references include CC0 material from Wikimedia Commons:
+- Muslim Kid Praying
+- Women performing prayer
+- Salat or Muslim Prayers – sequence/posture illustration
+
+The general sequence illustration is not presented as a complete madhhab-specific male/female posture authority.
+
+## Prayer-dua learning
+
+Prayer duas and Quran surahs are separated clearly in the UI. Current prayer-dua learning links point to official Diyanet material where available instead of shipping unverified third-party MP3 files.
 
 ## Prayer calculation
 
@@ -99,4 +103,4 @@ The generated IPA is unsigned and cannot be installed directly on a normal iPhon
 
 ## Privacy
 
-Location is requested while using the app for prayer-time and Qibla calculations. SalahPath does not intentionally persist the user's precise coordinates.
+Location is requested while using the app for prayer-time and Qibla calculations. SalahPath does not intentionally persist precise coordinates. Daily worship tracking uses local UserDefaults and is not designed to upload personal tracking data.
