@@ -23,7 +23,7 @@ jobs:
           echo "b1d6608ea108341d12b22c45e1af5a6c27ee5701d2fa119c118cb0aad8567406  source.zip" | shasum -a 256 -c -
           unzip -oq source.zip
           rm v3.b64 source.zip
-          chmod +x SalahZeit/scripts/build_unsigned_ipa.sh
+          chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
         working-directory: SalahZeit
@@ -31,12 +31,11 @@ jobs:
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
       - name: Build SalahPath v3 unsigned IPA
-        working-directory: SalahZeit
         run: ./scripts/build_unsigned_ipa.sh
 
       - name: Upload SalahPath v3 IPA
         uses: actions/upload-artifact@v4
         with:
           name: SalahPath-v3-unsigned-ipa
-          path: SalahZeit/SalahPath-unsigned.ipa
+          path: SalahPath-unsigned.ipa
           if-no-files-found: error
