@@ -1,6 +1,14 @@
-# SalahPath v3
+# SalahPath v3.1
 
 Private iPhone prayer and learning companion built with SwiftUI.
+
+## v3.1 additions
+
+- Quran bookmarks and last-read tracking
+- Per-ayah human recitation playback
+- Reciter selector: Alafasy, Al-Husary, Al-Minshawi and Al-Sudais
+- Improved child-friendly prayer figures
+- SalahPath-branded bilingual location permission text
 
 ## Core
 
