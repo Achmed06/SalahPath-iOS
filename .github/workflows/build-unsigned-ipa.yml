@@ -1,4 +1,4 @@
-name: Build SalahPath v3.6
+name: Build SalahPath v3.7
 
 on:
   workflow_dispatch:
@@ -12,6 +12,7 @@ on:
       - "v34-patch/**"
       - "v35-patch/**"
       - "v36-patch/**"
+      - "v37-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -47,38 +48,36 @@ jobs:
           python3 v36-patch/apply_v36.py
           python3 v36-patch/apply_v36_hotfix.py
           python3 v36-patch/apply_v36_audiofallback.py
-          python3 v36-patch/apply_v36_reciterfix.py
+          python3 v37-patch/apply_v37.py
           chmod +x scripts/build_unsigned_ipa.sh
 
-      - name: Probe Quran audio API and CDN
+      - name: Probe Quran audio API
         shell: bash
         run: |
           python3 - <<'PY'
           import json, urllib.request
-          reciters = {
-              "ar.alafasy": 128,
-              "ar.husary": 128,
-              "ar.minshawi": 128,
-          }
-          for edition, bitrate in reciters.items():
+          editions = [
+              "ar.alafasy",
+              "ar.husary",
+              "ar.minshawi",
+              "ar.abdurrahmaansudais",
+              "ar.saoodshuraym",
+          ]
+          for edition in editions:
               api = f"https://api.alquran.cloud/v1/surah/1/{edition}"
               with urllib.request.urlopen(api, timeout=25) as response:
                   if response.status != 200:
                       raise SystemExit(f"{edition}: API status {response.status}")
                   payload = json.load(response)
 
-              ayah = payload["data"]["ayahs"][0]
-              audio = ayah.get("audio")
-              if audio:
-                  audio = audio.replace("http://", "https://")
-                  source = "api"
-              else:
-                  audio = f"https://cdn.islamic.network/quran/audio/{bitrate}/{edition}/{ayah['number']}.mp3"
-                  source = "cdn-fallback"
+              audio = payload["data"]["ayahs"][0].get("audio")
+              if not audio:
+                  raise SystemExit(f"{edition}: no audio URL returned by live edition")
+              audio = audio.replace("http://", "https://")
 
               request = urllib.request.Request(
                   audio,
-                  headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.6"}
+                  headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.7"}
               )
               with urllib.request.urlopen(request, timeout=25) as response:
                   if response.status not in (200, 206):
@@ -87,7 +86,7 @@ jobs:
                   chunk = response.read(2048)
                   if not chunk:
                       raise SystemExit(f"{edition}: empty audio response")
-                  print(f"{edition}: OK via {source} {response.status} {ctype} {len(chunk)} bytes")
+                  print(f"{edition}: OK {response.status} {ctype} {len(chunk)} bytes")
           PY
 
       - name: Resolve Swift packages
@@ -96,12 +95,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.6 unsigned IPA
+      - name: Build SalahPath v3.7 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.6 IPA
+      - name: Upload SalahPath v3.7 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.6-unsigned-ipa
+          name: SalahPath-v3.7-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
