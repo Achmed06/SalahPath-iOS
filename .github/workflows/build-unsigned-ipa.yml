@@ -26,7 +26,6 @@ jobs:
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
-        working-directory: SalahZeit
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
