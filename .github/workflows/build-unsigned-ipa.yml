@@ -1,4 +1,4 @@
-name: Build SalahPath v3.5
+name: Build SalahPath v3.6
 
 on:
   workflow_dispatch:
@@ -11,8 +11,7 @@ on:
       - "v33-patch/**"
       - "v34-patch/**"
       - "v35-patch/**"
-      - "v35-assets/**"
-      - "v35-patch/**"
+      - "v36-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -36,18 +35,19 @@ jobs:
           python3 v33-patch/apply_v33_hotfix.py
           python3 v34-patch/apply_v34.py
           python3 v35-patch/apply_v35.py
+          python3 v36-patch/apply_v36.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies             -project SalahZeit.xcodeproj             -scheme SalahZeit
 
-      - name: Build SalahPath v3.5 unsigned IPA
+      - name: Build SalahPath v3.6 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.5 IPA
+      - name: Upload SalahPath v3.6 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.5-unsigned-ipa
+          name: SalahPath-v3.6-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
