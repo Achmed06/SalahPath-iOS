@@ -1,6 +1,18 @@
-# SalahPath v3.1
+# SalahPath v3.3
 
 Private iPhone prayer and learning companion built with SwiftUI.
+
+## v3.3 additions
+
+- Full Fard + Sunnah + Witr plan is visible instead of showing only obligatory rak'ah.
+- Daily prayer tracker, streak and Daily Deen mini-goals.
+- Daily dua card with source references.
+- Prayer duas and Quran surahs are separated clearly in the UI.
+- Short-surah learning screen with human recitation.
+- Quran audio URLs are resolved via the AlQuran.cloud audio edition API instead of relying only on hard-coded CDN paths.
+- Full-surah playback queues ayah recordings in sequence.
+- Male/female prayer-learning profile now uses CC0 Wikimedia Commons prayer photos instead of the former custom stick/cartoon figure.
+- German and Turkish remain first-class app languages.
 
 ## v3.1 additions
 
