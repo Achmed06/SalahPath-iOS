@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.28 UI
+name: Capture SalahPath v3.29 UI
 
 on:
   workflow_dispatch:
@@ -63,6 +63,7 @@ jobs:
           # v3.26 binary payload was retired; v3.27 supersedes it
           python3 v327-patch/apply_v327.py
           python3 v328-patch/apply_v328.py
+          python3 v329-patch/apply_v329.py
 
       - name: Select simulator
         shell: bash
@@ -126,11 +127,11 @@ jobs:
           SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
           sleep 10
           mkdir -p ui-preview
-          xcrun simctl io "$SIM_UDID" screenshot ui-preview/SalahPath-v3.28-Home.png
+          xcrun simctl io "$SIM_UDID" screenshot ui-preview/SalahPath-v3.29-Home.png
 
       - name: Upload UI preview
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.28-ui-preview
-          path: ui-preview/SalahPath-v3.28-Home.png
+          name: SalahPath-v3.29-ui-preview
+          path: ui-preview/SalahPath-v3.29-Home.png
           if-no-files-found: error
