@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.41 UI
+name: Capture SalahPath v3.42 UI
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
       - ".github/workflows/capture-ui.yml"
       - "v326-patch/**"
       - "v328-patch/**"
+      - "v342-patch/**"
 
 jobs:
   screenshot:
@@ -76,6 +77,7 @@ jobs:
           python3 v339-patch/apply_v339.py
           python3 v340-patch/apply_v340.py
           python3 v341-patch/apply_v341.py
+          python3 v342-patch/apply_v342.py
 
       - name: Select simulator
         shell: bash
@@ -119,7 +121,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Boot and capture Home screenshot
+      - name: Boot and capture reference screens
         shell: bash
         run: |
           xcrun simctl boot "$SIM_UDID" || true
@@ -136,14 +138,30 @@ jobs:
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private asrRule hanafi
           xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
 
-          SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
-          sleep 10
           mkdir -p ui-preview
-          xcrun simctl io "$SIM_UDID" screenshot ui-preview/SalahPath-v3.41-Home.png
 
-      - name: Upload UI preview
+          capture() {
+            SCREEN="$1"
+            NAME="$2"
+            xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
+            if [ "$SCREEN" = "home" ]; then
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+            else
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN"                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+            fi
+            sleep 5
+            xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
+          }
+
+          capture home  SalahPath-v3.42-Home.png
+          capture quran SalahPath-v3.42-Quran.png
+          capture dhikr SalahPath-v3.42-Dhikr.png
+          capture namaz SalahPath-v3.42-Namaz.png
+          capture times SalahPath-v3.42-PrayerTimes.png
+
+      - name: Upload UI previews
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.41-ui-preview
-          path: ui-preview/SalahPath-v3.41-Home.png
+          name: SalahPath-v3.42-ui-preview
+          path: ui-preview/*.png
           if-no-files-found: error
