@@ -12,8 +12,8 @@ root.mkdir(parents=True, exist_ok=True)
 
 chunk_dir = Path("v354-patch/mosque_chunks")
 parts = sorted(chunk_dir.glob("part*.txt"))
-if len(parts) != 9:
-    raise SystemExit(f"v3.54: expected 9 mosque chunks, found {len(parts)}")
+if len(parts) != 14:
+    raise SystemExit(f"v3.54: expected 14 mosque chunks, found {len(parts)}")
 
 encoded = "".join(p.read_text(encoding="utf-8").strip() for p in parts)
 try:
