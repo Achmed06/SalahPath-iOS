@@ -1,4 +1,4 @@
-name: Build SalahPath v3.34
+name: Build SalahPath v3.35
 
 on:
   workflow_dispatch:
@@ -40,6 +40,7 @@ on:
       - "v332-patch/**"
       - "v333-patch/**"
       - "v334-patch/**"
+      - "v335-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -103,12 +104,13 @@ jobs:
           python3 v332-patch/apply_v332.py
           python3 v333-patch/apply_v333.py
           python3 v334-patch/apply_v334.py
+          python3 v335-patch/apply_v335.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.34-patched-source
+          name: SalahPath-v3.35-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -131,7 +133,7 @@ jobs:
           audio = audio.replace("http://", "https://")
           request = urllib.request.Request(
               audio,
-              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.34"}
+              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.35"}
           )
           with urllib.request.urlopen(request, timeout=25) as response:
               ctype = response.headers.get("Content-Type", "")
@@ -151,12 +153,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.34 unsigned IPA
+      - name: Build SalahPath v3.35 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.34 IPA
+      - name: Upload SalahPath v3.35 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.34-unsigned-ipa
+          name: SalahPath-v3.35-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
