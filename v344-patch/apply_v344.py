@@ -28,6 +28,31 @@ if old not in s:
 s = s.replace(old, new, 1)
 p.write_text(s, encoding="utf-8")
 
+# v3.40's Quran dashboard PNG is also truncated. Keep all other validated
+# reference icon PNGs, but fall back to the existing vector Quran glyph.
+old_icon = '''            Image("ref_dash_\\(icon)")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 30, height: 30)
+                .accessibilityHidden(true)
+'''
+new_icon = '''            Group {
+                if icon == "quran" {
+                    ReferenceDashboardGlyph(kind: icon)
+                } else {
+                    Image("ref_dash_\\(icon)")
+                        .resizable()
+                        .scaledToFit()
+                }
+            }
+            .frame(width: 30, height: 30)
+            .accessibilityHidden(true)
+'''
+if old_icon not in s:
+    raise SystemExit("v3.44: DashboardTile image renderer not found")
+s = s.replace(old_icon, new_icon, 1)
+p.write_text(s, encoding="utf-8")
+
 # Keep the legacy imageset structurally valid even though Home no longer renders it.
 # This is a valid 1x1 transparent PNG.
 transparent_png = base64.b64decode(
@@ -35,6 +60,9 @@ transparent_png = base64.b64decode(
 )
 asset = Path("SalahZeit/Assets.xcassets/home_mosque.imageset/home_mosque.png")
 asset.write_bytes(transparent_png)
+
+quran_asset = Path("SalahZeit/Assets.xcassets/ref_dash_quran.imageset/ref_dash_quran.png")
+quran_asset.write_bytes(transparent_png)
 
 b = Path("scripts/build_unsigned_ipa.sh")
 t = b.read_text(encoding="utf-8")
