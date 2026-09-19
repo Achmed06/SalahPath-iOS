@@ -106,10 +106,10 @@ if old in s:
 s = s.replace('.font(.system(size: 6.5, weight: .bold))',
               '.font(.custom("AvenirNext-DemiBold", size: 6.2))', 1)
 
-s = s.replace('ReferenceLeafMark()
-                .frame(width: 20, height: 25)',
-              'ReferenceLeafMark(color: SalahTheme.teal)
-                .frame(width: 18, height: 23)', 1)
+s = s.replace('''ReferenceLeafMark()
+                .frame(width: 20, height: 25)''',
+              '''ReferenceLeafMark(color: SalahTheme.teal)
+                .frame(width: 18, height: 23)''', 1)
 
 s = s.replace('''        .background(
             SalahTheme.cream,
