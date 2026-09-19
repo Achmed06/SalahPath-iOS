@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/fast-preview.yml"
       - "v3*-patch/**"
+      - "qa/**"
 
 concurrency:
   group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || 'quran' }}
