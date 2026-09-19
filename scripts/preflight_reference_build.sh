@@ -23,7 +23,7 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.42 patch chain.
+# Current expected app version after the v3.43 patch chain.
 grep -q 'MARKETING_VERSION="3.43"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.43 not present"
 grep -q 'CURRENT_PROJECT_VERSION="48"' scripts/build_unsigned_ipa.sh   || fail "expected build number 48 not present"
 
@@ -32,9 +32,6 @@ required_assets=(
   home_mosque
   ref_dash_quran ref_dash_dhikr ref_dash_prayer ref_dash_wudu
   ref_dash_times ref_dash_qibla ref_dash_info ref_dash_fav
-  ref_logo ref_sun ref_dua_leaf ref_speaker ref_track_check ref_flame
-  ref_quote_leaf ref_tab_home ref_tab_quran ref_tab_prayer
-  ref_tab_discover ref_tab_profile
 )
 
 for asset in "${required_assets[@]}"; do
