@@ -8,7 +8,7 @@ on:
       - "v3*-patch/**"
 
 concurrency:
-  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || 'quran' }}
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
@@ -132,6 +132,7 @@ jobs:
 
           SCREEN="quran"
           case "$FAST_COMMIT_MESSAGE" in
+            *"[qa]"*)    SCREEN="qa" ;;
             *"[home]"*)  SCREEN="home" ;;
             *"[dhikr]"*) SCREEN="dhikr" ;;
             *"[namaz]"*) SCREEN="namaz" ;;
@@ -141,16 +142,38 @@ jobs:
 
           echo "FAST preview target: $SCREEN"
           mkdir -p fast-preview
-          if [ "$SCREEN" = "home" ]; then
-            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+
+          capture_one() {
+            TARGET="$1"
+            NAME="$2"
+            xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
+            if [ "$TARGET" = "home" ]; then
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+            else
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
+                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+            fi
+            sleep 2
+
+            if ! xcrun simctl spawn "$SIM_UDID" launchctl list | grep -q "com.salahzeit.private"; then
+              echo "::error::$TARGET screen is not running after launch"
+              exit 1
+            fi
+
+            xcrun simctl io "$SIM_UDID" screenshot "fast-preview/$NAME"
+          }
+
+          if [ "$SCREEN" = "qa" ]; then
+            capture_one home  SalahPath-FAST-QA-Home.png
+            capture_one quran SalahPath-FAST-QA-Quran.png
+            capture_one dhikr SalahPath-FAST-QA-Dhikr.png
+            capture_one namaz SalahPath-FAST-QA-Namaz.png
+            capture_one times SalahPath-FAST-QA-PrayerTimes.png
           else
-            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-            SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
-              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+            capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
-          sleep 2
-          xcrun simctl io "$SIM_UDID" screenshot "fast-preview/SalahPath-FAST-$SCREEN.png"
 
       - name: Upload FAST preview
         uses: actions/upload-artifact@v4
