@@ -74,7 +74,15 @@ jobs:
                       candidates.append((runtime, d["name"], d["udid"]))
           if not candidates:
               raise SystemExit("No available iPhone simulator")
-          runtime, name, udid = candidates[-1]
+          priority = ["iPhone 16 Pro", "iPhone 16", "iPhone 15 Pro", "iPhone 15"]
+          chosen = None
+          for wanted in priority:
+              chosen = next((c for c in candidates if c[1] == wanted), None)
+              if chosen:
+                  break
+          if not chosen:
+              chosen = next((c for c in candidates if "SE" not in c[1]), candidates[0])
+          runtime, name, udid = chosen
           print("Using", runtime, name, udid)
           with open(os.environ["GITHUB_ENV"], "a") as f:
               f.write(f"SIM_UDID={udid}\n")
