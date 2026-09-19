@@ -12,7 +12,7 @@ q_end = s.index("\nprivate struct QuranFavoritesView", q_start)
 q = s[q_start:q_end]
 
 card_start = q.index('                        VStack(alignment: .leading, spacing: 14) {')
-search_start = q.index('                        HStack(spacing: 8) {', card_start)
+search_start = q.index('                        Color.clear\n                            .frame(height: 100)\n\n                        HStack(spacing: 8) {', card_start)
 
 new_card = r'''                        VStack(spacing: 0) {
                             VStack(alignment: .leading, spacing: 14) {
@@ -111,7 +111,7 @@ new_card = r'''                        VStack(spacing: 0) {
                             .padding(.bottom, 6)
                         }
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(0.53, contentMode: .fit)
+                        .aspectRatio(0.64, contentMode: .fit)
                         .background(
                             SalahTheme.cream,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
