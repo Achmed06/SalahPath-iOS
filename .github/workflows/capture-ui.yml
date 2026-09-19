@@ -6,10 +6,8 @@ on:
     branches: [ main ]
     paths:
       - ".github/workflows/capture-ui.yml"
-      - "v326-patch/**"
-      - "v328-patch/**"
-      - "v342-patch/**"
-      - "v343-patch/**"
+      - "v3-source/**"
+      - "v3*-patch/**"
       - "scripts/preflight_reference_build.sh"
 
 jobs:
@@ -154,9 +152,12 @@ jobs:
             NAME="$2"
             xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
             if [ "$SCREEN" = "home" ]; then
-              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
             else
-              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN"                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
             fi
             sleep 5
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
