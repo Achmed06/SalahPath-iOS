@@ -46,6 +46,7 @@ on:
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
+  # retry marker: v3.37 QA
   build:
     runs-on: macos-15
     steps:
