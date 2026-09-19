@@ -4,7 +4,11 @@ import base64, io, json, tarfile
 # SalahPath v3.26 — real reference artwork + deterministic screenshot QA.
 
 # Decode the reference artwork payload into the asset catalog.
-payload = base64.b64decode(Path("v326-patch/assets.tgz.b64").read_text(encoding="utf-8").strip())
+encoded = "".join(
+    (Path("v326-patch") / f"asset-{i:02d}.b64").read_text(encoding="utf-8").strip()
+    for i in range(5)
+)
+payload = base64.b64decode(encoded)
 with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tf:
     logo = tf.extractfile("salahpath_logo.png").read()
     mosque = tf.extractfile("home_mosque.png").read()
