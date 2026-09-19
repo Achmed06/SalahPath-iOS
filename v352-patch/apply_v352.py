@@ -109,9 +109,9 @@ if old not in s:
     raise SystemExit("v3.52: current Namaz hero block not found")
 s = s.replace(old, new, 1)
 
-marker = "private struct ReferencePosterQiblaArt: View {"
+marker = "struct RakatOverviewView: View {"
 if marker not in s:
-    raise SystemExit("v3.52: helper insertion marker missing")
+    raise SystemExit("v3.52: RakatOverviewView insertion marker missing")
 
 helper = r'''private struct ReferencePrayerPerson: View {
     let imageName: String
