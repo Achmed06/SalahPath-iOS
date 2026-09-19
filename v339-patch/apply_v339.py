@@ -249,7 +249,7 @@ r = r.replace('''                        ZStack {
                             .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
                             .frame(height: 18)
 ''', 1)
-r = r.replace('("book.closed.fill", "Kur'an")', '("book.fill", "Kur'an")', 1)
+r = r.replace('''("book.closed.fill", "Kur'an")''', '''("book.fill", "Kur'an")''', 1)
 r = r.replace('("building.columns.fill", "Namaz")', '("figure.mind.and.body", "Namaz")', 1)
 r = r.replace('("safari.fill", "Keşfet")', '("location.north.circle", "Keşfet")', 1)
 r = r.replace('("person.crop.circle.fill", "Profil")', '("person.crop.circle", "Profil")', 1)
