@@ -111,7 +111,7 @@ new_card = r'''                        VStack(spacing: 0) {
                             .padding(.bottom, 6)
                         }
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(0.56, contentMode: .fit)
+                        .aspectRatio(0.53, contentMode: .fit)
                         .background(
                             SalahTheme.cream,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
