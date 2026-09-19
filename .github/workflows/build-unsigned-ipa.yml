@@ -67,6 +67,7 @@ on:
 
 jobs:
   build:
+    if: ${{ !startsWith(github.event.head_commit.message, 'FAST:') }}
     runs-on: macos-15
     steps:
       - name: Checkout
