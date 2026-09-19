@@ -23,9 +23,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.49 patch chain.
-grep -q 'MARKETING_VERSION="3.49"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.49 not present"
-grep -q 'CURRENT_PROJECT_VERSION="54"' scripts/build_unsigned_ipa.sh   || fail "expected build number 54 not present"
+# Current expected app version after the v3.50 patch chain.
+grep -q 'MARKETING_VERSION="3.50"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.50 not present"
+grep -q 'CURRENT_PROJECT_VERSION="55"' scripts/build_unsigned_ipa.sh   || fail "expected build number 55 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
