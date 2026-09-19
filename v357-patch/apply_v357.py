@@ -12,7 +12,7 @@ q_end = s.index("\nprivate struct QuranFavoritesView", q_start)
 q = s[q_start:q_end]
 
 card_start = q.index('                        VStack(alignment: .leading, spacing: 14) {')
-search_start = q.index('                        Color.clear\n                            .frame(height: 100)\n\n                        HStack(spacing: 8) {', card_start)
+search_start = q.index('                        HStack(spacing: 8) {', card_start)
 
 new_card = r'''                        VStack(spacing: 0) {
                             VStack(alignment: .leading, spacing: 14) {
@@ -123,7 +123,7 @@ new_card = r'''                        VStack(spacing: 0) {
 
 '''
 
-q = q[:card_start] + new_card + q[search_start:]
+q = q[:card_start] + new_card + '                        Color.clear\\n                            .frame(height: 100)\\n\\n' + q[search_start:]
 s = s[:q_start] + q + s[q_end:]
 p.write_text(s, encoding="utf-8")
 
