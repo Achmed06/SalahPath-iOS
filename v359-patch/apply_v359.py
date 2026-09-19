@@ -327,7 +327,7 @@ new = '''        .task { await store.loadChapters() }
     }
 
     private var quranShareText: String {
-        "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\nBismillâhirrahmânirrahîm"
+        "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\\nBismillâhirrahmânirrahîm"
     }
 
     @MainActor
