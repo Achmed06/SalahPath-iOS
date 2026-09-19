@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.31 UI
+name: Capture SalahPath v3.32 UI
 
 on:
   workflow_dispatch:
@@ -66,6 +66,7 @@ jobs:
           python3 v329-patch/apply_v329.py
           python3 v330-patch/apply_v330.py
           python3 v331-patch/apply_v331.py
+          python3 v332-patch/apply_v332.py
 
       - name: Select simulator
         shell: bash
@@ -129,11 +130,11 @@ jobs:
           SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
           sleep 10
           mkdir -p ui-preview
-          xcrun simctl io "$SIM_UDID" screenshot ui-preview/SalahPath-v3.31-Home.png
+          xcrun simctl io "$SIM_UDID" screenshot ui-preview/SalahPath-v3.32-Home.png
 
       - name: Upload UI preview
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.31-ui-preview
-          path: ui-preview/SalahPath-v3.31-Home.png
+          name: SalahPath-v3.32-ui-preview
+          path: ui-preview/SalahPath-v3.32-Home.png
           if-no-files-found: error
