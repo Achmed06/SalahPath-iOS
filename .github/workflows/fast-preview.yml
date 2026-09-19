@@ -167,11 +167,19 @@ jobs:
           }
 
           if [ "$SCREEN" = "qa" ]; then
-            capture_one home  SalahPath-FAST-QA-Home.png
-            capture_one quran SalahPath-FAST-QA-Quran.png
-            capture_one dhikr SalahPath-FAST-QA-Dhikr.png
-            capture_one namaz SalahPath-FAST-QA-Namaz.png
-            capture_one times SalahPath-FAST-QA-PrayerTimes.png
+            capture_one home             SalahPath-FAST-QA-Home.png
+            capture_one quran            SalahPath-FAST-QA-Quran.png
+            capture_one dhikr            SalahPath-FAST-QA-Dhikr.png
+            capture_one namaz            SalahPath-FAST-QA-Namaz.png
+            capture_one times            SalahPath-FAST-QA-PrayerTimes.png
+            capture_one quran-favorites  SalahPath-FAST-QA-QuranFavorites.png
+            capture_one namaz-howto      SalahPath-FAST-QA-NamazHowTo.png
+            capture_one tasbih           SalahPath-FAST-QA-Tasbih.png
+            capture_one dhikr-morning    SalahPath-FAST-QA-DhikrMorning.png
+            capture_one dhikr-duas       SalahPath-FAST-QA-DhikrDuas.png
+            capture_one dhikr-audio      SalahPath-FAST-QA-DhikrAudio.png
+            capture_one qibla            SalahPath-FAST-QA-Qibla.png
+            capture_one settings         SalahPath-FAST-QA-Settings.png
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
