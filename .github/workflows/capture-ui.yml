@@ -6,6 +6,7 @@ on:
     branches: [ main ]
     paths:
       - ".github/workflows/capture-ui.yml"
+      - "v326-patch/**"
 
 jobs:
   screenshot:
