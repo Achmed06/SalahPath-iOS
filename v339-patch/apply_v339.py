@@ -122,18 +122,18 @@ s = s.replace('''        .background(
         )
 ''', 1)
 
-s = s.replace('private struct ReferenceLeafMark: View {
-    var body: some View {',
-              'private struct ReferenceLeafMark: View {
+s = s.replace('''private struct ReferenceLeafMark: View {
+    var body: some View {''',
+              '''private struct ReferenceLeafMark: View {
     var color: Color = SalahTheme.gold
 
-    var body: some View {', 1)
-s = s.replace('.fill(SalahTheme.gold)
-', '.fill(color)
-', 1)
-s = s.replace('.fill(SalahTheme.gold.opacity(0.96))
-', '.fill(color.opacity(0.96))
-', 1)
+    var body: some View {''', 1)
+s = s.replace('''.fill(SalahTheme.gold)
+''', '''.fill(color)
+''', 1)
+s = s.replace('''.fill(SalahTheme.gold.opacity(0.96))
+''', '''.fill(color.opacity(0.96))
+''', 1)
 
 marker = 'private struct ReferenceLeafMark: View {'
 if marker in s and 'private struct ReferenceSunGlyph: View {' not in s:
