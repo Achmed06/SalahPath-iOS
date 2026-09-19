@@ -69,42 +69,13 @@ jobs:
           python3 v345-patch/apply_v345.py
           python3 v346-patch/apply_v346.py
 
-      - name: Print Quran implementation
+      - name: Print v3.42 side-screen patch
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
-
-          for path in Path("SalahZeit").rglob("*.swift"):
-              text = path.read_text(encoding="utf-8")
-              matches = list(re.finditer(r'(?i)quran|kur.?an', text))
-              if not matches:
-                  continue
-
-              print(f"\n===== FILE: {path} =====")
-              lines = text.splitlines()
-              interesting = []
-              for i, line in enumerate(lines):
-                  if re.search(r'(?i)struct\s+\w*(quran|kur)|quranview|reference.*quran|quran.*reference', line):
-                      interesting.append(i)
-
-              if not interesting:
-                  for i, line in enumerate(lines):
-                      if re.search(r'(?i)quran|kur.?an', line):
-                          interesting.append(i)
-                          if len(interesting) >= 4:
-                              break
-
-              seen = set()
-              for idx in interesting[:8]:
-                  start = max(0, idx - 25)
-                  end = min(len(lines), idx + 180)
-                  key = (start, end)
-                  if key in seen:
-                      continue
-                  seen.add(key)
-                  print(f"--- lines {start+1}-{end} ---")
-                  for n in range(start, end):
-                      print(f"{n+1:04d}: {lines[n]}")
+          import base64, gzip
+          raw = Path("v342-patch/apply_v342.py.gz.b64").read_text(encoding="utf-8").strip()
+          source = gzip.decompress(base64.b64decode(raw)).decode("utf-8")
+          print(source)
           PY
