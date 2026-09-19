@@ -2,22 +2,22 @@ from pathlib import Path
 import json
 
 # SalahPath v3.54 — exact Home mosque artwork from the supplied center-phone
-# reference. The binary JPEG is stored as a real Git blob in v354-patch so no
+# reference. The binary PNG is stored as a real Git blob in v354-patch so no
 # text/base64 transfer touches the image bytes.
 
 root = Path("SalahZeit/Assets.xcassets/home_mosque.imageset")
 root.mkdir(parents=True, exist_ok=True)
 
-src = Path("v354-patch/reference_home_mosque.jpg")
+src = Path("v354-patch/reference_home_mosque.png")
 if not src.exists():
     raise SystemExit("v3.54: reference mosque binary missing")
 
-dst = root / "home_mosque.jpg"
+dst = root / "home_mosque.png"
 dst.write_bytes(src.read_bytes())
 
 contents = {
     "images": [
-        {"filename": "home_mosque.jpg", "idiom": "universal", "scale": "1x"},
+        {"filename": "home_mosque.png", "idiom": "universal", "scale": "1x"},
         {"idiom": "universal", "scale": "2x"},
         {"idiom": "universal", "scale": "3x"},
     ],
