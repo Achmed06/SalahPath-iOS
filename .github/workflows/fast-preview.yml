@@ -7,6 +7,10 @@ on:
       - ".github/workflows/fast-preview.yml"
       - "v3*-patch/**"
 
+concurrency:
+  group: salahpath-fast-preview
+  cancel-in-progress: true
+
 jobs:
   fast-preview:
     if: ${{ startsWith(github.event.head_commit.message, 'FAST') }}
@@ -92,6 +96,14 @@ jobs:
           with open(os.environ["GITHUB_ENV"], "a") as f:
               f.write(f"SIM_UDID={udid}\n")
           PY
+
+      - name: Restore incremental Xcode cache
+        uses: actions/cache@v4
+        with:
+          path: DerivedData
+          key: salahpath-fast-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            salahpath-fast-${{ runner.os }}-
 
       - name: Build simulator only
         shell: bash
