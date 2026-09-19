@@ -8,7 +8,7 @@ on:
       - "v3*-patch/**"
 
 concurrency:
-  group: salahpath-fast-preview
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
