@@ -158,8 +158,11 @@ jobs:
             fi
             sleep 2
 
-            if ! xcrun simctl spawn "$SIM_UDID" launchctl list | grep -q "com.salahzeit.private"; then
+            STATUS_FILE="$RUNNER_TEMP/salahpath-launchctl-$TARGET.txt"
+            xcrun simctl spawn "$SIM_UDID" launchctl list > "$STATUS_FILE"
+            if ! grep -F "com.salahzeit.private" "$STATUS_FILE" >/dev/null; then
               echo "::error::$TARGET screen is not running after launch"
+              cat "$STATUS_FILE" || true
               exit 1
             fi
 
