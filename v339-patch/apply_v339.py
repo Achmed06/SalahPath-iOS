@@ -148,7 +148,7 @@ if marker in s and 'private struct ReferenceSunGlyph: View {' not in s:
                     .fill(c)
                     .frame(width: w * 0.46, height: h * 0.46)
 
-                ForEach(0..<8, id: .self) { index in
+                ForEach(0..<8, id: \.self) { index in
                     Capsule()
                         .fill(c)
                         .frame(width: max(1.1, w * 0.07), height: h * 0.20)
