@@ -78,7 +78,8 @@ jobs:
           python3 v340-patch/apply_v340.py
           python3 v341-patch/apply_v341.py
           python3 v342-patch/apply_v342.py
-          python3 v343-patch/apply_v343.py\n          python3 v344-patch/apply_v344.py
+          python3 v343-patch/apply_v343.py
+          python3 v344-patch/apply_v344.py
 
       - name: Strict source preflight
         shell: bash
