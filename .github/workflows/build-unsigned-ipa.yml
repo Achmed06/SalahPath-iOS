@@ -1,4 +1,4 @@
-name: Build SalahPath v3.28
+name: Build SalahPath v3.29
 
 on:
   workflow_dispatch:
@@ -34,6 +34,7 @@ on:
       - "v326-patch/**"
       - "v327-patch/**"
       - "v328-patch/**"
+      - "v329-patch/**"
       - ".github/workflows/build-unsigned-ipa.yml"
 
 jobs:
@@ -91,12 +92,13 @@ jobs:
           # v3.26 binary payload was retired; v3.27 supersedes it
           python3 v327-patch/apply_v327.py
           python3 v328-patch/apply_v328.py
+          python3 v329-patch/apply_v329.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.28-patched-source
+          name: SalahPath-v3.29-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -119,7 +121,7 @@ jobs:
           audio = audio.replace("http://", "https://")
           request = urllib.request.Request(
               audio,
-              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.28"}
+              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.29"}
           )
           with urllib.request.urlopen(request, timeout=25) as response:
               ctype = response.headers.get("Content-Type", "")
@@ -139,12 +141,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.28 unsigned IPA
+      - name: Build SalahPath v3.29 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.28 IPA
+      - name: Upload SalahPath v3.29 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.28-unsigned-ipa
+          name: SalahPath-v3.29-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
