@@ -1,19 +1,37 @@
 from pathlib import Path
 import json
+import base64
+import hashlib
 
 # SalahPath v3.54 — exact Home mosque artwork from the supplied center-phone
-# reference. The binary PNG is stored as a real Git blob in v354-patch so no
-# text/base64 transfer touches the image bytes.
+# reference. To avoid connector corruption, the PNG is stored as short UTF-8
+# base64 chunks and reconstructed with an explicit SHA-256 integrity check.
 
 root = Path("SalahZeit/Assets.xcassets/home_mosque.imageset")
 root.mkdir(parents=True, exist_ok=True)
 
-src = Path("v354-patch/reference_home_mosque.png")
-if not src.exists():
-    raise SystemExit("v3.54: reference mosque binary missing")
+chunk_dir = Path("v354-patch/mosque_chunks")
+parts = sorted(chunk_dir.glob("part*.txt"))
+if len(parts) != 9:
+    raise SystemExit(f"v3.54: expected 9 mosque chunks, found {len(parts)}")
+
+encoded = "".join(p.read_text(encoding="utf-8").strip() for p in parts)
+try:
+    payload = base64.b64decode(encoded, validate=True)
+except Exception as exc:
+    raise SystemExit(f"v3.54: mosque base64 decode failed: {exc}")
+
+expected_sha256 = "729554526ca37a2ca797493d7dffeb9a3a36dd9aaf17bcabf1769d7e3c3ba9a3"
+actual_sha256 = hashlib.sha256(payload).hexdigest()
+if actual_sha256 != expected_sha256:
+    raise SystemExit(
+        f"v3.54: mosque SHA-256 mismatch: expected {expected_sha256}, got {actual_sha256}"
+    )
+if not payload.startswith(b"\x89PNG\r\n\x1a\n"):
+    raise SystemExit("v3.54: reconstructed mosque is not a PNG")
 
 dst = root / "home_mosque.png"
-dst.write_bytes(src.read_bytes())
+dst.write_bytes(payload)
 
 contents = {
     "images": [
