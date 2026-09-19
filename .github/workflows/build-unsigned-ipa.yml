@@ -121,6 +121,12 @@ jobs:
           python3 v342-patch/apply_v342.py
           chmod +x scripts/build_unsigned_ipa.sh
 
+      - name: Strict source preflight
+        shell: bash
+        run: |
+          chmod +x scripts/preflight_reference_build.sh
+          scripts/preflight_reference_build.sh
+
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
