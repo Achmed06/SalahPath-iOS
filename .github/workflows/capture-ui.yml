@@ -79,6 +79,12 @@ jobs:
           python3 v341-patch/apply_v341.py
           python3 v342-patch/apply_v342.py
 
+      - name: Strict source preflight
+        shell: bash
+        run: |
+          chmod +x scripts/preflight_reference_build.sh
+          scripts/preflight_reference_build.sh
+
       - name: Select simulator
         shell: bash
         run: |
