@@ -97,7 +97,6 @@ jobs:
         shell: bash
         run: |
           xcrun simctl boot "$SIM_UDID" || true
-          open -a Simulator --args -CurrentDeviceUDID "$SIM_UDID"
           xcrun simctl bootstatus "$SIM_UDID" -b
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
@@ -106,7 +105,6 @@ jobs:
           xcrun simctl install "$SIM_UDID" "$APP_PATH"
 
           xcrun simctl privacy "$SIM_UDID" grant location com.salahzeit.private || true
-          xcrun simctl location "$SIM_UDID" set 41.0082,28.9784 || true
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage turkish
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private calculationMethod turkey
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private asrRule hanafi
