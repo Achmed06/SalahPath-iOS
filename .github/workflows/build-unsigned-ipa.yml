@@ -48,7 +48,7 @@ on:
 jobs:
   # retry marker: v3.37 QA
   build:
-    runs-on: macos-15
+    runs-on: macos-14
     steps:
       - name: Checkout
         uses: actions/checkout@v4
