@@ -1,0 +1,64 @@
+name: Validate SalahPath v3.37 Patch
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - "v337-patch/**"
+      - ".github/workflows/validate-v337.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore and apply patches through v3.37
+        shell: bash
+        run: |
+          cat             v3-source/part-01.b64             v3-source/part-02a.b64             v3-source/part-02b.b64             v3-source/part-03.b64             v3-source/part-04.b64             v3-source/part-05.b64             v3-source/part-06.b64             v3-source/part-07.b64             v3-source/part-08.b64 > v3.b64
+          base64 -d v3.b64 > source.zip
+          unzip -oq source.zip
+          python3 v31-patch/apply_v31.py
+          python3 v32-patch/apply_v32.py
+          python3 v33-patch/apply_v33.py
+          python3 v33-patch/apply_v33_hotfix.py
+          python3 v34-patch/apply_v34.py
+          python3 v35-patch/apply_v35.py
+          python3 v36-patch/apply_v36.py
+          python3 v36-patch/apply_v36_hotfix.py
+          python3 v36-patch/apply_v36_audiofallback.py
+          python3 v37-patch/apply_v37.py
+          python3 v38-patch/apply_v38.py
+          python3 v39-patch/apply_v39.py
+          python3 v310-patch/apply_v310.py
+          python3 v311-patch/apply_v311.py
+          python3 v312-patch/apply_v312.py
+          python3 v313-patch/apply_v313.py
+          python3 v314-patch/apply_v314.py
+          python3 v315-patch/apply_v315.py
+          python3 v316-patch/apply_v316.py
+          python3 v317-patch/apply_v317.py
+          python3 v318-patch/apply_v318.py
+          python3 v319-patch/apply_v319.py
+          python3 v320-patch/apply_v320.py
+          python3 v321-patch/apply_v321.py
+          python3 v322-patch/apply_v322.py
+          python3 v323-patch/apply_v323.py
+          python3 v324-patch/apply_v324.py
+          python3 v325-patch/apply_v325.py
+          python3 v327-patch/apply_v327.py
+          python3 v328-patch/apply_v328.py
+          python3 v329-patch/apply_v329.py
+          python3 v330-patch/apply_v330.py
+          python3 v331-patch/apply_v331.py
+          python3 v332-patch/apply_v332.py
+          python3 v333-patch/apply_v333.py
+          python3 v334-patch/apply_v334.py
+          python3 v335-patch/apply_v335.py
+          python3 v336-patch/apply_v336.py
+          python3 v337-patch/apply_v337.py
+          grep -q 'MARKETING_VERSION="3.37"' scripts/build_unsigned_ipa.sh
+          grep -q 'CURRENT_PROJECT_VERSION="42"' scripts/build_unsigned_ipa.sh
+          grep -q 'ReferenceMosqueSkyline' SalahZeit/Views/HomeView.swift
+          echo "v3.37 patch chain applies successfully"
