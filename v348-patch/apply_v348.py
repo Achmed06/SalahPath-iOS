@@ -125,60 +125,57 @@ q = q.replace('.padding(10)\n                        .background(SalahTheme.crea
 
 s = s[:q_start] + q + s[q_end:]
 
-# Namaz hero: current v3.47 uses standing intention images, while the reference
-# clearly shows both people seated in prayer on rugs.
-old_male = '''                        Image("male_intention")
+# Namaz hero: v3.42 compacted the hero and changed the exact image modifiers.
+# Replace those current anchors with the seated prayer assets already shipped in
+# the app, plus a subtle rug shape underneath.
+old_male = '''                    Image("male_intention")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 161)
+'''
+new_male = '''                    ZStack(alignment: .bottom) {
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .fill(SalahTheme.teal.opacity(0.18))
+                            .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
+                            }
+                        Image("male_sitting")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 150)
-                            .opacity(settings.prayerAudience == .male ? 1 : 0.52)
-'''
-new_male = '''                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(SalahTheme.teal.opacity(0.18))
-                                .frame(width: 118, height: 48)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                        .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
-                                }
-                            Image("male_sitting")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 118)
-                                .padding(.bottom, 7)
-                        }
-                        .frame(height: 150, alignment: .bottom)
-                        .opacity(settings.prayerAudience == .male ? 1 : 0.52)
+                            .frame(maxWidth: .infinity, maxHeight: 125)
+                            .padding(.bottom, 5)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
 '''
 if old_male not in s:
-    raise SystemExit("v3.48: male Namaz hero image not found")
+    raise SystemExit("v3.48: current male Namaz hero image not found")
 s = s.replace(old_male, new_male, 1)
 
-old_female = '''                        Image("female_intention")
+old_female = '''                    Image("female_intention")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: 161)
+'''
+new_female = '''                    ZStack(alignment: .bottom) {
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .fill(SalahTheme.teal.opacity(0.18))
+                            .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
+                            }
+                        Image("female_sitting")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 150)
-                            .opacity(settings.prayerAudience == .female ? 1 : 0.52)
-'''
-new_female = '''                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(SalahTheme.teal.opacity(0.18))
-                                .frame(width: 118, height: 48)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                        .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
-                                }
-                            Image("female_sitting")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 118)
-                                .padding(.bottom, 7)
-                        }
-                        .frame(height: 150, alignment: .bottom)
-                        .opacity(settings.prayerAudience == .female ? 1 : 0.52)
+                            .frame(maxWidth: .infinity, maxHeight: 125)
+                            .padding(.bottom, 5)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
 '''
 if old_female not in s:
-    raise SystemExit("v3.48: female Namaz hero image not found")
+    raise SystemExit("v3.48: current female Namaz hero image not found")
 s = s.replace(old_female, new_female, 1)
 
 p.write_text(s, encoding="utf-8")
