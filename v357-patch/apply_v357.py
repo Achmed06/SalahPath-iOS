@@ -111,7 +111,7 @@ new_card = r'''                        VStack(spacing: 0) {
                             .padding(.bottom, 6)
                         }
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(0.64, contentMode: .fit)
+                        .aspectRatio(0.53, contentMode: .fit)
                         .background(
                             SalahTheme.cream,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -123,7 +123,7 @@ new_card = r'''                        VStack(spacing: 0) {
 
 '''
 
-q = q[:card_start] + new_card + '                        Color.clear\\n                            .frame(height: 100)\\n\\n' + q[search_start:]
+q = q[:card_start] + new_card + q[search_start:]
 s = s[:q_start] + q + s[q_end:]
 p.write_text(s, encoding="utf-8")
 
