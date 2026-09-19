@@ -145,6 +145,7 @@ new_male = '''                    ZStack(alignment: .bottom) {
                             .resizable()
                             .scaledToFit()
                             .frame(maxWidth: .infinity, maxHeight: 125)
+                            .blendMode(.multiply)
                             .padding(.bottom, 5)
                     }
                     .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
@@ -170,6 +171,7 @@ new_female = '''                    ZStack(alignment: .bottom) {
                             .resizable()
                             .scaledToFit()
                             .frame(maxWidth: .infinity, maxHeight: 125)
+                            .blendMode(.multiply)
                             .padding(.bottom, 5)
                     }
                     .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
@@ -177,6 +179,12 @@ new_female = '''                    ZStack(alignment: .bottom) {
 if old_female not in s:
     raise SystemExit("v3.48: current female Namaz hero image not found")
 s = s.replace(old_female, new_female, 1)
+
+# Reference poster keeps this explanatory line in German while the tabs stay Turkish.
+dhikr_translation = '''                    Text(settings.t("Ich bitte Allah um Vergebung.", "Allah'tan bağışlanma dilerim."))'''
+if dhikr_translation not in s:
+    raise SystemExit("v3.48: Dhikr reference translation not found")
+s = s.replace(dhikr_translation, '''                    Text("Ich bitte Allah um Vergebung.")''', 1)
 
 p.write_text(s, encoding="utf-8")
 
