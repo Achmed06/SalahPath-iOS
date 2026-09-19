@@ -72,6 +72,56 @@ if old not in s:
     raise SystemExit("v3.59: Namaz hero arrow anchor missing")
 s = s.replace(old, new, 1)
 
+# --- Dhikr: tabs must visibly change the displayed dhikr, not only tint the pill.
+old = '''    @State private var counter = 33
+    @State private var section = 0
+
+    private var tabs: [String] { ["Sabah", "Akşam", "Günlük", "Özel"] }
+'''
+new = '''    @State private var counter = 33
+    @State private var section = 0
+
+    private var tabs: [String] { ["Sabah", "Akşam", "Günlük", "Özel"] }
+
+    private var activeDhikr: (arabic: String, latin: String, german: String) {
+        switch section {
+        case 1:
+            return ("سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ", "Sübhânallâhi ve bihamdihî", "Gepriesen sei Allah und Ihm gebührt Lob.")
+        case 2:
+            return ("لَا إِلٰهَ إِلَّا اللّٰهُ", "Lâ ilâhe illallâh", "Es gibt keinen Gott außer Allah.")
+        case 3:
+            return ("اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", "Allâhümme salli alâ Muhammed", "Allah, segne Muhammad.")
+        default:
+            return ("أَسْتَغْفِرُ اللّٰهَ", "Estağfirullâh", "Ich bitte Allah um Vergebung.")
+        }
+    }
+'''
+if old not in s:
+    raise SystemExit("v3.59: Dhikr tab state anchor missing")
+s = s.replace(old, new, 1)
+
+old = '''                            withAnimation(.easeOut(duration: 0.15)) {
+                                section = index
+                            }
+'''
+new = '''                            withAnimation(.easeOut(duration: 0.15)) {
+                                section = index
+                                counter = 33
+                            }
+'''
+if old not in s:
+    raise SystemExit("v3.59: Dhikr tab action anchor missing")
+s = s.replace(old, new, 1)
+
+for old, new in [
+    ('Text("أَسْتَغْفِرُ اللّٰهَ")', 'Text(activeDhikr.arabic)'),
+    ('Text("Estağfirullâh")', 'Text(activeDhikr.latin)'),
+    ('Text("Ich bitte Allah um Vergebung.")', 'Text(activeDhikr.german)'),
+]:
+    if old not in s:
+        raise SystemExit("v3.59: Dhikr visible content anchor missing")
+    s = s.replace(old, new, 1)
+
 # --- Dhikr: rows with chevrons must actually navigate.
 repls = [
 ('''                    dhikrStaticRow(
@@ -408,6 +458,32 @@ guide.write_text(s, encoding="utf-8")
 # --- Home wiring.
 home = Path("SalahZeit/Views/HomeView.swift")
 h = home.read_text(encoding="utf-8")
+
+for old, new in [
+    (
+'''            NavigationLink { MorningEveningAdhkarView() } label: {
+                DashboardTile(title: "Dua &\\nZikir", subtitle: "", icon: "dhikr")
+            }
+''',
+'''            NavigationLink { DhikrView() } label: {
+                DashboardTile(title: "Dua &\\nZikir", subtitle: "", icon: "dhikr")
+            }
+'''
+    ),
+    (
+'''            NavigationLink { PrayerHowToView() } label: {
+                DashboardTile(title: "Namaz\\nÖğren", subtitle: "", icon: "prayer")
+            }
+''',
+'''            NavigationLink { GuideView() } label: {
+                DashboardTile(title: "Namaz\\nÖğren", subtitle: "", icon: "prayer")
+            }
+'''
+    ),
+]:
+    if old not in h:
+        raise SystemExit("v3.59: Home reference destination anchor missing")
+    h = h.replace(old, new, 1)
 
 old = '''            NavigationLink { QuranView() } label: {
                 DashboardTile(title: "Favorilerim", subtitle: "Favorilerim", icon: "fav")
