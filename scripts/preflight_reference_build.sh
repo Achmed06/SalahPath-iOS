@@ -24,8 +24,8 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
 fi
 
 # Current expected app version after the v3.42 patch chain.
-grep -q 'MARKETING_VERSION="3.42"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.42 not present"
-grep -q 'CURRENT_PROJECT_VERSION="47"' scripts/build_unsigned_ipa.sh   || fail "expected build number 47 not present"
+grep -q 'MARKETING_VERSION="3.43"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.43 not present"
+grep -q 'CURRENT_PROJECT_VERSION="48"' scripts/build_unsigned_ipa.sh   || fail "expected build number 48 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
