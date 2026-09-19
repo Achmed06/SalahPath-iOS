@@ -9,8 +9,10 @@ on:
 
 jobs:
   fast-preview:
-    if: ${{ startsWith(github.event.head_commit.message, 'FAST:') }}
+    if: ${{ startsWith(github.event.head_commit.message, 'FAST') }}
     runs-on: macos-15
+    env:
+      FAST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -103,7 +105,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      - name: Capture Quran only
+      - name: Capture selected screen only
         shell: bash
         run: |
           xcrun simctl boot "$SIM_UDID" || true
@@ -116,12 +118,27 @@ jobs:
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage turkish
           xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
 
+          SCREEN="quran"
+          case "$FAST_COMMIT_MESSAGE" in
+            *"[home]"*)  SCREEN="home" ;;
+            *"[dhikr]"*) SCREEN="dhikr" ;;
+            *"[namaz]"*) SCREEN="namaz" ;;
+            *"[times]"*) SCREEN="times" ;;
+            *"[quran]"*) SCREEN="quran" ;;
+          esac
+
+          echo "FAST preview target: $SCREEN"
           mkdir -p fast-preview
-          SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-          SIMCTL_CHILD_SALAH_QA_SCREEN=quran \
-            xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+          if [ "$SCREEN" = "home" ]; then
+            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+          else
+            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+            SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+          fi
           sleep 2
-          xcrun simctl io "$SIM_UDID" screenshot "fast-preview/SalahPath-FAST-Quran.png"
+          xcrun simctl io "$SIM_UDID" screenshot "fast-preview/SalahPath-FAST-$SCREEN.png"
 
       - name: Upload FAST preview
         uses: actions/upload-artifact@v4
