@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.42 UI
+name: Capture SalahPath v3.43 UI
 
 on:
   workflow_dispatch:
@@ -9,6 +9,8 @@ on:
       - "v326-patch/**"
       - "v328-patch/**"
       - "v342-patch/**"
+      - "v343-patch/**"
+      - "scripts/preflight_reference_build.sh"
 
 jobs:
   screenshot:
@@ -78,6 +80,7 @@ jobs:
           python3 v340-patch/apply_v340.py
           python3 v341-patch/apply_v341.py
           python3 v342-patch/apply_v342.py
+          python3 v343-patch/apply_v343.py
 
       - name: Strict source preflight
         shell: bash
@@ -159,15 +162,15 @@ jobs:
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.42-Home.png
-          capture quran SalahPath-v3.42-Quran.png
-          capture dhikr SalahPath-v3.42-Dhikr.png
-          capture namaz SalahPath-v3.42-Namaz.png
-          capture times SalahPath-v3.42-PrayerTimes.png
+          capture home  SalahPath-v3.43-Home.png
+          capture quran SalahPath-v3.43-Quran.png
+          capture dhikr SalahPath-v3.43-Dhikr.png
+          capture namaz SalahPath-v3.43-Namaz.png
+          capture times SalahPath-v3.43-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.42-ui-preview
+          name: SalahPath-v3.43-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
