@@ -23,9 +23,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.43 patch chain.
-grep -q 'MARKETING_VERSION="3.43"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.43 not present"
-grep -q 'CURRENT_PROJECT_VERSION="48"' scripts/build_unsigned_ipa.sh   || fail "expected build number 48 not present"
+# Current expected app version after the v3.44 patch chain.
+grep -q 'MARKETING_VERSION="3.44"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.43 not present"
+grep -q 'CURRENT_PROJECT_VERSION="49"' scripts/build_unsigned_ipa.sh   || fail "expected build number 48 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
@@ -53,6 +53,8 @@ for path in root.rglob("Contents.json"):
         print(f"PRECHECK ERROR: invalid asset JSON {path}: {exc}", file=sys.stderr)
         raise SystemExit(1)
 
+import struct, zlib
+
 png_sig = b"\x89PNG\r\n\x1a\n"
 for path in root.rglob("*.png"):
     data = path.read_bytes()
@@ -60,7 +62,35 @@ for path in root.rglob("*.png"):
         print(f"PRECHECK ERROR: invalid PNG signature: {path}", file=sys.stderr)
         raise SystemExit(1)
 
-print("Asset JSON + PNG signatures: OK")
+    offset = 8
+    saw_iend = False
+    while offset < len(data):
+        if offset + 12 > len(data):
+            print(f"PRECHECK ERROR: truncated PNG chunk header: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        length = struct.unpack(">I", data[offset:offset + 4])[0]
+        chunk_type = data[offset + 4:offset + 8]
+        chunk_end = offset + 12 + length
+        if chunk_end > len(data):
+            print(f"PRECHECK ERROR: truncated PNG chunk payload: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        payload = data[offset + 8:offset + 8 + length]
+        stored_crc = struct.unpack(">I", data[offset + 8 + length:chunk_end])[0]
+        actual_crc = zlib.crc32(chunk_type)
+        actual_crc = zlib.crc32(payload, actual_crc) & 0xffffffff
+        if stored_crc != actual_crc:
+            print(f"PRECHECK ERROR: PNG CRC mismatch: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        offset = chunk_end
+        if chunk_type == b"IEND":
+            saw_iend = True
+            break
+
+    if not saw_iend:
+        print(f"PRECHECK ERROR: PNG missing IEND: {path}", file=sys.stderr)
+        raise SystemExit(1)
+
+print("Asset JSON + PNG structural integrity: OK")
 PY
 
 # Ensure QA routing added for the five visual-reference screens exists.
