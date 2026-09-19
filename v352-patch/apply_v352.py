@@ -9,74 +9,101 @@ from pathlib import Path
 p = Path("SalahZeit/Views/GuideView.swift")
 s = p.read_text(encoding="utf-8")
 
-old = '''                ZStack {
-                    HStack(spacing: 18) {
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(SalahTheme.teal.opacity(0.18))
-                                .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                        .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
-                                }
-                            Image("male_sitting")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity, maxHeight: 125)
-                                .blendMode(.multiply)
-                                .padding(.bottom, 5)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
+old = '''            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color(red: 0.96, green: 0.93, blue: 0.84))
 
-                        ZStack(alignment: .bottom) {
-                            RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                .fill(SalahTheme.teal.opacity(0.18))
-                                .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                        .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
-                                }
-                            Image("female_sitting")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(maxWidth: .infinity, maxHeight: 125)
-                                .blendMode(.multiply)
-                                .padding(.bottom, 5)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
+                HStack(alignment: .bottom, spacing: 1) {
+                    ZStack(alignment: .bottom) {
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .fill(SalahTheme.teal.opacity(0.18))
+                            .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
+                            }
+                        Image("male_sitting")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 125)
+                            .blendMode(.multiply)
+                            .padding(.bottom, 5)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
 
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 34, height: 34)
-                        .background(SalahTheme.teal, in: Circle())
+                    Button {
+                        settings.prayerAudience = settings.prayerAudience == .male ? .female : .male
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(SalahTheme.teal)
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 11, weight: .black))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 50)
+
+                    ZStack(alignment: .bottom) {
+                        RoundedRectangle(cornerRadius: 5, style: .continuous)
+                            .fill(SalahTheme.teal.opacity(0.18))
+                            .frame(maxWidth: .infinity, minHeight: 43, maxHeight: 43)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 0.8)
+                            }
+                        Image("female_sitting")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: 125)
+                            .blendMode(.multiply)
+                            .padding(.bottom, 5)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 161, alignment: .bottom)
                 }
+                .padding(.horizontal, 5)
+                .padding(.vertical, 5)
+            }
+            .frame(height: 176)
 '''
-new = '''                ZStack(alignment: .trailing) {
-                    HStack(spacing: 10) {
-                        ReferencePrayerPerson(
-                            imageName: "male_sitting",
-                            rugWidth: 128,
-                            rugRotation: -1.5
-                        )
+new = '''            ZStack(alignment: .trailing) {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color(red: 0.96, green: 0.93, blue: 0.84))
 
-                        ReferencePrayerPerson(
-                            imageName: "female_sitting",
-                            rugWidth: 128,
-                            rugRotation: 1.5
-                        )
-                    }
-                    .padding(.horizontal, 14)
+                HStack(alignment: .bottom, spacing: 10) {
+                    ReferencePrayerPerson(
+                        imageName: "male_sitting",
+                        rugWidth: 128,
+                        rugRotation: -1.5
+                    )
 
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 34, height: 34)
-                        .background(SalahTheme.teal, in: Circle())
-                        .offset(x: 4)
+                    ReferencePrayerPerson(
+                        imageName: "female_sitting",
+                        rugWidth: 128,
+                        rugRotation: 1.5
+                    )
                 }
-                .frame(maxWidth: .infinity, minHeight: 178, maxHeight: 178)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 2)
+
+                Button {
+                    settings.prayerAudience = settings.prayerAudience == .male ? .female : .male
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(SalahTheme.teal)
+                            .frame(width: 32, height: 32)
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 12, weight: .black))
+                            .foregroundStyle(.white)
+                    }
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing, 4)
+            }
+            .frame(height: 176)
 '''
 if old not in s:
     raise SystemExit("v3.52: current Namaz hero block not found")
