@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v410.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v411.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -287,6 +287,12 @@ grep -q 'settings.t("Sahur endet", "Sahur biter")' SalahZeit/Views/HomeView.swif
   || fail "Ramadan Sahur timing missing"
 grep -q 'settings.t("Iftar", "İftar")' SalahZeit/Views/HomeView.swift \
   || fail "Ramadan Iftar timing missing"
+
+# v411: Discover fasting entry now reflects the full learning hub.
+grep -q 'settings.t("Fasten & Ramadan", "Oruç & Ramazan")' SalahZeit/Views/RootTabView.swift \
+  || fail "updated fasting Discover title missing"
+grep -q 'settings.t("Lernen & Tracker", "Öğren & takip")' SalahZeit/Views/RootTabView.swift \
+  || fail "updated fasting Discover subtitle missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
