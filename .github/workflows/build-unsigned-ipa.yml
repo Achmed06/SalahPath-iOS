@@ -103,6 +103,8 @@ on:
       - "v397-patch/**"
       - "v398-patch/**"
       - "v399-patch/**"
+      - "v400-patch/**"
+      - "v401-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -236,6 +238,8 @@ jobs:
           python3 v397-patch/apply_v397.py
           python3 v398-patch/apply_v398.py
           python3 v399-patch/apply_v399.py
+          python3 v400-patch/apply_v400.py
+          python3 v401-patch/apply_v401.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
