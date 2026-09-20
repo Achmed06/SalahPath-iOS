@@ -102,6 +102,16 @@ grep -q 'Rabbim, ilmimi artır.' SalahZeit/Views/HomeView.swift   || fail "refer
 grep -q 'Günün Duası / Dua des Tages' SalahZeit/Views/HomeView.swift   || fail "reference dua heading missing"
 grep -q 'Namaz Takibi / Gebets-Tracking' SalahZeit/Views/HomeView.swift   || fail "reference tracking heading missing"
 
+# Language-consistency regressions fixed after v3.62.
+grep -q 'settings.t("Gebetszeiten", "Namaz Vakitleri")' SalahZeit/Views/HomeView.swift \
+  || fail "localized prayer-times title missing"
+grep -q 'settings.t("Morgen", "Sabah")' SalahZeit/Views/GuideView.swift \
+  || fail "localized Dhikr tabs missing"
+grep -q 'Text(activeDhikr.translation)' SalahZeit/Views/GuideView.swift \
+  || fail "localized Dhikr translation output missing"
+grep -q 'settings.t("Arabisch", "Arapça")' SalahZeit/Views/GuideView.swift \
+  || fail "localized Quran language tabs missing"
+
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
 if command -v xcrun >/dev/null 2>&1; then
