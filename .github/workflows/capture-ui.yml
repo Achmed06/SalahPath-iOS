@@ -1,5 +1,5 @@
-# Release UI verification trigger: v3.62 build 73 / v417
-name: Capture SalahPath v3.62 Build 73 UI
+# Release UI verification trigger: v3.62 build 74 / v418
+name: Capture SalahPath v3.62 Build 74 UI
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
     paths:
       - ".github/workflows/capture-ui.yml"
       - "v3-source/**"
-      - "v3*-patch/**"
+      - "v*-patch/**"
       - "scripts/preflight_reference_build.sh"
 
 jobs:
@@ -155,6 +155,7 @@ jobs:
           python3 v415-patch/apply_v415.py
           python3 v416-patch/apply_v416.py
           python3 v417-patch/apply_v417.py
+          python3 v418-patch/apply_v418.py
 
       - name: Strict source preflight
         shell: bash
@@ -239,23 +240,23 @@ jobs:
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-B73-TR-Home.png
-          capture quran SalahPath-v3.62-B73-TR-Quran.png
-          capture dhikr SalahPath-v3.62-B73-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-B73-TR-Namaz.png
-          capture times SalahPath-v3.62-B73-TR-PrayerTimes.png
+          capture home  SalahPath-v3.62-B74-TR-Home.png
+          capture quran SalahPath-v3.62-B74-TR-Quran.png
+          capture dhikr SalahPath-v3.62-B74-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-B74-TR-Namaz.png
+          capture times SalahPath-v3.62-B74-TR-PrayerTimes.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage german
 
-          capture home  SalahPath-v3.62-B73-DE-Home.png
-          capture quran SalahPath-v3.62-B73-DE-Quran.png
-          capture dhikr SalahPath-v3.62-B73-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-B73-DE-Namaz.png
-          capture times SalahPath-v3.62-B73-DE-PrayerTimes.png
+          capture home  SalahPath-v3.62-B74-DE-Home.png
+          capture quran SalahPath-v3.62-B74-DE-Quran.png
+          capture dhikr SalahPath-v3.62-B74-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-B74-DE-Namaz.png
+          capture times SalahPath-v3.62-B74-DE-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build73-ui-preview
+          name: SalahPath-v3.62-build74-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
