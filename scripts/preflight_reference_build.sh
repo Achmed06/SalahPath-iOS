@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Release trigger: SalahPath v3.62 build 70 includes v377 prayer selector localization.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
