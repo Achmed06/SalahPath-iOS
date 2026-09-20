@@ -5,13 +5,13 @@ root = Path.cwd()
 guide = root / "SalahZeit" / "Views" / "GuideView.swift"
 s = guide.read_text(encoding="utf-8")
 
-old = '''            Picker(settings.t("Ansicht", "Görünüm"), selection: $displayMode) {
+old = r'''            Picker(settings.t("Ansicht", "Görünüm"), selection: $displayMode) {
                 Text("Arapça").tag(0)
                 Text("Türkçe").tag(1)
                 Text("Deutsch").tag(2)
             }
 '''
-new = '''            Picker(settings.t("Ansicht", "Görünüm"), selection: $displayMode) {
+new = r'''            Picker(settings.t("Ansicht", "Görünüm"), selection: $displayMode) {
                 Text(settings.t("Arabisch", "Arapça")).tag(0)
                 Text(settings.t("Türkisch", "Türkçe")).tag(1)
                 Text("Deutsch").tag(2)
@@ -21,10 +21,10 @@ if old not in s:
     raise SystemExit("v3.79: Quran reader display picker anchor missing")
 s = s.replace(old, new, 1)
 
-old = '''                    Text("Türkçe")
+old = r'''                    Text("Türkçe")
                         .font(.system(size: 8.5, weight: .bold))
 '''
-new = '''                    Text(settings.t("Türkisch", "Türkçe"))
+new = r'''                    Text(settings.t("Türkisch", "Türkçe"))
                         .font(.system(size: 8.5, weight: .bold))
 '''
 if old not in s:
@@ -36,7 +36,7 @@ guide.write_text(s, encoding="utf-8")
 home = root / "SalahZeit" / "Views" / "HomeView.swift"
 s = home.read_text(encoding="utf-8")
 
-old = '''            Text("Günlük Seri")
+old = r'''            Text("Günlük Seri")
                 .font(.system(size: 7.0, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
 
@@ -47,7 +47,7 @@ old = '''            Text("Günlük Seri")
             Text("İstikrar\nbaşarının anahtarıdır.")
                 .font(.system(size: 5.7, weight: .medium, design: .serif))
 '''
-new = '''            Text(settings.t("Tägliche Serie", "Günlük Seri"))
+new = r'''            Text(settings.t("Tägliche Serie", "Günlük Seri"))
                 .font(.system(size: 7.0, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
 
