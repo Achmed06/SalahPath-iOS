@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release trigger: SalahPath v3.62 build 72 includes v383 compact navigation headers.
+# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v390.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -100,8 +100,12 @@ grep -Rqs 'SALAH_QA_SCREEN' SalahZeit   || fail "multi-screen screenshot QA rout
 # Ensure required reference copy/data survived the patch chain.
 grep -q '2:38:15' SalahZeit/Views/HomeView.swift   || fail "reference countdown missing"
 grep -q 'Rabbim, ilmimi artır.' SalahZeit/Views/HomeView.swift   || fail "reference daily dua missing"
-grep -q 'Günün Duası / Dua des Tages' SalahZeit/Views/HomeView.swift   || fail "reference dua heading missing"
-grep -q 'Namaz Takibi / Gebets-Tracking' SalahZeit/Views/HomeView.swift   || fail "reference tracking heading missing"
+grep -q 'Text(settings.t("Dua des Tages", "Günün Duası"))' SalahZeit/Views/HomeView.swift \
+  || fail "localized daily-dua heading missing"
+grep -q 'Text(settings.t("Gebets-Tracking", "Namaz Takibi"))' SalahZeit/Views/HomeView.swift \
+  || fail "localized prayer-tracking heading missing"
+grep -q 'Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))' SalahZeit/Views/HomeView.swift \
+  || fail "localized next-prayer heading missing"
 
 # Language-consistency regressions fixed after v3.62.
 grep -q 'settings.t("Gebetszeiten", "Namaz Vakitleri")' SalahZeit/Views/HomeView.swift \
@@ -124,6 +128,14 @@ grep -q 'settings.t("Tägliche Serie", "Günlük Seri")' SalahZeit/Views/HomeVie
   || fail "localized Home streak copy missing"
 grep -q '.navigationBarTitleDisplayMode(.inline)' SalahZeit/Views/GuideView.swift \
   || fail "compact navigation headers missing"
+grep -q 'Text(settings.t("FARD", "FARZ"))' SalahZeit/Views/GuideView.swift \
+  || fail "localized Wudu obligation badge missing"
+grep -q 'case "wudu_rightfoot": footVisual(mirrored: false)' SalahZeit/Views/GuideView.swift \
+  || fail "right-foot Wudu artwork mapping missing"
+grep -q 'case "wudu_leftfoot": footVisual(mirrored: true)' SalahZeit/Views/GuideView.swift \
+  || fail "left-foot Wudu artwork mapping missing"
+grep -q '.navigationTitle(settings.t("Wudu", "Abdest"))' SalahZeit/Views/GuideView.swift \
+  || fail "localized Wudu navigation title missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
