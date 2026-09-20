@@ -3,7 +3,7 @@ from pathlib import Path
 guide = Path("SalahZeit/Views/GuideView.swift")
 text = guide.read_text(encoding="utf-8")
 
-old = '''            ForEach(Array(lines.enumerated()), id: \\.offset) { index, line in
+old = '''            ForEach(Array(lines.enumerated()), id: .offset) { index, line in
                 HStack(alignment: .top, spacing: 10) {
                     Text("\\(index + 1)")
                         .font(.caption.bold())
@@ -34,6 +34,6 @@ new = '''            ForEach(lines.indices, id: \\.self) { index in
             }
 '''
 if old not in text:
-    raise SystemExit("v399: Rak'a plan ForEach anchor missing")
+    raise SystemExit("v399: actual Rak'a plan ForEach anchor missing")
 guide.write_text(text.replace(old, new, 1), encoding="utf-8")
 print("v399 applied: stable indexed ForEach for Rak'a plan cards")
