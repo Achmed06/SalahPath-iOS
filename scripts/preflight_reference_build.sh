@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v397.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v398.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -194,6 +194,18 @@ grep -q '@State private var showSpecialCases = false' SalahZeit/Views/GuideView.
   || fail "Rakʿa progressive-disclosure state missing"
 grep -q 'navigationTitle(settings.t("Rakʿa verstehen", "Rekâtı anla"))' SalahZeit/Views/GuideView.swift \
   || fail "Rakʿa beginner navigation title missing"
+
+# Guided Wudu flow introduced in v398.
+grep -q 'Wudu ganz von vorne' SalahZeit/Views/GuideView.swift \
+  || fail "guided Wudu introduction missing"
+grep -q 'Nacken / Ense' SalahZeit/Views/GuideView.swift \
+  || fail "Wudu nape wording missing"
+grep -q 'normalen Haaransatz bis zum Kinn' SalahZeit/Views/GuideView.swift \
+  || fail "Wudu face boundary explanation missing"
+grep -q '1× Farz · 3× Sunnah' SalahZeit/Views/GuideView.swift \
+  || fail "Wudu Farz and Sunnah repetition label missing"
+grep -q 'navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
+  || fail "guided Wudu navigation title missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
