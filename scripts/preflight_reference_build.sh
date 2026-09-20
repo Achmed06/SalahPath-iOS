@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v422.
+# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v424.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -375,3 +375,15 @@ grep -q 'settings.t("Deutsch + Türkisch", "Almanca + Türkçe")' SalahZeit/View
   || fail "Turkish language-pair label still mixed"
 grep -q 'settings.t("Arabisch, Türkisch, Deutsch", "Arapça, Türkçe, Almanca")' SalahZeit/Views/GuideView.swift \
   || fail "Turkish Quran language-list label still mixed"
+
+# v423-v424: Quran Cüz navigation and whole-Quran reading progress.
+grep -q 'private struct QuranJuzStart' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Cüz navigation missing"
+grep -q '.init(number: 2,  surah: 2,  ayah: 142)' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Cüz 2 start mapping missing"
+grep -q 'navigationTitle(settings.t("Cüz / Juz", "Cüz"))' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Cüz screen title missing"
+grep -q 'private var readingProgress: Double?' SalahZeit/Views/GuideView.swift \
+  || fail "Quran reading progress calculation missing"
+grep -q 'settings.t("Lesefortschritt", "Okuma ilerlemesi")' SalahZeit/Views/GuideView.swift \
+  || fail "Quran reading progress UI missing"
