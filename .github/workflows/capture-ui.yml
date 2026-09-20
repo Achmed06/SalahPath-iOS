@@ -196,11 +196,19 @@ jobs:
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-Home.png
-          capture quran SalahPath-v3.62-Quran.png
-          capture dhikr SalahPath-v3.62-Dhikr.png
-          capture namaz SalahPath-v3.62-Namaz.png
-          capture times SalahPath-v3.62-PrayerTimes.png
+          capture home  SalahPath-v3.62-TR-Home.png
+          capture quran SalahPath-v3.62-TR-Quran.png
+          capture dhikr SalahPath-v3.62-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-TR-Namaz.png
+          capture times SalahPath-v3.62-TR-PrayerTimes.png
+
+          xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage german
+
+          capture home  SalahPath-v3.62-DE-Home.png
+          capture quran SalahPath-v3.62-DE-Quran.png
+          capture dhikr SalahPath-v3.62-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-DE-Namaz.png
+          capture times SalahPath-v3.62-DE-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v4
