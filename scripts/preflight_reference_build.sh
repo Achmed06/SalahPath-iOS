@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v394.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v395.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -167,6 +167,15 @@ grep -q 'Button { audio.cyclePlaybackRate() } label:' SalahZeit/Views/GuideView.
 if grep -q 'Text("1.0x")' SalahZeit/Views/GuideView.swift; then
   fail "stale non-interactive Quran 1.0x label still present"
 fi
+
+# Learning content stays inside SalahPath as of v395.
+if grep -RIn 'Link(' SalahZeit/Views --include='*.swift' | grep -v 'NavigationLink' | grep -v 'ShareLink'; then
+  fail "external SwiftUI Link remains in learning UI"
+fi
+grep -q 'private struct PrayerDuaLesson: Identifiable' SalahZeit/Views/GuideView.swift \
+  || fail "in-app prayer dua lessons missing"
+grep -q 'Alle Gebetsduas stehen direkt in SalahPath' SalahZeit/Views/GuideView.swift \
+  || fail "in-app prayer dua explanation missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
