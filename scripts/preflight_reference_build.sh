@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v391.
+# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v392.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -130,6 +130,10 @@ grep -q 'settings.t("Tägliche Serie", "Günlük Seri")' SalahZeit/Views/HomeVie
   || fail "localized Home streak copy missing"
 grep -q '.navigationBarTitleDisplayMode(.inline)' SalahZeit/Views/GuideView.swift \
   || fail "compact navigation headers missing"
+grep -q 'settings.t("Gebet lernen", "Namaz Öğren")' SalahZeit/Views/GuideView.swift \
+  || fail "localized German prayer-learning title missing"
+grep -q 'settings.t("Gebet lernen", "Namaz öğren")' SalahZeit/Views/GuideView.swift \
+  || fail "localized German prayer-howto title missing"
 grep -q 'Text(settings.t("FARD", "FARZ"))' SalahZeit/Views/GuideView.swift \
   || fail "localized Wudu obligation badge missing"
 grep -q 'case "wudu_rightfoot": footVisual(mirrored: false)' SalahZeit/Views/GuideView.swift \
