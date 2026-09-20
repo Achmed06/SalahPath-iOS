@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v417.
+# Release checkpoint: SalahPath v3.62 build 74; cleanup chain validated through v418.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -24,9 +24,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.62 build 72 release checkpoint.
+# Current expected app version after the v3.62 build 74 release checkpoint.
 grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="73"' scripts/build_unsigned_ipa.sh   || fail "expected build number 73 not present"
+grep -q 'CURRENT_PROJECT_VERSION="74"' scripts/build_unsigned_ipa.sh   || fail "expected build number 74 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
@@ -339,6 +339,10 @@ grep -q 'case "wudu-step-1":' SalahZeit/SalahZeitApp.swift \
   || fail "Wudu step 1 QA route missing"
 grep -q 'case "wudu-step-13":' SalahZeit/SalahZeitApp.swift \
   || fail "Wudu step 13 QA route missing"
+
+# v418: Build 74 checkpoint.
+grep -q 'CURRENT_PROJECT_VERSION="74"' scripts/build_unsigned_ipa.sh \
+  || fail "Build 74 checkpoint missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
