@@ -127,6 +127,7 @@ jobs:
           python3 v388-patch/apply_v388.py
           python3 v389-patch/apply_v389.py
           python3 v390-patch/apply_v390.py
+          python3 v391-patch/apply_v391.py
 
       - name: Strict source preflight
         shell: bash
