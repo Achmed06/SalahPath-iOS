@@ -160,6 +160,8 @@ jobs:
           python3 v420-patch/apply_v420.py
           python3 v421-patch/apply_v421.py
           python3 v422-patch/apply_v422.py
+          python3 v423-patch/apply_v423.py
+          python3 v424-patch/apply_v424.py
 
       - name: Strict source preflight
         shell: bash
