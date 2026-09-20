@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - ".github/workflows/fast-preview.yml"
-      - "v3*-patch/**"
+      - "v*-patch/**"
       - "qa/**"
 
 concurrency:
@@ -66,7 +66,7 @@ jobs:
                   subprocess.run(["python3", str(p)], check=True)
 
           fast_dirs = []
-          for d in Path(".").glob("v3*-patch"):
+          for d in Path(".").glob("v*-patch"):
               digits = d.name.split("-")[0][1:]
               if digits.isdigit() and int(digits) >= 357:
                   fast_dirs.append((int(digits), d))
