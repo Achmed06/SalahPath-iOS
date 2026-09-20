@@ -1,0 +1,5 @@
+Retry Quran QA after robust v424 anchor.
+Screens:
+- Quran overview
+- Cüz navigation
+- Reading progress
