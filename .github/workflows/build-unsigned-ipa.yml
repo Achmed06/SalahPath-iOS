@@ -1,5 +1,5 @@
-name: Build SalahPath v3.62 Build 72
-# Release checkpoint: v3.62 / build 72
+name: Build SalahPath v3.62 Build 73
+# Release checkpoint: v3.62 / build 73
 
 on:
   workflow_dispatch:
@@ -96,6 +96,7 @@ on:
       - "v390-patch/**"
       - "v391-patch/**"
       - "v392-patch/**"
+      - "v393-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -222,6 +223,7 @@ jobs:
           python3 v390-patch/apply_v390.py
           python3 v391-patch/apply_v391.py
           python3 v392-patch/apply_v392.py
+          python3 v393-patch/apply_v393.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
@@ -233,7 +235,7 @@ jobs:
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build72-patched-source
+          name: SalahPath-v3.62-build73-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -276,12 +278,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.62 build 72 unsigned IPA
+      - name: Build SalahPath v3.62 build 73 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.62 build 72 IPA
+      - name: Upload SalahPath v3.62 build 73 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build72-unsigned-ipa
+          name: SalahPath-v3.62-build73-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
