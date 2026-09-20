@@ -192,6 +192,7 @@ jobs:
             capture_one namaz            SalahPath-FAST-QA-Namaz.png
             capture_one times            SalahPath-FAST-QA-PrayerTimes.png
             capture_one quran-favorites  SalahPath-FAST-QA-QuranFavorites.png
+            capture_one quran-juz        SalahPath-FAST-QA-QuranJuz.png
             capture_one quran-reader     SalahPath-FAST-QA-QuranReader.png
             capture_one namaz-howto      SalahPath-FAST-QA-NamazHowTo.png
             capture_one wudu             SalahPath-FAST-QA-Wudu.png
@@ -217,6 +218,9 @@ jobs:
             capture_one rakats           SalahPath-FAST-QA-Rakats.png
             capture_one hanafi-plan      SalahPath-FAST-QA-HanafiPlan.png
             capture_one tracker-pause    SalahPath-FAST-QA-TrackerPause.png
+          elif [ "$SCREEN" = "quran" ]; then
+            capture_one quran      SalahPath-FAST-Quran.png
+            capture_one quran-juz  SalahPath-FAST-QuranJuz.png
           elif [ "$SCREEN" = "wudu" ]; then
             capture_one wudu-step-1  SalahPath-FAST-Wudu-Step-01.png
             capture_one wudu-step-2  SalahPath-FAST-Wudu-Step-02.png
