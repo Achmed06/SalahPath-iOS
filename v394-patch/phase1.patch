@@ -1,0 +1,561 @@
+--- a/SalahZeit/Views/GuideView.swift
++++ b/SalahZeit/Views/GuideView.swift
+@@ -1484,7 +1484,15 @@
+     @Published var lastError: String?
+     @Published var queueIndex = 0
+     @Published var queueCount = 0
+-    @Published var playbackRate: Float = 1.0
++    @Published private(set) var playbackRate: Float
++    @Published private(set) var isPlaybackRequested = false
++    private let defaults: UserDefaults
++
++    init(defaults: UserDefaults = .standard) {
++        self.defaults = defaults
++        let saved = defaults.float(forKey: "audioPlaybackRate")
++        playbackRate = [Float(0.75), 1, 1.25, 1.5].contains(saved) ? saved : 1
++    }
+     @Published var currentTime: Double = 0
+     @Published var duration: Double = 0
+ 
+@@ -1512,17 +1520,12 @@
+     }
+ 
+     func toggle(_ url: URL) {
+-        if activeURL == url, let player {
+-            if isPlaying {
+-                player.pause()
+-            } else {
+-                lastError = nil
+-                player.defaultRate = playbackRate
+-                player.playImmediately(atRate: playbackRate)
+-            }
+-            return
+-        }
+-        playQueue([url])
++        if activeURL == url, player != nil {
++            if isPlaybackRequested { pause() }
++            else { resume() }
++        } else {
++            playQueue([url])
++        }
+     }
+ 
+     func play(_ url: URL) { playQueue([url]) }
+@@ -1556,31 +1559,47 @@
+         let rates: [Float] = [0.75, 1.0, 1.25, 1.5]
+         let current = rates.firstIndex(where: { abs($0 - playbackRate) < 0.001 }) ?? 1
+         playbackRate = rates[(current + 1) % rates.count]
++        defaults.set(playbackRate, forKey: "audioPlaybackRate")
+         player?.defaultRate = playbackRate
+-        if isPlaying { player?.rate = playbackRate }
++        if isPlaybackRequested { player?.playImmediately(atRate: playbackRate) }
+     }
+ 
+     func pause() {
++        isPlaybackRequested = false
+         player?.pause()
+         isPlaying = false
++        isLoading = false
+     }
+ 
+     func resume() {
+         guard let player else { return }
+         lastError = nil
++        isPlaybackRequested = true
++        if duration > 0 && currentTime >= duration - 0.1 {
++            player.seek(to: .zero)
++        }
+         player.defaultRate = playbackRate
+         player.playImmediately(atRate: playbackRate)
+     }
+ 
+     func stop() {
+-        player?.pause()
+-        isPlaying = false
+-        isLoading = false
++        pause()
++        removeObservers()
++        player = nil
++        activeURL = nil
++        queueURLs = []
++        queueIndex = 0
++        queueCount = 0
++        currentTime = 0
++        duration = 0
+     }
+ 
+     private func loadCurrentAndPlay() {
+         guard queueURLs.indices.contains(queueIndex) else { return }
++        player?.pause()
+         removeObservers()
++        player = nil
++        isPlaybackRequested = false
+         do {
+             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+             try AVAudioSession.sharedInstance().setActive(true, options: [])
+@@ -1594,6 +1613,7 @@
+         lastError = nil
+         isLoading = true
+         isPlaying = false
++        isPlaybackRequested = true
+         currentTime = 0
+         duration = 0
+         let url = queueURLs[queueIndex]
+@@ -1608,10 +1628,10 @@
+             queue: .main
+         ) { [weak self, weak newPlayer] time in
+             Task { @MainActor in
+-                guard let self else { return }
++                guard let self, let newPlayer, self.player === newPlayer else { return }
+                 let seconds = time.seconds
+                 self.currentTime = seconds.isFinite && seconds >= 0 ? seconds : 0
+-                if let itemDuration = newPlayer?.currentItem?.duration.seconds, itemDuration.isFinite, itemDuration > 0 {
++                if let itemDuration = newPlayer.currentItem?.duration.seconds, itemDuration.isFinite, itemDuration > 0 {
+                     self.duration = itemDuration
+                 }
+             }
+@@ -1619,7 +1639,7 @@
+ 
+         statusObservation = item.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
+             Task { @MainActor in
+-                guard let self else { return }
++                guard let self, self.player?.currentItem === item else { return }
+                 switch item.status {
+                 case .readyToPlay:
+                     self.isLoading = false
+@@ -1627,6 +1647,7 @@
+                 case .failed:
+                     self.isLoading = false
+                     self.isPlaying = false
++                    self.isPlaybackRequested = false
+                     self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                 default:
+                     self.isLoading = true
+@@ -1636,26 +1657,26 @@
+ 
+         timeControlObservation = newPlayer.observe(\.timeControlStatus, options: [.initial, .new]) { [weak self] player, _ in
+             Task { @MainActor in
+-                guard let self else { return }
+-                self.isPlaying = player.timeControlStatus == .playing
+-                if player.timeControlStatus == .waitingToPlayAtSpecifiedRate { self.isLoading = true }
+-                if player.timeControlStatus == .playing { self.isLoading = false }
++                guard let self, self.player === player else { return }
++                self.isPlaying = self.isPlaybackRequested && player.timeControlStatus == .playing
++                self.isLoading = self.isPlaybackRequested && player.timeControlStatus == .waitingToPlayAtSpecifiedRate
+             }
+         }
+ 
+         endObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: .main) { [weak self] _ in
+             Task { @MainActor in
+-                guard let self else { return }
+-                if self.hasNext { self.next() }
+-                else { self.isPlaying = false; self.isLoading = false }
++                guard let self, self.player?.currentItem === item else { return }
++                if self.hasNext && self.isPlaybackRequested { self.next() }
++                else { self.pause() }
+             }
+         }
+ 
+         failedObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: item, queue: .main) { [weak self] note in
+             Task { @MainActor in
+-                guard let self else { return }
++                guard let self, self.player?.currentItem === item else { return }
+                 self.isLoading = false
+                 self.isPlaying = false
++                self.isPlaybackRequested = false
+                 let error = note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+                 self.lastError = error?.localizedDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+             }
+@@ -2756,7 +2777,7 @@
+     @EnvironmentObject private var settings: SettingsStore
+     @StateObject private var store = QuranStore()
+     @StateObject private var previewAudio = RemoteAudioPlayer()
+-    @State private var languageTab = 0
++    @AppStorage("quranDisplayMode") private var languageTab = 0
+     @State private var search = ""
+     @State private var previewAudioURLs: [URL] = []
+     @State private var isResolvingPreviewAudio = false
+@@ -2785,7 +2806,7 @@
+                                     withAnimation(.easeOut(duration: 0.12)) { languageTab = index }
+                                 } label: {
+                                     Text(title)
+-                                        .font(.custom("AvenirNext-DemiBold", size: 11.2))
++                                        .font(.callout.weight(.semibold))
+                                         .foregroundStyle(languageTab == index ? SalahTheme.deepTeal : SalahTheme.mutedInk)
+                                         .frame(maxWidth: .infinity)
+                                         .padding(.vertical, 7)
+@@ -2807,19 +2828,19 @@
+                                     .foregroundStyle(SalahTheme.ink)
+ 
+                                 Text("1. Bismillâhirrahmânirrahîm")
+-                                    .font(.custom("AvenirNext-DemiBold", size: 14.2))
++                                    .font(.callout.weight(.semibold))
+                                     .foregroundStyle(SalahTheme.ink)
+ 
+-                                if languageTab != 2 {
++                                if languageTab == 1 || (languageTab == 0 && settings.language == .turkish) {
+                                     Text("Rahmân ve Rahîm olan Allah'ın adıyla.")
+-                                        .font(.custom("AvenirNext-Medium", size: 13.2))
++                                        .font(.body)
+                                         .foregroundStyle(SalahTheme.ink)
+                                         .fixedSize(horizontal: false, vertical: true)
+                                 }
+ 
+-                                if languageTab != 1 {
++                                if languageTab == 2 || (languageTab == 0 && settings.language == .german) {
+                                     Text("Im Namen Allahs, des Allerbarmers, des Barmherzigen.")
+-                                        .font(.custom("AvenirNext-Medium", size: 13.2))
++                                        .font(.body)
+                                         .foregroundStyle(SalahTheme.ink)
+                                         .fixedSize(horizontal: false, vertical: true)
+                                 }
+@@ -2866,7 +2887,7 @@
+                                                 ProgressView()
+                                                     .tint(.white)
+                                             } else {
+-                                                Image(systemName: previewAudio.isPlaying ? "pause.fill" : "play.fill")
++                                                Image(systemName: previewAudio.isPlaybackRequested ? "pause.fill" : "play.fill")
+                                                     .font(.system(size: 18, weight: .semibold))
+                                                     .foregroundStyle(.white)
+                                             }
+@@ -2885,13 +2906,16 @@
+ 
+                                     Button { previewAudio.cyclePlaybackRate() } label: {
+                                         Text(previewAudio.playbackRateLabel)
+-                                            .font(.system(size: 11.5, weight: .bold))
++                                            .font(.callout.bold())
++                                            .frame(minWidth: 44, minHeight: 44)
+                                             .padding(.horizontal, 9)
+                                             .padding(.vertical, 6)
+                                             .background(SalahTheme.softTeal, in: Capsule())
+                                     }
+                                     .buttonStyle(.plain)
+                                     .accessibilityLabel(settings.t("Wiedergabegeschwindigkeit", "Oynatma hızı"))
++                                    .accessibilityValue(previewAudio.playbackRateLabel)
++                                    .accessibilityIdentifier("quran.playbackRate")
+                                 }
+                                 .foregroundStyle(SalahTheme.teal)
+ 
+@@ -2927,7 +2951,7 @@
+                                     Task { await togglePreviewAudio() }
+                                 } label: {
+                                     quranAction(
+-                                        icon: previewAudio.isPlaying ? "pause.circle" : "play.circle",
++                                        icon: previewAudio.isPlaybackRequested ? "pause.circle" : "play.circle",
+                                         title: settings.t("Hören", "Dinle")
+                                     )
+                                 }
+@@ -2950,7 +2974,6 @@
+                             .padding(.bottom, 6)
+                         }
+                         .frame(maxWidth: .infinity)
+-                        .aspectRatio(0.64, contentMode: .fit)
+                         .background(
+                             SalahTheme.cream,
+                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+@@ -2959,9 +2982,6 @@
+                             RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                 .stroke(SalahTheme.gold.opacity(0.40), lineWidth: 0.7)
+                         }
+-
+-                        Color.clear
+-                            .frame(height: 100)
+ 
+                         HStack(spacing: 8) {
+                             Image(systemName: "magnifyingglass")
+@@ -2974,7 +2994,7 @@
+                         .frame(height: 42)
+                         .background(Color.white.opacity(0.76), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+ 
+-                        ForEach(filtered.prefix(8)) { surah in
++                        ForEach(filtered) { surah in
+                             NavigationLink {
+                                 QuranSurahView(surah: surah, initialAyah: nil)
+                             } label: {
+@@ -3018,6 +3038,10 @@
+         .navigationBarTitleDisplayMode(.inline)
+         .task { await store.loadChapters() }
+         .onDisappear { previewAudio.stop() }
++        .onChange(of: settings.quranReciter) { _, _ in
++            previewAudio.stop()
++            previewAudioURLs = []
++        }
+         .tint(SalahTheme.teal)
+     }
+ 
+@@ -3027,7 +3051,8 @@
+ 
+     @MainActor
+     private func togglePreviewAudio() async {
+-        if previewAudio.isPlaying {
++        guard !isResolvingPreviewAudio else { return }
++        if previewAudio.isPlaybackRequested {
+             previewAudio.pause()
+             return
+         }
+@@ -3064,7 +3089,7 @@
+                 .font(.system(size: 17, weight: .medium))
+                 .foregroundStyle(SalahTheme.teal)
+             Text(title)
+-                .font(.custom("AvenirNext-DemiBold", size: 9.2))
++                .font(.callout.weight(.semibold))
+                 .foregroundStyle(SalahTheme.ink)
+                 .lineLimit(1)
+         }
+@@ -3172,7 +3197,7 @@
+     @State private var error: String?
+     @State private var bookmarkedTokens = QuranBookmarkStore.tokens()
+     @State private var hasScrolledToInitial = false
+-    @State private var displayMode = 0
++    @AppStorage("quranDisplayMode") private var displayMode = 0
+ 
+     var body: some View {
+         ScrollViewReader { proxy in
+@@ -3225,7 +3250,7 @@
+             HStack(spacing: 12) {
+                 Button { audio.previous() } label: {
+                     Image(systemName: "backward.fill")
+-                        .frame(width: 34, height: 34)
++                        .frame(width: 44, height: 44)
+                 }
+                 .disabled(!audio.hasPrevious)
+ 
+@@ -3237,7 +3262,7 @@
+                         if isResolvingAudio || audio.isLoading {
+                             ProgressView().tint(.white)
+                         } else {
+-                            Image(systemName: audio.isPlaying ? "pause.fill" : (audioReady ? "play.fill" : "speaker.slash.fill"))
++                            Image(systemName: audio.isPlaybackRequested ? "pause.fill" : (audioReady ? "play.fill" : "speaker.slash.fill"))
+                                 .foregroundStyle(.white)
+                                 .font(.system(size: 16, weight: .bold))
+                         }
+@@ -3248,7 +3273,7 @@
+ 
+                 Button { audio.next() } label: {
+                     Image(systemName: "forward.fill")
+-                        .frame(width: 34, height: 34)
++                        .frame(width: 44, height: 44)
+                 }
+                 .disabled(!audio.hasNext)
+ 
+@@ -3259,17 +3284,21 @@
+                     )
+                     .tint(SalahTheme.teal)
+                     Text(settings.quranReciter.title)
+-                        .font(.system(size: 8.5, weight: .semibold))
++                        .font(.caption)
+                         .foregroundStyle(SalahTheme.mutedInk)
+                         .lineLimit(1)
+                 }
+ 
+-                Text("1.0x")
+-                    .font(.system(size: 9, weight: .bold))
+-                    .foregroundStyle(SalahTheme.ink)
+-                    .padding(.horizontal, 7)
+-                    .padding(.vertical, 5)
+-                    .background(Color.white.opacity(0.70), in: Capsule())
++                Button { audio.cyclePlaybackRate() } label: {
++                    Text(audio.playbackRateLabel)
++                        .font(.callout.bold())
++                        .frame(minWidth: 44, minHeight: 44)
++                        .background(SalahTheme.softTeal, in: Capsule())
++                }
++                .buttonStyle(.plain)
++                .accessibilityIdentifier("reader.playbackRate")
++                .accessibilityLabel(settings.t("Wiedergabegeschwindigkeit", "Oynatma hızı"))
++                .accessibilityValue(audio.playbackRateLabel)
+             }
+             .foregroundStyle(SalahTheme.teal)
+ 
+@@ -3333,7 +3362,7 @@
+                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
+                         audio.toggle(audioURL)
+                     } label: {
+-                        Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
++                        Image(systemName: audio.activeURL == audioURL && audio.isPlaybackRequested ? "pause.circle.fill" : "play.circle.fill")
+                     }
+                     .buttonStyle(.plain)
+                 } else {
+@@ -3355,7 +3384,7 @@
+             .foregroundStyle(SalahTheme.teal)
+ 
+             Text(ar.text)
+-                .font(.system(size: max(settings.quranFontSize, 28), weight: .regular))
++                .font(.system(size: settings.quranFontSize, weight: .regular))
+                 .multilineTextAlignment(.trailing)
+                 .frame(maxWidth: .infinity, alignment: .trailing)
+                 .textSelection(.enabled)
+@@ -3363,32 +3392,32 @@
+             if settings.quranShowTransliteration {
+                 Divider().overlay(SalahTheme.gold.opacity(0.30))
+                 Text(transliterated.text)
+-                    .font(.system(size: 12, weight: .semibold))
++                    .font(.body)
+                     .foregroundStyle(SalahTheme.mutedInk)
+                     .textSelection(.enabled)
+             }
+ 
+-            if settings.quranShowTranslation && displayMode != 2 {
++            if settings.quranShowTranslation && (displayMode == 1 || (displayMode == 0 && settings.language == .turkish)) {
+                 Divider().overlay(SalahTheme.gold.opacity(0.30))
+                 VStack(alignment: .leading, spacing: 3) {
+                     Text(settings.t("Türkisch", "Türkçe"))
+-                        .font(.system(size: 8.5, weight: .bold))
++                        .font(.caption.bold())
+                         .foregroundStyle(SalahTheme.teal)
+                     Text(turkish.text)
+-                        .font(.system(size: 13, weight: .medium))
++                        .font(.body)
+                         .foregroundStyle(SalahTheme.ink)
+                         .textSelection(.enabled)
+                 }
+             }
+ 
+-            if settings.quranShowTranslation && displayMode != 1 {
++            if settings.quranShowTranslation && (displayMode == 2 || (displayMode == 0 && settings.language == .german)) {
+                 Divider().overlay(SalahTheme.gold.opacity(0.30))
+                 VStack(alignment: .leading, spacing: 3) {
+                     Text("Deutsch")
+-                        .font(.system(size: 8.5, weight: .bold))
++                        .font(.caption.bold())
+                         .foregroundStyle(SalahTheme.teal)
+                     Text(german.text)
+-                        .font(.system(size: 13, weight: .medium))
++                        .font(.body)
+                         .foregroundStyle(SalahTheme.ink)
+                         .textSelection(.enabled)
+                 }
+@@ -3458,15 +3487,17 @@
+             audio.lastError = settings.t("Audio derzeit nicht verfügbar.", "Ses şu anda mevcut değil.")
+             return
+         }
+-        if audio.isPlaying { audio.stop() }
+-        else { audio.playQueue(resolvedAudioURLs) }
++        if audio.isPlaybackRequested { audio.pause() }
++        else if audio.queueCount == resolvedAudioURLs.count && audio.activeURL != nil {
++            audio.resume()
++        } else { audio.playQueue(resolvedAudioURLs) }
+     }
+ 
+     private func shareTextFor(ar: AyahData, turkish: AyahData, german: AyahData) -> String {
+         var parts = [ar.text]
+         if settings.quranShowTranslation {
+-            if displayMode != 2 { parts.append(turkish.text) }
+-            if displayMode != 1 { parts.append(german.text) }
++            if displayMode == 1 || (displayMode == 0 && settings.language == .turkish) { parts.append(turkish.text) }
++            if displayMode == 2 || (displayMode == 0 && settings.language == .german) { parts.append(german.text) }
+         }
+         parts.append("Quran \(surah.number):\(ar.numberInSurah)")
+         return parts.joined(separator: "\n\n")
+--- a/SalahZeit/Views/RootTabView.swift
++++ b/SalahZeit/Views/RootTabView.swift
+@@ -3,19 +3,6 @@
+ struct RootTabView: View {
+     @EnvironmentObject private var settings: SettingsStore
+     @State private var selection = 0
+-
+-    init() {
+-        let navigation = UINavigationBarAppearance()
+-        navigation.configureWithOpaqueBackground()
+-        navigation.backgroundColor = UIColor(red: 36/255, green: 79/255, blue: 77/255, alpha: 1)
+-        navigation.shadowColor = UIColor(red: 234/255, green: 185/255, blue: 80/255, alpha: 0.28)
+-        navigation.titleTextAttributes = [.foregroundColor: UIColor.white]
+-        navigation.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+-        UINavigationBar.appearance().standardAppearance = navigation
+-        UINavigationBar.appearance().scrollEdgeAppearance = navigation
+-        UINavigationBar.appearance().compactAppearance = navigation
+-        UINavigationBar.appearance().tintColor = UIColor.white
+-    }
+ 
+     var body: some View {
+         TabView(selection: $selection) {
+@@ -68,23 +55,25 @@
+                 } label: {
+                     VStack(spacing: 3) {
+                         Image(systemName: item.0)
+-                            .font(.system(size: selection == index ? 15.2 : 14.0, weight: selection == index ? .semibold : .regular))
++                            .font(.body.weight(selection == index ? .semibold : .regular))
+                             .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
+                             .frame(height: 20)
+ 
+                         Text(item.1)
+-                            .font(.custom(selection == index ? "AvenirNext-DemiBold" : "AvenirNext-Medium", size: 7.1))
++                            .font(.caption2.weight(selection == index ? .semibold : .regular))
+                             .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
+-                            .lineLimit(1)
+-                            .minimumScaleFactor(0.72)
++                            .multilineTextAlignment(.center)
++                            .fixedSize(horizontal: false, vertical: true)
+ 
+                         Color.clear
+                             .frame(height: 1)
+                     }
+-                    .frame(maxWidth: .infinity)
++                    .frame(maxWidth: .infinity, minHeight: 44)
+                     .contentShape(Rectangle())
+                 }
+                 .buttonStyle(.plain)
++                .accessibilityAddTraits(selection == index ? .isSelected : [])
++                .accessibilityIdentifier("tab.\(index)")
+             }
+         }
+         .padding(.horizontal, 5)
+--- a/SalahZeit/SalahZeitApp.swift
++++ b/SalahZeit/SalahZeitApp.swift
+@@ -10,6 +10,13 @@
+         navigation.configureWithOpaqueBackground()
+         navigation.backgroundColor = UIColor(red: 36/255, green: 79/255, blue: 77/255, alpha: 1)
+         navigation.shadowColor = UIColor(red: 234/255, green: 185/255, blue: 80/255, alpha: 0.28)
++        let backAppearance = UIBarButtonItemAppearance(style: .plain)
++        backAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
++        backAppearance.highlighted.titleTextAttributes = [.foregroundColor: UIColor.white]
++        navigation.backButtonAppearance = backAppearance
++        let backImage = UIImage(systemName: "chevron.backward")?
++            .withTintColor(.white, renderingMode: .alwaysOriginal)
++        navigation.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
+         navigation.titleTextAttributes = [.foregroundColor: UIColor.white]
+         navigation.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+         UINavigationBar.appearance().standardAppearance = navigation
+@@ -26,42 +33,24 @@
+         }
+     }
+ 
+-    @ToolbarContentBuilder
+-    private var referenceQAToolbar: some ToolbarContent {
+-        ToolbarItem(placement: .topBarLeading) {
+-            Image(systemName: "chevron.left")
+-                .font(.system(size: 14, weight: .semibold))
+-                .foregroundStyle(.white)
+-        }
+-        ToolbarItem(placement: .topBarTrailing) {
+-            Image(systemName: "bell.fill")
+-                .font(.system(size: 13, weight: .semibold))
+-                .foregroundStyle(.white)
+-        }
+-    }
+-
+     @ViewBuilder
+     private var qaRoot: some View {
+         switch ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] {
+         case "quran":
+             NavigationStack {
+                 QuranView()
+-                    .toolbar { referenceQAToolbar }
+             }
+         case "dhikr":
+             NavigationStack {
+                 DhikrView()
+-                    .toolbar { referenceQAToolbar }
+             }
+         case "namaz":
+             NavigationStack {
+                 GuideView()
+-                    .toolbar { referenceQAToolbar }
+             }
+         case "times":
+             NavigationStack {
+                 PrayerTimesOverviewView()
+-                    .toolbar { referenceQAToolbar }
+             }
+         case "quran-favorites":
+             NavigationStack { QuranFavoritesLandingView() }

@@ -1,0 +1,52 @@
+name: SalahPath development regression tests
+on:
+  pull_request:
+  push:
+    branches: [codex/salahpath-phase1]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: phase1-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  regression:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore current app with development patch
+        run: python3 scripts/restore_source.py
+      - name: Source and asset preflight
+        run: bash scripts/preflight_reference_build.sh
+      - name: Build the production Xcode project
+        run: xcodebuild -project SalahZeit.xcodeproj -scheme SalahZeit -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Install test project generator
+        run: brew install xcodegen
+      - name: Generate test harness
+        run: xcodegen generate --spec qa-project.yml
+      - name: Choose smallest available iPhone simulator
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          data = json.loads(subprocess.check_output(['xcrun','simctl','list','devices','available','-j']))
+          phones = [d for runtime, devices in data['devices'].items() if 'iOS' in runtime for d in devices if d['name'].startswith('iPhone') and d['isAvailable']]
+          chosen = next((d for d in phones if 'SE' in d['name']), next((d for d in phones if d['name'] == 'iPhone 16'), phones[0]))
+          with open(os.environ['GITHUB_ENV'],'a') as f: f.write('SIM_UDID='+chosen['udid']+'\n')
+          print(chosen['name'])
+          PY
+      - name: Unit and UI regression tests with screenshots
+        run: xcodebuild test -project SalahPathQA.xcodeproj -scheme SalahPathQA -destination "id=$SIM_UDID" -resultBundlePath TestResults.xcresult CODE_SIGNING_ALLOWED=NO
+      - name: Export screenshots
+        if: always()
+        run: |
+          if [ -d TestResults.xcresult ]; then
+            xcrun xcresulttool export attachments --path TestResults.xcresult --output-path screenshots
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase1-tests-and-screenshots
+          path: |
+            TestResults.xcresult
+            screenshots
