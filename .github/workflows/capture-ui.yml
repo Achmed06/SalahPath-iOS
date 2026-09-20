@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.62 Build 72 UI
+name: Capture SalahPath v3.62 Build 73 UI
 
 on:
   workflow_dispatch:
@@ -129,6 +129,7 @@ jobs:
           python3 v390-patch/apply_v390.py
           python3 v391-patch/apply_v391.py
           python3 v392-patch/apply_v392.py
+          python3 v393-patch/apply_v393.py
 
       - name: Strict source preflight
         shell: bash
@@ -213,23 +214,23 @@ jobs:
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-B72-TR-Home.png
-          capture quran SalahPath-v3.62-B72-TR-Quran.png
-          capture dhikr SalahPath-v3.62-B72-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-B72-TR-Namaz.png
-          capture times SalahPath-v3.62-B72-TR-PrayerTimes.png
+          capture home  SalahPath-v3.62-B73-TR-Home.png
+          capture quran SalahPath-v3.62-B73-TR-Quran.png
+          capture dhikr SalahPath-v3.62-B73-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-B73-TR-Namaz.png
+          capture times SalahPath-v3.62-B73-TR-PrayerTimes.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage german
 
-          capture home  SalahPath-v3.62-B72-DE-Home.png
-          capture quran SalahPath-v3.62-B72-DE-Quran.png
-          capture dhikr SalahPath-v3.62-B72-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-B72-DE-Namaz.png
-          capture times SalahPath-v3.62-B72-DE-PrayerTimes.png
+          capture home  SalahPath-v3.62-B73-DE-Home.png
+          capture quran SalahPath-v3.62-B73-DE-Quran.png
+          capture dhikr SalahPath-v3.62-B73-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-B73-DE-Namaz.png
+          capture times SalahPath-v3.62-B73-DE-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build72-ui-preview
+          name: SalahPath-v3.62-build73-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
