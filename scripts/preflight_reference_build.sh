@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Release trigger: SalahPath v3.62 build 69 includes v375 localization verification.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
