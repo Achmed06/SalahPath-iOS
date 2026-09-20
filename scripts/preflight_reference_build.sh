@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v403.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v405.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -240,6 +240,21 @@ grep -q 'Tage des Tashriq' SalahZeit/Views/GuideView.swift \
   || fail "Tashriq guidance missing"
 grep -q 'Weiße Tage · 13., 14. und 15.' SalahZeit/Views/GuideView.swift \
   || fail "white days guidance missing"
+
+# v404-v405: structured Islam-learning course.
+grep -q 'Islam Schritt für Schritt lernen' SalahZeit/Views/GuideView.swift \
+  || fail "Islam learning hub missing"
+grep -q 'Die fünf Säulen' SalahZeit/Views/GuideView.swift \
+  || fail "five pillars lesson missing"
+grep -q 'Die sechs Glaubensgrundsätze' SalahZeit/Views/GuideView.swift \
+  || fail "six beliefs lesson missing"
+grep -q 'Tawbah · Reue und Neubeginn' SalahZeit/Views/GuideView.swift \
+  || fail "repentance lesson missing"
+grep -q 'NavigationLink { IslamLearningHubView() }' SalahZeit/Views/RootTabView.swift \
+  || fail "Islam learning Discover tile missing"
+if grep -q 'ersetzen etmez' SalahZeit/Views/GuideView.swift; then
+  fail "stale mixed-language Turkish copy remains"
+fi
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
