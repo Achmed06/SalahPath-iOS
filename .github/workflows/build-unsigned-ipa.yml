@@ -1,4 +1,4 @@
-# Release trigger: v3.62 build 75 / v420
+# Release trigger: v3.62 build 75 / v420 / retry 2
 # Release trigger: v3.62 build 75 / v418 / retry 2
 name: Build SalahPath v3.62 Build 75
 # Release checkpoint: v3.62 / build 75
