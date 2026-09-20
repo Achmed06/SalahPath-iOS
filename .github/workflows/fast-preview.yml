@@ -217,6 +217,20 @@ jobs:
             capture_one rakats           SalahPath-FAST-QA-Rakats.png
             capture_one hanafi-plan      SalahPath-FAST-QA-HanafiPlan.png
             capture_one tracker-pause    SalahPath-FAST-QA-TrackerPause.png
+          elif [ "$SCREEN" = "wudu" ]; then
+            capture_one wudu-step-1  SalahPath-FAST-Wudu-Step-01.png
+            capture_one wudu-step-2  SalahPath-FAST-Wudu-Step-02.png
+            capture_one wudu-step-3  SalahPath-FAST-Wudu-Step-03.png
+            capture_one wudu-step-4  SalahPath-FAST-Wudu-Step-04.png
+            capture_one wudu-step-5  SalahPath-FAST-Wudu-Step-05.png
+            capture_one wudu-step-6  SalahPath-FAST-Wudu-Step-06.png
+            capture_one wudu-step-7  SalahPath-FAST-Wudu-Step-07.png
+            capture_one wudu-step-8  SalahPath-FAST-Wudu-Step-08.png
+            capture_one wudu-step-9  SalahPath-FAST-Wudu-Step-09.png
+            capture_one wudu-step-10 SalahPath-FAST-Wudu-Step-10.png
+            capture_one wudu-step-11 SalahPath-FAST-Wudu-Step-11.png
+            capture_one wudu-step-12 SalahPath-FAST-Wudu-Step-12.png
+            capture_one wudu-step-13 SalahPath-FAST-Wudu-Step-13.png
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
