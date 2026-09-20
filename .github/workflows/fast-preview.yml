@@ -204,6 +204,10 @@ jobs:
             capture_one settings         SalahPath-FAST-QA-Settings.png
             capture_one more             SalahPath-FAST-QA-More.png
             capture_one fasting          SalahPath-FAST-QA-Fasting.png
+            capture_one fasting-basics   SalahPath-FAST-QA-FastingBasics.png
+            capture_one fasting-rules    SalahPath-FAST-QA-FastingRules.png
+            capture_one fasting-exceptions SalahPath-FAST-QA-FastingExceptions.png
+            capture_one islam-learning   SalahPath-FAST-QA-IslamLearning.png
             capture_one hijri            SalahPath-FAST-QA-Hijri.png
             capture_one terms            SalahPath-FAST-QA-Terms.png
             capture_one surahs           SalahPath-FAST-QA-Surahs.png
