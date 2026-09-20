@@ -1,4 +1,4 @@
-name: Build SalahPath v3.56
+name: Build SalahPath v3.60
 
 on:
   workflow_dispatch:
@@ -62,6 +62,10 @@ on:
       - "v354-patch/**"
       - "v355-patch/**"
       - "v356-patch/**"
+      - "v360-patch/**"
+      - "v359-patch/**"
+      - "v358-patch/**"
+      - "v357-patch/**"
       - "scripts/preflight_reference_build.sh"
       - ".github/workflows/build-unsigned-ipa.yml"
 
@@ -149,6 +153,10 @@ jobs:
           python3 v354-patch/apply_v354.py
           python3 v355-patch/apply_v355.py
           python3 v356-patch/apply_v356.py
+          python3 v357-patch/apply_v357.py
+          python3 v358-patch/apply_v358.py
+          python3 v359-patch/apply_v359.py
+          python3 v360-patch/apply_v360.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
@@ -160,7 +168,7 @@ jobs:
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.56-patched-source
+          name: SalahPath-v3.60-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -183,7 +191,7 @@ jobs:
           audio = audio.replace("http://", "https://")
           request = urllib.request.Request(
               audio,
-              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.56"}
+              headers={"Range": "bytes=0-2047", "User-Agent": "SalahPath-QA/3.60"}
           )
           with urllib.request.urlopen(request, timeout=25) as response:
               ctype = response.headers.get("Content-Type", "")
@@ -203,12 +211,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.56 unsigned IPA
+      - name: Build SalahPath v3.60 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.56 IPA
+      - name: Upload SalahPath v3.60 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.56-unsigned-ipa
+          name: SalahPath-v3.60-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
