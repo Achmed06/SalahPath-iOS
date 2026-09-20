@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v416.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v417.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -329,6 +329,16 @@ grep -q 'settings.quranShowTranslation && displayMode == 2' SalahZeit/Views/Guid
   || fail "Quran German-only translation condition missing"
 grep -q 'settings.t("Deutsch", "Almanca")' SalahZeit/Views/GuideView.swift \
   || fail "Quran localized German language label missing"
+
+# v417: clearer frontal Wudu artwork and direct QA access to every step.
+grep -q 'private var neutralFace: some View' SalahZeit/Views/GuideView.swift \
+  || fail "clear frontal Wudu face artwork missing"
+grep -q 'init(initialStepIndex: Int = 0)' SalahZeit/Views/GuideView.swift \
+  || fail "Wudu initial-step QA initializer missing"
+grep -q 'case "wudu-step-1":' SalahZeit/SalahZeitApp.swift \
+  || fail "Wudu step 1 QA route missing"
+grep -q 'case "wudu-step-13":' SalahZeit/SalahZeitApp.swift \
+  || fail "Wudu step 13 QA route missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
