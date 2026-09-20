@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v392.
+# Release checkpoint: SalahPath v3.62 build 73; final cleanup chain validated through v393.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -26,7 +26,7 @@ fi
 
 # Current expected app version after the v3.62 build 72 release checkpoint.
 grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="72"' scripts/build_unsigned_ipa.sh   || fail "expected build number 72 not present"
+grep -q 'CURRENT_PROJECT_VERSION="73"' scripts/build_unsigned_ipa.sh   || fail "expected build number 73 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
