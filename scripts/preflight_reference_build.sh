@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v395.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v396.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -176,6 +176,14 @@ grep -q 'private struct PrayerDuaLesson: Identifiable' SalahZeit/Views/GuideView
   || fail "in-app prayer dua lessons missing"
 grep -q 'Alle Gebetsduas stehen direkt in SalahPath' SalahZeit/Views/GuideView.swift \
   || fail "in-app prayer dua explanation missing"
+
+# Guided prayer learning introduced in v396.
+grep -q '@State private var currentStepIndex = 0' SalahZeit/Views/GuideView.swift \
+  || fail "guided prayer step state missing"
+grep -q 'PrayerTutorialStepCard(step: steps\[currentStepIndex\]' SalahZeit/Views/GuideView.swift \
+  || fail "single-step prayer tutorial card missing"
+grep -q 'settings.t("Weiter", "İleri")' SalahZeit/Views/GuideView.swift \
+  || fail "guided prayer next control missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
