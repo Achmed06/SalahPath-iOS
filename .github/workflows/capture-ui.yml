@@ -1,4 +1,4 @@
-# Release UI verification trigger: v3.62 build 73 / v411
+# Release UI verification trigger: v3.62 build 73 / v412
 name: Capture SalahPath v3.62 Build 73 UI
 
 on:
@@ -149,6 +149,7 @@ jobs:
           python3 v409-patch/apply_v409.py
           python3 v410-patch/apply_v410.py
           python3 v411-patch/apply_v411.py
+          python3 v412-patch/apply_v412.py
 
       - name: Strict source preflight
         shell: bash
