@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v399.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v401.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -210,6 +210,18 @@ grep -q 'navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit
 # Stable indexed Rakʿa plan iteration in v399.
 grep -q 'ForEach(lines.indices, id: \\.self)' SalahZeit/Views/GuideView.swift \
   || fail "stable indexed Rakʿa plan iteration missing"
+
+# v400: controlled prayer artwork now includes simple facial features.
+grep -q 'private func drawFace(_ context: inout GraphicsContext' SalahZeit/Views/GuideView.swift \
+  || fail "prayer facial-feature drawing missing"
+
+# v401: Quran Continue Reading restores the last Surah/Ayah.
+grep -q 'static func lastRead() -> QuranBookmark?' SalahZeit/Views/GuideView.swift \
+  || fail "Quran last-read getter missing"
+grep -q 'settings.t("Weiterlesen", "Okumaya devam et")' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Continue Reading card missing"
+grep -q 'QuranSurahView(surah: chapter, initialAyah: lastRead.ayah)' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Continue Reading deep link missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
