@@ -9,11 +9,12 @@ if marker not in text:
 
 qa_view = r'''
 struct QuranProgressQAView: View {
+    init() {
+        QuranBookmarkStore.setLastRead(surah: 2, ayah: 142)
+    }
+
     var body: some View {
         QuranView()
-            .onAppear {
-                QuranBookmarkStore.setLastRead(surah: 2, ayah: 142)
-            }
     }
 }
 '''
