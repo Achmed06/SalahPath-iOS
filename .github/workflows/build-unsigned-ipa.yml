@@ -1,6 +1,6 @@
-# Release trigger: v3.62 build 74 / v418 / retry 2
-name: Build SalahPath v3.62 Build 74
-# Release checkpoint: v3.62 / build 74
+# Release trigger: v3.62 build 75 / v418 / retry 2
+name: Build SalahPath v3.62 Build 75
+# Release checkpoint: v3.62 / build 75
 
 on:
   workflow_dispatch:
@@ -124,6 +124,7 @@ on:
       - "v417-patch/**"
       - "v418-patch/**"
       - "v419-patch/**"
+      - "v420-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -277,6 +278,7 @@ jobs:
           python3 v417-patch/apply_v417.py
           python3 v418-patch/apply_v418.py
           python3 v419-patch/apply_v419.py
+          python3 v420-patch/apply_v420.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
@@ -288,7 +290,7 @@ jobs:
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build74-patched-source
+          name: SalahPath-v3.62-build75-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -331,12 +333,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.62 build 74 unsigned IPA
+      - name: Build SalahPath v3.62 build 75 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.62 build 74 IPA
+      - name: Upload SalahPath v3.62 build 75 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-build74-unsigned-ipa
+          name: SalahPath-v3.62-build75-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error
