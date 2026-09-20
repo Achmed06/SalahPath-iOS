@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v405.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v407.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -255,6 +255,16 @@ grep -q 'NavigationLink { IslamLearningHubView() }' SalahZeit/Views/RootTabView.
 if grep -q 'ersetzen etmez' SalahZeit/Views/GuideView.swift; then
   fail "stale mixed-language Turkish copy remains"
 fi
+
+# v406-v407: QA coverage for new learning screens.
+grep -q 'case "fasting-basics":' SalahZeit/SalahZeitApp.swift \
+  || fail "fasting basics QA route missing"
+grep -q 'case "fasting-rules":' SalahZeit/SalahZeitApp.swift \
+  || fail "fasting rules QA route missing"
+grep -q 'case "fasting-exceptions":' SalahZeit/SalahZeitApp.swift \
+  || fail "fasting exceptions QA route missing"
+grep -q 'case "islam-learning":' SalahZeit/SalahZeitApp.swift \
+  || fail "Islam learning QA route missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
