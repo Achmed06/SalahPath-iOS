@@ -142,6 +142,8 @@ grep -q 'settings.t("Wudu", "Abdest Rehberi")' SalahZeit/Views/RootTabView.swift
   || fail "localized Discover Wudu title missing"
 grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/RootTabView.swift \
   || fail "localized Discover Qibla title missing"
+grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/QiblaView.swift \
+  || fail "localized Qibla screen heading missing"
 grep -q 'settings.t("Hijri-Kalender", "Hicrî Takvim")' SalahZeit/Views/RootTabView.swift \
   || fail "localized Discover Hijri title missing"
 grep -q 'Text(settings.t("FARD", "FARZ"))' SalahZeit/Views/GuideView.swift \
