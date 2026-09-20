@@ -9,7 +9,7 @@ on:
       - "qa/**"
 
 concurrency:
-  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || 'quran' }}
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
@@ -123,6 +123,7 @@ jobs:
         run: |
           xcrun simctl boot "$SIM_UDID" || true
           xcrun simctl bootstatus "$SIM_UDID" -b
+          xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
@@ -139,6 +140,7 @@ jobs:
             *"[dhikr]"*) SCREEN="dhikr" ;;
             *"[namaz]"*) SCREEN="namaz" ;;
             *"[times]"*) SCREEN="times" ;;
+            *"[qibla]"*) SCREEN="qibla" ;;
             *"[quran]"*) SCREEN="quran" ;;
           esac
 
