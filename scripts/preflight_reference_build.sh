@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Release trigger: SalahPath v3.62 build 69 includes v375 localization verification.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -24,9 +23,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.62 build 69 release checkpoint.
+# Current expected app version after the v3.62 build 70 release checkpoint.
 grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="69"' scripts/build_unsigned_ipa.sh   || fail "expected build number 69 not present"
+grep -q 'CURRENT_PROJECT_VERSION="70"' scripts/build_unsigned_ipa.sh   || fail "expected build number 70 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
@@ -112,6 +111,10 @@ grep -q 'Text(activeDhikr.translation)' SalahZeit/Views/GuideView.swift \
   || fail "localized Dhikr translation output missing"
 grep -q 'settings.t("Arabisch", "Arapça")' SalahZeit/Views/GuideView.swift \
   || fail "localized Quran language tabs missing"
+grep -q 'audiencePill(.male, title: settings.t("Mann", "Erkek"))' SalahZeit/Views/GuideView.swift \
+  || fail "localized prayer audience selector missing"
+grep -q 'settings.language = settings.language == .german ? .turkish : .german' SalahZeit/Views/GuideView.swift \
+  || fail "bidirectional prayer language toggle missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
