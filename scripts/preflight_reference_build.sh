@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 74; cleanup chain validated through v419.
+# Release checkpoint: SalahPath v3.62 build 75; cleanup chain validated through v420.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -24,9 +24,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.62 build 74 release checkpoint.
+# Current expected app version after the v3.62 build 75 release checkpoint.
 grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="74"' scripts/build_unsigned_ipa.sh   || fail "expected build number 74 not present"
+grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh   || fail "expected build number 75 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
@@ -365,3 +365,7 @@ else
 fi
 
 echo "SalahPath preflight: PASS"
+
+# v420: Build 75 checkpoint.
+grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh \
+  || fail "Build 75 checkpoint missing"
