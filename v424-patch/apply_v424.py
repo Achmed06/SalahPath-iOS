@@ -110,10 +110,7 @@ if old not in text:
     raise SystemExit("v424: Quran Continue Reading card anchor missing")
 text = text.replace(old, new, 1)
 
-anchor = '''    private var quranShareText: String {
-        "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\nBismillâhirrahmânirrahîm"
-    }
-'''
+anchor = '    private var quranShareText: String {\n'
 helper = '''    private var readingProgress: Double? {
         guard let lastRead, !store.chapters.isEmpty else { return nil }
 
@@ -128,10 +125,10 @@ helper = '''    private var readingProgress: Double? {
         return min(max(Double(current) / Double(totalAyahs), 0), 1)
     }
 
-''' + anchor
+'''
 if anchor not in text:
-    raise SystemExit("v424: quranShareText anchor missing")
-text = text.replace(anchor, helper, 1)
+    raise SystemExit("v424: quranShareText declaration anchor missing")
+text = text.replace(anchor, helper + anchor, 1)
 
 guide.write_text(text, encoding="utf-8")
 print("v424 applied: Quran Continue Reading now shows whole-Quran reading progress")
