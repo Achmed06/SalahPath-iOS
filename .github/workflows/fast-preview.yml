@@ -195,6 +195,8 @@ jobs:
             capture_one quran-reader     SalahPath-FAST-QA-QuranReader.png
             capture_one namaz-howto      SalahPath-FAST-QA-NamazHowTo.png
             capture_one wudu             SalahPath-FAST-QA-Wudu.png
+            capture_one ghusl            SalahPath-FAST-QA-Ghusl.png
+            capture_one tayammum         SalahPath-FAST-QA-Tayammum.png
             capture_one tracker          SalahPath-FAST-QA-Tracker.png
             capture_one tasbih           SalahPath-FAST-QA-Tasbih.png
             capture_one dhikr-morning    SalahPath-FAST-QA-DhikrMorning.png
