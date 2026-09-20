@@ -74,6 +74,7 @@ on:
       - "v368-patch/**"
       - "v369-patch/**"
       - "v370-patch/**"
+      - "v371-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -178,6 +179,7 @@ jobs:
           python3 v368-patch/apply_v368.py
           python3 v369-patch/apply_v369.py
           python3 v370-patch/apply_v370.py
+          python3 v371-patch/apply_v371.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
