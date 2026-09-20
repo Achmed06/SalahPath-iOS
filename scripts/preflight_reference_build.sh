@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 75; cleanup chain validated through v420.
+# Release checkpoint: SalahPath v3.62 build 75; cleanup chain validated through v421.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -369,3 +369,9 @@ echo "SalahPath preflight: PASS"
 # v420: Build 75 checkpoint.
 grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh \
   || fail "Build 75 checkpoint missing"
+
+# v421: Turkish UI must use Almanca instead of Deutsch.
+grep -q 'settings.t("Deutsch + Türkisch", "Almanca + Türkçe")' SalahZeit/Views/RootTabView.swift \
+  || fail "Turkish language-pair label still mixed"
+grep -q 'settings.t("Arabisch, Türkisch, Deutsch", "Arapça, Türkçe, Almanca")' SalahZeit/Views/GuideView.swift \
+  || fail "Turkish Quran language-list label still mixed"
