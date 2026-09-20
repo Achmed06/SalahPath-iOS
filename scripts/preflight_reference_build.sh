@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v398.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v399.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -206,6 +206,10 @@ grep -q '1× Farz · 3× Sunnah' SalahZeit/Views/GuideView.swift \
   || fail "Wudu Farz and Sunnah repetition label missing"
 grep -q 'navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
   || fail "guided Wudu navigation title missing"
+
+# Stable indexed Rakʿa plan iteration in v399.
+grep -q 'ForEach(lines.indices, id: \\.self)' SalahZeit/Views/GuideView.swift \
+  || fail "stable indexed Rakʿa plan iteration missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
