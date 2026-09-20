@@ -1,0 +1,5 @@
+Targeted Quran overview verification for v419.
+Expected:
+- German app opens Quran overview on Deutsch tab
+- only German translation visible
+- no Turkish translation visible at the same time
