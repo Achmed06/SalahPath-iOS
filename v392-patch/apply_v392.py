@@ -45,4 +45,14 @@ for old, new in root_replacements.items():
     s = s.replace(old, new, 1)
 
 root_tab.write_text(s, encoding="utf-8")
-print("SalahPath v3.92 German prayer/discover localization cleanup applied")
+
+qibla = root / "SalahZeit" / "Views" / "QiblaView.swift"
+s = qibla.read_text(encoding="utf-8")
+old = 'Text(settings.t("Qibla / Kıble", "Qibla / Kıble"))'
+new = 'Text(settings.t("Qibla", "Kıble"))'
+if old not in s:
+    raise SystemExit("v3.92: Qibla heading localization anchor missing")
+s = s.replace(old, new, 1)
+qibla.write_text(s, encoding="utf-8")
+
+print("SalahPath v3.92 German prayer/discover/Qibla localization cleanup applied")
