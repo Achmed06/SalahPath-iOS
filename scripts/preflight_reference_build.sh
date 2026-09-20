@@ -348,9 +348,9 @@ grep -q 'if languageTab == 2 {' SalahZeit/Views/GuideView.swift \
 grep -q 'languageTab = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
   || fail "Quran overview app-language default missing"
 
-# v418: Build 74 checkpoint.
-grep -q 'CURRENT_PROJECT_VERSION="74"' scripts/build_unsigned_ipa.sh \
-  || fail "Build 74 checkpoint missing"
+# v420: Build 75 checkpoint.
+grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh \
+  || fail "Build 75 checkpoint missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
