@@ -67,7 +67,7 @@ private struct QuranJuzStart: Identifiable {
     ]
 }
 
-struct QuranJuzLandingView: View {
+private struct QuranJuzLandingView: View {
     @EnvironmentObject private var settings: SettingsStore
     let chapters: [SurahMeta]
 
