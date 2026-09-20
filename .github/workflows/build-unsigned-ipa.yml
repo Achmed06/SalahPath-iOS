@@ -1,4 +1,5 @@
 name: Build SalahPath v3.60
+# Release checkpoint: v3.60 / build 65
 
 on:
   workflow_dispatch:
