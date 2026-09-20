@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v396.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v397.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -184,6 +184,16 @@ grep -q 'PrayerTutorialStepCard(step: steps\[currentStepIndex\]' SalahZeit/Views
   || fail "single-step prayer tutorial card missing"
 grep -q 'settings.t("Weiter", "İleri")' SalahZeit/Views/GuideView.swift \
   || fail "guided prayer next control missing"
+
+# Beginner Rakʿa flow introduced in v397.
+grep -q 'Was bedeutet Rakʿa?' SalahZeit/Views/GuideView.swift \
+  || fail "beginner Rakʿa introduction missing"
+grep -q 'JETZT ist 1 Rakʿa fertig' SalahZeit/Views/GuideView.swift \
+  || fail "Rakʿa completion explanation missing"
+grep -q '@State private var showSpecialCases = false' SalahZeit/Views/GuideView.swift \
+  || fail "Rakʿa progressive-disclosure state missing"
+grep -q 'navigationTitle(settings.t("Rakʿa verstehen", "Rekâtı anla"))' SalahZeit/Views/GuideView.swift \
+  || fail "Rakʿa beginner navigation title missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
