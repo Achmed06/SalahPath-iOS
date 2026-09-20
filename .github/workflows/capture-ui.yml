@@ -1,4 +1,4 @@
-name: Capture SalahPath v3.62 UI
+name: Capture SalahPath v3.62 Build 69 UI
 
 on:
   workflow_dispatch:
@@ -112,6 +112,7 @@ jobs:
           python3 v373-patch/apply_v373.py
           python3 v374-patch/apply_v374.py
           python3 v375-patch/apply_v375.py
+          python3 v376-patch/apply_v376.py
 
       - name: Strict source preflight
         shell: bash
@@ -196,23 +197,23 @@ jobs:
             xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-TR-Home.png
-          capture quran SalahPath-v3.62-TR-Quran.png
-          capture dhikr SalahPath-v3.62-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-TR-Namaz.png
-          capture times SalahPath-v3.62-TR-PrayerTimes.png
+          capture home  SalahPath-v3.62-B69-TR-Home.png
+          capture quran SalahPath-v3.62-B69-TR-Quran.png
+          capture dhikr SalahPath-v3.62-B69-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-B69-TR-Namaz.png
+          capture times SalahPath-v3.62-B69-TR-PrayerTimes.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage german
 
-          capture home  SalahPath-v3.62-DE-Home.png
-          capture quran SalahPath-v3.62-DE-Quran.png
-          capture dhikr SalahPath-v3.62-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-DE-Namaz.png
-          capture times SalahPath-v3.62-DE-PrayerTimes.png
+          capture home  SalahPath-v3.62-B69-DE-Home.png
+          capture quran SalahPath-v3.62-B69-DE-Quran.png
+          capture dhikr SalahPath-v3.62-B69-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-B69-DE-Namaz.png
+          capture times SalahPath-v3.62-B69-DE-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.62-ui-preview
+          name: SalahPath-v3.62-build69-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
