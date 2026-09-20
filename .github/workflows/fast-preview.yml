@@ -202,6 +202,15 @@ jobs:
             capture_one dhikr-audio      SalahPath-FAST-QA-DhikrAudio.png
             capture_one qibla            SalahPath-FAST-QA-Qibla.png
             capture_one settings         SalahPath-FAST-QA-Settings.png
+            capture_one more             SalahPath-FAST-QA-More.png
+            capture_one fasting          SalahPath-FAST-QA-Fasting.png
+            capture_one hijri            SalahPath-FAST-QA-Hijri.png
+            capture_one terms            SalahPath-FAST-QA-Terms.png
+            capture_one surahs           SalahPath-FAST-QA-Surahs.png
+            capture_one positions        SalahPath-FAST-QA-Positions.png
+            capture_one rakats           SalahPath-FAST-QA-Rakats.png
+            capture_one hanafi-plan      SalahPath-FAST-QA-HanafiPlan.png
+            capture_one tracker-pause    SalahPath-FAST-QA-TrackerPause.png
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
