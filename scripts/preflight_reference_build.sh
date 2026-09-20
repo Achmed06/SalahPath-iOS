@@ -146,14 +146,14 @@ grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/QiblaView.swift \
   || fail "localized Qibla screen heading missing"
 grep -q 'settings.t("Hijri-Kalender", "Hicrî Takvim")' SalahZeit/Views/RootTabView.swift \
   || fail "localized Discover Hijri title missing"
-grep -q 'Text(settings.t("FARD", "FARZ"))' SalahZeit/Views/GuideView.swift \
-  || fail "localized Wudu obligation badge missing"
+grep -q 'settings.t("FARZ · PFLICHT", "FARZ")' SalahZeit/Views/GuideView.swift \
+  || fail "localized guided-Wudu obligation badge missing"
 grep -q 'case "wudu_rightfoot": footVisual(mirrored: false)' SalahZeit/Views/GuideView.swift \
   || fail "right-foot Wudu artwork mapping missing"
 grep -q 'case "wudu_leftfoot": footVisual(mirrored: true)' SalahZeit/Views/GuideView.swift \
   || fail "left-foot Wudu artwork mapping missing"
-grep -q '.navigationTitle(settings.t("Wudu", "Abdest"))' SalahZeit/Views/GuideView.swift \
-  || fail "localized Wudu navigation title missing"
+grep -q '.navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
+  || fail "localized guided-Wudu navigation title missing"
 
 # Phase-1 interaction regressions fixed in v394.
 grep -q 'navigation.setBackIndicatorImage(backIndicator' SalahZeit/Views/RootTabView.swift \
