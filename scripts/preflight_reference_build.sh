@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; final cleanup chain validated through v393.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v394.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -154,6 +154,19 @@ grep -q 'case "wudu_leftfoot": footVisual(mirrored: true)' SalahZeit/Views/Guide
   || fail "left-foot Wudu artwork mapping missing"
 grep -q '.navigationTitle(settings.t("Wudu", "Abdest"))' SalahZeit/Views/GuideView.swift \
   || fail "localized Wudu navigation title missing"
+
+# Phase-1 interaction regressions fixed in v394.
+grep -q 'navigation.setBackIndicatorImage(backIndicator' SalahZeit/Views/RootTabView.swift \
+  || fail "high-contrast navigation back indicator missing"
+grep -q '.toolbarColorScheme(.dark, for: .navigationBar)' SalahZeit/Views/RootTabView.swift \
+  || fail "dark navigation toolbar color scheme missing"
+grep -q 'private let playbackRateDefaultsKey = "quranPlaybackRate"' SalahZeit/Views/GuideView.swift \
+  || fail "persistent Quran playback-rate state missing"
+grep -q 'Button { audio.cyclePlaybackRate() } label:' SalahZeit/Views/GuideView.swift \
+  || fail "Quran reader playback-rate button missing"
+if grep -q 'Text("1.0x")' SalahZeit/Views/GuideView.swift; then
+  fail "stale non-interactive Quran 1.0x label still present"
+fi
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
