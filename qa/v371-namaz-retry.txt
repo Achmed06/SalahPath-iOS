@@ -1,0 +1,1 @@
+Retry visual verification for v371 prayer hero after duplicate legacy rug removal.
