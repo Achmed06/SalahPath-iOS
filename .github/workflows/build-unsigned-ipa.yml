@@ -127,6 +127,8 @@ on:
       - "v420-patch/**"
       - "v421-patch/**"
       - "v422-patch/**"
+      - "v423-patch/**"
+      - "v424-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -283,6 +285,8 @@ jobs:
           python3 v420-patch/apply_v420.py
           python3 v421-patch/apply_v421.py
           python3 v422-patch/apply_v422.py
+          python3 v423-patch/apply_v423.py
+          python3 v424-patch/apply_v424.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
