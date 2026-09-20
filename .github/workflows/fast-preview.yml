@@ -130,23 +130,33 @@ jobs:
           xcrun simctl install "$SIM_UDID" "$APP_PATH"
 
           xcrun simctl privacy "$SIM_UDID" grant location com.salahzeit.private || true
-          xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage turkish
           xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
 
           SCREEN="quran"
+          LANGUAGE="turkish"
           case "$FAST_COMMIT_MESSAGE" in
-            *"[qa]"*)    SCREEN="qa" ;;
-            *"[home]"*)  SCREEN="home" ;;
-            *"[dhikr]"*) SCREEN="dhikr" ;;
-            *"[namaz]"*) SCREEN="namaz" ;;
-            *"[times]"*) SCREEN="times" ;;
-            *"[qibla]"*) SCREEN="qibla" ;;
-            *"[wudu]"*)  SCREEN="wudu" ;;
-            *"[tracker]"*) SCREEN="tracker" ;;
-            *"[quran]"*) SCREEN="quran" ;;
+            *"[de-qa]"*)      SCREEN="qa";      LANGUAGE="german" ;;
+            *"[de-home]"*)    SCREEN="home";    LANGUAGE="german" ;;
+            *"[de-dhikr]"*)   SCREEN="dhikr";   LANGUAGE="german" ;;
+            *"[de-namaz]"*)   SCREEN="namaz";   LANGUAGE="german" ;;
+            *"[de-times]"*)   SCREEN="times";   LANGUAGE="german" ;;
+            *"[de-qibla]"*)   SCREEN="qibla";   LANGUAGE="german" ;;
+            *"[de-wudu]"*)    SCREEN="wudu";    LANGUAGE="german" ;;
+            *"[de-tracker]"*) SCREEN="tracker"; LANGUAGE="german" ;;
+            *"[de-quran]"*)   SCREEN="quran";   LANGUAGE="german" ;;
+            *"[qa]"*)         SCREEN="qa" ;;
+            *"[home]"*)       SCREEN="home" ;;
+            *"[dhikr]"*)      SCREEN="dhikr" ;;
+            *"[namaz]"*)      SCREEN="namaz" ;;
+            *"[times]"*)      SCREEN="times" ;;
+            *"[qibla]"*)      SCREEN="qibla" ;;
+            *"[wudu]"*)       SCREEN="wudu" ;;
+            *"[tracker]"*)    SCREEN="tracker" ;;
+            *"[quran]"*)      SCREEN="quran" ;;
           esac
 
-          echo "FAST preview target: $SCREEN"
+          xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage "$LANGUAGE"
+          echo "FAST preview target: $SCREEN ($LANGUAGE)"
           mkdir -p fast-preview
 
           capture_one() {
