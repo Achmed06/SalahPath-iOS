@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v407.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v409.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -265,6 +265,18 @@ grep -q 'case "fasting-exceptions":' SalahZeit/SalahZeitApp.swift \
   || fail "fasting exceptions QA route missing"
 grep -q 'case "islam-learning":' SalahZeit/SalahZeitApp.swift \
   || fail "Islam learning QA route missing"
+
+# v408-v409: Ghusl and Tayammum learning + QA routes.
+grep -q 'navigationTitle(settings.t("Ghusl lernen", "Gusül öğren"))' SalahZeit/Views/GuideView.swift \
+  || fail "Ghusl learning view missing"
+grep -q 'Die 3 Farz im Hanafi/Diyanet-Ablauf' SalahZeit/Views/GuideView.swift \
+  || fail "Ghusl Hanafi farz explanation missing"
+grep -q 'navigationTitle(settings.t("Tayammum lernen", "Teyemmüm öğren"))' SalahZeit/Views/GuideView.swift \
+  || fail "Tayammum learning view missing"
+grep -q 'case "ghusl":' SalahZeit/SalahZeitApp.swift \
+  || fail "Ghusl QA route missing"
+grep -q 'case "tayammum":' SalahZeit/SalahZeitApp.swift \
+  || fail "Tayammum QA route missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
