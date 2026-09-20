@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v412.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v413.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
