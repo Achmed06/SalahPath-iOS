@@ -134,6 +134,16 @@ grep -q 'settings.t("Gebet lernen", "Namaz Öğren")' SalahZeit/Views/GuideView.
   || fail "localized German prayer-learning title missing"
 grep -q 'settings.t("Gebet lernen", "Namaz öğren")' SalahZeit/Views/GuideView.swift \
   || fail "localized German prayer-howto title missing"
+grep -q 'settings.t("Hijri-Kalender", "Hicrî takvim")' SalahZeit/Views/GuideView.swift \
+  || fail "localized German Hijri title missing"
+grep -q 'settings.t("Gebet lernen", "Namaz Öğren")' SalahZeit/Views/RootTabView.swift \
+  || fail "localized Discover prayer title missing"
+grep -q 'settings.t("Wudu", "Abdest Rehberi")' SalahZeit/Views/RootTabView.swift \
+  || fail "localized Discover Wudu title missing"
+grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/RootTabView.swift \
+  || fail "localized Discover Qibla title missing"
+grep -q 'settings.t("Hijri-Kalender", "Hicrî Takvim")' SalahZeit/Views/RootTabView.swift \
+  || fail "localized Discover Hijri title missing"
 grep -q 'Text(settings.t("FARD", "FARZ"))' SalahZeit/Views/GuideView.swift \
   || fail "localized Wudu obligation badge missing"
 grep -q 'case "wudu_rightfoot": footVisual(mirrored: false)' SalahZeit/Views/GuideView.swift \
