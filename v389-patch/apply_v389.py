@@ -5,6 +5,27 @@ home = root / "SalahZeit" / "Views" / "HomeView.swift"
 s = home.read_text(encoding="utf-8")
 
 replacements = {
+    'Text("İbadetle Daha Güzel Bir Hayat")':
+    'Text(settings.t("Ein schöneres Leben durch Anbetung", "İbadetle Daha Güzel Bir Hayat"))',
+
+    'Text("„Şüphesiz namaz, müminlere vakitleri belli bir farzdır.“")':
+    'Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“", "„Şüphesiz namaz, müminlere vakitleri belli bir farzdır.“"))',
+
+    'Text("„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)")':
+    'Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“ (An-Nisāʾ 4:103)", "„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)"))',
+
+    '''                Text("“Küçük adımlar, büyük değişimler getirir.”")
+                    .font(.custom("Georgia-Italic", size: 9.1))
+                    .italic()
+                    .foregroundStyle(SalahTheme.ink)
+                Text("Kleine Schritte bringen große Veränderungen.")
+                    .font(.custom("AvenirNext-Medium", size: 7.6))
+                    .foregroundStyle(SalahTheme.mutedInk)''':
+    '''                Text(settings.t("„Kleine Schritte bringen große Veränderungen.“", "“Küçük adımlar, büyük değişimler getirir.”"))
+                    .font(.custom("Georgia-Italic", size: 9.1))
+                    .italic()
+                    .foregroundStyle(SalahTheme.ink)''',
+
     'Text("Sıradaki Namaz / Nächstes Gebet")':
     'Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))',
 
