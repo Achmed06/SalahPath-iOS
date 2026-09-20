@@ -9,7 +9,7 @@ on:
       - "qa/**"
 
 concurrency:
-  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || 'quran' }}
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || contains(github.event.head_commit.message, '[wudu]') && 'wudu' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
@@ -141,6 +141,7 @@ jobs:
             *"[namaz]"*) SCREEN="namaz" ;;
             *"[times]"*) SCREEN="times" ;;
             *"[qibla]"*) SCREEN="qibla" ;;
+            *"[wudu]"*)  SCREEN="wudu" ;;
             *"[quran]"*) SCREEN="quran" ;;
           esac
 
@@ -180,6 +181,7 @@ jobs:
             capture_one times            SalahPath-FAST-QA-PrayerTimes.png
             capture_one quran-favorites  SalahPath-FAST-QA-QuranFavorites.png
             capture_one namaz-howto      SalahPath-FAST-QA-NamazHowTo.png
+            capture_one wudu               SalahPath-FAST-QA-Wudu.png
             capture_one tasbih           SalahPath-FAST-QA-Tasbih.png
             capture_one dhikr-morning    SalahPath-FAST-QA-DhikrMorning.png
             capture_one dhikr-duas       SalahPath-FAST-QA-DhikrDuas.png
