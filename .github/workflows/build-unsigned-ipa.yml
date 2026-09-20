@@ -95,6 +95,7 @@ on:
       - "v389-patch/**"
       - "v390-patch/**"
       - "v391-patch/**"
+      - "v392-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -220,6 +221,7 @@ jobs:
           python3 v389-patch/apply_v389.py
           python3 v390-patch/apply_v390.py
           python3 v391-patch/apply_v391.py
+          python3 v392-patch/apply_v392.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
