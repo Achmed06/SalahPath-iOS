@@ -110,7 +110,9 @@ if old not in text:
     raise SystemExit("v424: Quran Continue Reading card anchor missing")
 text = text.replace(old, new, 1)
 
-anchor = '    private var quranShareText: String {\n'
+anchor = '''    @MainActor
+    private func togglePreviewAudio() async {
+'''
 helper = '''    private var readingProgress: Double? {
         guard let lastRead, !store.chapters.isEmpty else { return nil }
 
@@ -127,7 +129,7 @@ helper = '''    private var readingProgress: Double? {
 
 '''
 if anchor not in text:
-    raise SystemExit("v424: quranShareText declaration anchor missing")
+    raise SystemExit("v424: togglePreviewAudio declaration anchor missing")
 text = text.replace(anchor, helper + anchor, 1)
 
 guide.write_text(text, encoding="utf-8")
