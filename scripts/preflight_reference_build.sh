@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v401.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v403.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -222,6 +222,24 @@ grep -q 'settings.t("Weiterlesen", "Okumaya devam et")' SalahZeit/Views/GuideVie
   || fail "Quran Continue Reading card missing"
 grep -q 'QuranSurahView(surah: chapter, initialAyah: lastRead.ayah)' SalahZeit/Views/GuideView.swift \
   || fail "Quran Continue Reading deep link missing"
+
+# v402: complete fasting/Ramadan learning hub.
+grep -q 'Fasten ganz einfach' SalahZeit/Views/GuideView.swift \
+  || fail "fasting beginner lesson missing"
+grep -q 'Was bricht das Fasten?' SalahZeit/Views/GuideView.swift \
+  || fail "fasting invalidators lesson missing"
+grep -q 'Qada, Kaffarah, Fidya' SalahZeit/Views/GuideView.swift \
+  || fail "fasting compensation terminology missing"
+
+# v403: interactive Hijri calendar and internal event explanations.
+grep -q 'Nächste wichtige islamische Tage' SalahZeit/Views/GuideView.swift \
+  || fail "important Islamic days section missing"
+grep -q 'Beginn der letzten zehn Ramadan-Nächte' SalahZeit/Views/GuideView.swift \
+  || fail "last ten Ramadan nights guidance missing"
+grep -q 'Tage des Tashriq' SalahZeit/Views/GuideView.swift \
+  || fail "Tashriq guidance missing"
+grep -q 'Weiße Tage · 13., 14. und 15.' SalahZeit/Views/GuideView.swift \
+  || fail "white days guidance missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
