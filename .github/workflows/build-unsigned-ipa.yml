@@ -1,5 +1,5 @@
-name: Build SalahPath v3.60
-# Release checkpoint: v3.60 / build 65
+name: Build SalahPath v3.61
+# Release checkpoint: v3.61 / build 66
 
 on:
   workflow_dispatch:
@@ -64,6 +64,7 @@ on:
       - "v355-patch/**"
       - "v356-patch/**"
       - "v360-patch/**"
+      - "v361-patch/**"
       - "v359-patch/**"
       - "v358-patch/**"
       - "v357-patch/**"
@@ -158,6 +159,7 @@ jobs:
           python3 v358-patch/apply_v358.py
           python3 v359-patch/apply_v359.py
           python3 v360-patch/apply_v360.py
+          python3 v361-patch/apply_v361.py
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
@@ -169,7 +171,7 @@ jobs:
       - name: Upload patched source snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.60-patched-source
+          name: SalahPath-v3.61-patched-source
           path: |
             SalahZeit
             SalahZeit.xcodeproj/project.pbxproj
@@ -212,12 +214,12 @@ jobs:
             -project SalahZeit.xcodeproj \
             -scheme SalahZeit
 
-      - name: Build SalahPath v3.60 unsigned IPA
+      - name: Build SalahPath v3.61 unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
-      - name: Upload SalahPath v3.60 IPA
+      - name: Upload SalahPath v3.61 IPA
         uses: actions/upload-artifact@v4
         with:
-          name: SalahPath-v3.60-unsigned-ipa
+          name: SalahPath-v3.61-unsigned-ipa
           path: SalahPath-unsigned.ipa
           if-no-files-found: error

@@ -360,4 +360,13 @@ if old not in s:
 s = s.replace(old, new, 1)
 app.write_text(s, encoding="utf-8")
 
-print("SalahPath v3.61 FAST patch applied")
+# ---------- Release metadata ----------
+build_script = root / "scripts" / "build_unsigned_ipa.sh"
+t = build_script.read_text(encoding="utf-8")
+if 'MARKETING_VERSION="3.60"' not in t or 'CURRENT_PROJECT_VERSION="65"' not in t:
+    raise SystemExit("v3.61: expected v3.60/65 release base not found")
+t = t.replace('MARKETING_VERSION="3.60"', 'MARKETING_VERSION="3.61"', 1)
+t = t.replace('CURRENT_PROJECT_VERSION="65"', 'CURRENT_PROJECT_VERSION="66"', 1)
+build_script.write_text(t, encoding="utf-8")
+
+print("SalahPath v3.61 / build 66 patch applied")
