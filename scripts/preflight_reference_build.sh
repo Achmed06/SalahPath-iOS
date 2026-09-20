@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 75; cleanup chain validated through v421.
+# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v422.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -24,9 +24,9 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.62 build 75 release checkpoint.
+# Current expected app version after the v3.62 build 76 release checkpoint.
 grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh   || fail "expected build number 75 not present"
+grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh   || fail "expected build number 76 not present"
 
 # Reference assets introduced by the visual parity passes.
 required_assets=(
@@ -348,9 +348,9 @@ grep -q 'if languageTab == 2 {' SalahZeit/Views/GuideView.swift \
 grep -q 'languageTab = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
   || fail "Quran overview app-language default missing"
 
-# v420: Build 75 checkpoint.
-grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh \
-  || fail "Build 75 checkpoint missing"
+# v422: Build 76 checkpoint.
+grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh \
+  || fail "Build 76 checkpoint missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
@@ -366,9 +366,9 @@ fi
 
 echo "SalahPath preflight: PASS"
 
-# v420: Build 75 checkpoint.
-grep -q 'CURRENT_PROJECT_VERSION="75"' scripts/build_unsigned_ipa.sh \
-  || fail "Build 75 checkpoint missing"
+# v422: Build 76 checkpoint.
+grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh \
+  || fail "Build 76 checkpoint missing"
 
 # v421: Turkish UI must use Almanca instead of Deutsch.
 grep -q 'settings.t("Deutsch + Türkisch", "Almanca + Türkçe")' SalahZeit/Views/RootTabView.swift \
