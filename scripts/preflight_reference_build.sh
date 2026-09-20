@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v424.
+# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v426.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -364,8 +364,6 @@ else
   echo "xcrun unavailable: skipping Swift parse on this host"
 fi
 
-echo "SalahPath preflight: PASS"
-
 # v422: Build 76 checkpoint.
 grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh \
   || fail "Build 76 checkpoint missing"
@@ -387,3 +385,13 @@ grep -q 'private var readingProgress: Double?' SalahZeit/Views/GuideView.swift \
   || fail "Quran reading progress calculation missing"
 grep -q 'settings.t("Lesefortschritt", "Okuma ilerlemesi")' SalahZeit/Views/GuideView.swift \
   || fail "Quran reading progress UI missing"
+
+# v425-v426: deterministic visual QA for Quran reading progress.
+grep -q 'case "quran-progress":' SalahZeit/SalahZeitApp.swift \
+  || fail "Quran progress QA route missing"
+grep -q 'init(initialLastReadSurah: Int? = nil, initialLastReadAyah: Int? = nil)' SalahZeit/Views/GuideView.swift \
+  || fail "Quran deterministic last-read initializer missing"
+grep -q 'QuranView(initialLastReadSurah: 2, initialLastReadAyah: 142)' SalahZeit/Views/GuideView.swift \
+  || fail "Quran progress QA injection missing"
+
+echo "SalahPath preflight: PASS"
