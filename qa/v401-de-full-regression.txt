@@ -1,0 +1,12 @@
+SalahPath current-development regression checkpoint
+
+Includes:
+- v394 visible navigation back button + real/persistent Quran playback-rate control
+- v395 no external learning links + in-app prayer duas
+- v396 guided one-step prayer learning
+- v397/v399 beginner Rak'a explanation + compile hotfix
+- v398 guided detailed Wudu flow
+- v400 controlled prayer faces
+- v401 Quran Continue Reading
+
+Stable release remains v3.62 build 73.
