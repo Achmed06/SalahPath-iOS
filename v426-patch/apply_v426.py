@@ -13,8 +13,12 @@ new_state = '''    @State private var previewAudioURLs: [URL] = []
     @State private var isResolvingPreviewAudio = false
     @State private var lastRead: QuranBookmark?
 
-    init(initialLastRead: QuranBookmark? = nil) {
-        _lastRead = State(initialValue: initialLastRead ?? QuranBookmarkStore.lastRead())
+    init(initialLastReadSurah: Int? = nil, initialLastReadAyah: Int? = nil) {
+        if let surah = initialLastReadSurah, let ayah = initialLastReadAyah {
+            _lastRead = State(initialValue: QuranBookmark(surah: surah, ayah: ayah))
+        } else {
+            _lastRead = State(initialValue: QuranBookmarkStore.lastRead())
+        }
     }
 
     var body: some View {
@@ -35,7 +39,7 @@ old_qa = '''struct QuranProgressQAView: View {
 '''
 new_qa = '''struct QuranProgressQAView: View {
     var body: some View {
-        QuranView(initialLastRead: QuranBookmark(surah: 2, ayah: 142))
+        QuranView(initialLastReadSurah: 2, initialLastReadAyah: 142)
     }
 }
 '''
