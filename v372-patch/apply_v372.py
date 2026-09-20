@@ -1,4 +1,5 @@
-# Release trigger: SalahPath v3.62 build 68 after v374 visual/function fixes\nfrom pathlib import Path
+# Release trigger: SalahPath v3.62 build 68 after v374 visual/function fixes
+from pathlib import Path
 
 root = Path.cwd()
 build_script = root / "scripts" / "build_unsigned_ipa.sh"
