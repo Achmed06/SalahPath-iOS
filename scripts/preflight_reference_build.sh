@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v409.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v410.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -277,6 +277,16 @@ grep -q 'case "ghusl":' SalahZeit/SalahZeitApp.swift \
   || fail "Ghusl QA route missing"
 grep -q 'case "tayammum":' SalahZeit/SalahZeitApp.swift \
   || fail "Tayammum QA route missing"
+
+# v410: automatic Ramadan Home integration.
+grep -q 'private func isRamadan(_ date: Date) -> Bool' SalahZeit/Views/HomeView.swift \
+  || fail "Ramadan month detection missing"
+grep -q 'ramadanHomeCard(today: today)' SalahZeit/Views/HomeView.swift \
+  || fail "Ramadan Home card missing"
+grep -q 'settings.t("Sahur endet", "Sahur biter")' SalahZeit/Views/HomeView.swift \
+  || fail "Ramadan Sahur timing missing"
+grep -q 'settings.t("Iftar", "İftar")' SalahZeit/Views/HomeView.swift \
+  || fail "Ramadan Iftar timing missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
