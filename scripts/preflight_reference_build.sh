@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release trigger: SalahPath v3.62 build 71 includes v379-v381 localization fixes.
+# Release trigger: SalahPath v3.62 build 72 includes v383 compact navigation headers.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
