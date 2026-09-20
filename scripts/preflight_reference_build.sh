@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v414.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v416.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -307,6 +307,28 @@ grep -q 'private func salahFeatureIcon' SalahZeit/Views/RootTabView.swift \
   || fail "unified Discover feature icon helper missing"
 grep -q 'LinearGradient(' SalahZeit/Views/RootTabView.swift \
   || fail "Discover icon gradient styling missing"
+
+# v415: compiler-friendly learning subviews.
+grep -q 'private var fastingHeaderCard: some View' SalahZeit/Views/GuideView.swift \
+  || fail "split fasting header subview missing"
+grep -q 'private var eventHeaderCard: some View' SalahZeit/Views/GuideView.swift \
+  || fail "split Hijri event header subview missing"
+grep -q 'private var lessonHeaderCard: some View' SalahZeit/Views/GuideView.swift \
+  || fail "split Islam lesson header subview missing"
+grep -q 'private var islamProgressCard: some View' SalahZeit/Views/GuideView.swift \
+  || fail "split Islam progress subview missing"
+
+# v416: Quran reader shows one selected translation only.
+grep -q '@State private var didSetInitialDisplayMode = false' SalahZeit/Views/GuideView.swift \
+  || fail "Quran reader initial language state missing"
+grep -q 'displayMode = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
+  || fail "Quran reader app-language default missing"
+grep -q 'settings.quranShowTranslation && displayMode == 1' SalahZeit/Views/GuideView.swift \
+  || fail "Quran Turkish-only translation condition missing"
+grep -q 'settings.quranShowTranslation && displayMode == 2' SalahZeit/Views/GuideView.swift \
+  || fail "Quran German-only translation condition missing"
+grep -q 'settings.t("Deutsch", "Almanca")' SalahZeit/Views/GuideView.swift \
+  || fail "Quran localized German language label missing"
 
 # Parse every Swift file before Xcode build. This catches syntax damage from a patch
 # before package resolution/build spends several minutes.
