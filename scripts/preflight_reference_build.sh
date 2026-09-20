@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 74; cleanup chain validated through v418.
+# Release checkpoint: SalahPath v3.62 build 74; cleanup chain validated through v419.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -339,6 +339,14 @@ grep -q 'case "wudu-step-1":' SalahZeit/SalahZeitApp.swift \
   || fail "Wudu step 1 QA route missing"
 grep -q 'case "wudu-step-13":' SalahZeit/SalahZeitApp.swift \
   || fail "Wudu step 13 QA route missing"
+
+# v419: Quran overview follows the selected/app language without duplicate translation.
+grep -q 'if languageTab == 1 {' SalahZeit/Views/GuideView.swift \
+  || fail "Quran overview Turkish-only condition missing"
+grep -q 'if languageTab == 2 {' SalahZeit/Views/GuideView.swift \
+  || fail "Quran overview German-only condition missing"
+grep -q 'languageTab = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
+  || fail "Quran overview app-language default missing"
 
 # v418: Build 74 checkpoint.
 grep -q 'CURRENT_PROJECT_VERSION="74"' scripts/build_unsigned_ipa.sh \
