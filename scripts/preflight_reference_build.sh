@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v413.
+# Release checkpoint: SalahPath v3.62 build 73; cleanup chain validated through v414.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -255,6 +255,14 @@ grep -q 'NavigationLink { IslamLearningHubView() }' SalahZeit/Views/RootTabView.
 if grep -q 'ersetzen etmez' SalahZeit/Views/GuideView.swift; then
   fail "stale mixed-language Turkish copy remains"
 fi
+
+if grep -q 'gıdaähnliche' SalahZeit/Views/GuideView.swift; then
+  fail "mixed-language German fasting copy remains"
+fi
+grep -q 'Bilerek ağız dolusu kusmak' SalahZeit/Views/GuideView.swift \
+  || fail "beginner-friendly Turkish vomiting wording missing"
+grep -q 'feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird' SalahZeit/Views/GuideView.swift \
+  || fail "precise Ghusl wet-dream wording missing"
 
 # v406-v407: QA coverage for new learning screens.
 grep -q 'case "fasting-basics":' SalahZeit/SalahZeitApp.swift \
