@@ -360,13 +360,41 @@ if old not in s:
 s = s.replace(old, new, 1)
 app.write_text(s, encoding="utf-8")
 
+# ---------- Settings: remove false chevron from non-interactive location status ----------
+settings_view = root / "SalahZeit" / "Views" / "SettingsView.swift"
+t = settings_view.read_text(encoding="utf-8")
+old = '''                    profileRow(icon: "location.fill", title: settings.t("Standortstatus", "Konum durumu"), value: statusText)'''
+new = '''                    profileRow(icon: "location.fill", title: settings.t("Standortstatus", "Konum durumu"), value: statusText, showsChevron: false)'''
+if old not in t:
+    raise SystemExit("v3.61: location status row anchor missing")
+t = t.replace(old, new, 1)
+
+old = '''    private func profileRow(icon: String, title: String, value: String) -> some View {'''
+new = '''    private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {'''
+if old not in t:
+    raise SystemExit("v3.61: profileRow signature anchor missing")
+t = t.replace(old, new, 1)
+
+old = '''            Image(systemName: "chevron.right")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(SalahTheme.teal)'''
+new = '''            if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(SalahTheme.teal)
+            }'''
+if old not in t:
+    raise SystemExit("v3.61: profileRow chevron anchor missing")
+t = t.replace(old, new, 1)
+settings_view.write_text(t, encoding="utf-8")
+
 # ---------- Release metadata ----------
 build_script = root / "scripts" / "build_unsigned_ipa.sh"
 t = build_script.read_text(encoding="utf-8")
 if 'MARKETING_VERSION="3.60"' not in t or 'CURRENT_PROJECT_VERSION="65"' not in t:
     raise SystemExit("v3.61: expected v3.60/65 release base not found")
 t = t.replace('MARKETING_VERSION="3.60"', 'MARKETING_VERSION="3.61"', 1)
-t = t.replace('CURRENT_PROJECT_VERSION="65"', 'CURRENT_PROJECT_VERSION="66"', 1)
+t = t.replace('CURRENT_PROJECT_VERSION="65"', 'CURRENT_PROJECT_VERSION="67"', 1)
 build_script.write_text(t, encoding="utf-8")
 
-print("SalahPath v3.61 / build 66 patch applied")
+print("SalahPath v3.61 / build 67 patch applied")
