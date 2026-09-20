@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v390.
+# Release checkpoint remains SalahPath v3.62 build 72; working cleanup chain validated through v391.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -106,6 +106,8 @@ grep -q 'Text(settings.t("Gebets-Tracking", "Namaz Takibi"))' SalahZeit/Views/Ho
   || fail "localized prayer-tracking heading missing"
 grep -q 'Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))' SalahZeit/Views/HomeView.swift \
   || fail "localized next-prayer heading missing"
+grep -q 'Text(settings.t("(An-Nisāʾ 4:103)", "(Nisâ, 103)"))' SalahZeit/Views/HomeView.swift \
+  || fail "localized Home Quran citation missing"
 
 # Language-consistency regressions fixed after v3.62.
 grep -q 'settings.t("Gebetszeiten", "Namaz Vakitleri")' SalahZeit/Views/HomeView.swift \
