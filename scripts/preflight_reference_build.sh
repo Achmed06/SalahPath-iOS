@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v438; approved prayer rows + Apple Calendar export.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v440; App Store + religious-content audits.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -547,5 +547,30 @@ grep -q 'SalahPath-iOS/issues' SalahZeit/Views/SettingsView.swift   || fail "in-
 if command -v plutil >/dev/null 2>&1; then
   plutil -lint SalahZeit/PrivacyInfo.xcprivacy >/dev/null     || fail "PrivacyInfo.xcprivacy is not a valid plist"
 fi
+
+
+# v440: religious-content accuracy and documented release audits.
+test -f CONTENT_RIGHTS_AUDIT.md \
+  || fail "content rights audit missing"
+test -f RELIGIOUS_CONTENT_AUDIT.md \
+  || fail "religious content audit missing"
+grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' SalahZeit/Views/GuideView.swift \
+  || fail "Hanafi congregational Fatiha clarification missing"
+grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' SalahZeit/Views/GuideView.swift \
+  || fail "Quran 3:8 is incomplete"
+grep -q 'qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā' SalahZeit/Views/GuideView.swift \
+  || fail "Quran 25:74 transliteration remains incomplete"
+grep -q 'private func displayedArabic(for item: AdhkarEntry)' SalahZeit/Views/GuideView.swift \
+  || fail "morning/evening adhkar formula switch missing"
+grep -q 'وَإِلَيْكَ الْمَصِيرُ' SalahZeit/Views/GuideView.swift \
+  || fail "evening Allahumma bika formula missing"
+grep -q 'count: 1, source: "Allgemeines Istighfar / genel istiğfar"' SalahZeit/Views/GuideView.swift \
+  || fail "unsupported fixed Istighfar count remains"
+grep -q 'Quran 20:114 · excerpt' SalahZeit/Views/HomeView.swift \
+  || fail "Home Quran excerpt label missing"
+grep -q 'Bukhari 6306 · excerpt' SalahZeit/Views/HomeView.swift \
+  || fail "Sayyid al-Istighfar excerpt label missing"
+grep -q 'Hadithquellen und Diyanet' SalahZeit/Views/GuideView.swift \
+  || fail "hadith grading disclaimer wording missing"
 
 echo "SalahPath preflight: PASS"
