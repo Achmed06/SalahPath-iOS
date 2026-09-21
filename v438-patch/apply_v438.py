@@ -10,39 +10,44 @@ root = Path.cwd()
 guide = root / "SalahZeit" / "Views" / "GuideView.swift"
 assets_root = root / "SalahZeit" / "Assets.xcassets"
 
-# Install the exact user-approved prayer reference image as four app-sized rows.
-payload_dir = root / "v438-assets"
-parts = sorted(payload_dir.glob("part-*.b64"))
-if len(parts) != 4:
-    raise SystemExit(f"v438: expected 4 prayer payload parts, found {len(parts)}")
+# Install the four corrected Salam crops cut directly from the user-approved artwork.
+parts = []
+for index in range(1, 7):
+    part = root / "v438-assets" / f"salam-{index:02d}.b64"
+    if not part.is_file():
+        raise SystemExit(f"v438: missing Salam payload {part}")
+    parts.append(part.read_text(encoding="utf-8").strip())
 
-encoded = "".join(p.read_text(encoding="utf-8").strip() for p in parts)
-archive = base64.b64decode(encoded)
-expected_sha256 = "5bebe4919ab13f0b65903e6f5e98ec5ce856a44b04caf2d5066cef3af019301c"
+archive = base64.b64decode("".join(parts))
+expected_sha256 = "9e74602cadc62451efdcbf66ddc15f8d6018c08218b04cfed3c355cb3e3b5787"
 actual_sha256 = hashlib.sha256(archive).hexdigest()
 if actual_sha256 != expected_sha256:
-    raise SystemExit(f"v438: prayer payload checksum mismatch: {actual_sha256}")
-
-asset_names = (
-    "prayer_reference_male_1",
-    "prayer_reference_male_2",
-    "prayer_reference_female_1",
-    "prayer_reference_female_2",
-)
+    raise SystemExit(f"v438: Salam payload checksum mismatch: {actual_sha256}")
 
 with zipfile.ZipFile(io.BytesIO(archive)) as zf:
-    for asset_name in asset_names:
-        source_name = f"{asset_name}.jpg"
-        data = zf.read(source_name)
+    for asset_name in (
+        "male_salam_right",
+        "male_salam_left",
+        "female_salam_right",
+        "female_salam_left",
+    ):
+        jpg_name = f"{asset_name}.jpg"
+        data = zf.read(jpg_name)
         imageset = assets_root / f"{asset_name}.imageset"
         imageset.mkdir(parents=True, exist_ok=True)
-        (imageset / source_name).write_bytes(data)
+
+        # Remove the temporary generated SVG: only the approved crop remains active.
+        svg = imageset / f"{asset_name}.svg"
+        if svg.exists():
+            svg.unlink()
+
+        (imageset / jpg_name).write_bytes(data)
         (imageset / "Contents.json").write_text(
             json.dumps(
                 {
                     "images": [
                         {
-                            "filename": source_name,
+                            "filename": jpg_name,
                             "idiom": "universal",
                             "scale": "1x",
                         }
@@ -51,65 +56,22 @@ with zipfile.ZipFile(io.BytesIO(archive)) as zf:
                 },
                 ensure_ascii=False,
                 indent=2,
-            )
-            + "\n",
+            ) + "\n",
             encoding="utf-8",
         )
 
 text = guide.read_text(encoding="utf-8")
 
-# Native Calendar editor support.
+# Native Apple Calendar editor. It lets the user choose their own calendar
+# and confirm the event in Apple's UI.
 if "import EventKit\n" not in text:
     text = text.replace(
         "import SwiftUI\n",
         "import SwiftUI\nimport EventKit\nimport EventKitUI\n",
         1,
     )
-
-# Prayer reference: preserve the approved image exactly; only split it into
-# two vertically stacked rows per audience so it stays legible on iPhone.
-start_marker = "struct PrayerSequenceReferenceView: View {"
-end_marker = "// MARK: - Dhikr"
-start = text.find(start_marker)
-end = text.find(end_marker, start)
-if start < 0 or end < 0:
-    raise SystemExit("v438: PrayerSequenceReferenceView block missing")
-
-new_prayer = r'''struct PrayerSequenceReferenceView: View {
-    @EnvironmentObject private var settings: SettingsStore
-
-    private var assetNames: [String] {
-        settings.prayerAudience == .female
-            ? ["prayer_reference_female_1", "prayer_reference_female_2"]
-            : ["prayer_reference_male_1", "prayer_reference_male_2"]
-    }
-
-    var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                ForEach(assetNames, id: \.self) { assetName in
-                    Image(assetName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 1)
-                        }
-                }
-            }
-            .padding(12)
-        }
-        .scrollIndicators(.hidden)
-        .background(SalahTheme.page)
-        .navigationTitle(settings.t("Gebetspositionen", "Namaz duruşları"))
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-'''
-text = text[:start] + new_prayer + text[end:]
+elif "import EventKitUI\n" not in text:
+    text = text.replace("import EventKit\n", "import EventKit\nimport EventKitUI\n", 1)
 
 event_detail_marker = "private struct IslamicCalendarEventDetailView: View {"
 event_pos = text.find(event_detail_marker)
@@ -171,7 +133,8 @@ private struct CalendarEventEditor: UIViewControllerRepresentable {
 }
 
 '''
-text = text[:event_pos] + calendar_support + text[event_pos:]
+if "private struct CalendarEventEditor: UIViewControllerRepresentable" not in text:
+    text = text[:event_pos] + calendar_support + text[event_pos:]
 
 start = text.find(event_detail_marker)
 end_marker = "\n}\n\nstruct HijriCalendarView: View {"
@@ -316,7 +279,8 @@ new_detail = r'''private struct IslamicCalendarEventDetailView: View {
 text = text[:start] + new_detail + text[end:]
 guide.write_text(text, encoding="utf-8")
 
-# EventKit privacy descriptions for generated Info.plist builds.
+# Keep privacy descriptions in generated Info.plist builds for future direct
+# EventKit writes as well.
 usage_text = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können."
 pbx = root / "SalahZeit.xcodeproj" / "project.pbxproj"
 pbx_text = pbx.read_text(encoding="utf-8")
@@ -336,11 +300,10 @@ if "INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription" not in pbx_text:
         pbx.write_text(pbx_text, encoding="utf-8")
     else:
         plist = root / "SalahZeit" / "Info.plist"
-        if not plist.exists():
-            raise SystemExit("v438: could not add calendar usage descriptions")
-        data = plistlib.loads(plist.read_bytes())
-        data["NSCalendarsUsageDescription"] = usage_text
-        data["NSCalendarsWriteOnlyAccessUsageDescription"] = usage_text
-        plist.write_bytes(plistlib.dumps(data))
+        if plist.exists():
+            data = plistlib.loads(plist.read_bytes())
+            data["NSCalendarsUsageDescription"] = usage_text
+            data["NSCalendarsWriteOnlyAccessUsageDescription"] = usage_text
+            plist.write_bytes(plistlib.dumps(data))
 
-print("v438 applied: exact user-approved prayer rows + native Apple Calendar event export")
+print("v438 applied: corrected right-then-left Salam artwork + Apple Calendar export")
