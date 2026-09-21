@@ -122,14 +122,33 @@ jobs:
         shell: bash
         run: |
           xcrun simctl boot "$SIM_UDID" || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
-          xcrun simctl install "$SIM_UDID" "$APP_PATH"
 
-          xcrun simctl privacy "$SIM_UDID" grant location com.salahzeit.private || true
-          xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          python3 - "$SIM_UDID" "$APP_PATH" <<'PY'
+          import subprocess
+          import sys
+
+          udid, app_path = sys.argv[1], sys.argv[2]
+
+          def run(args, timeout, required=True):
+              print("RUN:", " ".join(args), flush=True)
+              try:
+                  result = subprocess.run(args, timeout=timeout, check=False)
+              except subprocess.TimeoutExpired:
+                  print(f"TIMEOUT after {timeout}s: {' '.join(args)}", flush=True)
+                  if required:
+                      raise SystemExit(124)
+                  return
+              if required and result.returncode != 0:
+                  raise SystemExit(result.returncode)
+
+          run(["xcrun", "simctl", "bootstatus", udid, "-b"], 120)
+          run(["xcrun", "simctl", "install", udid, app_path], 90)
+          run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.salahzeit.private"], 30, required=False)
+          run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "09:41", "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4"], 30, required=False)
+          PY
 
           SCREEN="quran"
           LANGUAGE="turkish"
