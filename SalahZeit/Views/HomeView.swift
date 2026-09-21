@@ -1800,8 +1800,15 @@ private struct DashboardTile: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            ReferenceDashboardGlyph(kind: icon)
-                .frame(width: 34, height: 34)
+            if let suppliedIconName {
+                Image(suppliedIconName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 42, height: 42)
+            } else {
+                ReferenceDashboardGlyph(kind: icon)
+                    .frame(width: 34, height: 34)
+            }
 
             Text(title)
                 .font(.system(size: 8.8, weight: .bold))
@@ -1829,6 +1836,20 @@ private struct DashboardTile: View {
         .overlay {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7)
+        }
+    }
+
+    private var suppliedIconName: String? {
+        switch icon {
+        case "quran": return "sp_icon_quran"
+        case "fav": return "sp_icon_bookmarks"
+        case "times": return "sp_icon_prayer_times"
+        case "prayer": return "sp_icon_prayer"
+        case "wudu": return "sp_icon_wudu"
+        case "calendar": return "sp_icon_calendar"
+        case "info": return "sp_icon_info"
+        case "settings": return "sp_icon_settings"
+        default: return nil
         }
     }
 }

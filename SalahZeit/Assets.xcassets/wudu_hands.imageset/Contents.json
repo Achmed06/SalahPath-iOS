@@ -1,20 +1,13 @@
 {
   "images": [
     {
-      "filename": "wudu_hands.jpg",
+      "filename": "wudu_hands.png",
       "idiom": "universal",
       "scale": "1x"
-    },
-    {
-      "filename": "wudu_hands.svg",
-      "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }

@@ -77,11 +77,11 @@ private struct ReferenceBottomBar: View {
 
     private var items: [(String, String)] {
         [
-            ("house.fill", settings.t("Start", "Ana Sayfa")),
-            ("book.fill", settings.t("Koran", "Kur'an")),
-            ("figure.mind.and.body", settings.t("Gebet", "Namaz")),
-            ("location.north.circle", settings.t("Entdecken", "Keşfet")),
-            ("person.crop.circle", settings.t("Profil", "Profil"))
+            ("sp_icon_home", settings.t("Start", "Ana Sayfa")),
+            ("sp_icon_quran", settings.t("Koran", "Kur'an")),
+            ("sp_icon_prayer", settings.t("Gebet", "Namaz")),
+            ("sp_icon_calendar", settings.t("Entdecken", "Keşfet")),
+            ("sp_icon_settings", settings.t("Profil", "Profil"))
         ]
     }
 
@@ -100,8 +100,10 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            Image(systemName: item.0)
-                                .font(.system(size: 17, weight: selection == index ? .bold : .semibold))
+                            Image(item.0)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
                                 .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
                         }
                         .frame(height: 22)
@@ -392,4 +394,3 @@ struct MoreView: View {
         .overlay { RoundedRectangle(cornerRadius: 12).stroke(SalahTheme.gold.opacity(0.33), lineWidth: 1) }
     }
 }
-
