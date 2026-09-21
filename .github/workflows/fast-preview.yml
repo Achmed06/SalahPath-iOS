@@ -143,7 +143,8 @@ jobs:
             *"[de-qibla]"*)   SCREEN="qibla";   LANGUAGE="german" ;;
             *"[de-wudu]"*)    SCREEN="wudu";    LANGUAGE="german" ;;
             *"[de-tracker]"*) SCREEN="tracker"; LANGUAGE="german" ;;
-            *"[de-audio-cache]"*) SCREEN="audio-cache"; LANGUAGE="german" ;;\n            *"[de-reader]"*)  SCREEN="quran-reader"; LANGUAGE="german" ;;
+            *"[de-audio-cache]"*) SCREEN="audio-cache"; LANGUAGE="german" ;;
+            *"[de-reader]"*)  SCREEN="quran-reader"; LANGUAGE="german" ;;
             *"[de-quran]"*)   SCREEN="quran";   LANGUAGE="german" ;;
             *"[qa]"*)         SCREEN="qa" ;;
             *"[home]"*)       SCREEN="home" ;;
