@@ -1854,7 +1854,7 @@ private struct DashboardTile: View {
     }
 }
 
-private struct ReferenceDashboardGlyph: View {
+struct ReferenceDashboardGlyph: View {
     let kind: String
 
     var body: some View {
