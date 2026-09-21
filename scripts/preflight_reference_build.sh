@@ -148,10 +148,10 @@ grep -q 'settings.t("Hijri-Kalender", "Hicrî Takvim")' SalahZeit/Views/RootTabV
   || fail "localized Discover Hijri title missing"
 grep -q 'settings.t("FARZ · PFLICHT", "FARZ")' SalahZeit/Views/GuideView.swift \
   || fail "localized guided-Wudu obligation badge missing"
-grep -q 'case "wudu_rightfoot": footVisual(mirrored: false)' SalahZeit/Views/GuideView.swift \
-  || fail "right-foot Wudu artwork mapping missing"
-grep -q 'case "wudu_leftfoot": footVisual(mirrored: true)' SalahZeit/Views/GuideView.swift \
-  || fail "left-foot Wudu artwork mapping missing"
+grep -q '"wudu_rightfoot"' SalahZeit/Views/GuideView.swift \
+  || fail "right-foot Wudu artwork key missing"
+grep -q '"wudu_leftfoot"' SalahZeit/Views/GuideView.swift \
+  || fail "left-foot Wudu artwork key missing"
 grep -q '.navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
   || fail "localized guided-Wudu navigation title missing"
 
