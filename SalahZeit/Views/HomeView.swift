@@ -307,6 +307,10 @@ struct HomeView: View {
         return locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum")
     }
 
+    private var effectiveNow: Date {
+        now
+    }
+
     var body: some View {
         ZStack(alignment: .top) {
             SalahTheme.deepTeal.ignoresSafeArea()
@@ -1056,7 +1060,7 @@ struct HomeView: View {
         let calendar = Calendar(identifier: .gregorian)
         let today = calendar.startOfDay(for: effectiveNow)
         let weekday = calendar.component(.weekday, from: today)
-        let daysFromMonday = (weekday + 5) % 7
+        let daysFromMonday: Int = (weekday + 5) % 7
         guard let monday = calendar.date(byAdding: .day, value: -daysFromMonday, to: today) else { return [today] }
         return (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: monday) }
     }

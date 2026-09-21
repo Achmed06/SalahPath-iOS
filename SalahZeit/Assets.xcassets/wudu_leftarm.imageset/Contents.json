@@ -1,6 +1,11 @@
 {
   "images": [
     {
+      "filename": "wudu_leftarm.jpg",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
       "filename": "wudu_leftarm.svg",
       "idiom": "universal"
     }

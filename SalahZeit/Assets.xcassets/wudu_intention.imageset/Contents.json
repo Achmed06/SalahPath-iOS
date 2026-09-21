@@ -1,6 +1,11 @@
 {
   "images": [
     {
+      "filename": "wudu_intention.jpg",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
       "filename": "wudu_intention.svg",
       "idiom": "universal"
     }

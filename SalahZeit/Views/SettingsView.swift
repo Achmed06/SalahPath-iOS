@@ -318,7 +318,7 @@ struct SettingsView: View {
         }
     }
 
-    private func profileRow(icon: String, title: String, value: String) -> some View {
+    private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {
         HStack(spacing: 9) {
             Image(systemName: icon)
                 .font(.system(size: 14, weight: .semibold))
@@ -334,9 +334,11 @@ struct SettingsView: View {
                 .foregroundStyle(SalahTheme.teal)
                 .multilineTextAlignment(.trailing)
                 .lineLimit(2)
-            Image(systemName: "chevron.right")
-                .font(.system(size: 9, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
+            if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(SalahTheme.teal)
+            }
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)

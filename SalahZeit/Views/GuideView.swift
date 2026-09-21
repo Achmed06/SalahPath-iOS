@@ -2389,11 +2389,15 @@ final class RemoteAudioPlayer: ObservableObject {
     @Published var lastError: String?
     @Published var queueIndex = 0
     @Published var queueCount = 0
+    @Published private(set) var currentTime: Double = 0
+    @Published private(set) var duration: Double = 0
+    @Published var playbackRate: Float = 1.0
 
     private var player: AVPlayer?
     private var queueURLs: [URL] = []
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
+    private var periodicTimeObserver: Any?
     private var endObserver: NSObjectProtocol?
     private var failedObserver: NSObjectProtocol?
 
@@ -2562,6 +2566,10 @@ final class RemoteAudioPlayer: ObservableObject {
     private func removeObservers() {
         statusObservation = nil
         timeControlObservation = nil
+        if let periodicTimeObserver, let player {
+            player.removeTimeObserver(periodicTimeObserver)
+        }
+        periodicTimeObserver = nil
         if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
         if let failedObserver { NotificationCenter.default.removeObserver(failedObserver) }
         endObserver = nil

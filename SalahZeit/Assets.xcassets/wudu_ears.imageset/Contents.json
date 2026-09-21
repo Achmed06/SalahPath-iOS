@@ -1,6 +1,11 @@
 {
   "images": [
     {
+      "filename": "wudu_ears.jpg",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
       "filename": "wudu_ears.svg",
       "idiom": "universal"
     }
