@@ -9,7 +9,7 @@ on:
       - "qa/**"
 
 concurrency:
-  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[de-qa]') && 'de-qa' || contains(github.event.head_commit.message, '[de-home]') && 'de-home' || contains(github.event.head_commit.message, '[de-dhikr]') && 'de-dhikr' || contains(github.event.head_commit.message, '[de-namaz]') && 'de-namaz' || contains(github.event.head_commit.message, '[de-times]') && 'de-times' || contains(github.event.head_commit.message, '[de-qibla]') && 'de-qibla' || contains(github.event.head_commit.message, '[de-wudu]') && 'de-wudu' || contains(github.event.head_commit.message, '[de-tracker]') && 'de-tracker' || contains(github.event.head_commit.message, '[de-audio-cache]') && 'de-audio-cache' || contains(github.event.head_commit.message, '[de-reader]') && 'de-reader' || contains(github.event.head_commit.message, '[de-quran]') && 'de-quran' || contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || contains(github.event.head_commit.message, '[wudu]') && 'wudu' || contains(github.event.head_commit.message, '[reader]') && 'reader' || contains(github.event.head_commit.message, '[tracker]') && 'tracker' || 'quran' }}
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[de-qa]') && 'de-qa' || contains(github.event.head_commit.message, '[de-home]') && 'de-home' || contains(github.event.head_commit.message, '[de-dhikr]') && 'de-dhikr' || contains(github.event.head_commit.message, '[de-prayer]') && 'de-prayer' || contains(github.event.head_commit.message, '[de-namaz]') && 'de-namaz' || contains(github.event.head_commit.message, '[de-times]') && 'de-times' || contains(github.event.head_commit.message, '[de-qibla]') && 'de-qibla' || contains(github.event.head_commit.message, '[de-wudu]') && 'de-wudu' || contains(github.event.head_commit.message, '[de-tracker]') && 'de-tracker' || contains(github.event.head_commit.message, '[de-audio-cache]') && 'de-audio-cache' || contains(github.event.head_commit.message, '[de-reader]') && 'de-reader' || contains(github.event.head_commit.message, '[de-quran]') && 'de-quran' || contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || contains(github.event.head_commit.message, '[wudu]') && 'wudu' || contains(github.event.head_commit.message, '[reader]') && 'reader' || contains(github.event.head_commit.message, '[tracker]') && 'tracker' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
@@ -157,6 +157,7 @@ jobs:
             *"[de-qa]"*)      SCREEN="qa";      LANGUAGE="german" ;;
             *"[de-home]"*)    SCREEN="home";    LANGUAGE="german" ;;
             *"[de-dhikr]"*)   SCREEN="dhikr";   LANGUAGE="german" ;;
+            *"[de-prayer]"*)  SCREEN="prayer-sequence"; LANGUAGE="german" ;;
             *"[de-namaz]"*)   SCREEN="namaz";   LANGUAGE="german" ;;
             *"[de-times]"*)   SCREEN="times";   LANGUAGE="german" ;;
             *"[de-qibla]"*)   SCREEN="qibla";   LANGUAGE="german" ;;
@@ -220,6 +221,7 @@ jobs:
             capture_one quran-progress   SalahPath-FAST-QA-QuranProgress.png
             capture_one quran-reader     SalahPath-FAST-QA-QuranReader.png
             capture_one namaz-howto      SalahPath-FAST-QA-NamazHowTo.png
+            capture_one prayer-sequence  SalahPath-FAST-QA-PrayerSequence.png
             capture_one wudu             SalahPath-FAST-QA-Wudu.png
             capture_one ghusl            SalahPath-FAST-QA-Ghusl.png
             capture_one tayammum         SalahPath-FAST-QA-Tayammum.png
