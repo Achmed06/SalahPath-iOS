@@ -1,103 +1,36 @@
-# SalahPath v3.7
+# SalahPath v3
 
-Native SwiftUI prayer, Quran and daily worship companion for iPhone.
+Private iOS prayer companion built with SwiftUI.
 
-## v3.7
+## v3
 
-The current release follows the SalahPath visual direction: deep teal/petrol surfaces, cream cards, restrained gold accents, large readable cards and native iOS navigation.
+- German and Turkish UI foundation
+- GPS prayer times, Qibla, countdown and notifications
+- Full daily prayer sequence with Fard, Sunnah and Witr overview
+- Separate male/female learning profiles based primarily on the Hanafi/Turkish teaching presentation, with explicit madhhab caveats
+- Child-friendly vector prayer illustrations instead of stick figures
+- Wudu guide
+- Dhikr / Tasbih counter
+- Full Quran chapter browser loaded from AlQuran.cloud
+- Arabic Quran text plus German (Bubenheim & Elyas) or Turkish (Diyanet) translation
+- Human Quran recitation via Islamic Network CDN (Mishary Rashid Alafasy)
+- Human-recorded prayer-dua streaming links with source attribution
 
-### Home
-- Current location name, Hijri date and notification state.
-- Next-prayer countdown and calculated prayer time.
-- Full Hanafi/Turkish learning sequence for Fard, Sunnah and Witr rather than showing only obligatory rak'ah.
-- Daily dua, five-prayer tracker, optional streak and Daily Deen goals.
-- Quick actions for Quran, Dua/Dhikr, Salah learning, Wudu, prayer times, Qibla and more.
-- Dedicated Today / 7 days / 30 days prayer-time view.
+## Data and content sources
 
-### Salah learning
-- Separate male/female learning profiles.
-- Detailed vertical step-by-step flow.
-- Each major step separates “What do I do?” from “What do I say?”.
-- Arabic, transliteration and German/Turkish explanation where relevant.
-- Hanafi/Turkish posture details are labelled as Hanafi practice, not presented as universal rules.
-- Separate 2-, 3-, 4-rak'ah and Hanafi Witr walkthroughs.
-- The position overview explicitly marks the second Sujud as the end of one rak'ah, then distinguishes continuing to another rak'ah from the final sitting.
-- Final Salam is shown as two explicit movements: own right shoulder first, then own left shoulder; only the head turns while the torso remains facing Qibla.
-- Side-view Ruku and Sujud artwork is explanatory only and does not imply changing Qibla direction.
-
-### Wudu
-- Step-by-step German/Turkish guide.
-- Repeat counts where relevant.
-- Hanafi Fard vs Sunnah classification.
-- Four Hanafi obligatory components are listed separately.
-
-### Quran
-- Uthmani Arabic text from AlQuran.cloud.
-- German Bubenheim/Elyas and Turkish Diyanet editions exposed by AlQuran.cloud.
-- Optional transliteration.
-- Adjustable Arabic font size.
-- Translation on/off.
-- Surah search, bookmarks/favorites, last-read continuation and sharing.
-- Per-ayah and full-surah human recitation.
-- Previous/next controls, loading state and playback errors.
-- Per-ayah memorisation repeat modes: 1×, 3×, 5× or continuous repeat, persisted across launches.
-- Current selectable live-audio editions:
-  - Mishary Rashid Alafasy — `ar.alafasy`
-  - Mahmoud Khalil Al-Husary — `ar.husary`
-  - Mohamed Siddiq al-Minshawi — `ar.minshawi`
-  - Abdul Rahman Al-Sudais — `ar.abdurrahmaansudais`
-  - Saud Al-Shuraim — `ar.saoodshuraym`
-
-The GitHub release workflow probes the live API and the first returned audio stream for every listed reciter before compiling the IPA.
-
-### Daily worship
-- Morning/evening Adhkar.
-- Dhikr/Tasbih.
-- Daily Deen goals.
-- Prayer tracker and neutral tracker pause.
-- Fasting tracker.
-- Hijri calendar.
-- Daily dua.
-
-### Prayer calculation and Qibla
-- Adhan Swift by Batoul Apps.
-- GPS-based prayer calculations.
-- Standard/Hanafi Asr selection.
-- Calculation presets and manual minute adjustments.
-- Sunrise displayed separately.
-- Local prayer notifications.
-- Qibla using Core Location heading.
-
-Calculated prayer start times are intentionally treated separately from mosque iqamah/jama'ah times.
-
-## Languages
-German and Turkish are first-class app languages. Arabic religious/Quran text is shown where appropriate.
-
-## Privacy
-Precise coordinates are not intentionally displayed on the home screen or retained as a location history. Worship tracking is stored locally on the device.
+- Prayer calculation: Adhan Swift (MIT)
+- Quran text, translations and Quran audio: AlQuran.cloud / Islamic Network. Keep edition attribution visible and comply with the source terms.
+- Turkish fiqh/teaching structure is based on Diyanet educational material, especially its Hanafi prayer sequence and stated male/female posture differences.
+- Prayer-dua recordings currently stream from externally hosted teaching pages and should be rights-cleared before any public App Store distribution.
 
 ## Build
 
-Requirements:
-- macOS with Xcode
-- iOS 17 or newer
-
-The Xcode project/scheme remains internally named `SalahZeit` for compatibility. The built application is branded `SalahPath`.
+Open `SalahZeit.xcodeproj` in Xcode or run:
 
 ```bash
 ./scripts/build_unsigned_ipa.sh
 ```
 
-Output:
+Output: `SalahPath-unsigned.ipa`.
 
-```text
-SalahPath-unsigned.ipa
-```
-
-The IPA generated by the repository workflow is unsigned and needs valid Apple signing before installation on a normal iPhone.
-
-## Verification status
-
-GitHub Actions verifies source restoration, live Quran audio availability, Swift package resolution, Xcode compilation and IPA creation.
-
-Runtime behavior that depends on real iPhone hardware or permissions — including actual speaker playback, compass heading, GPS permission behavior and notifications — is not practically verified on a physical iPhone by CI.
+The IPA is unsigned and must be signed before installation on a stock iPhone.
