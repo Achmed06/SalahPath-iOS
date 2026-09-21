@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; cleanup chain validated through v426.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v430.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -393,5 +393,23 @@ grep -q 'init(initialLastReadSurah: Int? = nil, initialLastReadAyah: Int? = nil)
   || fail "Quran deterministic last-read initializer missing"
 grep -q 'QuranView(initialLastReadSurah: 2, initialLastReadAyah: 142)' SalahZeit/Views/GuideView.swift \
   || fail "Quran progress QA injection missing"
+
+# v427: injected Quran progress remains stable during deterministic QA.
+grep -q 'private let usesInjectedLastRead: Bool' SalahZeit/Views/GuideView.swift \
+  || fail "Quran injected-last-read QA guard missing"
+grep -q 'if !usesInjectedLastRead {' SalahZeit/Views/GuideView.swift \
+  || fail "Quran injected progress preservation missing"
+
+# v428-v430: persistent Quran audio cache, settings controls and integration QA.
+grep -q 'actor QuranAudioCache {' SalahZeit/Views/GuideView.swift \
+  || fail "persistent Quran audio cache missing"
+grep -q 'private let maxBytes: Int64 = 300 \* 1024 \* 1024' SalahZeit/Views/GuideView.swift \
+  || fail "Quran audio cache 300 MB cap missing"
+grep -q 'await QuranAudioCache.shared.clear()' SalahZeit/Views/SettingsView.swift \
+  || fail "Quran audio cache clear control missing"
+grep -q 'case "audio-cache":' SalahZeit/SalahZeitApp.swift \
+  || fail "Quran audio cache QA route missing"
+grep -q 'audioCacheQACompleted' SalahZeit/Views/GuideView.swift \
+  || fail "Quran audio cache deterministic completion flag missing"
 
 echo "SalahPath preflight: PASS"
