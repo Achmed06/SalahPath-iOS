@@ -204,42 +204,20 @@ for name in names:
         encoding="utf-8",
     )
 
-old = '''    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(SalahTheme.softTeal.opacity(0.38))
+struct_pos = text.index("private struct PrayerPoseArtwork: View {")
+body_start = text.index("    var body: some View {", struct_pos)
+body_end = text.index("    private func point(", body_start)
 
-            VStack {
-                Spacer()
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(SalahTheme.teal.opacity(0.14))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
-                    }
-                    .frame(height: 38)
-                    .padding(.horizontal, 18)
-                    .padding(.bottom, 10)
-            }
-
-            Canvas { context, size in
-                drawPose(context: &context, size: size)
-            }
-            .padding(8)
-        }
-        .accessibilityHidden(true)
-    }
-'''
-new = '''    var body: some View {
+new_body = '''    var body: some View {
         Image(assetName)
             .resizable()
             .scaledToFit()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .accessibilityHidden(true)
     }
-'''
-if old not in text:
-    raise SystemExit("v434: PrayerPoseArtwork Canvas body anchor missing")
 
-guide.write_text(text.replace(old, new, 1), encoding="utf-8")
+'''
+
+text = text[:body_start] + new_body + text[body_end:]
+guide.write_text(text, encoding="utf-8")
 print("v434 applied: dedicated male/female vector prayer-pose assets")
