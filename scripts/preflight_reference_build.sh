@@ -438,13 +438,17 @@ grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
 grep -q 'case "prayer-sequence":' SalahZeit/SalahZeitApp.swift \
   || fail "prayer-sequence screenshot QA route missing"
 
-# v436: restore the original v3.5 male/female prayer artwork preferred by the user.
+# v436-v438: restore the preferred v3.5 prayer artwork and replace only Salam with
+# exact crops from the user-approved reference. Sequence is own-right first, own-left second.
 grep -q 'Image(assetName)' SalahZeit/Views/GuideView.swift \
   || fail "prayer pose asset renderer missing"
+grep -q '("salam_right", "Salām rechts · nur Kopf", "Sağa selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
+  || fail "right Salam must be first"
+grep -q '("salam_left", "Salām links · nur Kopf", "Sola selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
+  || fail "left Salam must be second"
 python3 - <<'PY'
 from pathlib import Path
 import json
-import xml.etree.ElementTree as ET
 
 root = Path("SalahZeit/Assets.xcassets")
 legacy_poses = [
@@ -467,57 +471,36 @@ for audience in ("male", "female"):
         if (imageset / f"{name}.svg").exists():
             raise SystemExit(f"PRECHECK ERROR: replacement SVG still active for restored pose: {name}")
 
-# Salam still has dedicated direction-specific artwork until it is rebuilt in the restored style.
 for audience in ("male", "female"):
     for pose in ("salam_right", "salam_left"):
         name = f"{audience}_{pose}"
-        svg = root / f"{name}.imageset" / f"{name}.svg"
-        if not svg.is_file():
-            raise SystemExit(f"PRECHECK ERROR: temporary Salam direction asset missing: {name}")
-        ET.parse(svg)
+        imageset = root / f"{name}.imageset"
+        contents = imageset / "Contents.json"
+        jpg = imageset / f"{name}.jpg"
+        svg = imageset / f"{name}.svg"
+        if not contents.is_file() or not jpg.is_file():
+            raise SystemExit(f"PRECHECK ERROR: corrected Salam JPG missing: {name}")
+        payload = json.loads(contents.read_text(encoding="utf-8"))
+        filenames = [item.get("filename") for item in payload.get("images", [])]
+        if jpg.name not in filenames:
+            raise SystemExit(f"PRECHECK ERROR: corrected Salam Contents.json mismatch: {name}")
+        if svg.exists():
+            raise SystemExit(f"PRECHECK ERROR: stale temporary Salam SVG still active: {name}")
 
-print("Restored v3.5 prayer JPG integrity: OK")
+print("Restored prayer artwork + corrected right-then-left Salam assets: OK")
 PY
 
-# v438: exact user-approved prayer rows + native Apple Calendar event editor.
-grep -q '"prayer_reference_female_1"' SalahZeit/Views/GuideView.swift \
-  || fail "female prayer reference row 1 selector missing"
-grep -q '"prayer_reference_female_2"' SalahZeit/Views/GuideView.swift \
-  || fail "female prayer reference row 2 selector missing"
-grep -q '"prayer_reference_male_1"' SalahZeit/Views/GuideView.swift \
-  || fail "male prayer reference row 1 selector missing"
-grep -q '"prayer_reference_male_2"' SalahZeit/Views/GuideView.swift \
-  || fail "male prayer reference row 2 selector missing"
-grep -q 'CalendarEventEditor' SalahZeit/Views/GuideView.swift \
-  || fail "native Calendar editor wrapper missing"
+# v438: important Islamic days can be handed to Apple's native Calendar editor.
+grep -q '^import EventKitUI$' SalahZeit/Views/GuideView.swift \
+  || fail "EventKitUI import missing"
+grep -q 'private struct CalendarEventEditor: UIViewControllerRepresentable' SalahZeit/Views/GuideView.swift \
+  || fail "native Apple Calendar editor bridge missing"
 grep -q 'EKEventEditViewController' SalahZeit/Views/GuideView.swift \
-  || fail "EventKitUI editor missing"
+  || fail "Apple Calendar event editor missing"
 grep -q 'In Apple Kalender eintragen' SalahZeit/Views/GuideView.swift \
-  || fail "Apple Calendar export action missing"
-grep -Rqs 'NSCalendarsWriteOnlyAccessUsageDescription' SalahZeit.xcodeproj SalahZeit \
-  || fail "calendar write-only privacy description missing"
-python3 - <<'PY'
-from pathlib import Path
-import json
-
-root = Path("SalahZeit/Assets.xcassets")
-for name in (
-    "prayer_reference_male_1",
-    "prayer_reference_male_2",
-    "prayer_reference_female_1",
-    "prayer_reference_female_2",
-):
-    imageset = root / f"{name}.imageset"
-    contents = imageset / "Contents.json"
-    jpg = imageset / f"{name}.jpg"
-    if not contents.is_file() or not jpg.is_file():
-        raise SystemExit(f"PRECHECK ERROR: approved prayer row missing: {name}")
-    payload = json.loads(contents.read_text(encoding="utf-8"))
-    filenames = [item.get("filename") for item in payload.get("images", [])]
-    if jpg.name not in filenames:
-        raise SystemExit(f"PRECHECK ERROR: prayer row Contents.json mismatch: {name}")
-print("Approved prayer reference rows: OK")
-PY
+  || fail "German calendar export action missing"
+grep -q "Apple Takvim'e ekle" SalahZeit/Views/GuideView.swift \
+  || fail "Turkish calendar export action missing"
 
 # v435: every guided Wudu step resolves to a dedicated SVG image asset.
 grep -q 'return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"' SalahZeit/Views/GuideView.swift \
