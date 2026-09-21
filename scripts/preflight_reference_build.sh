@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v436; preferred v3.5 prayer artwork restored.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v437; original prayer sheets restored.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -477,6 +477,29 @@ for audience in ("male", "female"):
         ET.parse(svg)
 
 print("Restored v3.5 prayer JPG integrity: OK")
+PY
+
+# v437: the prayer overview uses the original male/female reference sheets again.
+grep -q '"prayer_reference_female"' SalahZeit/Views/GuideView.swift \
+  || fail "female prayer reference sheet selector missing"
+grep -q '"prayer_reference_male"' SalahZeit/Views/GuideView.swift \
+  || fail "male prayer reference sheet selector missing"
+python3 - <<'PY'
+from pathlib import Path
+import json
+
+root = Path("SalahZeit/Assets.xcassets")
+for name in ("prayer_reference_male", "prayer_reference_female"):
+    imageset = root / f"{name}.imageset"
+    contents = imageset / "Contents.json"
+    jpg = imageset / f"{name}.jpg"
+    if not contents.is_file() or not jpg.is_file():
+        raise SystemExit(f"PRECHECK ERROR: original prayer sheet missing: {name}")
+    payload = json.loads(contents.read_text(encoding="utf-8"))
+    filenames = [item.get("filename") for item in payload.get("images", [])]
+    if jpg.name not in filenames:
+        raise SystemExit(f"PRECHECK ERROR: prayer sheet Contents.json mismatch: {name}")
+print("Original prayer reference sheets: OK")
 PY
 
 # v435: every guided Wudu step resolves to a dedicated SVG image asset.
