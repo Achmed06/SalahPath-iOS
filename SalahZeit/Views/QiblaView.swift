@@ -1,5 +1,6 @@
 import SwiftUI
 import Adhan
+import UIKit
 
 struct QiblaView: View {
     @EnvironmentObject private var locationManager: LocationManager
@@ -11,7 +12,7 @@ struct QiblaView: View {
                 let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                 let qibla = Qibla(coordinates: coordinates).direction
                 let heading = currentHeading
-                let rotation = normalized(qibla - heading)
+                let rotation = heading.map { normalized(qibla - $0) }
 
                 ScrollView {
                     VStack(spacing: 11) {
@@ -62,17 +63,27 @@ struct QiblaView: View {
                             }
                             .offset(y: 27)
 
-                            Image(systemName: "location.north.fill")
-                                .font(.system(size: 88, weight: .medium))
-                                .foregroundStyle(SalahTheme.teal.opacity(0.92))
-                                .rotationEffect(.degrees(rotation))
-                                .offset(y: -25)
-                                .animation(.easeOut(duration: 0.18), value: rotation)
+                            if let rotation {
+                                Image(systemName: "location.north.fill")
+                                    .font(.system(size: 88, weight: .medium))
+                                    .foregroundStyle(SalahTheme.teal.opacity(0.92))
+                                    .rotationEffect(.degrees(rotation))
+                                    .offset(y: -25)
+                                    .animation(.easeOut(duration: 0.18), value: rotation)
+                            } else {
+                                ProgressView()
+                                    .tint(SalahTheme.teal)
+                                    .offset(y: -25)
+                            }
                         }
 
                         HStack(spacing: 8) {
                             compactInfoTile(icon: "location.north.circle.fill", title: settings.t("Qibla", "Kıble"), value: "\(Int(qibla.rounded()))°")
-                            compactInfoTile(icon: "iphone", title: settings.t("Gerät", "Cihaz"), value: "\(Int(heading.rounded()))°")
+                            compactInfoTile(
+                                icon: "iphone",
+                                title: settings.t("Gerät", "Cihaz"),
+                                value: heading.map { "\(Int($0.rounded()))°" } ?? "—"
+                            )
                         }
 
                         VStack(spacing: 0) {
@@ -99,7 +110,18 @@ struct QiblaView: View {
         .navigationTitle(settings.t("Qibla", "Kıble"))
         .navigationBarTitleDisplayMode(.inline)
         .tint(SalahTheme.teal)
-        .onAppear { locationManager.requestAccessAndStart() }
+        .onAppear {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+            locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
+            locationManager.requestAccessAndStart()
+            locationManager.refresh()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+            locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
+        }
+        .onDisappear {
+            UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        }
     }
 
     private func compactInfoTile(icon: String, title: String, value: String) -> some View {
@@ -138,9 +160,11 @@ struct QiblaView: View {
         .overlay(alignment: .bottom) { Divider().padding(.leading, 50).opacity(0.34) }
     }
 
-    private var currentHeading: Double {
-        guard let heading = locationManager.heading else { return 0 }
-        return heading.trueHeading >= 0 ? heading.trueHeading : heading.magneticHeading
+    private var currentHeading: Double? {
+        guard let heading = locationManager.heading, heading.headingAccuracy >= 0 else { return nil }
+        let value = heading.trueHeading >= 0 ? heading.trueHeading : heading.magneticHeading
+        guard value >= 0 else { return nil }
+        return value
     }
 
     private func normalized(_ angle: Double) -> Double {
