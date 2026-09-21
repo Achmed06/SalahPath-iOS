@@ -1,0 +1,1 @@
+Re-run all 13 dedicated Wudu SVG visual QA screens after prayer asset parser fix.
