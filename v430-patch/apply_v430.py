@@ -42,6 +42,7 @@ struct QuranAudioCacheQAView: View {
         UserDefaults.standard.set(false, forKey: "audioCacheQAPassed")
         UserDefaults.standard.set(false, forKey: "audioCacheQACompleted")
         UserDefaults.standard.set("running", forKey: "audioCacheQADetail")
+        UserDefaults.standard.synchronize()
         await QuranAudioCache.shared.clear()
 
         do {
@@ -67,6 +68,7 @@ struct QuranAudioCacheQAView: View {
             UserDefaults.standard.set(passed, forKey: "audioCacheQAPassed")
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
             UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
+            UserDefaults.standard.synchronize()
         } catch {
             passed = false
             status = "FAIL · \(error.localizedDescription)"
@@ -74,6 +76,7 @@ struct QuranAudioCacheQAView: View {
             UserDefaults.standard.set(false, forKey: "audioCacheQAPassed")
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
             UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
+            UserDefaults.standard.synchronize()
         }
     }
 }
