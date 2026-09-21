@@ -21,7 +21,9 @@ The current release follows the SalahPath visual direction: deep teal/petrol sur
 - Arabic, transliteration and German/Turkish explanation where relevant.
 - Hanafi/Turkish posture details are labelled as Hanafi practice, not presented as universal rules.
 - Separate 2-, 3-, 4-rak'ah and Hanafi Witr walkthroughs.
-- Final Salam is shown as two explicit movements: own right shoulder first, then own left shoulder; no circular-arrow instruction.
+- The position overview explicitly marks the second Sujud as the end of one rak'ah, then distinguishes continuing to another rak'ah from the final sitting.
+- Final Salam is shown as two explicit movements: own right shoulder first, then own left shoulder; only the head turns while the torso remains facing Qibla.
+- Side-view Ruku and Sujud artwork is explanatory only and does not imply changing Qibla direction.
 
 ### Wudu
 - Step-by-step German/Turkish guide.
