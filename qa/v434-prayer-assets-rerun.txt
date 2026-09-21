@@ -1,0 +1,1 @@
+Re-run dedicated prayer SVG visual QA after female_ pose-prefix parser fix.
