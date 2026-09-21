@@ -286,39 +286,86 @@ struct MoreView: View {
 
     @ViewBuilder
     private func salahFeatureIcon(_ symbol: String, size: CGFloat) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [SalahTheme.softTeal, SalahTheme.cream],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+        if let asset = discoverAssetName(for: symbol) {
+            Image(asset)
+                .resizable()
+                .scaledToFit()
+                .frame(width: size, height: size)
+                .accessibilityHidden(true)
+        } else if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
+            ReferenceDashboardGlyph(kind: glyphKind)
+                .frame(width: size * 0.82, height: size * 0.82)
+                .frame(width: size, height: size)
+                .accessibilityHidden(true)
+        } else {
+            ZStack {
+                RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [SalahTheme.softTeal, SalahTheme.cream],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
-                )
-                .frame(width: size, height: size)
+                    .frame(width: size, height: size)
 
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
-                .frame(width: size, height: size)
+                RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
+                    .frame(width: size, height: size)
 
-            Circle()
-                .fill(Color.white.opacity(0.64))
-                .frame(width: size * 0.66, height: size * 0.66)
+                Circle()
+                    .fill(Color.white.opacity(0.64))
+                    .frame(width: size * 0.66, height: size * 0.66)
 
-            Image(systemName: symbol)
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(size: size * 0.43, weight: .semibold))
-                .foregroundStyle(SalahTheme.deepTeal)
+                Image(systemName: symbol)
+                    .symbolRenderingMode(.hierarchical)
+                    .font(.system(size: size * 0.43, weight: .semibold))
+                    .foregroundStyle(SalahTheme.deepTeal)
 
-            Circle()
-                .fill(SalahTheme.gold)
-                .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
-                .overlay {
-                    Circle().stroke(Color.white.opacity(0.90), lineWidth: 1)
-                }
-                .offset(x: size * 0.31, y: -size * 0.31)
+                Circle()
+                    .fill(SalahTheme.gold)
+                    .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
+                    .overlay {
+                        Circle().stroke(Color.white.opacity(0.90), lineWidth: 1)
+                    }
+                    .offset(x: size * 0.31, y: -size * 0.31)
+            }
+            .accessibilityHidden(true)
         }
-        .accessibilityHidden(true)
+    }
+
+    private func discoverAssetName(for symbol: String) -> String? {
+        switch symbol {
+        case "moon.stars.fill":
+            return "sp_icon_muslim_days"
+        case "book.pages.fill":
+            return "sp_icon_info"
+        case "figure.mind.and.body":
+            return "sp_icon_prayer"
+        case "drop.fill":
+            return "sp_icon_wudu"
+        case "play.square.stack.fill":
+            return "sp_icon_quran_audio"
+        case "text.book.closed.fill":
+            return "sp_icon_quran"
+        case "calendar":
+            return "sp_icon_calendar"
+        case "pause.circle.fill":
+            return "sp_icon_progress"
+        default:
+            return nil
+        }
+    }
+
+    private func discoverDashboardGlyphKind(for symbol: String) -> String? {
+        switch symbol {
+        case "hands.sparkles.fill", "circle.grid.cross.fill":
+            return "dhikr"
+        case "location.north.circle.fill":
+            return "qibla"
+        default:
+            return nil
+        }
     }
 
     private func discoverTile(icon: String, title: String, subtitle: String) -> some View {
@@ -378,9 +425,7 @@ struct MoreView: View {
 
     private func featureMini(icon: String, title: String) -> some View {
         VStack(spacing: 5) {
-            Image(systemName: icon)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            salahFeatureIcon(icon, size: 23)
             Text(title)
                 .font(.system(size: 7.5, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
