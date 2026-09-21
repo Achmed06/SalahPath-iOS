@@ -40,6 +40,8 @@ struct QuranAudioCacheQAView: View {
     @MainActor
     private func runTest() async {
         UserDefaults.standard.set(false, forKey: "audioCacheQAPassed")
+        UserDefaults.standard.set(false, forKey: "audioCacheQACompleted")
+        UserDefaults.standard.set("running", forKey: "audioCacheQADetail")
         await QuranAudioCache.shared.clear()
 
         do {
@@ -64,12 +66,14 @@ struct QuranAudioCacheQAView: View {
             detail = "Dateien: \(secondStats.count) · Bytes: \(secondStats.bytes)\nLokal: \(localFile) · Gleiche Datei: \(sameFile)"
             UserDefaults.standard.set(passed, forKey: "audioCacheQAPassed")
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
+            UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
         } catch {
             passed = false
             status = "FAIL · \(error.localizedDescription)"
             detail = error.localizedDescription
             UserDefaults.standard.set(false, forKey: "audioCacheQAPassed")
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
+            UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
         }
     }
 }
