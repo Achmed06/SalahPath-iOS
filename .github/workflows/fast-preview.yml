@@ -147,7 +147,7 @@ jobs:
           run(["xcrun", "simctl", "bootstatus", udid, "-b"], 120)
           run(["xcrun", "simctl", "install", udid, app_path], 240)
           if "[de-audio-cache]" not in commit_message:
-              run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.salahzeit.private"], 30, required=False)
+              run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.achmed06.salahpath"], 30, required=False)
               run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "09:41", "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4"], 30, required=False)
           PY
 
@@ -181,27 +181,27 @@ jobs:
             xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
           fi
 
-          xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage "$LANGUAGE"
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage "$LANGUAGE"
           echo "FAST preview target: $SCREEN ($LANGUAGE)"
           mkdir -p fast-preview
 
           capture_one() {
             TARGET="$1"
             NAME="$2"
-            xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
+            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
             if [ "$TARGET" = "home" ]; then
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             else
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
-                xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             fi
             sleep 2
 
             STATUS_FILE="$RUNNER_TEMP/salahpath-launchctl-$TARGET.txt"
             xcrun simctl spawn "$SIM_UDID" launchctl list > "$STATUS_FILE"
-            if ! grep -F "com.salahzeit.private" "$STATUS_FILE" >/dev/null; then
+            if ! grep -F "com.achmed06.salahpath" "$STATUS_FILE" >/dev/null; then
               echo "::error::$TARGET screen is not running after launch"
               cat "$STATUS_FILE" || true
               exit 1
@@ -264,13 +264,13 @@ jobs:
             capture_one wudu-step-12 SalahPath-FAST-Wudu-Step-12.png
             capture_one wudu-step-13 SalahPath-FAST-Wudu-Step-13.png
           elif [ "$SCREEN" = "audio-cache" ]; then
-            DATA_CONTAINER="$(xcrun simctl get_app_container "$SIM_UDID" com.salahzeit.private data)"
+            DATA_CONTAINER="$(xcrun simctl get_app_container "$SIM_UDID" com.achmed06.salahpath data)"
             QA_FILE="$DATA_CONTAINER/Library/Application Support/SalahPathAudioCacheQA.txt"
             rm -f "$QA_FILE"
-            xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
+            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
             SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
             SIMCTL_CHILD_SALAH_QA_SCREEN="audio-cache" \
-              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
+              xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
