@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v437; original prayer sheets restored.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v438; approved prayer rows + Apple Calendar export.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -479,27 +479,44 @@ for audience in ("male", "female"):
 print("Restored v3.5 prayer JPG integrity: OK")
 PY
 
-# v437: the prayer overview uses the original male/female reference sheets again.
-grep -q '"prayer_reference_female"' SalahZeit/Views/GuideView.swift \
-  || fail "female prayer reference sheet selector missing"
-grep -q '"prayer_reference_male"' SalahZeit/Views/GuideView.swift \
-  || fail "male prayer reference sheet selector missing"
+# v438: exact user-approved prayer rows + native Apple Calendar event editor.
+grep -q '"prayer_reference_female_1"' SalahZeit/Views/GuideView.swift \
+  || fail "female prayer reference row 1 selector missing"
+grep -q '"prayer_reference_female_2"' SalahZeit/Views/GuideView.swift \
+  || fail "female prayer reference row 2 selector missing"
+grep -q '"prayer_reference_male_1"' SalahZeit/Views/GuideView.swift \
+  || fail "male prayer reference row 1 selector missing"
+grep -q '"prayer_reference_male_2"' SalahZeit/Views/GuideView.swift \
+  || fail "male prayer reference row 2 selector missing"
+grep -q 'CalendarEventEditor' SalahZeit/Views/GuideView.swift \
+  || fail "native Calendar editor wrapper missing"
+grep -q 'EKEventEditViewController' SalahZeit/Views/GuideView.swift \
+  || fail "EventKitUI editor missing"
+grep -q 'In Apple Kalender eintragen' SalahZeit/Views/GuideView.swift \
+  || fail "Apple Calendar export action missing"
+grep -Rqs 'NSCalendarsWriteOnlyAccessUsageDescription' SalahZeit.xcodeproj SalahZeit \
+  || fail "calendar write-only privacy description missing"
 python3 - <<'PY'
 from pathlib import Path
 import json
 
 root = Path("SalahZeit/Assets.xcassets")
-for name in ("prayer_reference_male", "prayer_reference_female"):
+for name in (
+    "prayer_reference_male_1",
+    "prayer_reference_male_2",
+    "prayer_reference_female_1",
+    "prayer_reference_female_2",
+):
     imageset = root / f"{name}.imageset"
     contents = imageset / "Contents.json"
     jpg = imageset / f"{name}.jpg"
     if not contents.is_file() or not jpg.is_file():
-        raise SystemExit(f"PRECHECK ERROR: original prayer sheet missing: {name}")
+        raise SystemExit(f"PRECHECK ERROR: approved prayer row missing: {name}")
     payload = json.loads(contents.read_text(encoding="utf-8"))
     filenames = [item.get("filename") for item in payload.get("images", [])]
     if jpg.name not in filenames:
-        raise SystemExit(f"PRECHECK ERROR: prayer sheet Contents.json mismatch: {name}")
-print("Original prayer reference sheets: OK")
+        raise SystemExit(f"PRECHECK ERROR: prayer row Contents.json mismatch: {name}")
+print("Approved prayer reference rows: OK")
 PY
 
 # v435: every guided Wudu step resolves to a dedicated SVG image asset.
