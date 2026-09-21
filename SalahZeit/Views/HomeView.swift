@@ -1659,6 +1659,88 @@ private struct ReferencePagePattern: View {
     }
 }
 
+private struct ReferenceSunGlyph: View {
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            let h = proxy.size.height
+
+            ZStack {
+                Circle()
+                    .fill(SalahTheme.gold.opacity(0.18))
+                    .frame(width: w, height: h)
+
+                ForEach(0..<8, id: \.self) { index in
+                    Rectangle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: max(2, w * 0.08), height: max(3, h * 0.16))
+                        .rotationEffect(.degrees(Double(index) * 45))
+                        .offset(y: -(h * 0.28))
+                }
+
+                Circle()
+                    .stroke(SalahTheme.gold, lineWidth: max(1.2, min(w, h) * 0.10))
+                    .frame(width: w * 0.68, height: h * 0.68)
+
+                Circle()
+                    .fill(SalahTheme.gold)
+                    .frame(width: w * 0.35, height: h * 0.35)
+            }
+        }
+    }
+}
+
+private struct ReferenceLeafMark: View {
+    let color: Color
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            let h = proxy.size.height
+
+            ZStack {
+                Path { path in
+                    path.move(to: CGPoint(x: w * 0.5, y: h * 0.08))
+                    path.addCurve(
+                        to: CGPoint(x: w * 0.18, y: h * 0.72),
+                        control1: CGPoint(x: w * 0.12, y: h * 0.18),
+                        control2: CGPoint(x: w * 0.02, y: h * 0.48)
+                    )
+                    path.addCurve(
+                        to: CGPoint(x: w * 0.5, y: h * 0.92),
+                        control1: CGPoint(x: w * 0.30, y: h * 0.90),
+                        control2: CGPoint(x: w * 0.42, y: h * 0.98)
+                    )
+                    path.addCurve(
+                        to: CGPoint(x: w * 0.82, y: h * 0.72),
+                        control1: CGPoint(x: w * 0.56, y: h * 0.98),
+                        control2: CGPoint(x: w * 0.68, y: h * 0.90)
+                    )
+                    path.addCurve(
+                        to: CGPoint(x: w * 0.5, y: h * 0.08),
+                        control1: CGPoint(x: w * 0.98, y: h * 0.48),
+                        control2: CGPoint(x: w * 0.88, y: h * 0.18)
+                    )
+                    path.closeSubpath()
+                }
+                .fill(color)
+
+                Path { path in
+                    path.move(to: CGPoint(x: w * 0.5, y: h * 0.12))
+                    path.addLine(to: CGPoint(x: w * 0.5, y: h * 0.88))
+                }
+                .stroke(color.opacity(0.72), lineWidth: max(1.2, w * 0.06))
+
+                Path { path in
+                    path.move(to: CGPoint(x: w * 0.28, y: h * 0.52))
+                    path.addLine(to: CGPoint(x: w * 0.72, y: h * 0.52))
+                }
+                .stroke(color.opacity(0.68), lineWidth: max(1.1, w * 0.05))
+            }
+        }
+    }
+}
+
 private struct ReferenceMosqueSkyline: View {
     var body: some View {
         ZStack(alignment: .bottom) {
