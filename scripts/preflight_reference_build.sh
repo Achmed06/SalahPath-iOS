@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v434; dedicated prayer vector assets included.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v435; dedicated prayer + Wudu vector assets included.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -465,6 +465,34 @@ for audience in ("male", "female"):
             raise SystemExit(f"PRECHECK ERROR: prayer asset Contents.json mismatch: {name}")
         ET.parse(svg)
 print("Dedicated prayer SVG asset integrity: OK")
+PY
+
+# v435: every guided Wudu step resolves to a dedicated SVG image asset.
+grep -q 'return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"' SalahZeit/Views/GuideView.swift \
+  || fail "Wudu intention/Basmala vector selection missing"
+python3 - <<'PY'
+from pathlib import Path
+import json
+import xml.etree.ElementTree as ET
+
+root = Path("SalahZeit/Assets.xcassets")
+assets = [
+    "wudu_intention", "wudu_basmala", "wudu_hands", "wudu_mouth", "wudu_nose",
+    "wudu_face", "wudu_rightarm", "wudu_leftarm", "wudu_head", "wudu_ears",
+    "wudu_neck", "wudu_rightfoot", "wudu_leftfoot",
+]
+for name in assets:
+    imageset = root / f"{name}.imageset"
+    contents = imageset / "Contents.json"
+    svg = imageset / f"{name}.svg"
+    if not contents.is_file() or not svg.is_file():
+        raise SystemExit(f"PRECHECK ERROR: Wudu vector asset missing: {name}")
+    payload = json.loads(contents.read_text(encoding="utf-8"))
+    filenames = [item.get("filename") for item in payload.get("images", [])]
+    if svg.name not in filenames:
+        raise SystemExit(f"PRECHECK ERROR: Wudu asset Contents.json mismatch: {name}")
+    ET.parse(svg)
+print("Dedicated Wudu SVG asset integrity: OK")
 PY
 
 echo "SalahPath preflight: PASS"
