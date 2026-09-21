@@ -1,0 +1,1 @@
+Targeted visual QA for restored v3.5 prayer artwork. Core male/female prayer poses must use the original JPG assets from the preferred prayer sheets; do not use the later replacement SVG figures.
