@@ -37,12 +37,21 @@ struct QuranAudioCacheQAView: View {
         .task { await runTest() }
     }
 
+    private func writeQAResult(_ value: String) {
+        let fileManager = FileManager.default
+        guard let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else { return }
+        try? fileManager.createDirectory(at: base, withIntermediateDirectories: true)
+        let url = base.appendingPathComponent("SalahPathAudioCacheQA.txt")
+        try? value.write(to: url, atomically: true, encoding: .utf8)
+    }
+
     @MainActor
     private func runTest() async {
         UserDefaults.standard.set(false, forKey: "audioCacheQAPassed")
         UserDefaults.standard.set(false, forKey: "audioCacheQACompleted")
         UserDefaults.standard.set("running", forKey: "audioCacheQADetail")
         UserDefaults.standard.synchronize()
+        writeQAResult("RUNNING")
         await QuranAudioCache.shared.clear()
 
         do {
@@ -69,6 +78,7 @@ struct QuranAudioCacheQAView: View {
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
             UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
             UserDefaults.standard.synchronize()
+            writeQAResult((passed ? "PASS" : "FAIL") + "\n" + detail)
         } catch {
             passed = false
             status = "FAIL · \(error.localizedDescription)"
@@ -77,6 +87,7 @@ struct QuranAudioCacheQAView: View {
             UserDefaults.standard.set(detail, forKey: "audioCacheQADetail")
             UserDefaults.standard.set(true, forKey: "audioCacheQACompleted")
             UserDefaults.standard.synchronize()
+            writeQAResult("FAIL\n" + detail)
         }
     }
 }
