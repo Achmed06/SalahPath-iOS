@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import Combine
+import UIKit
 
 @MainActor
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
@@ -19,9 +20,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         super.init()
 
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        manager.distanceFilter = 250
-        manager.headingFilter = 2
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.distanceFilter = kCLDistanceFilterNone
+        manager.headingFilter = 1
+        manager.headingOrientation = .portrait
     }
 
     func requestAccessAndStart() {
@@ -46,9 +48,25 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     private func startUpdates() {
+        updateHeadingOrientation(for: UIDevice.current.orientation)
         manager.startUpdatingLocation()
         if CLLocationManager.headingAvailable() {
             manager.startUpdatingHeading()
+        }
+    }
+
+    func updateHeadingOrientation(for orientation: UIDeviceOrientation) {
+        switch orientation {
+        case .portrait:
+            manager.headingOrientation = .portrait
+        case .portraitUpsideDown:
+            manager.headingOrientation = .portraitUpsideDown
+        case .landscapeLeft:
+            manager.headingOrientation = .landscapeLeft
+        case .landscapeRight:
+            manager.headingOrientation = .landscapeRight
+        default:
+            break
         }
     }
 
@@ -68,7 +86,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let newest = locations.last else { return }
+        let now = Date()
+        guard let newest = locations.last(where: {
+            $0.horizontalAccuracy >= 0 &&
+            $0.horizontalAccuracy <= 1_000 &&
+            abs($0.timestamp.timeIntervalSince(now)) <= 120
+        }) else { return }
+
         Task { @MainActor in
             self.location = newest
             self.lastError = nil
@@ -79,7 +103,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         guard newHeading.headingAccuracy >= 0 else { return }
         Task { @MainActor in
-            self.heading = newHeading
+            if newHeading.headingAccuracy <= 50 || self.heading == nil {
+                self.heading = newHeading
+            }
         }
     }
 
