@@ -25,5 +25,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SalahZeit-unsigned-ipa
-          path: SalahZeit-unsigned.ipa
+          path: SalahPath-unsigned.ipa
           if-no-files-found: error
