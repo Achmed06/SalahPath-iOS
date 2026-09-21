@@ -9,7 +9,7 @@ on:
       - "qa/**"
 
 concurrency:
-  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[de-qa]') && 'de-qa' || contains(github.event.head_commit.message, '[de-home]') && 'de-home' || contains(github.event.head_commit.message, '[de-dhikr]') && 'de-dhikr' || contains(github.event.head_commit.message, '[de-namaz]') && 'de-namaz' || contains(github.event.head_commit.message, '[de-times]') && 'de-times' || contains(github.event.head_commit.message, '[de-qibla]') && 'de-qibla' || contains(github.event.head_commit.message, '[de-wudu]') && 'de-wudu' || contains(github.event.head_commit.message, '[de-tracker]') && 'de-tracker' || contains(github.event.head_commit.message, '[de-reader]') && 'de-reader' || contains(github.event.head_commit.message, '[de-quran]') && 'de-quran' || contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || contains(github.event.head_commit.message, '[wudu]') && 'wudu' || contains(github.event.head_commit.message, '[reader]') && 'reader' || contains(github.event.head_commit.message, '[tracker]') && 'tracker' || 'quran' }}
+  group: salahpath-fast-${{ contains(github.event.head_commit.message, '[de-qa]') && 'de-qa' || contains(github.event.head_commit.message, '[de-home]') && 'de-home' || contains(github.event.head_commit.message, '[de-dhikr]') && 'de-dhikr' || contains(github.event.head_commit.message, '[de-namaz]') && 'de-namaz' || contains(github.event.head_commit.message, '[de-times]') && 'de-times' || contains(github.event.head_commit.message, '[de-qibla]') && 'de-qibla' || contains(github.event.head_commit.message, '[de-wudu]') && 'de-wudu' || contains(github.event.head_commit.message, '[de-tracker]') && 'de-tracker' || contains(github.event.head_commit.message, '[de-audio-cache]') && 'de-audio-cache' || contains(github.event.head_commit.message, '[de-reader]') && 'de-reader' || contains(github.event.head_commit.message, '[de-quran]') && 'de-quran' || contains(github.event.head_commit.message, '[qa]') && 'qa' || contains(github.event.head_commit.message, '[home]') && 'home' || contains(github.event.head_commit.message, '[dhikr]') && 'dhikr' || contains(github.event.head_commit.message, '[namaz]') && 'namaz' || contains(github.event.head_commit.message, '[times]') && 'times' || contains(github.event.head_commit.message, '[qibla]') && 'qibla' || contains(github.event.head_commit.message, '[wudu]') && 'wudu' || contains(github.event.head_commit.message, '[reader]') && 'reader' || contains(github.event.head_commit.message, '[tracker]') && 'tracker' || 'quran' }}
   cancel-in-progress: true
 
 jobs:
@@ -143,7 +143,7 @@ jobs:
             *"[de-qibla]"*)   SCREEN="qibla";   LANGUAGE="german" ;;
             *"[de-wudu]"*)    SCREEN="wudu";    LANGUAGE="german" ;;
             *"[de-tracker]"*) SCREEN="tracker"; LANGUAGE="german" ;;
-            *"[de-reader]"*)  SCREEN="quran-reader"; LANGUAGE="german" ;;
+            *"[de-audio-cache]"*) SCREEN="audio-cache"; LANGUAGE="german" ;;\n            *"[de-reader]"*)  SCREEN="quran-reader"; LANGUAGE="german" ;;
             *"[de-quran]"*)   SCREEN="quran";   LANGUAGE="german" ;;
             *"[qa]"*)         SCREEN="qa" ;;
             *"[home]"*)       SCREEN="home" ;;
@@ -172,7 +172,11 @@ jobs:
               SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
             fi
-            sleep 2
+            if [ "$TARGET" = "audio-cache" ]; then
+              sleep 10
+            else
+              sleep 2
+            fi
 
             STATUS_FILE="$RUNNER_TEMP/salahpath-launchctl-$TARGET.txt"
             xcrun simctl spawn "$SIM_UDID" launchctl list > "$STATUS_FILE"
@@ -239,6 +243,17 @@ jobs:
             capture_one wudu-step-13 SalahPath-FAST-Wudu-Step-13.png
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
+          fi
+
+          if [ "$SCREEN" = "audio-cache" ]; then
+            RESULT="$(xcrun simctl spawn "$SIM_UDID" defaults read com.salahzeit.private audioCacheQAPassed 2>/dev/null || echo 0)"
+            DETAIL="$(xcrun simctl spawn "$SIM_UDID" defaults read com.salahzeit.private audioCacheQADetail 2>/dev/null || true)"
+            echo "Audio cache QA result: $RESULT"
+            echo "Audio cache QA detail: $DETAIL"
+            if [ "$RESULT" != "1" ]; then
+              echo "::error::Quran audio cache integration QA failed"
+              exit 1
+            fi
           fi
 
       - name: Upload FAST preview
