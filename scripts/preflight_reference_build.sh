@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v431; offline-audio integration QA PASS.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v432; offline-audio integration QA PASS.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -421,5 +421,17 @@ grep -q 'if self.shouldRepeatCurrentItem(), let newPlayer' SalahZeit/Views/Guide
   || fail "Quran ayah repeat playback logic missing"
 grep -q 'settings.t("Vers wiederholen", "Ayet tekrarı")' SalahZeit/Views/GuideView.swift \
   || fail "Quran ayah repeat UI missing"
+
+# v432: prayer overview must make a full Rakʿa and both Salam directions explicit.
+grep -q 'Das Gebet besteht nicht nur aus 1 Rakʿa' SalahZeit/Views/GuideView.swift \
+  || fail "prayer overview Rakʿa clarification missing"
+grep -q '("sujud", "Sujud 2 · Rakʿa fertig", "2. secde · rekât tamam")' SalahZeit/Views/GuideView.swift \
+  || fail "second Sujud / Rakʿa completion step missing"
+grep -q '("salam_right", "Salām rechts · nur Kopf", "Sağa selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
+  || fail "right Salam head-only step missing"
+grep -q '("salam_left", "Salām links · nur Kopf", "Sola selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
+  || fail "left Salam head-only step missing"
+grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
+  || fail "Salam Qibla/body clarification missing"
 
 echo "SalahPath preflight: PASS"
