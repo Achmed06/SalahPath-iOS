@@ -8,6 +8,7 @@ on:
     branches: [ main ]
     paths:
       - "v3-source/**"
+      - "v*-patch/**"
       - "v31-patch/**"
       - "v32-patch/**"
       - "v33-patch/**"
@@ -291,6 +292,21 @@ jobs:
           python3 v424-patch/apply_v424.py
           python3 v425-patch/apply_v425.py
           python3 v426-patch/apply_v426.py
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          future_dirs = []
+          for d in Path(".").glob("v*-patch"):
+              digits = d.name.split("-")[0][1:]
+              if digits.isdigit() and int(digits) >= 427:
+                  future_dirs.append((int(digits), d))
+
+          for _, d in sorted(future_dirs):
+              for script in sorted(d.glob("apply_*.py")):
+                  subprocess.run(["python3", str(script)], check=True)
+          PY
           chmod +x scripts/build_unsigned_ipa.sh
 
       - name: Strict source preflight
