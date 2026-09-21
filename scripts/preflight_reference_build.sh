@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v432; offline-audio integration QA PASS.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v433; offline-audio integration QA PASS.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -433,5 +433,9 @@ grep -q '("salam_left", "Salām links · nur Kopf", "Sola selâm · yalnız baş
   || fail "left Salam head-only step missing"
 grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
   || fail "Salam Qibla/body clarification missing"
+
+# v433: direct screenshot QA route for the detailed prayer-sequence screen.
+grep -q 'case "prayer-sequence":' SalahZeit/SalahZeitApp.swift \
+  || fail "prayer-sequence screenshot QA route missing"
 
 echo "SalahPath preflight: PASS"
