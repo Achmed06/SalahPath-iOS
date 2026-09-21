@@ -1,0 +1,1 @@
+Targeted visual QA: prayer overview must show the original v3.5 male/female prayer reference sheets, not the later generated replacement sequence grid.
