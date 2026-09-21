@@ -28,9 +28,13 @@ When you choose to add an Islamic date to your calendar, SalahPath opens Apple's
 
 ## Quran content and audio
 
-Quran text, translations, and recitation audio are requested directly from AlQuran.cloud and the Islamic Network media CDN when needed. These network services necessarily receive normal request information such as the requesting IP address while serving content. SalahPath does not intentionally send your GPS coordinates, worship tracker data, Quran bookmarks, or other local app state to these services.
+Quran text, translations, and recitation audio are requested directly from AlQuran.cloud and the Islamic Network media CDN when needed. These services necessarily receive normal network request information such as the requesting IP address while serving content. Their published documentation states that the AlQuran API applies rate limits by source IP.
 
-The external services operate independently and their own terms and privacy practices apply to their infrastructure.
+SalahPath does not intentionally send your GPS coordinates, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
+
+SalahPath does not control the Quran provider's server logs. The public AlQuran documentation reviewed on 21 September 2026 did not specify a retention period for AlQuran request logs. The provider may process connection metadata for content delivery, rate limiting, abuse prevention, reliability, and other infrastructure purposes under its own terms and privacy practices.
+
+Provider terms: https://alquran.cloud/terms-and-conditions
 
 ## Tracking, advertising, and sale of data
 
