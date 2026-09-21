@@ -162,7 +162,7 @@ def sitting(female, turn=0):
 
 def make_svg(name):
     female = name.startswith("female_")
-    pose = name.replace("male_", "").replace("female_", "")
+    pose = name.split("_", 1)[1]
     if pose in ("intention", "upright"):
         art = standing(female, "relaxed")
     elif pose == "takbir":
