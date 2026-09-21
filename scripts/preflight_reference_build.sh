@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v430; offline-audio integration QA PASS.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v431; offline-audio integration QA PASS.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -411,5 +411,15 @@ grep -q 'case "audio-cache":' SalahZeit/SalahZeitApp.swift \
   || fail "Quran audio cache QA route missing"
 grep -q 'audioCacheQACompleted' SalahZeit/Views/GuideView.swift \
   || fail "Quran audio cache deterministic completion flag missing"
+
+# v431: persistent per-ayah memorisation repeat control.
+grep -q 'private let repeatCountDefaultsKey = "quranAyahRepeatCount"' SalahZeit/Views/GuideView.swift \
+  || fail "Quran ayah repeat persistence missing"
+grep -q 'func cycleRepeatMode()' SalahZeit/Views/GuideView.swift \
+  || fail "Quran ayah repeat control missing"
+grep -q 'if self.shouldRepeatCurrentItem(), let newPlayer' SalahZeit/Views/GuideView.swift \
+  || fail "Quran ayah repeat playback logic missing"
+grep -q 'settings.t("Vers wiederholen", "Ayet tekrarı")' SalahZeit/Views/GuideView.swift \
+  || fail "Quran ayah repeat UI missing"
 
 echo "SalahPath preflight: PASS"
