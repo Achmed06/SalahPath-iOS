@@ -3,11 +3,11 @@ name: Build unsigned IPA
 on:
   workflow_dispatch:
   push:
-    branches: [ main, achmed06-fictional-memory ]
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
