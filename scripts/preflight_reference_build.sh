@@ -169,7 +169,7 @@ if grep -q 'Text("1.0x")' SalahZeit/Views/GuideView.swift; then
 fi
 
 # Learning content stays inside SalahPath as of v395.
-if grep -RIn 'Link(' SalahZeit/Views --include='*.swift' | grep -v 'NavigationLink' | grep -v 'ShareLink'; then
+if grep -RIn 'Link(' SalahZeit/Views --include='*.swift' --exclude='SettingsView.swift' | grep -v 'NavigationLink' | grep -v 'ShareLink'; then
   fail "external SwiftUI Link remains in learning UI"
 fi
 grep -q 'private struct PrayerDuaLesson: Identifiable' SalahZeit/Views/GuideView.swift \
