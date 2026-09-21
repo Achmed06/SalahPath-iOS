@@ -260,6 +260,11 @@ jobs:
             capture_one wudu-step-11 SalahPath-FAST-Wudu-Step-11.png
             capture_one wudu-step-12 SalahPath-FAST-Wudu-Step-12.png
             capture_one wudu-step-13 SalahPath-FAST-Wudu-Step-13.png
+          elif [ "$SCREEN" = "audio-cache" ]; then
+            xcrun simctl terminate "$SIM_UDID" com.salahzeit.private || true
+            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+            SIMCTL_CHILD_SALAH_QA_SCREEN="audio-cache" \
+              xcrun simctl launch "$SIM_UDID" com.salahzeit.private
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
@@ -292,6 +297,7 @@ jobs:
           fi
 
       - name: Upload FAST preview
+        if: ${{ !contains(github.event.head_commit.message, '[de-audio-cache]') }}
         uses: actions/upload-artifact@v4
         with:
           name: SalahPath-fast-preview
