@@ -38,6 +38,7 @@ The current release follows the SalahPath visual direction: deep teal/petrol sur
 - Surah search, bookmarks/favorites, last-read continuation and sharing.
 - Per-ayah and full-surah human recitation.
 - Previous/next controls, loading state and playback errors.
+- Per-ayah memorisation repeat modes: 1×, 3×, 5× or continuous repeat, persisted across launches.
 - Current selectable live-audio editions:
   - Mishary Rashid Alafasy — `ar.alafasy`
   - Mahmoud Khalil Al-Husary — `ar.husary`
