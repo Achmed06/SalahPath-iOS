@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v433; offline-audio integration QA PASS.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v434; dedicated prayer vector assets included.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -437,5 +437,34 @@ grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
 # v433: direct screenshot QA route for the detailed prayer-sequence screen.
 grep -q 'case "prayer-sequence":' SalahZeit/SalahZeitApp.swift \
   || fail "prayer-sequence screenshot QA route missing"
+
+# v434: dedicated male/female vector prayer assets replace the generic Canvas body.
+grep -q 'Image(assetName)' SalahZeit/Views/GuideView.swift \
+  || fail "dedicated prayer pose asset renderer missing"
+python3 - <<'PY'
+from pathlib import Path
+import json
+import xml.etree.ElementTree as ET
+
+root = Path("SalahZeit/Assets.xcassets")
+poses = [
+    "intention", "takbir", "standing", "upright", "bowing",
+    "sujud", "sitting", "final_sitting", "salam_right", "salam_left",
+]
+for audience in ("male", "female"):
+    for pose in poses:
+        name = f"{audience}_{pose}"
+        imageset = root / f"{name}.imageset"
+        contents = imageset / "Contents.json"
+        svg = imageset / f"{name}.svg"
+        if not contents.is_file() or not svg.is_file():
+            raise SystemExit(f"PRECHECK ERROR: prayer vector asset missing: {name}")
+        payload = json.loads(contents.read_text(encoding="utf-8"))
+        filenames = [item.get("filename") for item in payload.get("images", [])]
+        if svg.name not in filenames:
+            raise SystemExit(f"PRECHECK ERROR: prayer asset Contents.json mismatch: {name}")
+        ET.parse(svg)
+print("Dedicated prayer SVG asset integrity: OK")
+PY
 
 echo "SalahPath preflight: PASS"
