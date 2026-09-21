@@ -1,0 +1,13 @@
+SalahPath Wudu artwork visual QA marker.
+
+Target: v435 dedicated Wudu SVG instruction assets.
+Language: German
+Capture: all 13 Wudu steps.
+Expected:
+- no SF Symbol placeholder art in the active instruction image
+- intention and Basmala are distinct assets
+- mouth, nose and whole-face boundaries are visually distinct
+- right/left arms include elbow area
+- head Masah and ears are distinct
+- neck/Ense is shown from the back, not the throat/front of neck
+- right and left feet are distinct and include ankle emphasis
