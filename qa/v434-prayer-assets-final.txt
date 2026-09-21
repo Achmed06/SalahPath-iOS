@@ -1,0 +1,1 @@
+Final targeted prayer-sequence visual QA after v434 parser + resilient renderer fixes and v435 integration.
