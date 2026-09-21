@@ -145,7 +145,7 @@ jobs:
                   raise SystemExit(result.returncode)
 
           run(["xcrun", "simctl", "bootstatus", udid, "-b"], 120)
-          run(["xcrun", "simctl", "install", udid, app_path], 90)
+          run(["xcrun", "simctl", "install", udid, app_path], 240)
           if "[de-audio-cache]" not in commit_message:
               run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.salahzeit.private"], 30, required=False)
               run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "09:41", "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4"], 30, required=False)
