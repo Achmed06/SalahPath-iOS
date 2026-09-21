@@ -1,0 +1,12 @@
+SalahPath prayer artwork visual QA marker.
+
+Target: v434 dedicated male/female SVG prayer assets.
+Screen: prayer-sequence
+Language: German
+Expected:
+- dedicated vector illustration assets render
+- one full Rakʿa visibly ends after Sujud 2
+- final sitting is separate
+- Salam right then left
+- only the head/face indicates Salam direction
+- torso remains facing Qibla
