@@ -857,9 +857,8 @@ struct PrayerHowToView: View {
                     HStack(spacing: 12) {
                         Button {
                             guard currentStepIndex > 0 else { return }
-                            currentStepIndex -= 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("prayer-step-top", anchor: .top)
+                                currentStepIndex -= 1
                             }
                         } label: {
                             Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
@@ -875,9 +874,8 @@ struct PrayerHowToView: View {
 
                         Button {
                             guard currentStepIndex < steps.count - 1 else { return }
-                            currentStepIndex += 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("prayer-step-top", anchor: .top)
+                                currentStepIndex += 1
                             }
                         } label: {
                             HStack {
@@ -1669,13 +1667,13 @@ struct WuduGuideView: View {
         .init(number: 4, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Mit der rechten Hand Wasser in den Mund nehmen und gründlich spülen.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
         .init(number: 5, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Vorsichtig Wasser in die Nase ziehen und die Nase reinigen.", trAction: "Burnuna nazikçe su verip temizle.", repeatText: "3×", hanafiFard: false),
         .init(number: 6, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht: vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr. Kein Bereich darf trocken bleiben. Einmal vollständig ist Farz; dreimal entspricht der Sunnah-Praxis.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka. Kuru yer kalmamalı. Bir kez tam yıkamak farzdır; üç kez yıkamak sünnet uygulamasıdır.", repeatText: "3×", hanafiFard: true),
-        .init(number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 8, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
+        .init(number: 7, image: "wudu_leftarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
+        .init(number: 8, image: "wudu_rightarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
         .init(number: 9, image: "wudu_head", deTitle: "Masah des Kopfes", trTitle: "Başın meshi", deAction: "Mit feuchten Händen über den Kopf streichen. Hanafi: Für die Gültigkeit muss mindestens ein Viertel des Kopfes vom Masah erfasst werden; die vollständige Masah wird in dieser Lernreihenfolge einmal gezeigt.", trAction: "Islak ellerle başı mesh et. Hanefî: Geçerlilik için başın en az dörtte biri mesh edilmelidir; bu öğrenme sıralamasında tam baş meshi bir kez gösterilir.", repeatText: "1×", hanafiFard: true),
         .init(number: 10, image: "wudu_ears", deTitle: "Ohren", trTitle: "Kulaklar", deAction: "Mit erneut angefeuchteten Händen die Ohren abwischen: außen mit den Daumen, innen mit Zeige- oder kleinen Fingern. Nicht einer der vier Fard-Bestandteile.", trAction: "Eller tekrar ıslatılarak kulakların dışı başparmakla, içi işaret veya serçe parmakla mesh edilir. Dört farzdan biri değildir.", repeatText: "1×", hanafiFard: false),
         .init(number: 11, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "In der Diyanet/Hanafi-Lernreihenfolge wird die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger gewischt. Nicht die Kehle oder Vorderseite des Halses wischen. Dieser Schritt ist Sunnah und gehört NICHT zu den vier Farz-Bestandteilen.", trAction: "Diyanet/Hanefî öğrenme sıralamasında ense, ıslak parmakların dış kısmıyla mesh edilir. Boğazın ön tarafı mesh edilmez. Bu adım sünnettir ve abdestin dört farzından biri DEĞİLDİR.", repeatText: "1×", hanafiFard: false),
-        .init(number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true)
+        .init(number: 12, image: "wudu_leftfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true),
+        .init(number: 13, image: "wudu_rightfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true)
     ]
 
     var body: some View {
@@ -1742,9 +1740,8 @@ struct WuduGuideView: View {
                     HStack(spacing: 12) {
                         Button {
                             guard currentStepIndex > 0 else { return }
-                            currentStepIndex -= 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("wudu-step-top", anchor: .top)
+                                currentStepIndex -= 1
                             }
                         } label: {
                             Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
@@ -1760,9 +1757,8 @@ struct WuduGuideView: View {
 
                         Button {
                             guard currentStepIndex < steps.count - 1 else { return }
-                            currentStepIndex += 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("wudu-step-top", anchor: .top)
+                                currentStepIndex += 1
                             }
                         } label: {
                             HStack {
