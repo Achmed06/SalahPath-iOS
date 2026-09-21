@@ -1,3 +1,4 @@
+# App Store readiness patch; intentionally leaves core prayer/Quran behavior unchanged.
 from pathlib import Path
 
 root = Path.cwd()
