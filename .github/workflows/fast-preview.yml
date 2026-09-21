@@ -247,10 +247,26 @@ jobs:
           fi
 
           if [ "$SCREEN" = "audio-cache" ]; then
+            echo "Waiting for Quran audio cache integration QA to complete..."
+            COMPLETED="0"
+            for attempt in {1..60}; do
+              COMPLETED="$(xcrun simctl spawn "$SIM_UDID" defaults read com.salahzeit.private audioCacheQACompleted 2>/dev/null || echo 0)"
+              if [ "$COMPLETED" = "1" ]; then
+                break
+              fi
+              sleep 1
+            done
+
             RESULT="$(xcrun simctl spawn "$SIM_UDID" defaults read com.salahzeit.private audioCacheQAPassed 2>/dev/null || echo 0)"
             DETAIL="$(xcrun simctl spawn "$SIM_UDID" defaults read com.salahzeit.private audioCacheQADetail 2>/dev/null || true)"
+            echo "Audio cache QA completed: $COMPLETED"
             echo "Audio cache QA result: $RESULT"
             echo "Audio cache QA detail: $DETAIL"
+
+            if [ "$COMPLETED" != "1" ]; then
+              echo "::error::Quran audio cache integration QA timed out before completion"
+              exit 1
+            fi
             if [ "$RESULT" != "1" ]; then
               echo "::error::Quran audio cache integration QA failed"
               exit 1
