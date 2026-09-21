@@ -126,11 +126,11 @@ jobs:
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
 
-          python3 - "$SIM_UDID" "$APP_PATH" <<'PY'
+          python3 - "$SIM_UDID" "$APP_PATH" "$FAST_COMMIT_MESSAGE" <<'PY'
           import subprocess
           import sys
 
-          udid, app_path = sys.argv[1], sys.argv[2]
+          udid, app_path, commit_message = sys.argv[1], sys.argv[2], sys.argv[3]
 
           def run(args, timeout, required=True):
               print("RUN:", " ".join(args), flush=True)
@@ -146,8 +146,9 @@ jobs:
 
           run(["xcrun", "simctl", "bootstatus", udid, "-b"], 120)
           run(["xcrun", "simctl", "install", udid, app_path], 90)
-          run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.salahzeit.private"], 30, required=False)
-          run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "09:41", "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4"], 30, required=False)
+          if "[de-audio-cache]" not in commit_message:
+              run(["xcrun", "simctl", "privacy", udid, "grant", "location", "com.salahzeit.private"], 30, required=False)
+              run(["xcrun", "simctl", "status_bar", udid, "override", "--time", "09:41", "--batteryLevel", "100", "--wifiBars", "3", "--cellularBars", "4"], 30, required=False)
           PY
 
           SCREEN="quran"
