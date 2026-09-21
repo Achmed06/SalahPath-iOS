@@ -530,4 +530,22 @@ for name in assets:
 print("Dedicated Wudu SVG asset integrity: OK")
 PY
 
+
+# v439: App Store release-readiness guardrails.
+test -f SalahZeit/PrivacyInfo.xcprivacy   || fail "PrivacyInfo.xcprivacy missing"
+grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' SalahZeit/PrivacyInfo.xcprivacy   || fail "UserDefaults required-reason category missing"
+grep -q 'CA92.1' SalahZeit/PrivacyInfo.xcprivacy   || fail "UserDefaults CA92.1 reason missing"
+grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' SalahZeit/PrivacyInfo.xcprivacy   || fail "file timestamp required-reason category missing"
+grep -q 'C617.1' SalahZeit/PrivacyInfo.xcprivacy   || fail "file timestamp C617.1 reason missing"
+grep -q 'PrivacyInfo.xcprivacy in Resources' SalahZeit.xcodeproj/project.pbxproj   || fail "privacy manifest is not in target resources"
+grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' SalahZeit.xcodeproj/project.pbxproj   || fail "App Store bundle identifier mismatch"
+grep -q 'MARKETING_VERSION = 3.62;' SalahZeit.xcodeproj/project.pbxproj   || fail "project marketing version mismatch"
+grep -q 'CURRENT_PROJECT_VERSION = 76;' SalahZeit.xcodeproj/project.pbxproj   || fail "project build number mismatch"
+grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' SalahZeit.xcodeproj/project.pbxproj   || fail "export compliance declaration missing"
+grep -q 'blob/main/PRIVACY.md' SalahZeit/Views/SettingsView.swift   || fail "in-app privacy policy link missing"
+grep -q 'SalahPath-iOS/issues' SalahZeit/Views/SettingsView.swift   || fail "in-app support link missing"
+if command -v plutil >/dev/null 2>&1; then
+  plutil -lint SalahZeit/PrivacyInfo.xcprivacy >/dev/null     || fail "PrivacyInfo.xcprivacy is not a valid plist"
+fi
+
 echo "SalahPath preflight: PASS"
