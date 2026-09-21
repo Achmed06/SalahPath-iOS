@@ -123,7 +123,6 @@ jobs:
         run: |
           xcrun simctl boot "$SIM_UDID" || true
           xcrun simctl bootstatus "$SIM_UDID" -b
-          xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
@@ -157,6 +156,10 @@ jobs:
             *"[quran]"*)      SCREEN="quran" ;;
           esac
 
+          if [ "$SCREEN" != "audio-cache" ]; then
+            xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
+          fi
+
           xcrun simctl spawn "$SIM_UDID" defaults write com.salahzeit.private appLanguage "$LANGUAGE"
           echo "FAST preview target: $SCREEN ($LANGUAGE)"
           mkdir -p fast-preview
@@ -173,11 +176,7 @@ jobs:
               SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
                 xcrun simctl launch "$SIM_UDID" com.salahzeit.private
             fi
-            if [ "$TARGET" = "audio-cache" ]; then
-              sleep 10
-            else
-              sleep 2
-            fi
+            sleep 2
 
             STATUS_FILE="$RUNNER_TEMP/salahpath-launchctl-$TARGET.txt"
             xcrun simctl spawn "$SIM_UDID" launchctl list > "$STATUS_FILE"
