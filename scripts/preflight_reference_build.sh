@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v435; dedicated prayer + Wudu vector assets included.
+# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v436; preferred v3.5 prayer artwork restored.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -438,33 +438,45 @@ grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
 grep -q 'case "prayer-sequence":' SalahZeit/SalahZeitApp.swift \
   || fail "prayer-sequence screenshot QA route missing"
 
-# v434: dedicated male/female vector prayer assets replace the generic Canvas body.
+# v436: restore the original v3.5 male/female prayer artwork preferred by the user.
 grep -q 'Image(assetName)' SalahZeit/Views/GuideView.swift \
-  || fail "dedicated prayer pose asset renderer missing"
+  || fail "prayer pose asset renderer missing"
 python3 - <<'PY'
 from pathlib import Path
 import json
 import xml.etree.ElementTree as ET
 
 root = Path("SalahZeit/Assets.xcassets")
-poses = [
-    "intention", "takbir", "standing", "upright", "bowing",
-    "sujud", "sitting", "final_sitting", "salam_right", "salam_left",
+legacy_poses = [
+    "intention", "takbir", "standing", "upright",
+    "bowing", "sujud", "sitting", "final_sitting",
 ]
+
 for audience in ("male", "female"):
-    for pose in poses:
+    for pose in legacy_poses:
         name = f"{audience}_{pose}"
         imageset = root / f"{name}.imageset"
         contents = imageset / "Contents.json"
-        svg = imageset / f"{name}.svg"
-        if not contents.is_file() or not svg.is_file():
-            raise SystemExit(f"PRECHECK ERROR: prayer vector asset missing: {name}")
+        jpg = imageset / f"{name}.jpg"
+        if not contents.is_file() or not jpg.is_file():
+            raise SystemExit(f"PRECHECK ERROR: restored v3.5 prayer JPG missing: {name}")
         payload = json.loads(contents.read_text(encoding="utf-8"))
         filenames = [item.get("filename") for item in payload.get("images", [])]
-        if svg.name not in filenames:
-            raise SystemExit(f"PRECHECK ERROR: prayer asset Contents.json mismatch: {name}")
+        if jpg.name not in filenames:
+            raise SystemExit(f"PRECHECK ERROR: restored prayer Contents.json mismatch: {name}")
+        if (imageset / f"{name}.svg").exists():
+            raise SystemExit(f"PRECHECK ERROR: replacement SVG still active for restored pose: {name}")
+
+# Salam still has dedicated direction-specific artwork until it is rebuilt in the restored style.
+for audience in ("male", "female"):
+    for pose in ("salam_right", "salam_left"):
+        name = f"{audience}_{pose}"
+        svg = root / f"{name}.imageset" / f"{name}.svg"
+        if not svg.is_file():
+            raise SystemExit(f"PRECHECK ERROR: temporary Salam direction asset missing: {name}")
         ET.parse(svg)
-print("Dedicated prayer SVG asset integrity: OK")
+
+print("Restored v3.5 prayer JPG integrity: OK")
 PY
 
 # v435: every guided Wudu step resolves to a dedicated SVG image asset.
