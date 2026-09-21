@@ -12,6 +12,16 @@ fail() {
 
 echo "== SalahPath preflight =="
 
+# App Store uploads require Xcode 26+ as of 28 April 2026.
+if command -v xcodebuild >/dev/null 2>&1; then
+  XCODE_VERSION="$(xcodebuild -version | awk 'NR==1 {print $2}')"
+  XCODE_MAJOR="${XCODE_VERSION%%.*}"
+  [[ "$XCODE_MAJOR" =~ ^[0-9]+$ ]] || fail "unable to parse Xcode version: $XCODE_VERSION"
+  (( XCODE_MAJOR >= 26 )) || fail "App Store build requires Xcode 26 or newer; found Xcode $XCODE_VERSION"
+  echo "App Store Xcode requirement: OK ($XCODE_VERSION)"
+fi
+
+
 test -d SalahZeit || fail "SalahZeit source directory missing"
 test -f SalahZeit/SalahZeitApp.swift || fail "SalahZeitApp.swift missing"
 test -f SalahZeit/Views/HomeView.swift || fail "HomeView.swift missing"

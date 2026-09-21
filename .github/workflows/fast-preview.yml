@@ -15,7 +15,7 @@ concurrency:
 jobs:
   fast-preview:
     if: ${{ startsWith(github.event.head_commit.message, 'FAST') }}
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       FAST_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
