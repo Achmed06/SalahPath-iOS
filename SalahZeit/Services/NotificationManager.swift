@@ -33,7 +33,8 @@ final class NotificationManager {
         }
     }
 
-    @discardableResult\n    func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async -> Bool {
+    @discardableResult
+    func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async -> Bool {
         schedulingRevision &+= 1
         let revision = schedulingRevision
 
@@ -109,6 +110,8 @@ final class NotificationManager {
                 }
             }
         }
+
+        return revision == schedulingRevision
     }
 
     private func ensureAuthorization() async -> Bool {
@@ -127,7 +130,7 @@ final class NotificationManager {
 
     private func removeExistingPrayerNotifications(for revision: Int) async {
         let requests = await center.pendingNotificationRequests()
-        guard revision == schedulingRevision else { return false }
+        guard revision == schedulingRevision else { return }
 
         let ids = requests
             .map(\.identifier)
@@ -137,7 +140,7 @@ final class NotificationManager {
     }
 
     private func add(_ request: UNNotificationRequest, revision: Int) async {
-        guard revision == schedulingRevision else { return false }
+        guard revision == schedulingRevision else { return }
 
         do {
             try await center.add(request)
