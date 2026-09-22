@@ -1265,7 +1265,17 @@ struct HomeView: View {
     private func notificationTaskID(location: CLLocation) -> String {
         let lat = Int((location.coordinate.latitude * 10).rounded())
         let lon = Int((location.coordinate.longitude * 10).rounded())
-        return "\(lat)-\(lon)-\(settings.calculationPreset.rawValue)-\(settings.asrRule.rawValue)-\(settings.notificationLeadMinutes)-\(settings.notificationsEnabled)"
+        let prayerFlags = [
+            settings.fajrNotificationEnabled,
+            settings.dhuhrNotificationEnabled,
+            settings.asrNotificationEnabled,
+            settings.maghribNotificationEnabled,
+            settings.ishaNotificationEnabled
+        ]
+        .map { $0 ? "1" : "0" }
+        .joined()
+
+        return "\(lat)-\(lon)-\(settings.calculationPreset.rawValue)-\(settings.asrRule.rawValue)-\(settings.notificationLeadMinutes)-\(settings.notificationsEnabled)-\(settings.notifyAtPrayerTime)-\(prayerFlags)"
     }
 
     private func gregorianDateShort(_ date: Date) -> String {
