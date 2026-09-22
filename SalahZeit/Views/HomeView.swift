@@ -330,7 +330,9 @@ struct HomeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            if !isScreenshotQA {
+            guard !isScreenshotQA else { return }
+            if locationManager.authorizationStatus == .authorizedWhenInUse ||
+                locationManager.authorizationStatus == .authorizedAlways {
                 locationManager.requestAccessAndStart()
             }
         }
@@ -1137,18 +1139,74 @@ struct HomeView: View {
     }
 
     private var locationState: some View {
-        ContentUnavailableView {
-            Label(settings.t("Standort benötigt", "Konum gerekli"), systemImage: "location.slash")
-        } description: {
-            Text(settings.t(
-                "SalahPath benötigt deinen Standort nur für Gebetszeiten und Qibla. Exagte Koordinaten werden nicht auf dem Dashboard angezeigt.",
-                "SalahPath konumunu yalnızca namaz vakitleri ve kıble için kullanır. Kesin koordinatlar ana ekranda gösterilmez."
-            ))
-        } actions: {
-            Button(settings.t("Standort erlauben", "Konuma izin ver")) { locationManager.requestAccessAndStart() }
-                .buttonStyle(.borderedProminent)
-                .tint(SalahTheme.teal)
+        ScrollView {
+            VStack(spacing: 0) {
+                brandHeader
+                    .padding(.horizontal, 7)
+                    .padding(.top, 3)
+                    .padding(.bottom, 5)
+                    .background(SalahTheme.deepTeal)
+
+                LazyVStack(spacing: 5) {
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "location.slash")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(SalahTheme.teal)
+
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(settings.t("Standort ist optional", "Konum isteğe bağlı"))
+                                    .font(.system(size: 12.5, weight: .bold))
+                                    .foregroundStyle(SalahTheme.ink)
+                                Text(settings.t(
+                                    "Nur Gebetszeiten und Qibla benötigen deinen Standort. Alle anderen Bereiche bleiben nutzbar.",
+                                    "Yalnızca namaz vakitleri ve kıble konum gerektirir. Diğer tüm alanları kullanabilirsin."
+                                ))
+                                .font(.system(size: 9.2, weight: .medium))
+                                .foregroundStyle(SalahTheme.mutedInk)
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+
+                            Spacer(minLength: 4)
+                        }
+
+                        Button {
+                            locationManager.requestAccessAndStart()
+                        } label: {
+                            Label(settings.t("Standort aktivieren", "Konumu etkinleştir"), systemImage: "location.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.white)
+                        .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    }
+                    .padding(10)
+                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 13, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.40), lineWidth: 0.8)
+                    }
+
+                    quickActionStrip
+                    dailyDuaCard
+
+                    NavigationLink { PrayerTrackerOverviewView() } label: { streakCard }
+                        .buttonStyle(.plain)
+                        .accessibilityHint(settings.t("Gebets-Tracking öffnen", "Namaz takibini aç"))
+
+                    dashboardGrid
+                    referenceQuoteStrip
+                }
+                .padding(.horizontal, 7)
+                .padding(.top, 5)
+                .padding(.bottom, 4)
+                .background(SalahTheme.page)
+            }
         }
+        .scrollIndicators(.hidden)
+        .background(SalahTheme.page)
     }
 
     private func isNext(_ prayer: PrayerOccurrence, location: CLLocation) -> Bool {
