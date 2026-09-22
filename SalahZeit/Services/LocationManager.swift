@@ -87,6 +87,25 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         manager.requestLocation()
     }
 
+    func prepareQiblaHeading() {
+        updateHeadingOrientation(for: UIDevice.current.orientation)
+        startHeadingIfAvailable()
+
+        if manager.authorizationStatus == .authorizedWhenInUse ||
+            manager.authorizationStatus == .authorizedAlways {
+            // A real device location lets Core Location convert magnetic heading to true north.
+            // Manual prayer-time coordinates remain untouched in didUpdateLocations.
+            manager.startUpdatingLocation()
+        }
+    }
+
+    func stopQiblaHeading() {
+        manager.stopUpdatingHeading()
+        if usesManualLocation {
+            manager.stopUpdatingLocation()
+        }
+    }
+
     func useDeviceLocation() {
         clearManualLocation()
         requestAccessAndStart()
@@ -202,7 +221,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }) else { return }
 
         Task { @MainActor in
-            guard !self.usesManualLocation else { return }
+            if self.usesManualLocation {
+                // The location update was only needed so CLHeading can provide trueHeading.
+                self.manager.stopUpdatingLocation()
+                return
+            }
             self.location = newest
             self.lastError = nil
             self.updateLocalityIfNeeded(for: newest)
