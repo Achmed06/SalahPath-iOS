@@ -2473,7 +2473,8 @@ actor QuranAudioCache {
     private let maxBytes: Int64 = 300 * 1024 * 1024
 
     private var directoryURL: URL {
-        let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? fileManager.temporaryDirectory
         return base.appendingPathComponent("SalahPathAudioCache", isDirectory: true)
     }
 
@@ -5185,15 +5186,27 @@ private final class QuranStore: ObservableObject {
     @Published var error:String?
 
     func loadChapters() async {
-        guard chapters.isEmpty else { return }
-        isLoading = true; defer { isLoading=false }
+        guard chapters.isEmpty, !isLoading else { return }
+        error = nil
+        isLoading = true
+        defer { isLoading = false }
+
         do {
-            let url=URL(string:"https://api.alquran.cloud/v1/surah")!
-            var request = URLRequest(url: url); request.timeoutInterval = 20
-            let (data,response)=try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else { throw URLError(.badServerResponse) }
-            chapters=try JSONDecoder().decode(SurahListResponse.self,from:data).data
-        } catch { self.error=error.localizedDescription }
+            guard let url = URL(string: "https://api.alquran.cloud/v1/surah") else {
+                throw URLError(.badURL)
+            }
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 20
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            chapters = try JSONDecoder().decode(SurahListResponse.self, from: data).data
+            error = nil
+        } catch {
+            self.error = error.localizedDescription
+        }
     }
 
     func loadSurah(_ number:Int, language:AppLanguage) async throws -> (SurahData,SurahData,SurahData) {
@@ -5417,11 +5430,23 @@ struct QuranView: View {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
-                ContentUnavailableView(
-                    settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
-                    systemImage: "wifi.exclamationmark",
-                    description: Text(error)
-                )
+                VStack(spacing: 12) {
+                    ContentUnavailableView(
+                        settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(error)
+                    )
+
+                    Button {
+                        Task { await store.loadChapters() }
+                    } label: {
+                        Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
             } else {
                 ScrollView {
                     VStack(spacing: 8) {
