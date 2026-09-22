@@ -1263,8 +1263,8 @@ struct HomeView: View {
     }
 
     private func notificationTaskID(location: CLLocation) -> String {
-        let lat = Int((location.coordinate.latitude * 10).rounded())
-        let lon = Int((location.coordinate.longitude * 10).rounded())
+        let lat = Int((location.coordinate.latitude * 1_000).rounded())
+        let lon = Int((location.coordinate.longitude * 1_000).rounded())
         let prayerFlags = [
             settings.fajrNotificationEnabled,
             settings.dhuhrNotificationEnabled,
@@ -1274,8 +1274,32 @@ struct HomeView: View {
         ]
         .map { $0 ? "1" : "0" }
         .joined()
+        let offsets = [
+            settings.fajrOffset,
+            settings.dhuhrOffset,
+            settings.asrOffset,
+            settings.maghribOffset,
+            settings.ishaOffset
+        ]
+        .map(String.init)
+        .joined(separator: ",")
+        let dayKey = Calendar.current.ordinality(of: .day, in: .era, for: now) ?? 0
 
-        return "\(lat)-\(lon)-\(settings.calculationPreset.rawValue)-\(settings.asrRule.rawValue)-\(settings.notificationLeadMinutes)-\(settings.notificationsEnabled)-\(settings.notifyAtPrayerTime)-\(prayerFlags)"
+        return [
+            String(lat),
+            String(lon),
+            settings.calculationPreset.rawValue,
+            settings.asrRule.rawValue,
+            String(settings.notificationLeadMinutes),
+            settings.notificationsEnabled ? "1" : "0",
+            settings.notifyAtPrayerTime ? "1" : "0",
+            prayerFlags,
+            offsets,
+            settings.language.rawValue,
+            settings.use24Hour ? "24h" : "12h",
+            TimeZone.current.identifier,
+            String(dayKey)
+        ].joined(separator: "|")
     }
 
     private func gregorianDateShort(_ date: Date) -> String {
