@@ -716,24 +716,228 @@ struct PrayerHowToView: View {
     }
 
     init(initialStepIndex: Int = 0) {
-        _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 11))
+        _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
         Self.validateSalamDirectionSequence()
     }
 
     private var steps: [PrayerTutorialStep] {
         [
-            .init(number: "1", pose: .intention, imageKey: "intention", deTitle: "Niyyah – Absicht", trTitle: "Niyet", deAction: "Stehe sauber bedeckt und zur Qibla. Fasse im Herzen die Absicht für genau das Gebet, das du jetzt betest. Eine bestimmte gesprochene Niyyah-Formel ist nicht erforderlich.", trAction: "Temiz ve örtülü şekilde kıbleye dön. Kılacağın namaza kalben niyet et. Niyeti belirli bir cümleyle sesli söylemek şart değildir.", deHanafi: nil, trHanafi: nil, recitations: []),
-            .init(number: "2", pose: .takbir, imageKey: "takbir", deTitle: "Eröffnungstakbir", trTitle: "İftitah tekbiri", deAction: "Heb beide Hände an und sage einmal Allāhu akbar. Danach die Hände für den Qiyām binden.", trAction: "İki eli kaldır, bir kez Allāhu ekber de. Sonra kıyam için elleri bağla.", deHanafi: settings.prayerAudience == .male ? "Hanafi Mann: Daumen etwa auf Höhe der Ohrläppchen." : "Hanafi Frau: Fingerspitzen etwa bis Schulterhöhe.", trHanafi: settings.prayerAudience == .male ? "Hanefî erkek: Başparmaklar yaklaşık kulak memesi hizasında." : "Hanefî kadın: Parmak uçları yaklaşık omuz hizasına kadar.", recitations: [.init(deLabel: "Einmal", trLabel: "Bir kez", arabic: PrayerText.takbir.arabic, transliteration: PrayerText.takbir.transliteration, deMeaning: PrayerText.takbir.deMeaning, trMeaning: PrayerText.takbir.trMeaning, deNote: nil, trNote: nil)]),
-            .init(number: "3", pose: .standing, imageKey: "standing", deTitle: "Qiyām – Hände binden", trTitle: "Kıyam – elleri bağlama", deAction: "Stehe ruhig und schaue zum Ort der Niederwerfung. Beginne im ersten Rakʿah mit Sübhaneke.", trAction: "Sakin dur ve secde edeceğin yere bak. İlk rekâtta Sübhâneke ile başla.", deHanafi: settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.", trHanafi: settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.", recitations: [PrayerText.subhanaka]),
-            .init(number: "4", pose: .standing, imageKey: "standing", deTitle: "Qiyām – Quran rezitieren", trTitle: "Kıyam – kıraat", deAction: "Im ersten Rakʿah: Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sura oder passende Verse. Im zweiten Rakʿah beginnt man mit der Basmala, dann Fātiha und Zusatzsura.", trAction: "İlk rekâtta: Eûzü, Besmele, Fâtiha, Âmin ve ardından zamm-ı sûre veya uygun ayetler. İkinci rekâtta Besmele, Fâtiha ve zamm-ı sûre okunur.", deHanafi: "Bei 3-/4-Rakʿah-Fard wird im 3. und 4. Rakʿah nach hanafitischer Lehre grundsätzlich nur al-Fātiha gelesen. Vier-Rakʿah-Sunnah hat eigene Regeln – siehe Gebetsplan.", trHanafi: "3/4 rekât farz namazların 3. ve 4. rekâtında Hanefî uygulamada esas olarak yalnız Fâtiha okunur. Dört rekât sünnetlerin ayrıntısı için namaz planına bak.", recitations: [PrayerText.audhu, PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]),
-            .init(number: "5", pose: .bowing, imageKey: "bowing", deTitle: "Rukūʿ", trTitle: "Rükû", deAction: "Sage beim Hinuntergehen Allāhu akbar. Beuge dich und halte die Position kurz ruhig. Danach den Rukūʿ-Dhikr dreimal.", trAction: "Rükûya giderken Allāhu ekber de. Rükûda kısa bir an sakin dur. Sonra rükû tesbihini üç kez söyle.", deHanafi: settings.prayerAudience == .male ? "Mann: Rücken möglichst gerade, Hände auf den Knien, Knie gestreckt." : "Frau: kompaktere Haltung; Rücken weniger waagerecht, Hände auf den Knien, Knie etwas gebeugt.", trHanafi: settings.prayerAudience == .male ? "Erkek: sırt mümkün olduğunca düz, eller dizlerde, dizler dik." : "Kadın: daha toplu duruş; sırt daha az yatay, eller dizlerde, dizler biraz bükülü.", recitations: [PrayerText.takbir, PrayerText.ruku]),
-            .init(number: "6", pose: .upright, imageKey: "upright", deTitle: "Kavme – vollständig aufrichten", trTitle: "Kavme – rükûdan tam doğrulma", deAction: "Richte dich vollständig aus dem Rukūʿ auf. Nicht direkt in die Secde fallen: erst ganz stehen und kurz ruhig werden.", trAction: "Rükûdan tamamen doğrul. Hemen secdeye inme; önce tam ayağa kalk ve kısa bir an sakin dur.", deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.", trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.", recitations: [PrayerText.rising, PrayerText.upright]),
-            .init(number: "7", pose: .prostration, imageKey: "sujud", deTitle: "Erste Secde", trTitle: "Birinci secde", deAction: "Sage Allāhu akbar und gehe in die Niederwerfung. Stirn und Nase liegen auf; Hände stehen neben dem Kopf. Halte die Secde ruhig und sage den Dhikr dreimal.", trAction: "Allāhu ekber diyerek secdeye git. Alın ve burun yere gelir; eller başın yanında olur. Secdede sakin dur ve tesbihi üç kez söyle.", deHanafi: settings.prayerAudience == .male ? "Mann: Unterarme vom Boden und Arme vom Körper fernhalten, sofern ohne Mühe möglich." : "Frau: Arme näher am Körper, Bauch näher an den Oberschenkeln; kompaktere Haltung.", trHanafi: settings.prayerAudience == .male ? "Erkek: mümkünse dirsekleri yere koymaz, kolları gövdeden açık tutar." : "Kadın: kollar gövdeye, karın uyluklara daha yakın; daha toplu duruş.", recitations: [PrayerText.takbir, PrayerText.sujud]),
-            .init(number: "8", pose: .sitting, imageKey: "sitting", deTitle: "Celse – zwischen den Secden", trTitle: "Celse – iki secde arası", deAction: "Sage Allāhu akbar und setze dich vollständig auf. Bleibe kurz ruhig sitzen; dann erst zur zweiten Secde.", trAction: "Allāhu ekber diyerek tamamen otur. Kısa bir an sakin otur; sonra ikinci secdeye git.", deHanafi: settings.prayerAudience == .male ? "Mann: auf dem linken Fuß sitzen; rechter Fuß aufgestellt, Zehen Richtung Qibla." : "Frau: beide Füße zur rechten Seite herausnehmen und auf dem Boden sitzen.", trHanafi: settings.prayerAudience == .male ? "Erkek: sol ayak üzerine oturur; sağ ayak dik, parmaklar kıbleye yönelir." : "Kadın: iki ayağını sağ tarafa çıkararak yere oturur.", recitations: [PrayerText.takbir, PrayerText.rabbighfirli]),
-            .init(number: "9", pose: .prostration, imageKey: "sujud", deTitle: "Zweite Secde", trTitle: "İkinci secde", deAction: "Sage Allāhu akbar, gehe erneut in die Secde und sprich den Dhikr dreimal. Danach mit Allāhu akbar zum nächsten Rakʿah aufstehen oder – wenn vorgeschrieben – sitzen bleiben.", trAction: "Allāhu ekber diyerek tekrar secdeye git ve tesbihi üç kez söyle. Sonra Allāhu ekber diyerek sonraki rekâta kalk veya gerekiyorsa otur.", deHanafi: nil, trHanafi: nil, recitations: [PrayerText.takbir, PrayerText.sujud]),
-            .init(number: "10", pose: .sitting, imageKey: "final_sitting", deTitle: "Nach dem 2. Rakʿah", trTitle: "2. rekâttan sonra", deAction: "Nach zwei Rakʿah sitzt du und liest Ettehiyyâtü. Endet das Gebet hier, folgt das vollständige Schluss-Sitzen. Geht ein 3-/4-Rakʿah-Fard weiter, stehst du nach Ettehiyyâtü mit Allāhu akbar auf.", trAction: "İki rekâttan sonra oturup Ettehiyyâtü oku. Namaz burada bitiyorsa son oturuşa devam edilir. 3/4 rekât farz devam ediyorsa Ettehiyyâtü'den sonra Allāhu ekber diyerek ayağa kalkılır.", deHanafi: "Bei bestimmten vier-Rakʿah-Sunnah-Gebeten ist die erste Sitzphase anders – im Gebetsplan wird das getrennt erklärt.", trHanafi: "Bazı dört rekât sünnetlerde ilk oturuş farklıdır; namaz planında ayrı açıklanır.", recitations: [PrayerText.tahiyyat]),
-            .init(number: "11", pose: .finalSitting, imageKey: "final_sitting", deTitle: "Letztes Sitzen", trTitle: "Son oturuş", deAction: "Im letzten Sitzen: Ettehiyyâtü, anschließend Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ.", trAction: "Son oturuşta: Ettehiyyâtü, ardından Allâhümme Salli, Allâhümme Bârik ve Rabbenâ Âtinâ gibi bir kapanış duası okunur.", deHanafi: nil, trHanafi: nil, recitations: [PrayerText.tahiyyat, PrayerText.salli, PrayerText.barik, PrayerText.rabbana]),
-            .init(number: "12", pose: .salam, imageKey: nil, deTitle: "Salām – Gebet beenden", trTitle: "Selâm – namazı bitirme", deAction: "Das ist bewusst in zwei klare Bewegungen geteilt: zuerst Gesicht nach RECHTS und den Satz sprechen; danach Gesicht nach LINKS und denselben Satz erneut sprechen.", trAction: "Bu adım iki açık harekete ayrılır: önce yüzünü SAĞA çevirip cümleyi söyle; sonra SOLA çevirip aynı cümleyi tekrar söyle.", deHanafi: "Hanafi: zuerst rechts, dann links. Kein Kreis drehen – nur den Kopf/das Gesicht jeweils zur Seite wenden.", trHanafi: "Hanefî: önce sağa, sonra sola. Daire çizilmez; sadece baş/yüz iki yana çevrilir.", recitations: [PrayerText.salam])
+            .init(
+                number: "1",
+                pose: .intention,
+                imageKey: "intention",
+                deTitle: "Niyyah – Absicht",
+                trTitle: "Niyet",
+                deAction: "Stehe sauber bedeckt und zur Qibla. Fasse im Herzen die Absicht für genau das Gebet, das du jetzt betest. Eine bestimmte gesprochene Niyyah-Formel ist nicht erforderlich.",
+                trAction: "Temiz ve örtülü şekilde kıbleye dön. Kılacağın namaza kalben niyet et. Niyeti belirli bir cümleyle sesli söylemek şart değildir.",
+                deHanafi: nil,
+                trHanafi: nil,
+                recitations: []
+            ),
+            .init(
+                number: "2",
+                pose: .takbir,
+                imageKey: "takbir",
+                deTitle: "Eröffnungstakbir",
+                trTitle: "İftitah tekbiri",
+                deAction: "Heb beide Hände an und sage einmal Allāhu akbar. Danach bindest du die Hände für den Qiyām.",
+                trAction: "İki eli kaldır, bir kez Allāhu ekber de. Sonra kıyam için elleri bağla.",
+                deHanafi: settings.prayerAudience == .male ? "Hanafi Mann: Daumen etwa auf Höhe der Ohrläppchen." : "Hanafi Frau: Fingerspitzen etwa bis Schulterhöhe.",
+                trHanafi: settings.prayerAudience == .male ? "Hanefî erkek: Başparmaklar yaklaşık kulak memesi hizasında." : "Hanefî kadın: Parmak uçları yaklaşık omuz hizasına kadar.",
+                recitations: [.init(deLabel: "Einmal", trLabel: "Bir kez", arabic: PrayerText.takbir.arabic, transliteration: PrayerText.takbir.transliteration, deMeaning: PrayerText.takbir.deMeaning, trMeaning: PrayerText.takbir.trMeaning, deNote: nil, trNote: nil)]
+            ),
+            .init(
+                number: "3",
+                pose: .standing,
+                imageKey: "standing",
+                deTitle: "Qiyām – 1. Rakʿah",
+                trTitle: "Kıyam – 1. rekât",
+                deAction: "Stehe ruhig mit gebundenen Händen und schaue zum Ort der Niederwerfung. Im ersten Rakʿah liest du Sübhaneke, danach Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sura oder passende Verse.",
+                trAction: "Eller bağlı şekilde sakin dur ve secde edeceğin yere bak. İlk rekâtta Sübhâneke, ardından Eûzü, Besmele, Fâtiha, Âmin ve sonra zamm-ı sûre veya uygun ayetler okunur.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.",
+                recitations: [PrayerText.subhanaka, PrayerText.audhu, PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
+            ),
+            .init(
+                number: "4",
+                pose: .bowing,
+                imageKey: "bowing",
+                deTitle: "Rukūʿ – 1. Rakʿah",
+                trTitle: "Rükû – 1. rekât",
+                deAction: "Sage beim Hinuntergehen Allāhu akbar. Beuge dich und halte die Position kurz ruhig. Sprich danach den Rukūʿ-Dhikr dreimal.",
+                trAction: "Rükûya giderken Allāhu ekber de. Rükûda kısa bir an sakin dur. Sonra rükû tesbihini üç kez söyle.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: Rücken möglichst gerade, Hände auf den Knien, Knie gestreckt." : "Frau: kompaktere Haltung; Rücken weniger waagerecht, Hände auf den Knien, Knie etwas gebeugt.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: sırt mümkün olduğunca düz, eller dizlerde, dizler dik." : "Kadın: daha toplu duruş; sırt daha az yatay, eller dizlerde, dizler biraz bükülü.",
+                recitations: [PrayerText.takbir, PrayerText.ruku]
+            ),
+            .init(
+                number: "5",
+                pose: .upright,
+                imageKey: "upright",
+                deTitle: "Aufrichten – 1. Rakʿah",
+                trTitle: "Doğrulma – 1. rekât",
+                deAction: "Richte dich vollständig aus dem Rukūʿ auf. Stehe kurz ganz ruhig, bevor du in die Secde gehst.",
+                trAction: "Rükûdan tamamen doğrul. Secdeye gitmeden önce kısa bir an tamamen dik ve sakin dur.",
+                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
+                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                recitations: [PrayerText.rising, PrayerText.upright]
+            ),
+            .init(
+                number: "6",
+                pose: .prostration,
+                imageKey: "sujud",
+                deTitle: "Erste Secde – 1. Rakʿah",
+                trTitle: "Birinci secde – 1. rekât",
+                deAction: "Sage Allāhu akbar und gehe in die Niederwerfung. Stirn und Nase liegen auf; die Hände stehen neben dem Kopf. Bleibe ruhig und sprich den Secde-Dhikr dreimal.",
+                trAction: "Allāhu ekber diyerek secdeye git. Alın ve burun yere gelir; eller başın yanında olur. Sakin dur ve secde tesbihini üç kez söyle.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: Unterarme vom Boden und Arme vom Körper fernhalten, sofern ohne Mühe möglich." : "Frau: Arme näher am Körper, Bauch näher an den Oberschenkeln; kompaktere Haltung.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: mümkünse dirsekleri yere koymaz, kolları gövdeden açık tutar." : "Kadın: kollar gövdeye, karın uyluklara daha yakın; daha toplu duruş.",
+                recitations: [PrayerText.takbir, PrayerText.sujud]
+            ),
+            .init(
+                number: "7",
+                pose: .sitting,
+                imageKey: "sitting",
+                deTitle: "Sitzen zwischen den Secden",
+                trTitle: "İki secde arası oturuş",
+                deAction: "Sage Allāhu akbar und setze dich vollständig auf. Bleibe kurz ruhig sitzen. Erst danach gehst du in die zweite Secde.",
+                trAction: "Allāhu ekber diyerek tamamen otur. Kısa bir an sakin otur. Ancak sonra ikinci secdeye git.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: auf dem linken Fuß sitzen; rechter Fuß aufgestellt, Zehen Richtung Qibla." : "Frau: beide Füße zur rechten Seite herausnehmen und auf dem Boden sitzen.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: sol ayak üzerine oturur; sağ ayak dik, parmaklar kıbleye yönelir." : "Kadın: iki ayağını sağ tarafa çıkararak yere oturur.",
+                recitations: [PrayerText.takbir, PrayerText.rabbighfirli]
+            ),
+            .init(
+                number: "8",
+                pose: .prostration,
+                imageKey: "sujud",
+                deTitle: "Zweite Secde – 1. Rakʿah",
+                trTitle: "İkinci secde – 1. rekât",
+                deAction: "Sage Allāhu akbar, gehe erneut in die Secde und sprich den Dhikr dreimal. Damit ist die erste Rakʿah beendet.",
+                trAction: "Allāhu ekber diyerek tekrar secdeye git ve tesbihi üç kez söyle. Böylece birinci rekât tamamlanır.",
+                deHanafi: nil,
+                trHanafi: nil,
+                recitations: [PrayerText.takbir, PrayerText.sujud]
+            ),
+            .init(
+                number: "9",
+                pose: .standing,
+                imageKey: "standing",
+                deTitle: "Aufstehen zum 2. Rakʿah",
+                trTitle: "2. rekâta kalkış",
+                deAction: "Nach der zweiten Secde stehst du mit Allāhu akbar zum zweiten Rakʿah auf. Richte dich vollständig auf und binde die Hände wieder wie zuvor.",
+                trAction: "İkinci secdeden sonra Allāhu ekber diyerek ikinci rekâta kalk. Tamamen doğrul ve ellerini önceki gibi yeniden bağla.",
+                deHanafi: nil,
+                trHanafi: nil,
+                recitations: [PrayerText.takbir]
+            ),
+            .init(
+                number: "10",
+                pose: .standing,
+                imageKey: "standing",
+                deTitle: "Qiyām – 2. Rakʿah",
+                trTitle: "Kıyam – 2. rekât",
+                deAction: "Im zweiten Rakʿah liest du nicht noch einmal Sübhaneke und Eʿūḏu. Beginne mit der Basmala, lies al-Fātiha, sage Âmîn und lies anschließend eine zusätzliche Sura oder passende Verse.",
+                trAction: "İkinci rekâtta Sübhâneke ve Eûzü yeniden okunmaz. Besmele ile başla, Fâtiha'yı oku, Âmin de ve ardından zamm-ı sûre veya uygun ayetler oku.",
+                deHanafi: nil,
+                trHanafi: nil,
+                recitations: [PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
+            ),
+            .init(
+                number: "11",
+                pose: .bowing,
+                imageKey: "bowing",
+                deTitle: "Rukūʿ – 2. Rakʿah",
+                trTitle: "Rükû – 2. rekât",
+                deAction: "Sage Allāhu akbar, gehe wieder in den Rukūʿ und bleibe kurz ruhig. Sprich den Rukūʿ-Dhikr dreimal.",
+                trAction: "Allāhu ekber diyerek tekrar rükûya git ve kısa bir an sakin dur. Rükû tesbihini üç kez söyle.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: Rücken möglichst gerade, Hände auf den Knien, Knie gestreckt." : "Frau: kompaktere Haltung; Rücken weniger waagerecht, Hände auf den Knien, Knie etwas gebeugt.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: sırt mümkün olduğunca düz, eller dizlerde, dizler dik." : "Kadın: daha toplu duruş; sırt daha az yatay, eller dizlerde, dizler biraz bükülü.",
+                recitations: [PrayerText.takbir, PrayerText.ruku]
+            ),
+            .init(
+                number: "12",
+                pose: .upright,
+                imageKey: "upright",
+                deTitle: "Aufrichten – 2. Rakʿah",
+                trTitle: "Doğrulma – 2. rekât",
+                deAction: "Richte dich wieder vollständig aus dem Rukūʿ auf und bleibe kurz ruhig stehen, bevor du zur Secde gehst.",
+                trAction: "Rükûdan yeniden tamamen doğrul ve secdeye gitmeden önce kısa bir an sakin dur.",
+                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
+                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                recitations: [PrayerText.rising, PrayerText.upright]
+            ),
+            .init(
+                number: "13",
+                pose: .prostration,
+                imageKey: "sujud",
+                deTitle: "Erste Secde – 2. Rakʿah",
+                trTitle: "Birinci secde – 2. rekât",
+                deAction: "Sage Allāhu akbar und gehe wieder in die erste Secde. Bleibe ruhig und sprich den Secde-Dhikr dreimal.",
+                trAction: "Allāhu ekber diyerek yeniden birinci secdeye git. Sakin dur ve secde tesbihini üç kez söyle.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: Unterarme vom Boden und Arme vom Körper fernhalten, sofern ohne Mühe möglich." : "Frau: Arme näher am Körper, Bauch näher an den Oberschenkeln; kompaktere Haltung.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: mümkünse dirsekleri yere koymaz, kolları gövdeden açık tutar." : "Kadın: kollar gövdeye, karın uyluklara daha yakın; daha toplu duruş.",
+                recitations: [PrayerText.takbir, PrayerText.sujud]
+            ),
+            .init(
+                number: "14",
+                pose: .sitting,
+                imageKey: "sitting",
+                deTitle: "Sitzen zwischen den Secden – 2. Rakʿah",
+                trTitle: "İki secde arası – 2. rekât",
+                deAction: "Sage Allāhu akbar und setze dich vollständig auf. Bleibe kurz ruhig sitzen. Danach gehst du in die zweite Secde.",
+                trAction: "Allāhu ekber diyerek tamamen otur. Kısa bir an sakin otur. Ardından ikinci secdeye git.",
+                deHanafi: settings.prayerAudience == .male ? "Mann: auf dem linken Fuß sitzen; rechter Fuß aufgestellt, Zehen Richtung Qibla." : "Frau: beide Füße zur rechten Seite herausnehmen und auf dem Boden sitzen.",
+                trHanafi: settings.prayerAudience == .male ? "Erkek: sol ayak üzerine oturur; sağ ayak dik, parmaklar kıbleye yönelir." : "Kadın: iki ayağını sağ tarafa çıkararak yere oturur.",
+                recitations: [PrayerText.takbir, PrayerText.rabbighfirli]
+            ),
+            .init(
+                number: "15",
+                pose: .prostration,
+                imageKey: "sujud",
+                deTitle: "Zweite Secde – 2. Rakʿah",
+                trTitle: "İkinci secde – 2. rekât",
+                deAction: "Sage Allāhu akbar und gehe in die zweite Secde. Sprich den Secde-Dhikr dreimal. Danach ist auch die zweite Rakʿah beendet.",
+                trAction: "Allāhu ekber diyerek ikinci secdeye git. Secde tesbihini üç kez söyle. Böylece ikinci rekât da tamamlanır.",
+                deHanafi: nil,
+                trHanafi: nil,
+                recitations: [PrayerText.takbir, PrayerText.sujud]
+            ),
+            .init(
+                number: "16",
+                pose: .finalSitting,
+                imageKey: "final_sitting",
+                deTitle: "Sitzen nach dem 2. Rakʿah",
+                trTitle: "2. rekâttan sonra oturuş",
+                deAction: "Bleibe nach der zweiten Secde sitzen. Endet dein Gebet nach zwei Rakʿah, ist dies das vollständige Schluss-Sitzen: Ettehiyyâtü, danach Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Bei einem 3-/4-Rakʿah-Fard liest du hier Ettehiyyâtü und stehst anschließend mit Allāhu akbar zur nächsten Rakʿah auf.",
+                trAction: "İkinci secdeden sonra oturmaya devam et. Namazın iki rekâtta bitiyorsa bu son oturuştur: Ettehiyyâtü, ardından Allâhümme Salli, Allâhümme Bârik ve Rabbenâ Âtinâ gibi bir dua okunur. 3/4 rekât farz devam ediyorsa burada Ettehiyyâtü okunur ve sonra Allāhu ekber diyerek sonraki rekâta kalkılır.",
+                deHanafi: "Die folgenden Schritte 17 und 18 beenden ein Gebet, das an dieser Stelle endet.",
+                trHanafi: "Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar.",
+                recitations: [PrayerText.tahiyyat, PrayerText.salli, PrayerText.barik, PrayerText.rabbana]
+            ),
+            .init(
+                number: "17",
+                pose: .finalSitting,
+                imageKey: "salam_left",
+                deTitle: "Salām – zuerst rechts",
+                trTitle: "Selâm – önce sağa",
+                deAction: "Der Oberkörper bleibt nach vorn. Drehe nur Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām einmal.",
+                trAction: "Gövde önde kalır. Yalnız başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı bir kez söyle.",
+                deHanafi: "Zuerst rechts. Danach folgt Schritt 18 nach links.",
+                trHanafi: "Önce sağa. Ardından 18. adımda sola dönülür.",
+                recitations: [PrayerText.salam]
+            ),
+            .init(
+                number: "18",
+                pose: .finalSitting,
+                imageKey: "salam_right",
+                deTitle: "Salām – danach links",
+                trTitle: "Selâm – sonra sola",
+                deAction: "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut. Damit ist das Gebet beendet.",
+                trAction: "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle. Böylece namaz tamamlanır.",
+                deHanafi: "Reihenfolge: rechts, dann links.",
+                trHanafi: "Sıra: önce sağ, sonra sol.",
+                recitations: [PrayerText.salam]
+            )
         ]
     }
 
