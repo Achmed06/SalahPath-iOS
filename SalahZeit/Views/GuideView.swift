@@ -747,7 +747,7 @@ struct PrayerHowToView: View {
 
             HStack(spacing: 14) {
                 PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
-                    .frame(width: 118, height: 150)
+                    .frame(width: 104, height: 132)
                     .background(SalahTheme.cream)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
@@ -853,12 +853,20 @@ struct PrayerHowToView: View {
                     .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
 
                     PrayerTutorialStepCard(step: steps[currentStepIndex], audience: settings.prayerAudience)
+                        .id("prayer-step-card-\(currentStepIndex)")
 
                     HStack(spacing: 12) {
                         Button {
                             guard currentStepIndex > 0 else { return }
+                            let target = currentStepIndex - 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex -= 1
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
+                                }
                             }
                         } label: {
                             Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
@@ -874,8 +882,15 @@ struct PrayerHowToView: View {
 
                         Button {
                             guard currentStepIndex < steps.count - 1 else { return }
+                            let target = currentStepIndex + 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex += 1
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
+                                }
                             }
                         } label: {
                             HStack {
@@ -953,7 +968,7 @@ private struct PrayerTutorialStepCard: View {
                 } else if let imageName {
                     PrayerPoseArtwork(assetName: imageName)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 245)
+                        .frame(height: 205)
                         .padding(.vertical, 6)
                         .background(SalahTheme.cream)
                 }
@@ -1047,7 +1062,7 @@ private struct PrayerSalamVisual: View {
             salamDirection(
                 number: "1",
                 direction: settings.t("RECHTS", "SAĞA"),
-                imageName: "\(prefix)_salam_right",
+                imageName: "\(prefix)_salam_left",
                 arrow: "arrow.right",
                 instruction: settings.t(
                     "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
@@ -1058,7 +1073,7 @@ private struct PrayerSalamVisual: View {
             salamDirection(
                 number: "2",
                 direction: settings.t("LINKS", "SOLA"),
-                imageName: "\(prefix)_salam_left",
+                imageName: "\(prefix)_salam_right",
                 arrow: "arrow.left",
                 instruction: settings.t(
                     "Danach über die Mitte zur EIGENEN linken Schulter drehen und denselben Salām erneut sprechen.",
@@ -1082,7 +1097,7 @@ private struct PrayerSalamVisual: View {
                     .foregroundStyle(SalahTheme.teal)
                 Spacer()
                 Image(systemName: arrow)
-                    .font(.system(size: 29, weight: .bold))
+                    .font(.system(size: 25, weight: .bold))
                     .foregroundStyle(SalahTheme.gold)
             }
 
@@ -1105,7 +1120,7 @@ private struct PrayerSalamVisual: View {
                 .font(.subheadline.bold())
                 .foregroundStyle(SalahTheme.ink)
         }
-        .padding(13)
+        .padding(11)
         .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 16))
         .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
@@ -1398,7 +1413,7 @@ private struct WuduInstructionVisual: View {
             .resizable()
             .scaledToFit()
             .frame(maxWidth: .infinity)
-            .frame(height: 214)
+            .frame(height: 188)
             .accessibilityHidden(true)
     }
 
@@ -1736,12 +1751,20 @@ struct WuduGuideView: View {
                     .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
 
                     wuduStepCard(steps[currentStepIndex])
+                        .id("wudu-step-card-\(currentStepIndex)")
 
                     HStack(spacing: 12) {
                         Button {
                             guard currentStepIndex > 0 else { return }
+                            let target = currentStepIndex - 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex -= 1
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                                }
                             }
                         } label: {
                             Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
@@ -1757,8 +1780,15 @@ struct WuduGuideView: View {
 
                         Button {
                             guard currentStepIndex < steps.count - 1 else { return }
+                            let target = currentStepIndex + 1
                             withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex += 1
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                                }
                             }
                         } label: {
                             HStack {
