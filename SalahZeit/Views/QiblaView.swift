@@ -113,8 +113,14 @@ struct QiblaView: View {
         .onAppear {
             UIDevice.current.beginGeneratingDeviceOrientationNotifications()
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
-            locationManager.requestAccessAndStart()
-            locationManager.refresh()
+
+            if locationManager.usesManualLocation {
+                locationManager.requestAccessAndStart()
+            } else if locationManager.authorizationStatus == .authorizedWhenInUse ||
+                        locationManager.authorizationStatus == .authorizedAlways {
+                locationManager.requestAccessAndStart()
+                locationManager.refresh()
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
