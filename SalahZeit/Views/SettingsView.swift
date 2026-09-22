@@ -6,6 +6,9 @@ struct SettingsView: View {
     @State private var notificationStatusText: String?
     @State private var audioCacheText = "—"
     @State private var isClearingAudioCache = false
+    @State private var manualLocationText = ""
+    @State private var manualLocationError: String?
+    @State private var isResolvingManualLocation = false
 
     var body: some View {
         ScrollView {
@@ -28,6 +31,17 @@ struct SettingsView: View {
                     } label: {
                         profileRow(icon: "person.2.fill", title: settings.t("Gebetsanleitung", "Namaz anlatımı"), value: settings.prayerAudience.title(settings.language))
                     }
+
+                    Button {
+                        settings.restartOnboarding()
+                    } label: {
+                        profileRow(
+                            icon: "wand.and.stars",
+                            title: settings.t("Ersteinrichtung erneut öffnen", "İlk kurulumu yeniden aç"),
+                            value: settings.t("Start", "Başlat")
+                        )
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 referenceSection(settings.t("Gebetszeiten", "Namaz vakitleri")) {
@@ -178,11 +192,92 @@ struct SettingsView: View {
                 }
 
                 referenceSection(settings.t("Standort & Datenschutz", "Konum ve gizlilik")) {
-                    profileRow(icon: "location.fill", title: settings.t("Standortstatus", "Konum durumu"), value: statusText)
+                    profileRow(
+                        icon: locationManager.usesManualLocation ? "mappin.and.ellipse" : "location.fill",
+                        title: settings.t("Standortstatus", "Konum durumu"),
+                        value: locationManager.locality ?? statusText,
+                        showsChevron: false
+                    )
+
+                    HStack(spacing: 7) {
+                        TextField(settings.t("Stadt oder PLZ manuell", "Şehir veya posta kodu"), text: $manualLocationText)
+                            .textInputAutocapitalization(.words)
+                            .autocorrectionDisabled()
+                            .font(.system(size: 10.5, weight: .medium))
+                            .padding(.horizontal, 10)
+                            .frame(height: 40)
+                            .background(SalahTheme.page.opacity(0.62), in: RoundedRectangle(cornerRadius: 9))
+
+                        Button {
+                            Task {
+                                isResolvingManualLocation = true
+                                manualLocationError = nil
+                                let success = await locationManager.setManualLocation(searchText: manualLocationText)
+                                isResolvingManualLocation = false
+                                if !success { manualLocationError = locationManager.lastError }
+                            }
+                        } label: {
+                            Group {
+                                if isResolvingManualLocation {
+                                    ProgressView().tint(.white)
+                                } else {
+                                    Image(systemName: "checkmark")
+                                        .font(.system(size: 12, weight: .bold))
+                                }
+                            }
+                            .frame(width: 40, height: 40)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.white)
+                        .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 9))
+                        .disabled(manualLocationText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isResolvingManualLocation)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+
+                    HStack(spacing: 8) {
+                        Button {
+                            manualLocationError = nil
+                            locationManager.useDeviceLocation()
+                        } label: {
+                            Label(settings.t("GPS verwenden", "GPS kullan"), systemImage: "location.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.white)
+                        .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 9))
+
+                        if locationManager.usesManualLocation {
+                            Button {
+                                manualLocationError = nil
+                                locationManager.clearManualLocation()
+                            } label: {
+                                Label(settings.t("Manuell löschen", "Manuel konumu sil"), systemImage: "xmark.circle")
+                                    .font(.system(size: 10.5, weight: .bold))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 9)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(SalahTheme.deepTeal)
+                            .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 9))
+                        }
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.bottom, 8)
+
+                    if let manualLocationError {
+                        Text(manualLocationError)
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.bottom, 8)
+                    }
 
                     Text(settings.t(
-                        "Gebetszeiten und Qibla werden auf dem Gerät aus GPS-Koordinaten berechnet. Die App speichert deinen aktuellen Standort nicht dauerhaft.",
-                        "Namaz vakitleri ve kıble cihaz üzerinde GPS koordinatlarından hesaplanır. Uygulama mevcut konumunu kalıcı olarak saklamaz."
+                        "Du kannst GPS verwenden, einen Ort dauerhaft manuell speichern oder ganz ohne Standort weiterarbeiten. Gebetszeiten und Qibla nutzen den ausgewählten Ort.",
+                        "GPS kullanabilir, bir konumu manuel olarak kaydedebilir veya konumsuz devam edebilirsin. Namaz vakitleri ve kıble seçtiğin konumu kullanır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -240,7 +335,10 @@ struct SettingsView: View {
         .navigationTitle(settings.t("Profil", "Profil"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            locationManager.requestAccessAndStart()
+            if locationManager.authorizationStatus == .authorizedWhenInUse ||
+                locationManager.authorizationStatus == .authorizedAlways {
+                locationManager.requestAccessAndStart()
+            }
             Task { await refreshAudioCacheText() }
         }
         .onChange(of: settings.notificationsEnabled) { _, enabled in
