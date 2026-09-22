@@ -86,6 +86,23 @@ struct QiblaView: View {
                             )
                         }
 
+                        if locationManager.usesManualLocation && !deviceLocationAuthorized {
+                            HStack(alignment: .top, spacing: 9) {
+                                Image(systemName: "location.slash.fill")
+                                    .foregroundStyle(SalahTheme.gold)
+                                Text(settings.t(
+                                    "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Die Gradangabe oben bleibt anhand deines manuell gewählten Orts verfügbar.",
+                                    "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Yukarıdaki derece değeri manuel seçtiğin konuma göre kullanılmaya devam eder."
+                                ))
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(SalahTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(SalahTheme.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        }
+
                         if let accuracy = headingAccuracy, accuracy > 20 {
                             HStack(alignment: .top, spacing: 9) {
                                 Image(systemName: "exclamationmark.triangle.fill")
@@ -131,18 +148,15 @@ struct QiblaView: View {
             UIDevice.current.beginGeneratingDeviceOrientationNotifications()
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
 
-            if locationManager.usesManualLocation {
-                locationManager.requestAccessAndStart()
-            } else if locationManager.authorizationStatus == .authorizedWhenInUse ||
-                        locationManager.authorizationStatus == .authorizedAlways {
-                locationManager.requestAccessAndStart()
-                locationManager.refresh()
+            if locationManager.usesManualLocation || deviceLocationAuthorized {
+                locationManager.prepareQiblaHeading()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
         }
         .onDisappear {
+            locationManager.stopQiblaHeading()
             UIDevice.current.endGeneratingDeviceOrientationNotifications()
         }
     }
@@ -188,11 +202,15 @@ struct QiblaView: View {
         return heading.headingAccuracy
     }
 
+    private var deviceLocationAuthorized: Bool {
+        locationManager.authorizationStatus == .authorizedWhenInUse ||
+        locationManager.authorizationStatus == .authorizedAlways
+    }
+
     private var currentHeading: Double? {
         guard let heading = locationManager.heading, heading.headingAccuracy >= 0 else { return nil }
-        let value = heading.trueHeading >= 0 ? heading.trueHeading : heading.magneticHeading
-        guard value >= 0 else { return nil }
-        return value
+        guard heading.trueHeading >= 0 else { return nil }
+        return heading.trueHeading
     }
 
     private func normalized(_ angle: Double) -> Double {
