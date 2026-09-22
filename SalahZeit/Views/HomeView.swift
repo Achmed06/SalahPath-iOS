@@ -287,6 +287,9 @@ struct HomeView: View {
     @State private var selectedPrayer: PrayerOccurrence?
     @State private var trackerRefresh = 0
     @State private var dailyDeenRefresh = 0
+    @State private var manualLocationText = ""
+    @State private var manualLocationError: String?
+    @State private var isResolvingManualLocation = false
     private let engine = PrayerEngine()
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -973,7 +976,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Kur'an", "Kur'an"), subtitle: settings.t("Oku & Dinle", "Oku & Dinle"), icon: "quran")
             }
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Quran Audio", "Kur'an Audio"), subtitle: settings.t("Dinle", "Dinle"), icon: "quran")
+                DashboardTile(title: settings.t("Quran Audio", "Kur'an Audio"), subtitle: settings.t("Dinle", "Dinle"), icon: "quran_audio")
             }
             NavigationLink { QuranFavoritesLandingView() } label: {
                 DashboardTile(title: settings.t("Juz & Favoriler", "Cüz & Favoriler"), subtitle: settings.t("İşaretler", "İşaretler"), icon: "fav")
@@ -1171,7 +1174,8 @@ struct HomeView: View {
                         }
 
                         Button {
-                            locationManager.requestAccessAndStart()
+                            locationManager.useDeviceLocation()
+                            manualLocationError = nil
                         } label: {
                             Label(settings.t("Standort aktivieren", "Konumu etkinleştir"), systemImage: "location.fill")
                                 .font(.system(size: 10.5, weight: .bold))
@@ -1181,6 +1185,50 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
                         .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+                        HStack(spacing: 7) {
+                            TextField(settings.t("Stadt oder PLZ manuell", "Şehir veya posta kodu"), text: $manualLocationText)
+                                .textInputAutocapitalization(.words)
+                                .autocorrectionDisabled()
+                                .font(.system(size: 10.5, weight: .medium))
+                                .padding(.horizontal, 10)
+                                .frame(height: 38)
+                                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 9))
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 9)
+                                        .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.8)
+                                }
+
+                            Button {
+                                Task {
+                                    isResolvingManualLocation = true
+                                    manualLocationError = nil
+                                    let success = await locationManager.setManualLocation(searchText: manualLocationText)
+                                    isResolvingManualLocation = false
+                                    if !success { manualLocationError = locationManager.lastError }
+                                }
+                            } label: {
+                                Group {
+                                    if isResolvingManualLocation {
+                                        ProgressView().tint(.white)
+                                    } else {
+                                        Image(systemName: "checkmark")
+                                            .font(.system(size: 12, weight: .bold))
+                                    }
+                                }
+                                .frame(width: 38, height: 38)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(.white)
+                            .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 9))
+                            .disabled(manualLocationText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isResolvingManualLocation)
+                        }
+
+                        if let manualLocationError {
+                            Text(manualLocationError)
+                                .font(.system(size: 8.5, weight: .medium))
+                                .foregroundStyle(.red)
+                        }
                     }
                     .padding(10)
                     .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
@@ -1899,10 +1947,9 @@ private struct DashboardTile: View {
 
     private var suppliedIconName: String? {
         switch icon {
-        case "quran": return "sp_icon_quran"
+        case "quran_audio": return "sp_icon_quran_audio"
         case "fav": return "sp_icon_bookmarks"
         case "times": return "sp_icon_prayer_times"
-        case "prayer": return "sp_icon_prayer"
         case "wudu": return "sp_icon_wudu"
         case "calendar": return "sp_icon_calendar"
         case "info": return "sp_icon_info"
