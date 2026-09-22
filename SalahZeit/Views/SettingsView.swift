@@ -210,8 +210,8 @@ struct SettingsView: View {
                                 )
                             } else {
                                 notificationStatusText = settings.t(
-                                    "Benachrichtigungen sind in iOS nicht erlaubt. Bitte in den Systemeinstellungen aktivieren.",
-                                    "iOS bildirim izni kapalı. Lütfen Sistem Ayarları'ndan etkinleştir."
+                                    "Benachrichtigungen konnten nicht vollständig geplant werden. Prüfe die iOS-Berechtigung und versuche es erneut.",
+                                    "Bildirimler tam olarak planlanamadı. iOS iznini kontrol edip tekrar dene."
                                 )
                             }
                         }
