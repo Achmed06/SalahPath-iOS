@@ -100,11 +100,19 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            Image(item.0)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
+                            if item.0 == "sp_icon_quran" {
+                                ReferenceDashboardGlyph(kind: "quran")
+                                    .frame(width: 19, height: 19)
+                            } else if item.0 == "sp_icon_prayer" {
+                                ReferenceDashboardGlyph(kind: "prayer")
+                                    .frame(width: 19, height: 19)
+                            } else {
+                                Image(item.0)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
+                            }
                         }
                         .frame(height: 22)
 
@@ -339,8 +347,6 @@ struct MoreView: View {
         switch symbol {
         // Keep only the supplied assets that are clean at larger sizes.
         // The remaining Discover entries use the cut-safe vector/SF fallback below.
-        case "figure.mind.and.body":
-            return "sp_icon_prayer"
         case "drop.fill":
             return "sp_icon_wudu"
         case "play.square.stack.fill":
@@ -360,6 +366,8 @@ struct MoreView: View {
             return "dhikr"
         case "location.north.circle.fill":
             return "qibla"
+        case "figure.mind.and.body":
+            return "prayer"
         default:
             return nil
         }
