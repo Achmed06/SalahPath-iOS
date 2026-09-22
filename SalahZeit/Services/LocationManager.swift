@@ -28,11 +28,27 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
         let defaults = UserDefaults.standard
         if defaults.bool(forKey: ManualLocationKeys.enabled) {
-            let latitude = defaults.double(forKey: ManualLocationKeys.latitude)
-            let longitude = defaults.double(forKey: ManualLocationKeys.longitude)
-            location = CLLocation(latitude: latitude, longitude: longitude)
-            locality = defaults.string(forKey: ManualLocationKeys.locality)
-            usesManualLocation = true
+            let latitude = (defaults.object(forKey: ManualLocationKeys.latitude) as? NSNumber)?.doubleValue
+            let longitude = (defaults.object(forKey: ManualLocationKeys.longitude) as? NSNumber)?.doubleValue
+
+            if let latitude, let longitude {
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                if latitude.isFinite, longitude.isFinite, CLLocationCoordinate2DIsValid(coordinate) {
+                    location = CLLocation(latitude: latitude, longitude: longitude)
+                    locality = defaults.string(forKey: ManualLocationKeys.locality)
+                    usesManualLocation = true
+                } else {
+                    defaults.removeObject(forKey: ManualLocationKeys.latitude)
+                    defaults.removeObject(forKey: ManualLocationKeys.longitude)
+                    defaults.removeObject(forKey: ManualLocationKeys.locality)
+                    defaults.removeObject(forKey: ManualLocationKeys.enabled)
+                }
+            } else {
+                defaults.removeObject(forKey: ManualLocationKeys.latitude)
+                defaults.removeObject(forKey: ManualLocationKeys.longitude)
+                defaults.removeObject(forKey: ManualLocationKeys.locality)
+                defaults.removeObject(forKey: ManualLocationKeys.enabled)
+            }
         }
 
         super.init()
