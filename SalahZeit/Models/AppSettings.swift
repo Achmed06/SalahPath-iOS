@@ -178,6 +178,7 @@ final class SettingsStore: ObservableObject {
         static let quranFontSize = "quranFontSize"
         static let quranShowTranslation = "quranShowTranslation"
         static let quranShowTransliteration = "quranShowTransliteration"
+        static let onboardingCompleted = "onboardingCompleted"
     }
 
     @Published var calculationPreset: CalculationPreset { didSet { defaults.set(calculationPreset.rawValue, forKey: Keys.method) } }
@@ -196,6 +197,7 @@ final class SettingsStore: ObservableObject {
     @Published var quranFontSize: Double { didSet { defaults.set(quranFontSize, forKey: Keys.quranFontSize) } }
     @Published var quranShowTranslation: Bool { didSet { defaults.set(quranShowTranslation, forKey: Keys.quranShowTranslation) } }
     @Published var quranShowTransliteration: Bool { didSet { defaults.set(quranShowTransliteration, forKey: Keys.quranShowTransliteration) } }
+    @Published var onboardingCompleted: Bool { didSet { defaults.set(onboardingCompleted, forKey: Keys.onboardingCompleted) } }
 
     private let defaults: UserDefaults
 
@@ -217,9 +219,18 @@ final class SettingsStore: ObservableObject {
         self.quranFontSize = defaults.object(forKey: Keys.quranFontSize) as? Double ?? 28
         self.quranShowTranslation = defaults.object(forKey: Keys.quranShowTranslation) as? Bool ?? true
         self.quranShowTransliteration = defaults.object(forKey: Keys.quranShowTransliteration) as? Bool ?? false
+        self.onboardingCompleted = defaults.object(forKey: Keys.onboardingCompleted) as? Bool ?? false
     }
 
     func t(_ de: String, _ tr: String) -> String { language == .german ? de : tr }
+
+    func completeOnboarding() {
+        onboardingCompleted = true
+    }
+
+    func restartOnboarding() {
+        onboardingCompleted = false
+    }
 
     func offset(for kind: PrayerKind) -> Int {
         switch kind {
