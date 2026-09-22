@@ -1368,7 +1368,14 @@ struct PrayerTimesOverviewView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Gebetszeiten", "Namaz Vakitleri"))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { if !isScreenshotQA { locationManager.requestAccessAndStart() } }
+        .onAppear {
+            guard !isScreenshotQA else { return }
+            if locationManager.usesManualLocation ||
+                locationManager.authorizationStatus == .authorizedWhenInUse ||
+                locationManager.authorizationStatus == .authorizedAlways {
+                locationManager.requestAccessAndStart()
+            }
+        }
     }
 
     private func referenceTodayCard(day: PrayerDay, location: CLLocation) -> some View {
