@@ -142,16 +142,55 @@ struct SettingsView: View {
                 }
 
                 referenceSection(settings.t("Benachrichtigungen", "Bildirimler")) {
-                    referenceToggle(icon: "bell.fill", title: settings.t("Gebetsbeginn erinnern", "Namaz vaktini hatırlat"), isOn: $settings.notificationsEnabled)
+                    referenceToggle(
+                        icon: "bell.fill",
+                        title: settings.t("Gebetsbenachrichtigungen", "Namaz bildirimleri"),
+                        isOn: $settings.notificationsEnabled
+                    )
 
-                    Picker(settings.t("Erinnerung", "Hatırlatma"), selection: $settings.notificationLeadMinutes) {
-                        Text(settings.t("Bei Beginn", "Vakit girince")).tag(0)
+                    referenceToggle(
+                        icon: "clock.badge.checkmark",
+                        title: settings.t("Zum Gebetsbeginn erinnern", "Vakit girince bildir"),
+                        isOn: $settings.notifyAtPrayerTime
+                    )
+                    .disabled(!settings.notificationsEnabled)
+                    .opacity(settings.notificationsEnabled ? 1 : 0.45)
+
+                    Picker(settings.t("Vorwarnung", "Ön hatırlatma"), selection: $settings.notificationLeadMinutes) {
+                        Text(settings.t("Keine", "Kapalı")).tag(0)
                         Text(settings.t("5 Min. vorher", "5 dk önce")).tag(5)
                         Text(settings.t("10 Min. vorher", "10 dk önce")).tag(10)
                         Text(settings.t("15 Min. vorher", "15 dk önce")).tag(15)
+                        Text(settings.t("30 Min. vorher", "30 dk önce")).tag(30)
                     }
                     .pickerStyle(.menu)
                     .disabled(!settings.notificationsEnabled)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(settings.t("Für welche Gebete?", "Hangi namazlar?"))
+                            .font(.system(size: 9.5, weight: .bold))
+                            .foregroundStyle(SalahTheme.teal)
+                            .padding(.horizontal, 12)
+                            .padding(.top, 9)
+                            .padding(.bottom, 3)
+
+                        referenceToggle(icon: "sun.horizon.fill", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
+                        referenceToggle(icon: "sun.max.fill", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
+                        referenceToggle(icon: "sun.min.fill", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
+                        referenceToggle(icon: "sunset.fill", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
+                        referenceToggle(icon: "moon.stars.fill", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
+                    }
+                    .disabled(!settings.notificationsEnabled)
+                    .opacity(settings.notificationsEnabled ? 1 : 0.45)
+
+                    Text(settings.t(
+                        "Wenn eine Vorwarnung gewählt ist, kann SalahPath zweimal erinnern: einmal vorher und – falls aktiviert – noch einmal genau zum Gebetsbeginn.",
+                        "Ön hatırlatma seçilirse SalahPath iki kez bildirebilir: önce seçilen dakika kadar önce ve açıksa tam namaz vaktinde."
+                    ))
+                    .font(.system(size: 9.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
 
@@ -163,7 +202,7 @@ struct SettingsView: View {
                             }
                             await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
                             notificationStatusText = settings.notificationsEnabled
-                                ? settings.t("Für die nächsten 7 Tage geplant.", "Önümüzdeki 7 gün için planlandı.")
+                                ? settings.t("Für die nächsten 7 Tage aktualisiert.", "Önümüzdeki 7 gün için güncellendi.")
                                 : settings.t("Deaktiviert.", "Kapalı.")
                         }
                     } label: {
