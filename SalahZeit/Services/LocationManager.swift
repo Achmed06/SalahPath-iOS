@@ -10,6 +10,14 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published private(set) var heading: CLHeading?
     @Published private(set) var lastError: String?
     @Published private(set) var locality: String?
+    @Published private(set) var usesManualLocation = false
+
+    private enum ManualLocationKeys {
+        static let latitude = "manualLocationLatitude"
+        static let longitude = "manualLocationLongitude"
+        static let locality = "manualLocationLocality"
+        static let enabled = "manualLocationEnabled"
+    }
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
@@ -17,6 +25,16 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     override init() {
         authorizationStatus = manager.authorizationStatus
+
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: ManualLocationKeys.enabled) {
+            let latitude = defaults.double(forKey: ManualLocationKeys.latitude)
+            let longitude = defaults.double(forKey: ManualLocationKeys.longitude)
+            location = CLLocation(latitude: latitude, longitude: longitude)
+            locality = defaults.string(forKey: ManualLocationKeys.locality)
+            usesManualLocation = true
+        }
+
         super.init()
 
         manager.delegate = self
@@ -27,6 +45,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func requestAccessAndStart() {
+        if usesManualLocation {
+            startHeadingIfAvailable()
+            return
+        }
+
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
@@ -40,6 +63,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func refresh() {
+        if usesManualLocation { return }
         guard manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways else {
             requestAccessAndStart()
             return
@@ -47,9 +71,77 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         manager.requestLocation()
     }
 
+    func useDeviceLocation() {
+        clearManualLocation()
+        requestAccessAndStart()
+    }
+
+    @discardableResult
+    func setManualLocation(searchText: String) async -> Bool {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            lastError = "Bitte Ort, Stadt oder Postleitzahl eingeben."
+            return false
+        }
+
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(query)
+            guard let placemark = placemarks.first, let resolvedLocation = placemark.location else {
+                lastError = "Ort wurde nicht gefunden."
+                return false
+            }
+
+            let label = [
+                placemark.locality,
+                placemark.administrativeArea,
+                placemark.country
+            ]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .reduce(into: [String]()) { result, item in
+                if !result.contains(item) { result.append(item) }
+            }
+            .joined(separator: ", ")
+
+            let resolvedLabel = label.isEmpty ? query : label
+            location = resolvedLocation
+            locality = resolvedLabel
+            usesManualLocation = true
+            lastError = nil
+
+            let defaults = UserDefaults.standard
+            defaults.set(resolvedLocation.coordinate.latitude, forKey: ManualLocationKeys.latitude)
+            defaults.set(resolvedLocation.coordinate.longitude, forKey: ManualLocationKeys.longitude)
+            defaults.set(resolvedLabel, forKey: ManualLocationKeys.locality)
+            defaults.set(true, forKey: ManualLocationKeys.enabled)
+
+            startHeadingIfAvailable()
+            return true
+        } catch {
+            lastError = "Ort konnte nicht gefunden werden. Bitte Eingabe prüfen."
+            return false
+        }
+    }
+
+    func clearManualLocation() {
+        usesManualLocation = false
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: ManualLocationKeys.latitude)
+        defaults.removeObject(forKey: ManualLocationKeys.longitude)
+        defaults.removeObject(forKey: ManualLocationKeys.locality)
+        defaults.removeObject(forKey: ManualLocationKeys.enabled)
+
+        location = nil
+        locality = nil
+    }
+
     private func startUpdates() {
         updateHeadingOrientation(for: UIDevice.current.orientation)
         manager.startUpdatingLocation()
+        startHeadingIfAvailable()
+    }
+
+    private func startHeadingIfAvailable() {
         if CLLocationManager.headingAvailable() {
             manager.startUpdatingHeading()
         }
@@ -94,6 +186,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }) else { return }
 
         Task { @MainActor in
+            guard !self.usesManualLocation else { return }
             self.location = newest
             self.lastError = nil
             self.updateLocalityIfNeeded(for: newest)
