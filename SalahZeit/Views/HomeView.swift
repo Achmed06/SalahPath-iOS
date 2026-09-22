@@ -1917,6 +1917,7 @@ private struct DashboardTile: View {
                 Image(suppliedIconName)
                     .resizable()
                     .scaledToFit()
+                    .frame(width: 36, height: 36)
                     .frame(width: 42, height: 42)
             } else {
                 ReferenceDashboardGlyph(kind: icon)
@@ -1954,9 +1955,11 @@ private struct DashboardTile: View {
 
     private var suppliedIconName: String? {
         switch icon {
+        case "quran": return "sp_icon_quran"
         case "quran_audio": return "sp_icon_quran_audio"
         case "fav": return "sp_icon_bookmarks"
         case "times": return "sp_icon_prayer_times"
+        case "prayer": return "sp_icon_prayer"
         case "wudu": return "sp_icon_wudu"
         case "calendar": return "sp_icon_calendar"
         case "info": return "sp_icon_info"
