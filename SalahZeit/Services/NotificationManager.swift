@@ -7,6 +7,8 @@ final class NotificationManager {
     static let shared = NotificationManager()
     private let center = UNUserNotificationCenter.current()
     private let engine = PrayerEngine()
+    private let prayerIdentifierPrefix = "salahzeit.prayer."
+    private var schedulingRevision = 0
 
     private init() {}
 
@@ -19,32 +21,41 @@ final class NotificationManager {
     }
 
     func removePrayerNotifications() {
+        schedulingRevision &+= 1
+        let center = center
+        let prefix = prayerIdentifierPrefix
         center.getPendingNotificationRequests { requests in
             let ids = requests
                 .map(\.identifier)
-                .filter { $0.hasPrefix("salahzeit.prayer.") }
+                .filter { $0.hasPrefix(prefix) }
             guard !ids.isEmpty else { return }
-            self.center.removePendingNotificationRequests(withIdentifiers: ids)
+            center.removePendingNotificationRequests(withIdentifiers: ids)
         }
     }
 
     func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async {
-        removePrayerNotifications()
+        schedulingRevision &+= 1
+        let revision = schedulingRevision
+
+        await removeExistingPrayerNotifications(for: revision)
+        guard revision == schedulingRevision else { return }
         guard settings.notificationsEnabled else { return }
 
-        let granted = await requestAuthorization()
-        guard granted else { return }
+        let granted = await ensureAuthorization()
+        guard revision == schedulingRevision, granted else { return }
 
         let calendar = Calendar.current
         let now = Date()
 
         for dayOffset in 0..<7 {
+            guard revision == schedulingRevision else { return }
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
                   let day = engine.calculateDay(for: date, location: location, settings: settings, calendar: calendar) else {
                 continue
             }
 
             for prayer in day.prayers where prayer.kind != .sunrise {
+                guard revision == schedulingRevision else { return }
                 guard settings.notificationEnabled(for: prayer.kind) else { continue }
 
                 let prayerName = prayer.kind.localizedName(settings.language)
@@ -66,8 +77,12 @@ final class NotificationManager {
                         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
                         components.timeZone = .current
                         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                        let identifier = "salahzeit.prayer.\(dayOffset).\(prayer.kind.rawValue).pre"
-                        try? await center.add(UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger))
+                        let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).pre"
+                        await add(
+                            UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger),
+                            revision: revision
+                        )
+                        guard revision == schedulingRevision else { return }
                     }
                 }
 
@@ -85,11 +100,53 @@ final class NotificationManager {
                     var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
                     components.timeZone = .current
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                    let identifier = "salahzeit.prayer.\(dayOffset).\(prayer.kind.rawValue).time"
-                    try? await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+                    let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).time"
+                    await add(
+                        UNNotificationRequest(identifier: identifier, content: content, trigger: trigger),
+                        revision: revision
+                    )
+                    guard revision == schedulingRevision else { return }
                 }
             }
         }
+    }
+
+    private func ensureAuthorization() async -> Bool {
+        let settings = await center.notificationSettings()
+        switch settings.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            return true
+        case .notDetermined:
+            return await requestAuthorization()
+        case .denied:
+            return false
+        @unknown default:
+            return false
+        }
+    }
+
+    private func removeExistingPrayerNotifications(for revision: Int) async {
+        let requests = await center.pendingNotificationRequests()
+        guard revision == schedulingRevision else { return }
+
+        let ids = requests
+            .map(\.identifier)
+            .filter { $0.hasPrefix(prayerIdentifierPrefix) }
+        guard !ids.isEmpty else { return }
+        center.removePendingNotificationRequests(withIdentifiers: ids)
+    }
+
+    private func add(_ request: UNNotificationRequest, revision: Int) async {
+        guard revision == schedulingRevision else { return }
+
+        do {
+            try await center.add(request)
+        } catch {
+            return
+        }
+
+        guard revision != schedulingRevision else { return }
+        center.removePendingNotificationRequests(withIdentifiers: [request.identifier])
     }
 
     private func format(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
