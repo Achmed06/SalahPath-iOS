@@ -3,7 +3,7 @@ name: Build unsigned IPA
 on:
   workflow_dispatch:
   push:
-    branches: [ main, achmed06-fictional-memory ]
+    branches: [ main ]
 
 jobs:
   build:
