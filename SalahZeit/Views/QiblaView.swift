@@ -86,6 +86,23 @@ struct QiblaView: View {
                             )
                         }
 
+                        if let accuracy = headingAccuracy, accuracy > 20 {
+                            HStack(alignment: .top, spacing: 9) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(SalahTheme.gold)
+                                Text(settings.t(
+                                    "Kompassgenauigkeit ist gerade niedrig (±\(Int(accuracy.rounded()))°). Entferne magnetische Hüllen/Zubehör und bewege das iPhone kurz in einer Acht.",
+                                    "Pusula doğruluğu şu anda düşük (±\(Int(accuracy.rounded()))°). Manyetik kılıf/aksesuarları uzaklaştır ve iPhone'u kısa süre sekiz şeklinde hareket ettir."
+                                ))
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundStyle(SalahTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(SalahTheme.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        }
+
                         VStack(spacing: 0) {
                             infoRow(icon: "location.fill", title: locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
                             infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
@@ -164,6 +181,11 @@ struct QiblaView: View {
         .padding(.horizontal, 11)
         .padding(.vertical, 10)
         .overlay(alignment: .bottom) { Divider().padding(.leading, 50).opacity(0.34) }
+    }
+
+    private var headingAccuracy: Double? {
+        guard let heading = locationManager.heading, heading.headingAccuracy >= 0 else { return nil }
+        return heading.headingAccuracy
     }
 
     private var currentHeading: Double? {
