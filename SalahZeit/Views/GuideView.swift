@@ -5589,21 +5589,18 @@ struct QuranView: View {
 
                                 VStack(spacing: 7) {
                                     HStack {
-                                        Text("0:00")
+                                        Text(audioTimeString(previewAudio.currentTime))
                                         Spacer()
-                                        Text("0:45")
+                                        Text(audioTimeString(previewAudio.duration))
                                     }
                                     .font(.system(size: 10.5, weight: .semibold).monospacedDigit())
                                     .foregroundStyle(SalahTheme.mutedInk)
 
-                                    ZStack(alignment: .leading) {
-                                        Capsule()
-                                            .fill(SalahTheme.teal.opacity(0.14))
-                                            .frame(height: 3.5)
-                                        Capsule()
-                                            .fill(SalahTheme.teal)
-                                            .frame(width: 104, height: 3.5)
-                                    }
+                                    ProgressView(
+                                        value: min(previewAudio.currentTime, max(previewAudio.duration, 1)),
+                                        total: max(previewAudio.duration, 1)
+                                    )
+                                    .tint(SalahTheme.teal)
                                 }
 
                                 HStack(spacing: 24) {
@@ -5632,6 +5629,7 @@ struct QuranView: View {
                                         }
                                     }
                                     .buttonStyle(.plain)
+                                    .disabled(isResolvingPreviewAudio || previewAudio.isLoading)
 
                                     Button { previewAudio.next() } label: {
                                         Image(systemName: "forward.end.fill")
@@ -5781,6 +5779,12 @@ struct QuranView: View {
         "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\nBismillâhirrahmânirrahîm"
     }
 
+    private func audioTimeString(_ seconds: Double) -> String {
+        guard seconds.isFinite, seconds > 0 else { return "0:00" }
+        let total = Int(seconds.rounded(.down))
+        return String(format: "%d:%02d", total / 60, total % 60)
+    }
+
     private var readingProgress: Double? {
         guard let lastRead, !store.chapters.isEmpty else { return nil }
 
@@ -5798,12 +5802,16 @@ struct QuranView: View {
     @MainActor
     private func togglePreviewAudio() async {
         if previewAudio.isPlaying {
-            previewAudio.stop()
+            previewAudio.pause()
             return
         }
 
         if !previewAudioURLs.isEmpty {
-            previewAudio.playQueue(previewAudioURLs)
+            if previewAudio.queueCount == previewAudioURLs.count, previewAudio.activeURL != nil {
+                previewAudio.resume()
+            } else {
+                previewAudio.playQueue(previewAudioURLs)
+            }
             return
         }
 
