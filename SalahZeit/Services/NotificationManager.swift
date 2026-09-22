@@ -53,6 +53,7 @@ final class NotificationManager {
 
         let calendar = Calendar.current
         let now = Date()
+        var allRequestsScheduled = true
 
         for dayOffset in 0..<7 {
             guard revision == schedulingRevision else { return false }
@@ -85,10 +86,11 @@ final class NotificationManager {
                         components.timeZone = .current
                         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                         let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).pre"
-                        await add(
+                        let added = await add(
                             UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger),
                             revision: revision
                         )
+                        allRequestsScheduled = allRequestsScheduled && added
                         guard revision == schedulingRevision else { return false }
                     }
                 }
@@ -108,16 +110,17 @@ final class NotificationManager {
                     components.timeZone = .current
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                     let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).time"
-                    await add(
+                    let added = await add(
                         UNNotificationRequest(identifier: identifier, content: content, trigger: trigger),
                         revision: revision
                     )
+                    allRequestsScheduled = allRequestsScheduled && added
                     guard revision == schedulingRevision else { return false }
                 }
             }
         }
 
-        return revision == schedulingRevision
+        return revision == schedulingRevision && allRequestsScheduled
     }
 
     private func ensureAuthorization() async -> Bool {
@@ -145,17 +148,18 @@ final class NotificationManager {
         center.removePendingNotificationRequests(withIdentifiers: ids)
     }
 
-    private func add(_ request: UNNotificationRequest, revision: Int) async {
-        guard revision == schedulingRevision else { return }
+    private func add(_ request: UNNotificationRequest, revision: Int) async -> Bool {
+        guard revision == schedulingRevision else { return false }
 
         do {
             try await center.add(request)
         } catch {
-            return
+            return false
         }
 
-        guard revision != schedulingRevision else { return }
+        guard revision != schedulingRevision else { return true }
         center.removePendingNotificationRequests(withIdentifiers: [request.identifier])
+        return false
     }
 
     private func format(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
