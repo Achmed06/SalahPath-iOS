@@ -33,29 +33,29 @@ final class NotificationManager {
         }
     }
 
-    func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async {
+    @discardableResult\n    func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async -> Bool {
         schedulingRevision &+= 1
         let revision = schedulingRevision
 
         await removeExistingPrayerNotifications(for: revision)
-        guard revision == schedulingRevision else { return }
-        guard settings.notificationsEnabled else { return }
+        guard revision == schedulingRevision else { return false }
+        guard settings.notificationsEnabled else { return false }
 
         let granted = await ensureAuthorization()
-        guard revision == schedulingRevision, granted else { return }
+        guard revision == schedulingRevision, granted else { return false }
 
         let calendar = Calendar.current
         let now = Date()
 
         for dayOffset in 0..<7 {
-            guard revision == schedulingRevision else { return }
+            guard revision == schedulingRevision else { return false }
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
                   let day = engine.calculateDay(for: date, location: location, settings: settings, calendar: calendar) else {
                 continue
             }
 
             for prayer in day.prayers where prayer.kind != .sunrise {
-                guard revision == schedulingRevision else { return }
+                guard revision == schedulingRevision else { return false }
                 guard settings.notificationEnabled(for: prayer.kind) else { continue }
 
                 let prayerName = prayer.kind.localizedName(settings.language)
@@ -82,7 +82,7 @@ final class NotificationManager {
                             UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger),
                             revision: revision
                         )
-                        guard revision == schedulingRevision else { return }
+                        guard revision == schedulingRevision else { return false }
                     }
                 }
 
@@ -105,7 +105,7 @@ final class NotificationManager {
                         UNNotificationRequest(identifier: identifier, content: content, trigger: trigger),
                         revision: revision
                     )
-                    guard revision == schedulingRevision else { return }
+                    guard revision == schedulingRevision else { return false }
                 }
             }
         }
@@ -127,7 +127,7 @@ final class NotificationManager {
 
     private func removeExistingPrayerNotifications(for revision: Int) async {
         let requests = await center.pendingNotificationRequests()
-        guard revision == schedulingRevision else { return }
+        guard revision == schedulingRevision else { return false }
 
         let ids = requests
             .map(\.identifier)
@@ -137,7 +137,7 @@ final class NotificationManager {
     }
 
     private func add(_ request: UNNotificationRequest, revision: Int) async {
-        guard revision == schedulingRevision else { return }
+        guard revision == schedulingRevision else { return false }
 
         do {
             try await center.add(request)
