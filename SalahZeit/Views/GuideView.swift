@@ -2671,6 +2671,21 @@ final class RemoteAudioPlayer: ObservableObject {
         loadCurrentAndPlay()
     }
 
+    func pause() {
+        player?.pause()
+        isPlaying = false
+    }
+
+    func resume() {
+        guard let player else {
+            guard !queueURLs.isEmpty else { return }
+            loadCurrentAndPlay()
+            return
+        }
+        lastError = nil
+        player.playImmediately(atRate: playbackRate)
+    }
+
     func stop() {
         playbackRevision &+= 1
         removeObservers()
@@ -6118,7 +6133,7 @@ private struct QuranSurahView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .disabled(!audioReady || isResolvingAudio)
+                .disabled(!audioReady || isResolvingAudio || audio.isLoading)
 
                 Button { audio.next() } label: {
                     Image(systemName: "forward.fill")
@@ -6178,11 +6193,22 @@ private struct QuranSurahView: View {
                 }
             }
         } else if let error {
-            ContentUnavailableView(
-                settings.t("Inhalt nicht geladen", "İçerik yüklenemedi"),
-                systemImage: "wifi.exclamationmark",
-                description: Text(error)
-            )
+            VStack(spacing: 12) {
+                ContentUnavailableView(
+                    settings.t("Inhalt nicht geladen", "İçerik yüklenemedi"),
+                    systemImage: "wifi.exclamationmark",
+                    description: Text(error)
+                )
+
+                Button {
+                    Task { await loadContent() }
+                } label: {
+                    Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                        .font(.headline)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(SalahTheme.teal)
+            }
         } else {
             ProgressView().padding(.top, 40)
         }
@@ -6332,8 +6358,14 @@ private struct QuranSurahView: View {
             audio.lastError = settings.t("Audio derzeit nicht verfügbar.", "Ses şu anda mevcut değil.")
             return
         }
-        if audio.isPlaying { audio.stop() }
-        else { audio.playQueue(resolvedAudioURLs) }
+
+        if audio.isPlaying {
+            audio.pause()
+        } else if audio.queueCount == resolvedAudioURLs.count, audio.activeURL != nil {
+            audio.resume()
+        } else {
+            audio.playQueue(resolvedAudioURLs)
+        }
     }
 
     private func shareTextFor(ar: AyahData, turkish: AyahData, german: AyahData) -> String {
