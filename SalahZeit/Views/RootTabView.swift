@@ -144,16 +144,16 @@ struct MoreView: View {
     @EnvironmentObject private var settings: SettingsStore
 
     private let columns = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8)
+        GridItem(.flexible(), spacing: 7),
+        GridItem(.flexible(), spacing: 7)
     ]
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 discoverHero
 
-                LazyVGrid(columns: columns, spacing: 8) {
+                LazyVGrid(columns: columns, spacing: 7) {
                     NavigationLink { MorningEveningAdhkarView() } label: {
                         discoverTile(icon: "hands.sparkles.fill", title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Morgen & Abend", "Sabah & Akşam"))
                     }
@@ -319,8 +319,9 @@ struct MoreView: View {
 
                 Image(systemName: symbol)
                     .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: size * 0.43, weight: .semibold))
+                    .font(.system(size: size * 0.38, weight: .semibold))
                     .foregroundStyle(SalahTheme.deepTeal)
+                    .frame(width: size * 0.72, height: size * 0.72)
 
                 Circle()
                     .fill(SalahTheme.gold)
@@ -336,18 +337,14 @@ struct MoreView: View {
 
     private func discoverAssetName(for symbol: String) -> String? {
         switch symbol {
-        case "moon.stars.fill":
-            return "sp_icon_muslim_days"
-        case "book.pages.fill":
-            return "sp_icon_info"
+        // Keep only the supplied assets that are clean at larger sizes.
+        // The remaining Discover entries use the cut-safe vector/SF fallback below.
         case "figure.mind.and.body":
             return "sp_icon_prayer"
         case "drop.fill":
             return "sp_icon_wudu"
         case "play.square.stack.fill":
             return "sp_icon_quran_audio"
-        case "text.book.closed.fill":
-            return "sp_icon_quran"
         case "calendar":
             return "sp_icon_calendar"
         case "pause.circle.fill":
@@ -369,8 +366,8 @@ struct MoreView: View {
     }
 
     private func discoverTile(icon: String, title: String, subtitle: String) -> some View {
-        VStack(spacing: 7) {
-            salahFeatureIcon(icon, size: 44)
+        VStack(spacing: 5) {
+            salahFeatureIcon(icon, size: 38)
 
             Text(title)
                 .font(.system(size: 11.5, weight: .bold))
@@ -384,15 +381,15 @@ struct MoreView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
-        .frame(maxWidth: .infinity, minHeight: 108)
-        .padding(9)
+        .frame(maxWidth: .infinity, minHeight: 94)
+        .padding(7)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1) }
     }
 
     private func discoverRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 10) {
-            salahFeatureIcon(icon, size: 34)
+            salahFeatureIcon(icon, size: 30)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -409,8 +406,8 @@ struct MoreView: View {
                 .font(.caption.bold())
                 .foregroundStyle(SalahTheme.teal)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 11)
+        .padding(.vertical, 8)
         .contentShape(Rectangle())
         .overlay(alignment: .bottom) { Divider().padding(.leading, 54).opacity(0.34) }
     }
