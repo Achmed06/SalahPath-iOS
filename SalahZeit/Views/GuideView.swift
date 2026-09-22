@@ -2625,6 +2625,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
     private var player: AVPlayer?
     private var queueURLs: [URL] = []
+    private var playbackRevision = 0
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
     private var periodicTimeObserver: Any?
@@ -2670,14 +2671,25 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     func stop() {
+        playbackRevision &+= 1
+        removeObservers()
         player?.pause()
+        player = nil
+        activeURL = nil
         isPlaying = false
         isLoading = false
+        currentTime = 0
+        duration = 0
     }
 
     private func loadCurrentAndPlay() {
         guard queueURLs.indices.contains(queueIndex) else { return }
+
+        playbackRevision &+= 1
+        let revision = playbackRevision
         removeObservers()
+        player?.pause()
+        player = nil
 
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
@@ -2702,6 +2714,7 @@ final class RemoteAudioPlayer: ObservableObject {
         Task { [weak self] in
             let playbackURL = await QuranAudioCache.shared.playbackURL(for: sourceURL)
             guard let self,
+                  self.playbackRevision == revision,
                   self.queueIndex == expectedIndex,
                   self.activeURL == sourceURL else { return }
             self.startPlayback(playbackURL)
