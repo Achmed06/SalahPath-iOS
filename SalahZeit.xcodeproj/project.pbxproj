@@ -212,7 +212,6 @@
 				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_CFBundleDisplayName = SalahPath;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
@@ -240,7 +239,6 @@
 				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCalendarsUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_CFBundleDisplayName = SalahPath;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
