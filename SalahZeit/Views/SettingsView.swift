@@ -200,10 +200,20 @@ struct SettingsView: View {
                                 notificationStatusText = settings.t("Standort noch nicht verfügbar.", "Konum henüz hazır değil.")
                                 return
                             }
-                            await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
-                            notificationStatusText = settings.notificationsEnabled
-                                ? settings.t("Für die nächsten 7 Tage aktualisiert.", "Önümüzdeki 7 gün için güncellendi.")
-                                : settings.t("Deaktiviert.", "Kapalı.")
+                            let scheduled = await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
+                            if !settings.notificationsEnabled {
+                                notificationStatusText = settings.t("Deaktiviert.", "Kapalı.")
+                            } else if scheduled {
+                                notificationStatusText = settings.t(
+                                    "Für die nächsten 7 Tage aktualisiert.",
+                                    "Önümüzdeki 7 gün için güncellendi."
+                                )
+                            } else {
+                                notificationStatusText = settings.t(
+                                    "Benachrichtigungen sind in iOS nicht erlaubt. Bitte in den Systemeinstellungen aktivieren.",
+                                    "iOS bildirim izni kapalı. Lütfen Sistem Ayarları'ndan etkinleştir."
+                                )
+                            }
                         }
                     } label: {
                         HStack {
