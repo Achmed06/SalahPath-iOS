@@ -166,7 +166,13 @@ final class SettingsStore: ObservableObject {
         static let asr = "asrRule"
         static let use24Hour = "use24Hour"
         static let notifications = "notificationsEnabled"
+        static let notifyAtPrayerTime = "notifyAtPrayerTime"
         static let leadMinutes = "notificationLeadMinutes"
+        static let fajrNotification = "fajrNotificationEnabled"
+        static let dhuhrNotification = "dhuhrNotificationEnabled"
+        static let asrNotification = "asrNotificationEnabled"
+        static let maghribNotification = "maghribNotificationEnabled"
+        static let ishaNotification = "ishaNotificationEnabled"
         static let fajrOffset = "fajrOffset"
         static let dhuhrOffset = "dhuhrOffset"
         static let asrOffset = "asrOffset"
@@ -185,7 +191,13 @@ final class SettingsStore: ObservableObject {
     @Published var asrRule: AsrRule { didSet { defaults.set(asrRule.rawValue, forKey: Keys.asr) } }
     @Published var use24Hour: Bool { didSet { defaults.set(use24Hour, forKey: Keys.use24Hour) } }
     @Published var notificationsEnabled: Bool { didSet { defaults.set(notificationsEnabled, forKey: Keys.notifications) } }
+    @Published var notifyAtPrayerTime: Bool { didSet { defaults.set(notifyAtPrayerTime, forKey: Keys.notifyAtPrayerTime) } }
     @Published var notificationLeadMinutes: Int { didSet { defaults.set(notificationLeadMinutes, forKey: Keys.leadMinutes) } }
+    @Published var fajrNotificationEnabled: Bool { didSet { defaults.set(fajrNotificationEnabled, forKey: Keys.fajrNotification) } }
+    @Published var dhuhrNotificationEnabled: Bool { didSet { defaults.set(dhuhrNotificationEnabled, forKey: Keys.dhuhrNotification) } }
+    @Published var asrNotificationEnabled: Bool { didSet { defaults.set(asrNotificationEnabled, forKey: Keys.asrNotification) } }
+    @Published var maghribNotificationEnabled: Bool { didSet { defaults.set(maghribNotificationEnabled, forKey: Keys.maghribNotification) } }
+    @Published var ishaNotificationEnabled: Bool { didSet { defaults.set(ishaNotificationEnabled, forKey: Keys.ishaNotification) } }
     @Published var fajrOffset: Int { didSet { defaults.set(fajrOffset, forKey: Keys.fajrOffset) } }
     @Published var dhuhrOffset: Int { didSet { defaults.set(dhuhrOffset, forKey: Keys.dhuhrOffset) } }
     @Published var asrOffset: Int { didSet { defaults.set(asrOffset, forKey: Keys.asrOffset) } }
@@ -207,7 +219,13 @@ final class SettingsStore: ObservableObject {
         self.asrRule = AsrRule(rawValue: defaults.string(forKey: Keys.asr) ?? "") ?? .standard
         self.use24Hour = defaults.object(forKey: Keys.use24Hour) as? Bool ?? true
         self.notificationsEnabled = defaults.object(forKey: Keys.notifications) as? Bool ?? false
-        self.notificationLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 0
+        self.notifyAtPrayerTime = defaults.object(forKey: Keys.notifyAtPrayerTime) as? Bool ?? true
+        self.notificationLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 10
+        self.fajrNotificationEnabled = defaults.object(forKey: Keys.fajrNotification) as? Bool ?? true
+        self.dhuhrNotificationEnabled = defaults.object(forKey: Keys.dhuhrNotification) as? Bool ?? true
+        self.asrNotificationEnabled = defaults.object(forKey: Keys.asrNotification) as? Bool ?? true
+        self.maghribNotificationEnabled = defaults.object(forKey: Keys.maghribNotification) as? Bool ?? true
+        self.ishaNotificationEnabled = defaults.object(forKey: Keys.ishaNotification) as? Bool ?? true
         self.fajrOffset = defaults.object(forKey: Keys.fajrOffset) as? Int ?? 0
         self.dhuhrOffset = defaults.object(forKey: Keys.dhuhrOffset) as? Int ?? 0
         self.asrOffset = defaults.object(forKey: Keys.asrOffset) as? Int ?? 0
@@ -230,6 +248,17 @@ final class SettingsStore: ObservableObject {
 
     func restartOnboarding() {
         onboardingCompleted = false
+    }
+
+    func notificationEnabled(for kind: PrayerKind) -> Bool {
+        switch kind {
+        case .fajr: return fajrNotificationEnabled
+        case .dhuhr: return dhuhrNotificationEnabled
+        case .asr: return asrNotificationEnabled
+        case .maghrib: return maghribNotificationEnabled
+        case .isha: return ishaNotificationEnabled
+        case .sunrise: return false
+        }
     }
 
     func offset(for kind: PrayerKind) -> Int {
