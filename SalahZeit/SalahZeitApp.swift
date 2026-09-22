@@ -120,7 +120,297 @@ struct SalahPathApp: App {
         case "tracker-pause":
             NavigationStack { TrackerPauseView() }
         default:
-            RootTabView()
+            if settings.onboardingCompleted {
+                RootTabView()
+            } else {
+                OnboardingFlowView()
+            }
         }
+    }
+}
+
+private struct OnboardingFlowView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @EnvironmentObject private var locationManager: LocationManager
+
+    @State private var step = 0
+    @State private var manualLocation = ""
+    @State private var resolvingLocation = false
+    @State private var locationError: String?
+
+    var body: some View {
+        ZStack {
+            SalahTheme.page.ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                Spacer(minLength: 12)
+
+                Image("salahpath_logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 72, height: 72)
+
+                Group {
+                    switch step {
+                    case 0: welcomeStep
+                    case 1: profileStep
+                    case 2: locationStep
+                    default: readyStep
+                    }
+                }
+                .frame(maxWidth: 520)
+
+                Spacer(minLength: 12)
+
+                if step < 3 {
+                    HStack(spacing: 10) {
+                        if step > 0 {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.18)) { step -= 1 }
+                            } label: {
+                                Text(settings.t("Zurück", "Geri"))
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(SalahTheme.deepTeal)
+                            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 13))
+                        }
+
+                        if step < 2 {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.18)) { step += 1 }
+                            } label: {
+                                Text(settings.t("Weiter", "İleri"))
+                                    .font(.headline.bold())
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(.white)
+                            .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+                        }
+                    }
+                    .frame(maxWidth: 520)
+                }
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
+        }
+        .preferredColorScheme(.light)
+    }
+
+    private var welcomeStep: some View {
+        setupCard {
+            VStack(spacing: 14) {
+                Text("السلام عليكم")
+                    .font(.system(size: 31, weight: .semibold))
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                Text("As-salāmu ʿalaykum")
+                    .font(.title2.bold())
+                    .foregroundStyle(SalahTheme.ink)
+
+                Text(settings.t(
+                    "Willkommen bei SalahPath. Wir richten nur die Dinge ein, die dir später Suche in den Einstellungen sparen.",
+                    "SalahPath'e hoş geldin. Sonradan ayarlarda aramak zorunda kalmaman için yalnızca önemli şeyleri şimdi ayarlıyoruz."
+                ))
+                .font(.subheadline)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+
+                Picker("", selection: $settings.language) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(language.title).tag(language)
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+        }
+    }
+
+    private var profileStep: some View {
+        setupCard {
+            VStack(spacing: 14) {
+                Text(settings.t("Welche Gebetsanleitung passt zu dir?", "Hangi namaz anlatımı sana uygun?"))
+                    .font(.title3.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .multilineTextAlignment(.center)
+
+                Text(settings.t(
+                    "Damit die App direkt die passenden Mann- oder Frau-Abbildungen zeigt.",
+                    "Uygulamanın doğrudan uygun erkek veya kadın görsellerini göstermesi için."
+                ))
+                .font(.subheadline)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+
+                ForEach(PrayerAudience.allCases) { audience in
+                    Button {
+                        settings.prayerAudience = audience
+                    } label: {
+                        HStack {
+                            Image(systemName: audience == .male ? "person.fill" : "person.fill")
+                            Text(audience.title(settings.language))
+                                .font(.headline)
+                            Spacer()
+                            Image(systemName: settings.prayerAudience == audience ? "checkmark.circle.fill" : "circle")
+                        }
+                        .padding(12)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .background(
+                        settings.prayerAudience == audience ? SalahTheme.softTeal : SalahTheme.cream,
+                        in: RoundedRectangle(cornerRadius: 13)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 13)
+                            .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1)
+                    }
+                }
+            }
+        }
+    }
+
+    private var locationStep: some View {
+        setupCard {
+            VStack(spacing: 12) {
+                Text(settings.t("Standort für Gebetszeiten & Qibla", "Namaz vakitleri ve kıble için konum"))
+                    .font(.title3.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .multilineTextAlignment(.center)
+
+                Text(settings.t(
+                    "Du entscheidest. GPS ist nicht nötig, wenn du deinen Ort manuell eingibst. Du kannst diesen Schritt auch überspringen.",
+                    "Karar senin. Şehrini manuel girersen GPS gerekmez. Bu adımı tamamen atlayabilirsin."
+                ))
+                .font(.subheadline)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+
+                Button {
+                    locationManager.useDeviceLocation()
+                    locationError = nil
+                    withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
+                } label: {
+                    Label(settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"), systemImage: "location.fill")
+                        .font(.headline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white)
+                .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+
+                HStack(spacing: 8) {
+                    TextField(settings.t("Stadt oder PLZ", "Şehir veya posta kodu"), text: $manualLocation)
+                        .textInputAutocapitalization(.words)
+                        .autocorrectionDisabled()
+                        .padding(.horizontal, 11)
+                        .frame(height: 44)
+                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 11))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 11)
+                                .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1)
+                        }
+
+                    Button {
+                        Task {
+                            resolvingLocation = true
+                            locationError = nil
+                            let success = await locationManager.setManualLocation(searchText: manualLocation)
+                            resolvingLocation = false
+                            if success {
+                                withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
+                            } else {
+                                locationError = locationManager.lastError
+                            }
+                        }
+                    } label: {
+                        if resolvingLocation {
+                            ProgressView()
+                                .frame(width: 44, height: 44)
+                        } else {
+                            Image(systemName: "checkmark")
+                                .font(.headline.bold())
+                                .frame(width: 44, height: 44)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.white)
+                    .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 11))
+                    .disabled(manualLocation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || resolvingLocation)
+                }
+
+                if let locationError {
+                    Text(locationError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                Button {
+                    locationError = nil
+                    withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
+                } label: {
+                    Text(settings.t("Jetzt überspringen", "Şimdi atla"))
+                        .font(.subheadline.bold())
+                        .foregroundStyle(SalahTheme.teal)
+                        .padding(.vertical, 6)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private var readyStep: some View {
+        setupCard {
+            VStack(spacing: 14) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 50))
+                    .foregroundStyle(SalahTheme.teal)
+
+                Text(settings.t("Fertig eingerichtet", "Kurulum tamam"))
+                    .font(.title2.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.language.title, systemImage: "globe")
+                    Label(settings.prayerAudience.title(settings.language), systemImage: "person.fill")
+                    Label(
+                        locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
+                        systemImage: locationManager.location == nil ? "location.slash" : "location.fill"
+                    )
+                }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(SalahTheme.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Button {
+                    settings.completeOnboarding()
+                } label: {
+                    Text(settings.t("SalahPath öffnen", "SalahPath'i aç"))
+                        .font(.headline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white)
+                .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+            }
+        }
+    }
+
+    private func setupCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .padding(18)
+            .frame(maxWidth: .infinity)
+            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+            }
     }
 }
