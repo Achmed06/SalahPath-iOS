@@ -62,7 +62,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     func requestAccessAndStart() {
         if usesManualLocation {
-            startHeadingIfAvailable()
             return
         }
 
@@ -101,9 +100,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     func stopQiblaHeading() {
         manager.stopUpdatingHeading()
-        if usesManualLocation {
-            manager.stopUpdatingLocation()
-        }
+        manager.stopUpdatingLocation()
     }
 
     func useDeviceLocation() {
@@ -150,7 +147,6 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             defaults.set(resolvedLabel, forKey: ManualLocationKeys.locality)
             defaults.set(true, forKey: ManualLocationKeys.enabled)
 
-            startHeadingIfAvailable()
             return true
         } catch {
             lastError = "Ort konnte nicht gefunden werden. Bitte Eingabe prüfen."
@@ -171,9 +167,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     private func startUpdates() {
-        updateHeadingOrientation(for: UIDevice.current.orientation)
-        manager.startUpdatingLocation()
-        startHeadingIfAvailable()
+        manager.requestLocation()
     }
 
     private func startHeadingIfAvailable() {
