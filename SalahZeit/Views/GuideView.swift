@@ -8246,7 +8246,7 @@ struct QuranDirectoryView: View {
                         Text(chapter.englishName)
                             .font(.headline)
                             .foregroundStyle(SalahTheme.ink)
-                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "ayet")) · \(chapter.revelationType)")
+                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "ayet")) · \(localizedRevelationType(chapter.revelationType))")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -8331,6 +8331,17 @@ struct QuranDirectoryView: View {
     private func revelationNumber(for surah: Int) -> Int {
         guard revelationOrderBySurah.indices.contains(surah) else { return 999 }
         return revelationOrderBySurah[surah]
+    }
+
+    private func localizedRevelationType(_ value: String) -> String {
+        switch value.lowercased() {
+        case "meccan":
+            return settings.t("mekkanisch", "Mekkî")
+        case "medinan":
+            return settings.t("medinensisch", "Medenî")
+        default:
+            return value
+        }
     }
 }
 
