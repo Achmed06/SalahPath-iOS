@@ -10,7 +10,14 @@ struct PrayerEngine {
         settings: SettingsStore,
         calendar: Calendar = .current
     ) -> PrayerDay? {
-        let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let coordinate = location.coordinate
+        guard coordinate.latitude.isFinite,
+              coordinate.longitude.isFinite,
+              CLLocationCoordinate2DIsValid(coordinate) else {
+            return nil
+        }
+
+        let coordinates = Coordinates(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let components = calendar.dateComponents([.year, .month, .day], from: date)
 
         var parameters = settings.calculationPreset.method.params
@@ -94,6 +101,7 @@ struct PrayerEngine {
     }
 
     private func adjusted(_ date: Date, kind: PrayerKind, settings: SettingsStore) -> Date {
-        date.addingTimeInterval(TimeInterval(settings.offset(for: kind) * 60))
+        let minutes = min(max(settings.offset(for: kind), -15), 15)
+        return date.addingTimeInterval(TimeInterval(minutes) * 60)
     }
 }
