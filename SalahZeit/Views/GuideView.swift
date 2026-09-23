@@ -8048,6 +8048,7 @@ private final class QuranPageStore: ObservableObject {
 struct QuranPageReaderView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var store = QuranPageStore()
+    @State private var bookmarkedTokens = QuranBookmarkStore.tokens()
 
     let page: Int
 
@@ -8101,28 +8102,60 @@ struct QuranPageReaderView: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 9) {
-                                    HStack(alignment: .top, spacing: 9) {
+                                    HStack(spacing: 9) {
                                         Text("\(ayah.numberInSurah)")
                                             .font(.caption.bold().monospacedDigit())
                                             .foregroundStyle(SalahTheme.deepTeal)
                                             .frame(width: 30, height: 30)
                                             .background(SalahTheme.gold.opacity(0.20), in: Circle())
 
-                                        Text(ayah.text)
-                                            .font(.system(size: 23))
-                                            .frame(maxWidth: .infinity, alignment: .trailing)
-                                            .multilineTextAlignment(.trailing)
+                                        Spacer()
+
+                                        let bookmark = QuranBookmark(
+                                            surah: ayah.surah.number,
+                                            ayah: ayah.numberInSurah
+                                        )
+                                        Button {
+                                            _ = QuranBookmarkStore.toggle(bookmark)
+                                            bookmarkedTokens = QuranBookmarkStore.tokens()
+                                        } label: {
+                                            Image(systemName: bookmarkedTokens.contains(bookmark.token) ? "bookmark.fill" : "bookmark")
+                                                .font(.system(size: 15, weight: .semibold))
+                                                .foregroundStyle(SalahTheme.teal)
+                                                .frame(width: 32, height: 32)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel(
+                                            bookmarkedTokens.contains(bookmark.token)
+                                                ? settings.t("Lesezeichen entfernen", "Yer imini kaldır")
+                                                : settings.t("Lesezeichen setzen", "Yer imi ekle")
+                                        )
                                     }
 
-                                    if let translated = translationByAyah[ayah.number] {
+                                    Text(ayah.text)
+                                        .font(.system(size: max(settings.quranFontSize, 28)))
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                                        .multilineTextAlignment(.trailing)
+                                        .textSelection(.enabled)
+
+                                    if settings.quranShowTranslation,
+                                       let translated = translationByAyah[ayah.number] {
+                                        Divider().opacity(0.24)
                                         Text(translated.text)
                                             .font(.subheadline)
                                             .foregroundStyle(SalahTheme.ink)
                                             .fixedSize(horizontal: false, vertical: true)
+                                            .textSelection(.enabled)
                                     }
                                 }
                                 .padding(.horizontal, 13)
                                 .padding(.vertical, 12)
+                                .onAppear {
+                                    QuranBookmarkStore.setLastRead(
+                                        surah: ayah.surah.number,
+                                        ayah: ayah.numberInSurah
+                                    )
+                                }
 
                                 if index < arabic.ayahs.count - 1 {
                                     Divider().opacity(0.28)
@@ -8139,8 +8172,8 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen und nach dem ersten erfolgreichen Laden lokal gespeichert. Bereits geladene Seiten funktionieren danach auch ohne Internet. Die Mushaf-Navigation umfasst 604 Seiten.",
-                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir ve ilk başarılı yüklemeden sonra cihazda saklanır. Daha önce açılan sayfalar daha sonra internetsiz de çalışır. Mushaf gezinmesi 604 sayfadır."
+                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen und nach dem ersten erfolgreichen Laden lokal gespeichert. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader. Die Mushaf-Navigation umfasst 604 Seiten.",
+                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir ve ilk başarılı yüklemeden sonra cihazda saklanır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır. Mushaf gezinmesi 604 sayfadır."
                         ))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
