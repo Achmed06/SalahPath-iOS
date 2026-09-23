@@ -768,6 +768,10 @@ struct PrayerHowToView: View {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
     }
 
+    private var safeCurrentStepIndex: Int {
+        min(max(currentStepIndex, 0), max(steps.count - 1, 0))
+    }
+
     private var steps: [PrayerTutorialStep] {
         [
             .init(
@@ -1104,7 +1108,7 @@ struct PrayerHowToView: View {
                     .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
 
-                    PrayerTutorialStepCard(step: steps[currentStepIndex], audience: settings.prayerAudience)
+                    PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
                         .id("prayer-step-card-\(currentStepIndex)")
 
                     HStack(spacing: 12) {
@@ -1970,6 +1974,10 @@ struct WuduGuideView: View {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 12))
     }
 
+    private var safeCurrentStepIndex: Int {
+        min(max(currentStepIndex, 0), max(steps.count - 1, 0))
+    }
+
     private let steps: [WuduTutorialStep] = [
         .init(number: 1, image: "wudu_intention", deTitle: "Niyyah / Absicht", trTitle: "Niyet", deAction: "Fasse im Herzen die Absicht, Wudu zu nehmen. In der hanafitischen Lehre ist die Niyyah Sunnah und gehört nicht zu den vier Fard-Bestandteilen.", trAction: "Kalben abdest almaya niyet et. Hanefî mezhebinde niyet sünnettir; abdestin dört farzından biri değildir.", repeatText: nil, hanafiFard: false),
         .init(number: 2, image: "wudu_basmala", deTitle: "Basmala", trTitle: "Besmele", deAction: "Beginne mit Bismillāh. Dies gehört zur dargestellten Wudu-Praxis und ist kein eigener Fard-Bestandteil.", trAction: "Bismillâh diyerek başla. Bu, gösterilen abdest uygulamasının bir parçasıdır; ayrı bir farz değildir.", repeatText: nil, hanafiFard: false),
@@ -2028,12 +2036,12 @@ struct WuduGuideView: View {
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
                             Spacer()
-                            Text(steps[currentStepIndex].hanafiFard ? settings.t("FARZ · PFLICHT", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
+                            Text(steps[safeCurrentStepIndex].hanafiFard ? settings.t("FARZ · PFLICHT", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
                                 .font(.caption.bold())
                                 .padding(.horizontal, 9)
                                 .padding(.vertical, 5)
                                 .background(
-                                    (steps[currentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal),
+                                    (steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal),
                                     in: Capsule()
                                 )
                                 .foregroundStyle(SalahTheme.deepTeal)
@@ -2045,7 +2053,7 @@ struct WuduGuideView: View {
                     .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
 
-                    wuduStepCard(steps[currentStepIndex])
+                    wuduStepCard(steps[safeCurrentStepIndex])
                         .id("wudu-step-card-\(currentStepIndex)")
 
                     HStack(spacing: 12) {
