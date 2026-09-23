@@ -764,19 +764,8 @@ struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var currentStepIndex: Int
 
-    private static let salamDirectionSequence = ["salam_right", "salam_left"]
-
-    private static func validateSalamDirectionSequence() {
-        let expected = ["salam_right", "salam_left"]
-        precondition(
-            salamDirectionSequence == expected,
-            "Prayer Salam direction must be RIGHT then LEFT from the worshipper's own perspective."
-        )
-    }
-
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
-        Self.validateSalamDirectionSequence()
     }
 
     private var steps: [PrayerTutorialStep] {
