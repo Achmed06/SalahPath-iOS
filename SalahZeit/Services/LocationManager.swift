@@ -136,6 +136,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     @discardableResult
     func setManualLocation(searchText: String) async -> Bool {
+        pendingDeviceLocationSwitch = false
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else {
             lastError = "Bitte Ort, Stadt oder Postleitzahl eingeben."
