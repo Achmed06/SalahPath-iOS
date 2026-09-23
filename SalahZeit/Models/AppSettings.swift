@@ -233,11 +233,41 @@ final class SettingsStore: ObservableObject {
     @Published var asrNotificationEnabled: Bool { didSet { defaults.set(asrNotificationEnabled, forKey: Keys.asrNotification) } }
     @Published var maghribNotificationEnabled: Bool { didSet { defaults.set(maghribNotificationEnabled, forKey: Keys.maghribNotification) } }
     @Published var ishaNotificationEnabled: Bool { didSet { defaults.set(ishaNotificationEnabled, forKey: Keys.ishaNotification) } }
-    @Published var fajrOffset: Int { didSet { persistOffset(&fajrOffset, key: Keys.fajrOffset) } }
-    @Published var dhuhrOffset: Int { didSet { persistOffset(&dhuhrOffset, key: Keys.dhuhrOffset) } }
-    @Published var asrOffset: Int { didSet { persistOffset(&asrOffset, key: Keys.asrOffset) } }
-    @Published var maghribOffset: Int { didSet { persistOffset(&maghribOffset, key: Keys.maghribOffset) } }
-    @Published var ishaOffset: Int { didSet { persistOffset(&ishaOffset, key: Keys.ishaOffset) } }
+    @Published var fajrOffset: Int {
+        didSet {
+            let sanitized = Self.sanitizedOffset(fajrOffset)
+            if fajrOffset != sanitized { fajrOffset = sanitized }
+            defaults.set(sanitized, forKey: Keys.fajrOffset)
+        }
+    }
+    @Published var dhuhrOffset: Int {
+        didSet {
+            let sanitized = Self.sanitizedOffset(dhuhrOffset)
+            if dhuhrOffset != sanitized { dhuhrOffset = sanitized }
+            defaults.set(sanitized, forKey: Keys.dhuhrOffset)
+        }
+    }
+    @Published var asrOffset: Int {
+        didSet {
+            let sanitized = Self.sanitizedOffset(asrOffset)
+            if asrOffset != sanitized { asrOffset = sanitized }
+            defaults.set(sanitized, forKey: Keys.asrOffset)
+        }
+    }
+    @Published var maghribOffset: Int {
+        didSet {
+            let sanitized = Self.sanitizedOffset(maghribOffset)
+            if maghribOffset != sanitized { maghribOffset = sanitized }
+            defaults.set(sanitized, forKey: Keys.maghribOffset)
+        }
+    }
+    @Published var ishaOffset: Int {
+        didSet {
+            let sanitized = Self.sanitizedOffset(ishaOffset)
+            if ishaOffset != sanitized { ishaOffset = sanitized }
+            defaults.set(sanitized, forKey: Keys.ishaOffset)
+        }
+    }
     @Published var language: AppLanguage { didSet { defaults.set(language.rawValue, forKey: Keys.language) } }
     @Published var prayerAudience: PrayerAudience { didSet { defaults.set(prayerAudience.rawValue, forKey: Keys.audience) } }
     @Published var appearance: AppAppearance { didSet { defaults.set(appearance.rawValue, forKey: Keys.appearance) } }
@@ -296,12 +326,6 @@ final class SettingsStore: ObservableObject {
     private static func sanitizedQuranFontSize(_ value: Double) -> Double {
         guard value.isFinite else { return 28 }
         return min(max(value, 20), 40)
-    }
-
-    private func persistOffset(_ value: inout Int, key: String) {
-        let sanitized = Self.sanitizedOffset(value)
-        if value != sanitized { value = sanitized }
-        defaults.set(sanitized, forKey: key)
     }
 
     var safeQuranFontSize: Double {
