@@ -3410,6 +3410,214 @@ struct RamadanGuideIndexView: View {
     }
 }
 
+// MARK: - Esmaül Hüsna
+
+private struct EsmaName: Identifiable {
+    let number: Int
+    let arabic: String
+    let name: String
+    let deMeaning: String
+    let trMeaning: String
+    var id: Int { number }
+}
+
+struct EsmaulHusnaView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @State private var search = ""
+
+    private let names: [EsmaName] = [
+        .init(number: 1, arabic: "اللَّهُ", name: "Allah", deMeaning: "Der eine wahre Gott; der Eigenname Allahs.", trMeaning: "Tek gerçek ilâh; Allah'ın özel ismi."),
+        .init(number: 2, arabic: "الرَّحْمٰنُ", name: "er-Rahmân", deMeaning: "Der unermesslich Barmherzige.", trMeaning: "Sonsuz rahmet sahibi."),
+        .init(number: 3, arabic: "الرَّحِيمُ", name: "er-Rahîm", deMeaning: "Der besonders Barmherzige.", trMeaning: "Rahmeti her şeyi kuşatan."),
+        .init(number: 4, arabic: "الْمَلِكُ", name: "el-Melik", deMeaning: "Der absolute Herrscher und Besitzer.", trMeaning: "Bütün varlıkların gerçek sahibi ve hükümdarı."),
+        .init(number: 5, arabic: "الْقُدُّوسُ", name: "el-Kuddûs", deMeaning: "Der vollkommen Reine, frei von jedem Mangel.", trMeaning: "Her türlü eksiklikten uzak olan."),
+        .init(number: 6, arabic: "السَّلَامُ", name: "es-Selâm", deMeaning: "Der Quell von Frieden und Unversehrtheit.", trMeaning: "Esenlik ve selâmet veren."),
+        .init(number: 7, arabic: "الْمُؤْمِنُ", name: "el-Mü’min", deMeaning: "Der Sicherheit und Vertrauen schenkt.", trMeaning: "Güven ve emniyet veren."),
+        .init(number: 8, arabic: "الْمُهَيْمِنُ", name: "el-Müheymin", deMeaning: "Der alles überwacht und beschützt.", trMeaning: "Her şeyi gözetip yöneten."),
+        .init(number: 9, arabic: "الْعَزِيزُ", name: "el-Azîz", deMeaning: "Der Unüberwindliche, Erhabene.", trMeaning: "Mutlak izzet ve üstünlük sahibi."),
+        .init(number: 10, arabic: "الْجَبَّارُ", name: "el-Cebbâr", deMeaning: "Der allmächtig Durchsetzende.", trMeaning: "Mutlak kudretiyle hükmünü yürüten."),
+        .init(number: 11, arabic: "الْمُتَكَبِّرُ", name: "el-Mütekebbir", deMeaning: "Der wahrhaft Große und Erhabene.", trMeaning: "Büyüklükte eşsiz ve yüce olan."),
+        .init(number: 12, arabic: "الْخَالِقُ", name: "el-Hâlik", deMeaning: "Der Schöpfer aller Dinge.", trMeaning: "Her şeyin yaratıcısı."),
+        .init(number: 13, arabic: "الْبَارِئُ", name: "el-Bâri’", deMeaning: "Der aus dem Nichts erschafft.", trMeaning: "Örneksiz ve maddesiz yaratan."),
+        .init(number: 14, arabic: "الْمُصَوِّرُ", name: "el-Musavvir", deMeaning: "Der den Geschöpfen Gestalt gibt.", trMeaning: "Varlıklara şekil ve suret veren."),
+        .init(number: 15, arabic: "الْغَفَّارُ", name: "el-Gaffâr", deMeaning: "Der immer wieder viel vergibt.", trMeaning: "Çokça bağışlayan."),
+        .init(number: 16, arabic: "الْقَهَّارُ", name: "el-Kahhâr", deMeaning: "Der alles bezwingt, dem alles untersteht.", trMeaning: "Her şeye galip gelen."),
+        .init(number: 17, arabic: "الْوَهَّابُ", name: "el-Vehhâb", deMeaning: "Der freigebig und ohne Gegenleistung schenkt.", trMeaning: "Karşılıksız çokça nimet veren."),
+        .init(number: 18, arabic: "الرَّزَّاقُ", name: "er-Rezzâk", deMeaning: "Der alle Versorgung gewährt.", trMeaning: "Bütün rızıkları veren."),
+        .init(number: 19, arabic: "الْفَتَّاحُ", name: "el-Fettâh", deMeaning: "Der Wege öffnet und gerecht entscheidet.", trMeaning: "Hayır kapılarını açan ve hükmeden."),
+        .init(number: 20, arabic: "الْعَلِيمُ", name: "el-Alîm", deMeaning: "Der alles weiß.", trMeaning: "Her şeyi bilen."),
+        .init(number: 21, arabic: "الْقَابِضُ", name: "el-Kâbız", deMeaning: "Der nach Weisheit begrenzt und zurückhält.", trMeaning: "Hikmetiyle daraltan ve tutan."),
+        .init(number: 22, arabic: "الْبَاسِطُ", name: "el-Bâsıt", deMeaning: "Der nach Weisheit weitet und reichlich gibt.", trMeaning: "Hikmetiyle genişleten."),
+        .init(number: 23, arabic: "الْخَافِضُ", name: "el-Hâfıd", deMeaning: "Der erniedrigt, wen Er will.", trMeaning: "Dilediğini alçaltan."),
+        .init(number: 24, arabic: "الرَّافِعُ", name: "er-Râfi‘", deMeaning: "Der erhöht und erhebt.", trMeaning: "Dilediğini yükselten."),
+        .init(number: 25, arabic: "الْمُعِزُّ", name: "el-Muizz", deMeaning: "Der Ehre und Stärke gibt.", trMeaning: "İzzet ve güç veren."),
+        .init(number: 26, arabic: "الْمُذِلُّ", name: "el-Müzill", deMeaning: "Der Demütigung zulässt und unterwirft.", trMeaning: "Dilediğini zelil kılan."),
+        .init(number: 27, arabic: "السَّمِيعُ", name: "es-Semî‘", deMeaning: "Der alles hört.", trMeaning: "Her şeyi işiten."),
+        .init(number: 28, arabic: "الْبَصِيرُ", name: "el-Basîr", deMeaning: "Der alles sieht.", trMeaning: "Her şeyi gören."),
+        .init(number: 29, arabic: "الْحَكَمُ", name: "el-Hakem", deMeaning: "Der endgültige Richter.", trMeaning: "Nihai hükmü veren."),
+        .init(number: 30, arabic: "الْعَدْلُ", name: "el-Adl", deMeaning: "Der vollkommen Gerechte.", trMeaning: "Mutlak adalet sahibi."),
+        .init(number: 31, arabic: "اللَّطِيفُ", name: "el-Latîf", deMeaning: "Der Feinfühlige, der auch das Verborgenste kennt.", trMeaning: "En ince şeyleri bilen ve lütfeden."),
+        .init(number: 32, arabic: "الْخَبِيرُ", name: "el-Habîr", deMeaning: "Der über alles vollständig informiert ist.", trMeaning: "Her şeyden haberdar olan."),
+        .init(number: 33, arabic: "الْحَلِيمُ", name: "el-Halîm", deMeaning: "Der Nachsichtige und Milde.", trMeaning: "Hemen cezalandırmayan, yumuşak davranan."),
+        .init(number: 34, arabic: "الْعَظِيمُ", name: "el-Azîm", deMeaning: "Der unermesslich Erhabene.", trMeaning: "Azamet ve yücelik sahibi."),
+        .init(number: 35, arabic: "الْغَفُورُ", name: "el-Gafûr", deMeaning: "Der sehr viel vergibt.", trMeaning: "Çok bağışlayan."),
+        .init(number: 36, arabic: "الشَّكُورُ", name: "eş-Şekûr", deMeaning: "Der gute Taten reich belohnt.", trMeaning: "Az amele çok karşılık veren."),
+        .init(number: 37, arabic: "الْعَلِيُّ", name: "el-Aliyy", deMeaning: "Der Höchste und Erhabenste.", trMeaning: "Yücelikte eşsiz olan."),
+        .init(number: 38, arabic: "الْكَبِيرُ", name: "el-Kebîr", deMeaning: "Der unvergleichlich Große.", trMeaning: "Büyüklüğü sınırsız olan."),
+        .init(number: 39, arabic: "الْحَفِيظُ", name: "el-Hafîz", deMeaning: "Der alles bewahrt und beschützt.", trMeaning: "Her şeyi koruyup gözeten."),
+        .init(number: 40, arabic: "الْمُقِيتُ", name: "el-Mukît", deMeaning: "Der Nahrung und Kraft gewährt.", trMeaning: "Rızık ve güç veren, koruyan."),
+        .init(number: 41, arabic: "الْحَسِيبُ", name: "el-Hasîb", deMeaning: "Der abrechnet und für alles genügt.", trMeaning: "Hesaba çeken ve kullarına yeten."),
+        .init(number: 42, arabic: "الْجَلِيلُ", name: "el-Celîl", deMeaning: "Der Besitzer vollkommener Majestät.", trMeaning: "Azamet ve yücelik sahibi."),
+        .init(number: 43, arabic: "الْكَرِيمُ", name: "el-Kerîm", deMeaning: "Der überaus Großzügige.", trMeaning: "Çok cömert ve ikram sahibi."),
+        .init(number: 44, arabic: "الرَّقِيبُ", name: "er-Rakîb", deMeaning: "Der alles wachsam überwacht.", trMeaning: "Her şeyi gözeten."),
+        .init(number: 45, arabic: "الْمُجِيبُ", name: "el-Mücîb", deMeaning: "Der Gebete erhört.", trMeaning: "Dualara icabet eden."),
+        .init(number: 46, arabic: "الْوَاسِعُ", name: "el-Vâsi‘", deMeaning: "Dessen Wissen, Macht und Barmherzigkeit alles umfasst.", trMeaning: "İlmi, rahmeti ve kudreti geniş olan."),
+        .init(number: 47, arabic: "الْحَكِيمُ", name: "el-Hakîm", deMeaning: "Der vollkommen Weise.", trMeaning: "Her işi hikmetli olan."),
+        .init(number: 48, arabic: "الْوَدُودُ", name: "el-Vedûd", deMeaning: "Der Liebende und Liebe Schenkende.", trMeaning: "Seven ve sevilen."),
+        .init(number: 49, arabic: "الْمَجِيدُ", name: "el-Mecîd", deMeaning: "Der Ruhmreiche und Großzügige.", trMeaning: "Şanı yüce ve ikramı bol olan."),
+        .init(number: 50, arabic: "الْبَاعِثُ", name: "el-Bâis", deMeaning: "Der auferweckt und entsendet.", trMeaning: "Dirilten ve elçiler gönderen."),
+        .init(number: 51, arabic: "الشَّهِيدُ", name: "eş-Şehîd", deMeaning: "Der über alles Zeuge ist.", trMeaning: "Her şeye şahit olan."),
+        .init(number: 52, arabic: "الْحَقُّ", name: "el-Hakk", deMeaning: "Der absolute und beständige Wahre.", trMeaning: "Varlığı ve hükmü gerçek olan."),
+        .init(number: 53, arabic: "الْوَكِيلُ", name: "el-Vekîl", deMeaning: "Der vollkommen Verlässliche, dem man sich anvertraut.", trMeaning: "Kendisine güvenilip dayanılan."),
+        .init(number: 54, arabic: "الْقَوِيُّ", name: "el-Kaviyy", deMeaning: "Der Allstarke.", trMeaning: "Gücü her şeye yeten."),
+        .init(number: 55, arabic: "الْمَتِينُ", name: "el-Metîn", deMeaning: "Der unerschütterlich Starke.", trMeaning: "Kuvveti sarsılmaz olan."),
+        .init(number: 56, arabic: "الْوَلِيُّ", name: "el-Veliyy", deMeaning: "Der Schutzherr und Helfer der Gläubigen.", trMeaning: "Müminlerin dostu ve yardımcısı."),
+        .init(number: 57, arabic: "الْحَمِيدُ", name: "el-Hamîd", deMeaning: "Der allen Lobes Würdige.", trMeaning: "Her türlü övgüye layık olan."),
+        .init(number: 58, arabic: "الْمُحْصِي", name: "el-Muhsî", deMeaning: "Der alles bis ins Einzelne zählt und kennt.", trMeaning: "Her şeyin sayısını ve ölçüsünü bilen."),
+        .init(number: 59, arabic: "الْمُبْدِئُ", name: "el-Mübdi’", deMeaning: "Der die Schöpfung erstmals hervorbringt.", trMeaning: "Varlıkları ilk defa yaratan."),
+        .init(number: 60, arabic: "الْمُعِيدُ", name: "el-Muîd", deMeaning: "Der die Schöpfung wieder hervorbringt.", trMeaning: "Ölümden sonra yeniden yaratan."),
+        .init(number: 61, arabic: "الْمُحْيِي", name: "el-Muhyî", deMeaning: "Der Leben gibt.", trMeaning: "Hayat veren ve dirilten."),
+        .init(number: 62, arabic: "الْمُمِيتُ", name: "el-Mümît", deMeaning: "Der den Tod bestimmt.", trMeaning: "Öldüren, canları alan."),
+        .init(number: 63, arabic: "الْحَيُّ", name: "el-Hayy", deMeaning: "Der ewig Lebendige.", trMeaning: "Ezelî ve ebedî diri olan."),
+        .init(number: 64, arabic: "الْقَيُّومُ", name: "el-Kayyûm", deMeaning: "Der aus sich selbst besteht und alles erhält.", trMeaning: "Varlığı kendinden, her şeyi ayakta tutan."),
+        .init(number: 65, arabic: "الْوَاجِدُ", name: "el-Vâcid", deMeaning: "Der nichts entbehrt und alles findet.", trMeaning: "Hiçbir şeye muhtaç olmayan."),
+        .init(number: 66, arabic: "الْمَاجِدُ", name: "el-Mâcid", deMeaning: "Der Edle und Ruhmreiche.", trMeaning: "Şanı yüce, keremi bol olan."),
+        .init(number: 67, arabic: "الْوَاحِدُ", name: "el-Vâhid", deMeaning: "Der Eine ohne Teilhaber.", trMeaning: "Tek ve ortağı olmayan."),
+        .init(number: 68, arabic: "الصَّمَدُ", name: "es-Samed", deMeaning: "Der Unabhängige, auf den alle angewiesen sind.", trMeaning: "Herkesin muhtaç olduğu, kimseye muhtaç olmayan."),
+        .init(number: 69, arabic: "الْقَادِرُ", name: "el-Kâdir", deMeaning: "Der zu allem Fähige.", trMeaning: "Her şeye gücü yeten."),
+        .init(number: 70, arabic: "الْمُقْتَدِرُ", name: "el-Muktedir", deMeaning: "Dessen Macht ohne Grenze ist.", trMeaning: "Kudreti sınırsız olan."),
+        .init(number: 71, arabic: "الْمُقَدِّمُ", name: "el-Mukaddim", deMeaning: "Der nach Weisheit voranstellt.", trMeaning: "Hikmetiyle öne alan."),
+        .init(number: 72, arabic: "الْمُؤَخِّرُ", name: "el-Muahhir", deMeaning: "Der nach Weisheit zurückstellt.", trMeaning: "Hikmetiyle geriye bırakan."),
+        .init(number: 73, arabic: "الأَوَّلُ", name: "el-Evvel", deMeaning: "Der Erste ohne Anfang.", trMeaning: "Başlangıcı olmayan ilk."),
+        .init(number: 74, arabic: "الآخِرُ", name: "el-Âhir", deMeaning: "Der Letzte ohne Ende.", trMeaning: "Sonu olmayan son."),
+        .init(number: 75, arabic: "الظَّاهِرُ", name: "ez-Zâhir", deMeaning: "Der Offenbare, dessen Zeichen sichtbar sind.", trMeaning: "Varlığı delilleriyle açık olan."),
+        .init(number: 76, arabic: "الْبَاطِنُ", name: "el-Bâtın", deMeaning: "Der Verborgene, der alles Verborgene kennt.", trMeaning: "Zatı gizli, gizlilikleri bilen."),
+        .init(number: 77, arabic: "الْوَالِي", name: "el-Vâlî", deMeaning: "Der alles lenkt und verwaltet.", trMeaning: "Kâinatı yöneten."),
+        .init(number: 78, arabic: "الْمُتَعَالِي", name: "el-Müteâlî", deMeaning: "Der über jede Unvollkommenheit Erhabene.", trMeaning: "Her türlü noksanlıktan yüce olan."),
+        .init(number: 79, arabic: "الْبَرُّ", name: "el-Berr", deMeaning: "Der überreich Gutes tut.", trMeaning: "Çok iyilik eden."),
+        .init(number: 80, arabic: "التَّوَّابُ", name: "et-Tevvâb", deMeaning: "Der Reue immer wieder annimmt.", trMeaning: "Tövbeleri çokça kabul eden."),
+        .init(number: 81, arabic: "الْمُنْتَقِمُ", name: "el-Müntakim", deMeaning: "Der gerechte Vergeltung übt.", trMeaning: "Suçlara adaletle karşılık veren."),
+        .init(number: 82, arabic: "الْعَفُوُّ", name: "el-Afüvv", deMeaning: "Der Sünden auslöscht und vergibt.", trMeaning: "Çokça affeden."),
+        .init(number: 83, arabic: "الرَّؤُوفُ", name: "er-Raûf", deMeaning: "Der voller Mitgefühl ist.", trMeaning: "Şefkat ve merhameti çok olan."),
+        .init(number: 84, arabic: "مَالِكُ الْمُلْكِ", name: "Mâlikü’l-Mülk", deMeaning: "Der wahre Besitzer aller Herrschaft.", trMeaning: "Mülkün gerçek sahibi."),
+        .init(number: 85, arabic: "ذُو الْجَلَالِ وَالْإِكْرَامِ", name: "Zü’l-Celâli ve’l-İkrâm", deMeaning: "Der Besitzer von Majestät und Großzügigkeit.", trMeaning: "Celâl ve ikram sahibi."),
+        .init(number: 86, arabic: "الْمُقْسِطُ", name: "el-Muksit", deMeaning: "Der vollkommen gerecht ausgleicht.", trMeaning: "Adaletle hükmeden."),
+        .init(number: 87, arabic: "الْجَامِعُ", name: "el-Câmi‘", deMeaning: "Der zusammenführt und versammelt.", trMeaning: "Toplayan ve bir araya getiren."),
+        .init(number: 88, arabic: "الْغَنِيُّ", name: "el-Ganî", deMeaning: "Der völlig Unabhängige und Reiche.", trMeaning: "Hiçbir şeye muhtaç olmayan."),
+        .init(number: 89, arabic: "الْمُغْنِي", name: "el-Muğnî", deMeaning: "Der reich und unabhängig macht.", trMeaning: "Zenginlik ve yeterlilik veren."),
+        .init(number: 90, arabic: "الْمَانِعُ", name: "el-Mâni‘", deMeaning: "Der nach Weisheit verhindert.", trMeaning: "Hikmetiyle engel olan."),
+        .init(number: 91, arabic: "الضَّارُّ", name: "ed-Dârr", deMeaning: "Der auch schädliche Dinge nach Weisheit erschafft.", trMeaning: "Hikmetiyle zarar veren şeyleri yaratan."),
+        .init(number: 92, arabic: "النَّافِعُ", name: "en-Nâfi‘", deMeaning: "Der Nutzen und Gutes gewährt.", trMeaning: "Fayda ve hayır veren."),
+        .init(number: 93, arabic: "النُّورُ", name: "en-Nûr", deMeaning: "Der Licht und Rechtleitung schenkt.", trMeaning: "Nurlandıran ve kalpleri aydınlatan."),
+        .init(number: 94, arabic: "الْهَادِي", name: "el-Hâdî", deMeaning: "Der den rechten Weg zeigt.", trMeaning: "Doğru yola ileten."),
+        .init(number: 95, arabic: "الْبَدِيعُ", name: "el-Bedî‘", deMeaning: "Der ohne Vorbild erschafft.", trMeaning: "Örneksiz ve benzersiz yaratan."),
+        .init(number: 96, arabic: "الْبَاقِي", name: "el-Bâkî", deMeaning: "Der ewig Bleibende.", trMeaning: "Varlığı sonsuz olan."),
+        .init(number: 97, arabic: "الْوَارِثُ", name: "el-Vâris", deMeaning: "Der letztlich alles besitzt und überdauert.", trMeaning: "Her şeyin gerçek mirasçısı."),
+        .init(number: 98, arabic: "الرَّشِيدُ", name: "er-Reşîd", deMeaning: "Der vollkommen recht leitet und richtig führt.", trMeaning: "Doğru yolu gösteren, işi isabetli olan."),
+        .init(number: 99, arabic: "الصَّبُورُ", name: "es-Sabûr", deMeaning: "Der unendlich Geduldige.", trMeaning: "Cezada acele etmeyen, çok sabırlı olan.")
+    ]
+
+    private var filtered: [EsmaName] {
+        let q = search.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return names }
+        return names.filter {
+            $0.name.localizedCaseInsensitiveContains(q) ||
+            $0.arabic.localizedCaseInsensitiveContains(q) ||
+            $0.deMeaning.localizedCaseInsensitiveContains(q) ||
+            $0.trMeaning.localizedCaseInsensitiveContains(q) ||
+            String($0.number) == q
+        }
+    }
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Allahs schöne Namen", "Esmâü'l-Hüsnâ"), systemImage: "sparkles")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Die bekannte 99er-Liste hilft beim Lernen und Nachdenken über Allahs Namen. Die Namen Allahs sind nach Diyanet nicht auf diese Zahl begrenzt.",
+                        "Meşhur 99 isim listesi Allah'ın isimlerini öğrenmeye ve anlamları üzerinde düşünmeye yardımcı olur. Diyanet'e göre Allah'ın isimleri yalnız 99 ile sınırlı değildir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+
+                    Text("99 / 99")
+                        .font(.caption.bold().monospacedDigit())
+                        .foregroundStyle(SalahTheme.teal)
+                }
+                .padding(.vertical, 3)
+            }
+
+            Section {
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(SalahTheme.teal)
+                    TextField(settings.t("Name oder Bedeutung suchen", "İsim veya anlam ara"), text: $search)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                }
+            }
+
+            Section(settings.t("99 Namen", "99 İsim")) {
+                ForEach(filtered) { item in
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack(spacing: 10) {
+                            Text("\(item.number)")
+                                .font(.caption.bold().monospacedDigit())
+                                .foregroundStyle(.white)
+                                .frame(width: 34, height: 34)
+                                .background(SalahTheme.deepTeal, in: Circle())
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(item.name)
+                                    .font(.headline.bold())
+                                    .foregroundStyle(SalahTheme.ink)
+                                Text(settings.language == .german ? item.deMeaning : item.trMeaning)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+
+                            Spacer()
+
+                            Text(item.arabic)
+                                .font(.system(size: 23, weight: .medium))
+                                .foregroundStyle(SalahTheme.deepTeal)
+                        }
+                    }
+                    .padding(.vertical, 3)
+                }
+            }
+
+            Section(settings.t("Quelle", "Kaynak")) {
+                Text(settings.t(
+                    "Namensliste: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. Die kurzen deutschen/türkischen Bedeutungen in SalahPath sind bewusst knapp formulierte Lernhilfen.",
+                    "İsim listesi: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. SalahPath'teki kısa anlamlar öğrenme amaçlı özlü açıklamalardır."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Esmaül Hüsna", "Esmâü'l-Hüsnâ"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Supplementary reference utilities
 
 struct PrayerDebtTrackerView: View {
