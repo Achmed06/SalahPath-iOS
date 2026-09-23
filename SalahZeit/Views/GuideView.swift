@@ -8057,7 +8057,6 @@ struct QuranView: View {
     }
 
     @MainActor
-    @MainActor
     private func togglePreviewAudio() async {
         if previewAudio.isPlaying {
             previewAudio.pause()
