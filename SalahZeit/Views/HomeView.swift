@@ -86,6 +86,7 @@ enum PrayerTrackerStore {
 
 struct PrayerTrackerOverviewView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var refresh = 0
     @State private var now = Date()
 
@@ -157,6 +158,14 @@ struct PrayerTrackerOverviewView: View {
         .navigationTitle(settings.t("Gebets-Tracking", "Namaz Takibi"))
         .navigationBarTitleDisplayMode(.inline)
         .tint(SalahTheme.teal)
+        .onAppear {
+            now = Date()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                now = Date()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
         }
@@ -165,6 +174,7 @@ struct PrayerTrackerOverviewView: View {
 
 struct TrackerPauseView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var refresh = 0
     @State private var now = Date()
 
@@ -207,6 +217,14 @@ struct TrackerPauseView: View {
         }
         .navigationTitle(settings.t("Tracker-Pause", "Takip duraklatma"))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            now = Date()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                now = Date()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
         }
