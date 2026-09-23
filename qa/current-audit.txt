@@ -201,7 +201,7 @@ CRASH-HARDENING FOLLOW-UP
 
 APP STORE / PRIVACY RELEASE HARDENING
 - Native source now includes PrivacyInfo.xcprivacy in the app target resources.
-- Privacy manifest declares no tracking and documents UserDefaults / file-timestamp required-reason API use.
+- Privacy manifest declares no tracking, conservatively declares the Quran provider source-IP metadata as a non-linked/non-tracking Device ID used for App Functionality, and documents UserDefaults / file-timestamp required-reason API use.
 - Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 76.
 - ITSAppUsesNonExemptEncryption is explicitly false.
 - Privacy and support links are exposed inside Settings.
@@ -218,4 +218,4 @@ SWIFT / CONCURRENCY RELEASE HARDENING
 
 NEXT RELEASE GATE
 - Every new commit must pass the GitHub Actions preflight, warning-as-error Release compilation, IPA integrity checks and artifact upload before this audit is considered release-ready.
-- Final App Store submission still requires signed TestFlight/device validation and completion of the provider-log-retention decision documented in APP_STORE_SUBMISSION.md.
+- Final App Store submission still requires signed TestFlight/device validation. The provider-log-retention decision is finalized conservatively in APP_STORE_SUBMISSION.md: Identifiers → Device ID, App Functionality, not linked, not tracking; no Quran-service GPS location disclosure.
