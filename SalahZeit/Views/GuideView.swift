@@ -7865,16 +7865,21 @@ private final class QuranStore: ObservableObject {
 
     private func sanitizedChapters(_ values: [SurahMeta]) -> [SurahMeta] {
         var seen = Set<Int>()
+        var sanitized: [SurahMeta] = []
 
-        return values.filter { chapter in
+        for chapter in values {
             guard (1...114).contains(chapter.number),
                   chapter.numberOfAyahs > 0,
                   !chapter.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-                  !chapter.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return false
+                  !chapter.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  seen.insert(chapter.number).inserted else {
+                continue
             }
-            return seen.insert(chapter.number).inserted
+            sanitized.append(chapter)
         }
+
+        guard sanitized.count == 114 else { return [] }
+        return sanitized.sorted { $0.number < $1.number }
     }
 
     func loadSurah(_ number:Int, language:AppLanguage) async throws -> (SurahData,SurahData,SurahData) {
@@ -7951,17 +7956,19 @@ private final class QuranStore: ObservableObject {
             return nil
         }
 
-        var seenAyahs = Set<Int>()
-        let ayahs = value.ayahs.filter { ayah in
+        let ayahs = value.ayahs.sorted { $0.numberInSurah < $1.numberInSurah }
+        guard !ayahs.isEmpty else { return nil }
+
+        var seenGlobalNumbers = Set<Int>()
+        for (index, ayah) in ayahs.enumerated() {
             guard ayah.number > 0,
-                  ayah.numberInSurah > 0,
-                  !ayah.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return false
+                  ayah.numberInSurah == index + 1,
+                  !ayah.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  seenGlobalNumbers.insert(ayah.number).inserted else {
+                return nil
             }
-            return seenAyahs.insert(ayah.numberInSurah).inserted
         }
 
-        guard !ayahs.isEmpty else { return nil }
         return SurahData(
             number: value.number,
             name: value.name,
