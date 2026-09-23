@@ -26,15 +26,15 @@ final class NotificationManager {
 
         Task { @MainActor [weak self] in
             guard let self else { return }
-            let requests = await center.pendingNotificationRequests()
-            guard revision == schedulingRevision else { return }
+            let requests = await self.center.pendingNotificationRequests()
+            guard revision == self.schedulingRevision else { return }
 
             let ids = requests
                 .map(\.identifier)
-                .filter { $0.hasPrefix(prayerIdentifierPrefix) }
+                .filter { $0.hasPrefix(self.prayerIdentifierPrefix) }
             guard !ids.isEmpty else { return }
 
-            center.removePendingNotificationRequests(withIdentifiers: ids)
+            self.center.removePendingNotificationRequests(withIdentifiers: ids)
         }
     }
 
