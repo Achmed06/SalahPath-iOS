@@ -411,6 +411,13 @@ struct MoreView: View {
                     NavigationLink { IslamLearningHubView() } label: {
                         discoverTile(icon: "book.pages.fill", title: settings.t("Islam lernen", "İslâm'ı Öğren"), subtitle: settings.t("Von den Grundlagen", "Temelden başla"))
                     }
+                    NavigationLink { IlmihalDirectoryView() } label: {
+                        discoverTile(
+                            icon: "books.vertical.fill",
+                            title: settings.t("İlmihal", "İlmihal"),
+                            subtitle: settings.t("Glaube · عبادات · Alltag", "İman · ibadet · hayat")
+                        )
+                    }
                     NavigationLink { EsmaulHusnaView() } label: {
                         discoverTile(
                             icon: "sparkles",
