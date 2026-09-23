@@ -1,0 +1,85 @@
+name: Vendor Doha Adhan audio
+
+on:
+  push:
+    branches:
+      - feature/adhan-notification-sounds
+    paths:
+      - .github/workflows/vendor-doha-adhan.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/adhan-notification-sounds
+
+      - name: Prepare audio tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Download public-domain Doha recordings and create iOS clips
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p SalahZeit/Resources qa .tmp-adhan
+
+          FAJR_URL="https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_01_Fajr_Adhan.mp3"
+          STANDARD_URL="https://archive.org/download/adhan.recordings.from.doha.qatar/Adhan_Doha_Qatar_02_Dhuhr_Adhan.mp3"
+
+          curl --fail --location --retry 5 "$FAJR_URL" -o .tmp-adhan/fajr.mp3
+          curl --fail --location --retry 5 "$STANDARD_URL" -o .tmp-adhan/standard.mp3
+
+          test -s .tmp-adhan/fajr.mp3
+          test -s .tmp-adhan/standard.mp3
+
+          ffmpeg -hide_banner -loglevel error -y -i .tmp-adhan/fajr.mp3 \
+            -t 28 -af "afade=t=out:st=26.5:d=1.5" \
+            -ar 44100 -ac 1 -c:a pcm_s16le -f caf SalahZeit/Resources/adhan-fajr.caf
+
+          ffmpeg -hide_banner -loglevel error -y -i .tmp-adhan/standard.mp3 \
+            -t 28 -af "afade=t=out:st=26.5:d=1.5" \
+            -ar 44100 -ac 1 -c:a pcm_s16le -f caf SalahZeit/Resources/adhan-standard.caf
+
+          rm -f SalahZeit/Resources/adhan-short.caf
+
+          {
+            echo "Internet Archive item: adhan.recordings.from.doha.qatar"
+            echo "Usage on source page: Public Domain Mark 1.0"
+            echo "Fajr source: Adhan_Doha_Qatar_01_Fajr_Adhan.mp3"
+            echo "Dhuhr source used as standard: Adhan_Doha_Qatar_02_Dhuhr_Adhan.mp3"
+            echo
+            sha256sum .tmp-adhan/fajr.mp3 .tmp-adhan/standard.mp3
+            echo
+            sha256sum SalahZeit/Resources/adhan-fajr.caf SalahZeit/Resources/adhan-standard.caf
+            echo
+            git hash-object SalahZeit/Resources/adhan-fajr.caf
+            git hash-object SalahZeit/Resources/adhan-standard.caf
+          } > qa/adhan-audio-hashes.txt
+
+          rm -rf .tmp-adhan
+
+      - name: Commit verified derivatives
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add SalahZeit/Resources qa/adhan-audio-hashes.txt
+          if git diff --cached --quiet; then
+            echo "Doha audio already vendored."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Vendor public-domain Doha Adhan clips"
+          git push origin HEAD:feature/adhan-notification-sounds
