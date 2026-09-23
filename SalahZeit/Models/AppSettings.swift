@@ -221,22 +221,34 @@ final class SettingsStore: ObservableObject {
     @Published var use24Hour: Bool { didSet { defaults.set(use24Hour, forKey: Keys.use24Hour) } }
     @Published var notificationsEnabled: Bool { didSet { defaults.set(notificationsEnabled, forKey: Keys.notifications) } }
     @Published var notifyAtPrayerTime: Bool { didSet { defaults.set(notifyAtPrayerTime, forKey: Keys.notifyAtPrayerTime) } }
-    @Published var notificationLeadMinutes: Int { didSet { defaults.set(notificationLeadMinutes, forKey: Keys.leadMinutes) } }
+    @Published var notificationLeadMinutes: Int {
+        didSet {
+            let sanitized = Self.sanitizedLeadMinutes(notificationLeadMinutes)
+            if notificationLeadMinutes != sanitized { notificationLeadMinutes = sanitized }
+            defaults.set(sanitized, forKey: Keys.leadMinutes)
+        }
+    }
     @Published var fajrNotificationEnabled: Bool { didSet { defaults.set(fajrNotificationEnabled, forKey: Keys.fajrNotification) } }
     @Published var dhuhrNotificationEnabled: Bool { didSet { defaults.set(dhuhrNotificationEnabled, forKey: Keys.dhuhrNotification) } }
     @Published var asrNotificationEnabled: Bool { didSet { defaults.set(asrNotificationEnabled, forKey: Keys.asrNotification) } }
     @Published var maghribNotificationEnabled: Bool { didSet { defaults.set(maghribNotificationEnabled, forKey: Keys.maghribNotification) } }
     @Published var ishaNotificationEnabled: Bool { didSet { defaults.set(ishaNotificationEnabled, forKey: Keys.ishaNotification) } }
-    @Published var fajrOffset: Int { didSet { defaults.set(fajrOffset, forKey: Keys.fajrOffset) } }
-    @Published var dhuhrOffset: Int { didSet { defaults.set(dhuhrOffset, forKey: Keys.dhuhrOffset) } }
-    @Published var asrOffset: Int { didSet { defaults.set(asrOffset, forKey: Keys.asrOffset) } }
-    @Published var maghribOffset: Int { didSet { defaults.set(maghribOffset, forKey: Keys.maghribOffset) } }
-    @Published var ishaOffset: Int { didSet { defaults.set(ishaOffset, forKey: Keys.ishaOffset) } }
+    @Published var fajrOffset: Int { didSet { persistOffset(&fajrOffset, key: Keys.fajrOffset) } }
+    @Published var dhuhrOffset: Int { didSet { persistOffset(&dhuhrOffset, key: Keys.dhuhrOffset) } }
+    @Published var asrOffset: Int { didSet { persistOffset(&asrOffset, key: Keys.asrOffset) } }
+    @Published var maghribOffset: Int { didSet { persistOffset(&maghribOffset, key: Keys.maghribOffset) } }
+    @Published var ishaOffset: Int { didSet { persistOffset(&ishaOffset, key: Keys.ishaOffset) } }
     @Published var language: AppLanguage { didSet { defaults.set(language.rawValue, forKey: Keys.language) } }
     @Published var prayerAudience: PrayerAudience { didSet { defaults.set(prayerAudience.rawValue, forKey: Keys.audience) } }
     @Published var appearance: AppAppearance { didSet { defaults.set(appearance.rawValue, forKey: Keys.appearance) } }
     @Published var quranReciter: QuranReciter { didSet { defaults.set(quranReciter.rawValue, forKey: Keys.quranReciter) } }
-    @Published var quranFontSize: Double { didSet { defaults.set(quranFontSize, forKey: Keys.quranFontSize) } }
+    @Published var quranFontSize: Double {
+        didSet {
+            let sanitized = Self.sanitizedQuranFontSize(quranFontSize)
+            if quranFontSize != sanitized { quranFontSize = sanitized }
+            defaults.set(sanitized, forKey: Keys.quranFontSize)
+        }
+    }
     @Published var quranShowTranslation: Bool { didSet { defaults.set(quranShowTranslation, forKey: Keys.quranShowTranslation) } }
     @Published var quranShowTransliteration: Bool { didSet { defaults.set(quranShowTransliteration, forKey: Keys.quranShowTransliteration) } }
     @Published var onboardingCompleted: Bool { didSet { defaults.set(onboardingCompleted, forKey: Keys.onboardingCompleted) } }
@@ -251,37 +263,49 @@ final class SettingsStore: ObservableObject {
         self.notificationsEnabled = defaults.object(forKey: Keys.notifications) as? Bool ?? false
         self.notifyAtPrayerTime = defaults.object(forKey: Keys.notifyAtPrayerTime) as? Bool ?? true
         let storedLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 10
-        let allowedLeadMinutes = [0, 5, 10, 15, 30]
-        self.notificationLeadMinutes = allowedLeadMinutes.contains(storedLeadMinutes) ? storedLeadMinutes : 10
+        self.notificationLeadMinutes = Self.sanitizedLeadMinutes(storedLeadMinutes)
         self.fajrNotificationEnabled = defaults.object(forKey: Keys.fajrNotification) as? Bool ?? true
         self.dhuhrNotificationEnabled = defaults.object(forKey: Keys.dhuhrNotification) as? Bool ?? true
         self.asrNotificationEnabled = defaults.object(forKey: Keys.asrNotification) as? Bool ?? true
         self.maghribNotificationEnabled = defaults.object(forKey: Keys.maghribNotification) as? Bool ?? true
         self.ishaNotificationEnabled = defaults.object(forKey: Keys.ishaNotification) as? Bool ?? true
-        func sanitizedOffset(_ key: String) -> Int {
-            min(max(defaults.object(forKey: key) as? Int ?? 0, -15), 15)
-        }
-        self.fajrOffset = sanitizedOffset(Keys.fajrOffset)
-        self.dhuhrOffset = sanitizedOffset(Keys.dhuhrOffset)
-        self.asrOffset = sanitizedOffset(Keys.asrOffset)
-        self.maghribOffset = sanitizedOffset(Keys.maghribOffset)
-        self.ishaOffset = sanitizedOffset(Keys.ishaOffset)
+        self.fajrOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.fajrOffset) as? Int ?? 0)
+        self.dhuhrOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.dhuhrOffset) as? Int ?? 0)
+        self.asrOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.asrOffset) as? Int ?? 0)
+        self.maghribOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.maghribOffset) as? Int ?? 0)
+        self.ishaOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.ishaOffset) as? Int ?? 0)
         self.language = AppLanguage(rawValue: defaults.string(forKey: Keys.language) ?? "") ?? .german
         self.prayerAudience = PrayerAudience(rawValue: defaults.string(forKey: Keys.audience) ?? "") ?? .male
         self.appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
         self.quranReciter = QuranReciter(rawValue: defaults.string(forKey: Keys.quranReciter) ?? "") ?? .alafasy
         let storedQuranFontSize = defaults.object(forKey: Keys.quranFontSize) as? Double ?? 28
-        self.quranFontSize = storedQuranFontSize.isFinite
-            ? min(max(storedQuranFontSize, 20), 40)
-            : 28
+        self.quranFontSize = Self.sanitizedQuranFontSize(storedQuranFontSize)
         self.quranShowTranslation = defaults.object(forKey: Keys.quranShowTranslation) as? Bool ?? true
         self.quranShowTransliteration = defaults.object(forKey: Keys.quranShowTransliteration) as? Bool ?? false
         self.onboardingCompleted = defaults.object(forKey: Keys.onboardingCompleted) as? Bool ?? false
     }
 
+    private static func sanitizedLeadMinutes(_ value: Int) -> Int {
+        [0, 5, 10, 15, 30].contains(value) ? value : 10
+    }
+
+    private static func sanitizedOffset(_ value: Int) -> Int {
+        min(max(value, -15), 15)
+    }
+
+    private static func sanitizedQuranFontSize(_ value: Double) -> Double {
+        guard value.isFinite else { return 28 }
+        return min(max(value, 20), 40)
+    }
+
+    private func persistOffset(_ value: inout Int, key: String) {
+        let sanitized = Self.sanitizedOffset(value)
+        if value != sanitized { value = sanitized }
+        defaults.set(sanitized, forKey: key)
+    }
+
     var safeQuranFontSize: Double {
-        guard quranFontSize.isFinite else { return 28 }
-        return min(max(quranFontSize, 20), 40)
+        Self.sanitizedQuranFontSize(quranFontSize)
     }
 
     func t(_ de: String, _ tr: String) -> String { language == .german ? de : tr }
