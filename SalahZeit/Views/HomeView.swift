@@ -281,7 +281,12 @@ private struct DailyDuaDetailView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .cardStyle(material: true)
+                .padding()
+                .background(SalahTheme.cream.opacity(0.94), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.cardStroke(), lineWidth: 1)
+                }
 
                 VStack(spacing: 12) {
                     Text(dua.arabic)
@@ -304,7 +309,13 @@ private struct DailyDuaDetailView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .cardStyle()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.cardStroke(), lineWidth: 1)
+                }
 
                 Label(dua.source, systemImage: "checkmark.seal.fill")
                     .font(.footnote)
