@@ -98,7 +98,7 @@ PAGE COVERAGE
 
 83-84
 - Adhan/dua audio list.
-- Build 77 adds a real optional 18-second Adhan notification sound at exact prayer time from a verified CC0 Wikimedia Commons source.
+- Build 77 adds real optional 28-second Adhan notification sounds at exact prayer time from the Internet Archive public-domain Doha collection: a dedicated Fajr recording plus a standard recording for the other four prayers.
 - Advance reminders remain on the normal iOS sound; a Settings preview schedules the same real notification sound for testing.
 - The broader legacy Adhan/Sela/dua audio catalogue remains intentionally unimplemented until each additional recording has verified redistribution rights.
 
@@ -180,7 +180,8 @@ IMPLEMENTED FROM THIS AUDIT
 - Added persistent Qada tracker.
 - Added compact 32 Farz reference.
 - Added native nearby-mosque search backed by Apple Maps.
-- Exposed Qada tracker, 32 Farz, and nearby mosques from Entdecken.\n- Added optional licensed CC0 Adhan sound for exact prayer-time notifications, with an in-app test action and release hash gate.
+- Exposed Qada tracker, 32 Farz, and nearby mosques from Entdecken.
+- Added separate Fajr and standard public-domain Doha Adhan sounds for exact prayer-time notifications, with in-app test actions and release hash gates.
 
 INTENTIONAL NON-GOALS
 - No copying ads.
