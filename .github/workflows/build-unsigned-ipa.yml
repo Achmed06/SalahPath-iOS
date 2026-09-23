@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Run release preflight
+        run: ./scripts/preflight_reference_build.sh
+
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies \
