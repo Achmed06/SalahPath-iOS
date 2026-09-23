@@ -8985,12 +8985,29 @@ private struct QuranSurahView: View {
                         Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(settings.t(
+                        audio.activeURL == audioURL && audio.isPlaying
+                            ? "Vers \(ar.numberInSurah) pausieren"
+                            : "Vers \(ar.numberInSurah) abspielen",
+                        audio.activeURL == audioURL && audio.isPlaying
+                            ? "\(ar.numberInSurah). ayeti duraklat"
+                            : "\(ar.numberInSurah). ayeti oynat"
+                    ))
                 } else {
-                    Image(systemName: "speaker.slash").foregroundStyle(.secondary)
+                    Image(systemName: "speaker.slash")
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(settings.t(
+                            "Audio für Vers \(ar.numberInSurah) nicht verfügbar",
+                            "\(ar.numberInSurah). ayet için ses mevcut değil"
+                        ))
                 }
 
                 ShareLink(item: shareText) { Image(systemName: "square.and.arrow.up") }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(settings.t(
+                        "Vers \(ar.numberInSurah) teilen",
+                        "\(ar.numberInSurah). ayeti paylaş"
+                    ))
 
                 Button {
                     let bookmark = QuranBookmark(surah: surah.number, ayah: ar.numberInSurah)
@@ -9000,6 +9017,17 @@ private struct QuranSurahView: View {
                     Image(systemName: bookmarkedTokens.contains(token) ? "bookmark.fill" : "bookmark")
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(settings.t(
+                    bookmarkedTokens.contains(token)
+                        ? "Lesezeichen für Vers \(ar.numberInSurah) entfernen"
+                        : "Vers \(ar.numberInSurah) als Lesezeichen speichern",
+                    bookmarkedTokens.contains(token)
+                        ? "\(ar.numberInSurah). ayetin yer imini kaldır"
+                        : "\(ar.numberInSurah). ayeti yer imine ekle"
+                ))
+                .accessibilityValue(bookmarkedTokens.contains(token)
+                    ? settings.t("Gespeichert", "Kayıtlı")
+                    : settings.t("Nicht gespeichert", "Kayıtlı değil"))
             }
             .foregroundStyle(SalahTheme.teal)
 
