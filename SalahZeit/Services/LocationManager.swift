@@ -20,9 +20,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     private let manager = CLLocationManager()
-    private let geocoder = CLGeocoder()
+    private let searchGeocoder = CLGeocoder()
+    private let reverseGeocoder = CLGeocoder()
     private var lastGeocodedLocation: CLLocation?
     private var pendingDeviceLocationSwitch = false
+    private var locationIntentRevision = 0
+    private var reverseGeocodeRevision = 0
 
     override init() {
         authorizationStatus = manager.authorizationStatus
@@ -118,6 +121,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func useDeviceLocation() {
+        locationIntentRevision &+= 1
         lastError = nil
         pendingDeviceLocationSwitch = true
 
@@ -136,7 +140,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     @discardableResult
     func setManualLocation(searchText: String) async -> Bool {
+        locationIntentRevision &+= 1
+        let revision = locationIntentRevision
         pendingDeviceLocationSwitch = false
+        reverseGeocodeRevision &+= 1
+        reverseGeocoder.cancelGeocode()
+
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else {
             lastError = "Bitte Ort, Stadt oder Postleitzahl eingeben."
@@ -144,7 +153,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
 
         do {
-            let placemarks = try await geocoder.geocodeAddressString(query)
+            let placemarks = try await searchGeocoder.geocodeAddressString(query)
+            guard revision == locationIntentRevision else { return false }
             guard let placemark = placemarks.first, let resolvedLocation = placemark.location else {
                 lastError = "Ort wurde nicht gefunden."
                 return false
@@ -176,12 +186,14 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
             return true
         } catch {
+            guard revision == locationIntentRevision else { return false }
             lastError = "Ort konnte nicht gefunden werden. Bitte Eingabe prüfen."
             return false
         }
     }
 
     func clearManualLocation() {
+        locationIntentRevision &+= 1
         pendingDeviceLocationSwitch = false
         usesManualLocation = false
         clearManualLocationStorage()
@@ -286,12 +298,22 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private func updateLocalityIfNeeded(for location: CLLocation) {
         if let lastGeocodedLocation, lastGeocodedLocation.distance(from: location) < 1_000, locality != nil { return }
         lastGeocodedLocation = location
+        reverseGeocodeRevision &+= 1
+        let revision = reverseGeocodeRevision
+
         Task {
             do {
-                let placemarks = try await geocoder.reverseGeocodeLocation(location)
-                guard let placemark = placemarks.first else { return }
+                let placemarks = try await reverseGeocoder.reverseGeocodeLocation(location)
+                guard revision == reverseGeocodeRevision,
+                      !usesManualLocation,
+                      let currentLocation = self.location,
+                      currentLocation.distance(from: location) < 1_000,
+                      let placemark = placemarks.first else { return }
+
                 let value = placemark.locality ?? placemark.subLocality ?? placemark.administrativeArea ?? placemark.country
-                if let value, !value.isEmpty { locality = value }
+                if let value, !value.isEmpty {
+                    locality = value
+                }
             } catch {
                 // Prayer time calculation must continue even when reverse geocoding is unavailable.
             }
