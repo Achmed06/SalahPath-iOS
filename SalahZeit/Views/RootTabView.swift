@@ -420,6 +420,13 @@ struct MoreView: View {
                     NavigationLink { ShortSurahLearningView() } label: {
                         discoverTile(icon: "play.square.stack.fill", title: settings.t("Kurze Suren", "Kısa Sûreler"), subtitle: settings.t("Lernen & hören", "Öğren & dinle"))
                     }
+                    NavigationLink { QuranDirectoryView() } label: {
+                        discoverTile(
+                            icon: "books.vertical.fill",
+                            title: settings.t("Quran-Verzeichnis", "Kur'an Dizini"),
+                            subtitle: settings.t("Suren · Seiten · Juz", "Sûre · sayfa · cüz")
+                        )
+                    }
                     NavigationLink { PrayerDuaAudioView() } label: {
                         discoverTile(icon: "text.book.closed.fill", title: settings.t("Gebetsduas", "Namaz Duaları"), subtitle: settings.t("Lesen & lernen", "Oku & öğren"))
                     }
