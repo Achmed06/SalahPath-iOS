@@ -41,23 +41,23 @@ require_file "SalahZeit/PrivacyInfo.xcprivacy"
 require_file "PRIVACY.md"
 require_file "SUPPORT.md"
 require_file "CONTENT_RIGHTS_AUDIT.md"
-require_file "RELIGIOUS_CONTENT_AUDIT.md"
+require_file "RELIGIOUS_CONTENT_AUDIT.md"\nrequire_file "AUDIO_LICENSES.md"\nrequire_file "SalahZeit/Resources/adhan-short.caf"
 
 # Patch/merge integrity.
 if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Release checkpoint: SalahPath v3.62 build 76
+# Release checkpoint: SalahPath v3.62 build 77
 grep -q 'MARKETING_VERSION = 3.62;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'CURRENT_PROJECT_VERSION = 76;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'CURRENT_PROJECT_VERSION = 77;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_STRICT_CONCURRENCY = complete;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
-grep -q 'CURRENT_PROJECT_VERSION="76"' "scripts/build_unsigned_ipa.sh"
+grep -q 'CURRENT_PROJECT_VERSION="77"' "scripts/build_unsigned_ipa.sh"
 grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"\ngrep -q 'adhan-short.caf in Resources' "SalahZeit.xcodeproj/project.pbxproj"\ngrep -q 'adhanSoundEnabled' "SalahZeit/Models/AppSettings.swift"\ngrep -q 'UNNotificationSound(named:' "SalahZeit/Services/NotificationManager.swift"\n[[ "$(git hash-object SalahZeit/Resources/adhan-short.caf)" == "3145c872878db49bcab080a10efb6545faec423d" ]] || fail "adhan-short.caf does not match the audited CC0 asset"
 grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
@@ -180,4 +180,4 @@ for path in root.rglob("*.png"):
 print("Asset JSON + PNG structural integrity: OK")
 PY
 
-printf 'Reference build checks passed for SalahPath v3.62 build 76\n'
+printf 'Reference build checks passed for SalahPath v3.62 build 77\n'
