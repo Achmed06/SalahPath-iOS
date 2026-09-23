@@ -178,6 +178,10 @@ struct SalahPathApp: App {
             NavigationStack { QuranPageReaderView(page: 1) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
+        case "wudu":
+            NavigationStack { WuduGuideView() }
+        case "ghusl":
+            NavigationStack { GhuslGuideView() }
         case "tasbih":
             NavigationStack { TasbihCounterView() }
         case "dhikr-morning":
