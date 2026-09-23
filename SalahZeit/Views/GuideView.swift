@@ -5727,11 +5727,13 @@ struct MorningEveningAdhkarView: View {
     }
 
     private func progress(_ item: AdhkarEntry) -> Int {
-        AdhkarProgressStore.value(id: item.id, period: periodKey, date: now)
+        let stored = AdhkarProgressStore.value(id: item.id, period: periodKey, date: now)
+        return min(max(stored, 0), max(item.count, 0))
     }
 
     private func setProgress(_ value: Int, _ item: AdhkarEntry) {
-        AdhkarProgressStore.set(value, id: item.id, period: periodKey, date: now)
+        let sanitized = min(max(value, 0), max(item.count, 0))
+        AdhkarProgressStore.set(sanitized, id: item.id, period: periodKey, date: now)
         refresh += 1
     }
 }
