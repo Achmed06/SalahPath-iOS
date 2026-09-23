@@ -740,7 +740,7 @@ struct MoreView: View {
                     .frame(width: size, height: size)
 
                 Circle()
-                    .fill(Color.white.opacity(0.64))
+                    .fill(SalahTheme.cream.opacity(0.86))
                     .frame(width: size * 0.66, height: size * 0.66)
 
                 Image(systemName: symbol)
@@ -753,7 +753,7 @@ struct MoreView: View {
                     .fill(SalahTheme.gold)
                     .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
                     .overlay {
-                        Circle().stroke(Color.white.opacity(0.90), lineWidth: 1)
+                        Circle().stroke(SalahTheme.cream.opacity(0.90), lineWidth: 1)
                     }
                     .offset(x: size * 0.31, y: -size * 0.31)
             }
