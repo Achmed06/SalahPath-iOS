@@ -87,16 +87,46 @@ struct QiblaView: View {
                         }
 
                         if locationManager.usesManualLocation && !deviceLocationAuthorized {
-                            HStack(alignment: .top, spacing: 9) {
-                                Image(systemName: "location.slash.fill")
-                                    .foregroundStyle(SalahTheme.gold)
-                                Text(settings.t(
-                                    "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Die Gradangabe oben bleibt anhand deines manuell gewählten Orts verfügbar.",
-                                    "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Yukarıdaki derece değeri manuel seçtiğin konuma göre kullanılmaya devam eder."
-                                ))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.ink)
-                                .fixedSize(horizontal: false, vertical: true)
+                            VStack(alignment: .leading, spacing: 9) {
+                                HStack(alignment: .top, spacing: 9) {
+                                    Image(systemName: "location.slash.fill")
+                                        .foregroundStyle(SalahTheme.gold)
+                                    Text(settings.t(
+                                        "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Dein manuell gewählter Ort für Gebetszeiten bleibt dabei unverändert.",
+                                        "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
+                                    ))
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                }
+
+                                Button {
+                                    if locationManager.authorizationStatus == .denied ||
+                                        locationManager.authorizationStatus == .restricted {
+                                        openAppSettings()
+                                    } else {
+                                        locationManager.requestQiblaDeviceLocationAccess()
+                                    }
+                                } label: {
+                                    Label(
+                                        settings.t(
+                                            locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                                ? "iPhone-Einstellungen öffnen"
+                                                : "Gerätestandort für Kompass erlauben",
+                                            locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                                ? "iPhone ayarlarını aç"
+                                                : "Pusula için cihaz konumuna izin ver"
+                                        ),
+                                        systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                            ? "gear"
+                                            : "location.fill"
+                                    )
+                                    .font(.system(size: 10.5, weight: .bold))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(SalahTheme.teal)
                             }
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -133,11 +163,43 @@ struct QiblaView: View {
                 }
                 .scrollIndicators(.hidden)
             } else {
-                ContentUnavailableView(
-                    settings.t("Standort benötigt", "Konum gerekli"),
-                    systemImage: "location.slash",
-                    description: Text(settings.t("Die Qibla-Richtung wird aus deinem Standort berechnet.", "Kıble yönü konumuna göre hesaplanır."))
-                )
+                VStack(spacing: 14) {
+                    ContentUnavailableView(
+                        settings.t("Standort benötigt", "Konum gerekli"),
+                        systemImage: "location.slash",
+                        description: Text(settings.t(
+                            "Die Qibla-Richtung wird aus deinem Standort berechnet. Du kannst den Gerätestandort verwenden oder im Profil einen Ort manuell festlegen.",
+                            "Kıble yönü konumuna göre hesaplanır. Cihaz konumunu kullanabilir veya profilde bir yeri manuel seçebilirsin."
+                        ))
+                    )
+
+                    Button {
+                        if locationManager.authorizationStatus == .denied ||
+                            locationManager.authorizationStatus == .restricted {
+                            openAppSettings()
+                        } else {
+                            locationManager.useDeviceLocation()
+                        }
+                    } label: {
+                        Label(
+                            settings.t(
+                                locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                    ? "iPhone-Einstellungen öffnen"
+                                    : "Aktuellen Standort verwenden",
+                                locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                    ? "iPhone ayarlarını aç"
+                                    : "Mevcut konumu kullan"
+                            ),
+                            systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                ? "gear"
+                                : "location.fill"
+                        )
+                        .font(.headline)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
             }
         }
         .background(SalahTheme.page.ignoresSafeArea())
@@ -148,7 +210,12 @@ struct QiblaView: View {
             UIDevice.current.beginGeneratingDeviceOrientationNotifications()
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
 
-            if locationManager.usesManualLocation || deviceLocationAuthorized {
+            if deviceLocationAuthorized {
+                locationManager.prepareQiblaHeading()
+            }
+        }
+        .onChange(of: locationManager.authorizationStatus) { _, status in
+            if status == .authorizedWhenInUse || status == .authorizedAlways {
                 locationManager.prepareQiblaHeading()
             }
         }
@@ -195,6 +262,11 @@ struct QiblaView: View {
         .padding(.horizontal, 11)
         .padding(.vertical, 10)
         .overlay(alignment: .bottom) { Divider().padding(.leading, 50).opacity(0.34) }
+    }
+
+    private func openAppSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
 
     private var headingAccuracy: Double? {
