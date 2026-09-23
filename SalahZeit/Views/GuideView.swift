@@ -5755,7 +5755,7 @@ struct MorningEveningAdhkarView: View {
     private func setProgress(_ value: Int, _ item: AdhkarEntry) {
         let sanitized = min(max(value, 0), max(item.count, 0))
         AdhkarProgressStore.set(sanitized, id: item.id, period: periodKey, date: now)
-        refresh += 1
+        refresh &+= 1
     }
 }
 
@@ -5881,7 +5881,7 @@ struct FastingTrackerView: View {
                 get: { FastingStore.contains(now) },
                 set: { _ in
                     FastingStore.toggle(now)
-                    refresh += 1
+                    refresh &+= 1
                 }
             )) {
                 Label(
@@ -5916,7 +5916,7 @@ struct FastingTrackerView: View {
     private func fastingHistoryRow(_ day: Date) -> some View {
         Button {
             FastingStore.toggle(day)
-            refresh += 1
+            refresh &+= 1
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
@@ -6841,7 +6841,7 @@ private struct IslamLearningLessonView: View {
     private var lessonCompletionButton: some View {
         Button {
             IslamLearningStore.toggle(lesson.id)
-            refresh += 1
+            refresh &+= 1
         } label: {
             Label(
                 completed
@@ -7157,7 +7157,7 @@ struct IslamLearningHubView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Islam lernen", "İslâm'ı öğren"))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { refresh += 1 }
+        .onAppear { refresh &+= 1 }
     }
 
     private var islamProgressCard: some View {
@@ -9824,7 +9824,7 @@ private struct QuranFavoritesView: View {
                         .swipeActions {
                             Button(role: .destructive) {
                                 _ = QuranBookmarkStore.toggle(QuranBookmark(surah: favorite.surah, ayah: favorite.ayah))
-                                refresh += 1
+                                refresh &+= 1
                             } label: { Label(settings.t("Entfernen", "Kaldır"), systemImage: "trash") }
                         }
                     }
