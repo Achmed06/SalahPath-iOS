@@ -4730,11 +4730,22 @@ private struct QuranReferenceJumpView: View {
             } else if store.isLoading {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error {
-                ContentUnavailableView(
-                    settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
-                    systemImage: "wifi.exclamationmark",
-                    description: Text(error)
-                )
+                VStack(spacing: 12) {
+                    ContentUnavailableView(
+                        settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(error)
+                    )
+
+                    Button {
+                        Task { await store.loadChapters() }
+                    } label: {
+                        Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
             } else {
                 ProgressView()
             }
@@ -8138,11 +8149,22 @@ struct QuranDirectoryView: View {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran-Verzeichnis wird geladen…", "Kur'an dizini yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
-                ContentUnavailableView(
-                    settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
-                    systemImage: "wifi.exclamationmark",
-                    description: Text(error)
-                )
+                VStack(spacing: 12) {
+                    ContentUnavailableView(
+                        settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(error)
+                    )
+
+                    Button {
+                        Task { await store.loadChapters() }
+                    } label: {
+                        Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
             } else {
                 VStack(spacing: 8) {
                     Picker("", selection: $tab) {
@@ -8440,11 +8462,22 @@ struct QuranFavoritesLandingView: View {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
-                ContentUnavailableView(
-                    settings.t("Favoriten konnten nicht geladen werden", "Favoriler yüklenemedi"),
-                    systemImage: "wifi.exclamationmark",
-                    description: Text(error)
-                )
+                VStack(spacing: 12) {
+                    ContentUnavailableView(
+                        settings.t("Favoriten konnten nicht geladen werden", "Favoriler yüklenemedi"),
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(error)
+                    )
+
+                    Button {
+                        Task { await store.loadChapters() }
+                    } label: {
+                        Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
             } else {
                 QuranFavoritesView(chapters: store.chapters)
             }
