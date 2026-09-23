@@ -1,7 +1,7 @@
 # SalahPath content-rights audit
 
 Audit date: 21 September 2026  
-Target build: SalahPath 3.62 (76)
+Target build: SalahPath 3.62 (77)
 
 ## Current Quran integration
 
@@ -32,6 +32,12 @@ https://community.islamic.network/d/257-commercial-use-of-quran-audio-text-via-y
 For the current build, the documented provider terms support the way SalahPath uses the Quran service: reading, streaming and local audio caching are not paywalled, source/translator attribution is present, and the app does not redistribute the files as a separate media product.
 
 Because reciters and translation rightsholders retain their rights, this audit is not a transfer of copyright. If SalahPath later introduces paid Quran access, subscriptions that gate Quran content, advertising tied to Quran access, resale, redistribution outside the app, or a different Quran/audio provider, the rights review must be repeated before release.
+
+## Bundled Adhan notification audio
+
+Build 77 bundles `SalahZeit/Resources/adhan-short.caf` as an optional prayer-time notification sound. It is an 18-second derivative of “Beautiful adhan” by Adam-synagda from Wikimedia Commons, released under CC0 1.0 Universal. The exact source, transformation and audited Git blob SHA are recorded in `AUDIO_LICENSES.md`. The release preflight verifies that the bundled source file still matches that audited blob.
+
+This audio is not sourced from AlQuran.cloud and is not subject to the Quran recitation terms above.
 
 ## App Store evidence
 
