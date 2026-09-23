@@ -1037,7 +1037,9 @@ struct HomeView: View {
             paused = PrayerTrackerStore.isPaused(date)
         }
 
-        let label = isScreenshotQA ? qaLabels[index] : shortWeekdayLetter(date)
+        let label = isScreenshotQA
+            ? (qaLabels.indices.contains(index) ? qaLabels[index] : shortWeekdayLetter(date))
+            : shortWeekdayLetter(date)
 
         return VStack(spacing: 2) {
             ZStack {
