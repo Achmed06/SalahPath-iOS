@@ -83,7 +83,7 @@ private final class NearbyMosqueStore: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
 
-        var request = MKLocalSearch.Request()
+        let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
         request.resultTypes = .pointOfInterest
         request.region = MKCoordinateRegion(
@@ -137,7 +137,13 @@ struct NearbyMosquesView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 }
-                .cardStyle(material: true)
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1)
+                }
 
                 if locationManager.location == nil {
                     VStack(spacing: 10) {
