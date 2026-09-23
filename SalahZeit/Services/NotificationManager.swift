@@ -167,7 +167,7 @@ final class NotificationManager {
         guard Bundle.main.url(forResource: "adhan-short", withExtension: "caf") != nil else {
             return .default
         }
-        return UNNotificationSound(named: UNNotificationSoundName(adhanSoundFileName))
+        return UNNotificationSound(named: UNNotificationSoundName(rawValue: adhanSoundFileName))
     }
 
     private func ensureAuthorization() async -> Bool {
