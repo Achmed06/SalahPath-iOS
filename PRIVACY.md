@@ -1,20 +1,22 @@
 # SalahPath Privacy Policy
 
-Last updated: 21 September 2026
+Last updated: 23 September 2026
 
 SalahPath is designed to work without an account, advertising profile, or analytics account. The app does not contain advertising SDKs or tracking SDKs.
 
 ## Data used on the device
 
-SalahPath stores app settings and worship-related state locally on the iPhone. This can include language and prayer-calculation preferences, prayer and fasting tracker state, Quran bookmarks and last-read position, memorisation settings, and downloaded Quran audio cache files.
+SalahPath stores app settings and worship-related state locally on the iPhone. This can include language and prayer-calculation preferences, prayer and fasting tracker state, Quran bookmarks and last-read position, memorisation settings, a manually selected place, and locally cached Quran text and recitation audio.
 
 This information is used only to provide app functionality. SalahPath does not operate a developer backend that receives these local records.
 
 ## Location
 
-With permission, SalahPath uses the device's location while the app is in use to calculate prayer times, determine Qibla direction, and show a nearby locality name. Precise coordinates are not intentionally stored as a location history and are not sent to a SalahPath-operated server.
+With permission, SalahPath uses the device's location while the app is in use to calculate prayer times, determine Qibla direction, show a nearby locality name, and search for nearby mosques. Device-location updates are not intentionally stored as a location history and are not sent to a SalahPath-operated server.
 
-Apple system services, including Core Location and reverse geocoding, may process location information according to Apple's own privacy terms.
+If you manually choose a city or postal code, SalahPath resolves that place and stores the selected latitude, longitude, and locality locally on the device so the manual location remains available between launches. You can clear the saved manual location in the app.
+
+Apple system services, including Core Location, geocoding, and MapKit local search, may process location information and nearby-search requests according to Apple's own privacy terms.
 
 You can revoke location access at any time in iOS Settings. Prayer-time and Qibla features that require the current location may then be unavailable or less accurate.
 
@@ -42,7 +44,7 @@ SalahPath does not use App Tracking Transparency identifiers, advertising identi
 
 ## Retention and deletion
 
-Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. Quran audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted.
+Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. Quran text and audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted. A saved manual location can also be cleared from SalahPath's settings.
 
 SalahPath has no user account database from which an account needs to be deleted. Data that may be processed independently by Apple or external Quran-content providers is subject to those providers' retention policies.
 
