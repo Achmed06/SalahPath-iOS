@@ -5899,12 +5899,11 @@ private struct IslamicCalendarEventDetailView: View {
 
 struct HijriCalendarView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var now = Date()
 
     private var localCalendar: Calendar {
-        var calendar = Calendar.autoupdatingCurrent
-        calendar.timeZone = .autoupdatingCurrent
-        return calendar
+        LocalDay.calendar()
     }
 
     private var hijriCalendar: Calendar {
@@ -5922,6 +5921,14 @@ struct HijriCalendarView: View {
         }
         .navigationTitle(settings.t("Hijri-Kalender", "Hicrî takvim"))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            now = Date()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                now = Date()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
         }
