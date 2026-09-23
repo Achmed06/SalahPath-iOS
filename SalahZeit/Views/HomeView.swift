@@ -422,11 +422,6 @@ struct HomeView: View {
                 await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
             }
         }
-        .task(id: notificationTaskID(location: location)) {
-            if settings.notificationsEnabled {
-                await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
-            }
-        }
     }
 
     private var brandHeader: some View {
@@ -1299,46 +1294,6 @@ struct HomeView: View {
     private func isNext(_ prayer: PrayerOccurrence, location: CLLocation) -> Bool {
         guard let next = engine.nextPrayer(now: now, location: location, settings: settings) else { return false }
         return prayer.kind == next.kind && Calendar.current.isDate(prayer.date, inSameDayAs: next.date)
-    }
-
-    private func notificationTaskID(location: CLLocation) -> String {
-        let lat = Int((location.coordinate.latitude * 1_000).rounded())
-        let lon = Int((location.coordinate.longitude * 1_000).rounded())
-        let prayerFlags = [
-            settings.fajrNotificationEnabled,
-            settings.dhuhrNotificationEnabled,
-            settings.asrNotificationEnabled,
-            settings.maghribNotificationEnabled,
-            settings.ishaNotificationEnabled
-        ]
-        .map { $0 ? "1" : "0" }
-        .joined()
-        let offsets = [
-            settings.fajrOffset,
-            settings.dhuhrOffset,
-            settings.asrOffset,
-            settings.maghribOffset,
-            settings.ishaOffset
-        ]
-        .map(String.init)
-        .joined(separator: ",")
-        let dayKey = Calendar.current.ordinality(of: .day, in: .era, for: now) ?? 0
-
-        return [
-            String(lat),
-            String(lon),
-            settings.calculationPreset.rawValue,
-            settings.asrRule.rawValue,
-            String(settings.notificationLeadMinutes),
-            settings.notificationsEnabled ? "1" : "0",
-            settings.notifyAtPrayerTime ? "1" : "0",
-            prayerFlags,
-            offsets,
-            settings.language.rawValue,
-            settings.use24Hour ? "24h" : "12h",
-            TimeZone.current.identifier,
-            String(dayKey)
-        ].joined(separator: "|")
     }
 
     private func gregorianDateShort(_ date: Date) -> String {
