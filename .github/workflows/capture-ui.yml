@@ -1,5 +1,5 @@
-# Release UI verification trigger: v3.62 build 76 / v422 / release verify
-name: Capture SalahPath v3.62 Build 76 UI
+# Release UI verification trigger: v3.62 build 77 / v422 / release verify
+name: Capture SalahPath v3.62 Build 77 UI
 
 on:
   workflow_dispatch:
@@ -140,23 +140,23 @@ jobs:
             run_timeout 30 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-B76-TR-Home.png
-          capture quran SalahPath-v3.62-B76-TR-Quran.png
-          capture dhikr SalahPath-v3.62-B76-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-B76-TR-Namaz.png
-          capture times SalahPath-v3.62-B76-TR-PrayerTimes.png
+          capture home  SalahPath-v3.62-B77-TR-Home.png
+          capture quran SalahPath-v3.62-B77-TR-Quran.png
+          capture dhikr SalahPath-v3.62-B77-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-B77-TR-Namaz.png
+          capture times SalahPath-v3.62-B77-TR-PrayerTimes.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
 
-          capture home  SalahPath-v3.62-B76-DE-Home.png
-          capture quran SalahPath-v3.62-B76-DE-Quran.png
-          capture dhikr SalahPath-v3.62-B76-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-B76-DE-Namaz.png
-          capture times SalahPath-v3.62-B76-DE-PrayerTimes.png
+          capture home  SalahPath-v3.62-B77-DE-Home.png
+          capture quran SalahPath-v3.62-B77-DE-Quran.png
+          capture dhikr SalahPath-v3.62-B77-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-B77-DE-Namaz.png
+          capture times SalahPath-v3.62-B77-DE-PrayerTimes.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v7
         with:
-          name: SalahPath-v3.62-build76-ui-preview
+          name: SalahPath-v3.62-build77-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
