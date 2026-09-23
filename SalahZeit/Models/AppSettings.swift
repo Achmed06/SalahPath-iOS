@@ -10,6 +10,25 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     var title: String { self == .german ? "Deutsch" : "Türkçe" }
 }
 
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system
+    case light
+    case dark
+
+    var id: String { rawValue }
+
+    func title(_ language: AppLanguage) -> String {
+        switch (self, language) {
+        case (.system, .german): return "System"
+        case (.system, .turkish): return "Sistem"
+        case (.light, .german): return "Hell"
+        case (.light, .turkish): return "Açık"
+        case (.dark, .german): return "Dunkel"
+        case (.dark, .turkish): return "Koyu"
+        }
+    }
+}
+
 enum PrayerAudience: String, CaseIterable, Identifiable {
     case male
     case female
@@ -180,6 +199,7 @@ final class SettingsStore: ObservableObject {
         static let ishaOffset = "ishaOffset"
         static let language = "appLanguage"
         static let audience = "prayerAudience"
+        static let appearance = "appAppearance"
         static let quranReciter = "quranReciter"
         static let quranFontSize = "quranFontSize"
         static let quranShowTranslation = "quranShowTranslation"
@@ -205,6 +225,7 @@ final class SettingsStore: ObservableObject {
     @Published var ishaOffset: Int { didSet { defaults.set(ishaOffset, forKey: Keys.ishaOffset) } }
     @Published var language: AppLanguage { didSet { defaults.set(language.rawValue, forKey: Keys.language) } }
     @Published var prayerAudience: PrayerAudience { didSet { defaults.set(prayerAudience.rawValue, forKey: Keys.audience) } }
+    @Published var appearance: AppAppearance { didSet { defaults.set(appearance.rawValue, forKey: Keys.appearance) } }
     @Published var quranReciter: QuranReciter { didSet { defaults.set(quranReciter.rawValue, forKey: Keys.quranReciter) } }
     @Published var quranFontSize: Double { didSet { defaults.set(quranFontSize, forKey: Keys.quranFontSize) } }
     @Published var quranShowTranslation: Bool { didSet { defaults.set(quranShowTranslation, forKey: Keys.quranShowTranslation) } }
@@ -233,6 +254,7 @@ final class SettingsStore: ObservableObject {
         self.ishaOffset = defaults.object(forKey: Keys.ishaOffset) as? Int ?? 0
         self.language = AppLanguage(rawValue: defaults.string(forKey: Keys.language) ?? "") ?? .german
         self.prayerAudience = PrayerAudience(rawValue: defaults.string(forKey: Keys.audience) ?? "") ?? .male
+        self.appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
         self.quranReciter = QuranReciter(rawValue: defaults.string(forKey: Keys.quranReciter) ?? "") ?? .alafasy
         self.quranFontSize = defaults.object(forKey: Keys.quranFontSize) as? Double ?? 28
         self.quranShowTranslation = defaults.object(forKey: Keys.quranShowTranslation) as? Bool ?? true
