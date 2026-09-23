@@ -17,12 +17,12 @@ struct PrayerDetailView: View {
         NavigationStack {
             List {
                 Section(settings.t("Beginn", "Başlangıç")) {
-                    LabeledContent(settings.t("Zeit", "Vakit"), value: timeString(prayer.date, use24Hour: settings.use24Hour))
+                    LabeledContent(settings.t("Zeit", "Vakit"), value: timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
                     if let fard = prayer.kind.fardRakats {
                         LabeledContent(settings.t("Pflicht", "Farz"), value: "\(fard) \(settings.t("Rakʿat Fard", "rekât farz"))")
                     }
                     if let window = engine.prayerWindow(for: prayer, day: day, nextDay: nextDay) {
-                        LabeledContent(settings.t("Gebetsfenster", "Namaz aralığı"), value: "\(timeString(window.start, use24Hour: settings.use24Hour))–\(timeString(window.end, use24Hour: settings.use24Hour))")
+                        LabeledContent(settings.t("Gebetsfenster", "Namaz aralığı"), value: "\(timeString(window.start, use24Hour: settings.use24Hour, language: settings.language))–\(timeString(window.end, use24Hour: settings.use24Hour, language: settings.language))")
                     }
                 }
 
