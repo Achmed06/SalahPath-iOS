@@ -244,7 +244,16 @@ private enum DailyDuaStore {
         .init(deTitle: "Rabbana atina", trTitle: "Rabbenâ âtinâ", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.", repetition: nil, source: "Quran 2:201"),
         .init(deTitle: "Rabbi zidni ilma", trTitle: "Rabbî zidnî ilmâ", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", deMeaning: "Mein Herr, mehre mein Wissen.", trMeaning: "Rabbim, ilmimi artır.", repetition: nil, source: "Quran 20:114"),
         .init(deTitle: "Hasbunallahu", trTitle: "Hasbünallahu", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl", deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.", trMeaning: "Allah bize yeter, O ne güzel vekildir.", repetition: nil, source: "Quran 3:173"),
-        .init(deTitle: "Sayyidul Istighfar", trTitle: "Seyyidü'l-istiğfar", arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ...", transliteration: "Allāhumma anta rabbī lā ilāha illā anta...", deMeaning: "Große Bittformel um Vergebung.", trMeaning: "Bağışlanma için çok faziletli dua.", repetition: "Morgens / akşam", source: "Bukhari 6306")
+        .init(
+            deTitle: "Sayyidul Istighfar",
+            trTitle: "Seyyidü'l-istiğfar",
+            arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+            transliteration: "Allāhumma anta rabbī lā ilāha illā anta, khalaqtanī wa anā ʿabduka, wa anā ʿalā ʿahdika wa waʿdika ma-staṭaʿtu, aʿūdhu bika min sharri mā ṣanaʿtu, abūʾu laka biniʿmatika ʿalayya, wa abūʾu laka bidhanbī, faghfir lī, fa-innahu lā yaghfiru-dh-dhunūba illā anta.",
+            deMeaning: "O Allah, Du bist mein Herr. Du hast mich erschaffen und ich bin Dein Diener. Soweit ich kann, halte ich an meinem Bund mit Dir fest. Ich suche Schutz bei Dir vor dem Schlechten meiner Taten, erkenne Deine Gaben und meine Fehler an und bitte Dich um Vergebung; nur Du vergibst die Sünden.",
+            trMeaning: "Allah'ım, Sen benim Rabbimsin. Beni Sen yarattın, ben Senin kulunum. Gücüm yettiğince ahdine bağlı kalırım. Yaptıklarımın şerrinden Sana sığınır, nimetlerini ve günahımı itiraf ederim. Beni bağışla; günahları ancak Sen bağışlarsın.",
+            repetition: "Morgens / Sabah · Abends / Akşam",
+            source: "Diyanet · Buhârî 6306"
+        )
     ]
 
     static func item(for date: Date) -> DailyDuaEntry {
@@ -253,21 +262,6 @@ private enum DailyDuaStore {
     }
 }
 
-
-
-private enum DailyDuaSpeaker {
-    private static let synthesizer = AVSpeechSynthesizer()
-
-    static func speak(_ text: String) {
-        if synthesizer.isSpeaking {
-            synthesizer.stopSpeaking(at: .immediate)
-        }
-        let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: "ar-SA")
-        utterance.rate = 0.38
-        synthesizer.speak(utterance)
-    }
-}
 
 enum SalahTheme {
     // The navigation/header tone remains brand-stable; content colors adapt to iOS appearance.
@@ -830,24 +824,25 @@ struct HomeView: View {
                         .frame(width: 14, height: 18)
                 }
 
-                Text("Günün Duası / Dua des Tages")
-                    .font(.system(size: 11.3, weight: .bold))
-                    .foregroundStyle(SalahTheme.ink)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(settings.t("Dua des Tages", "Günün Duası"))
+                        .font(.system(size: 11.3, weight: .bold))
+                        .foregroundStyle(SalahTheme.ink)
+
+                    Text(settings.language == .german ? dua.deTitle : dua.trTitle)
+                        .font(.system(size: 8.2, weight: .semibold))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .lineLimit(1)
+                }
 
                 Spacer()
 
-                Button {
-                    DailyDuaSpeaker.speak(dua.arabic)
-                } label: {
-                    Image(systemName: "speaker.wave.2.fill")
-                        .font(.system(size: 11.5, weight: .bold))
-                        .foregroundStyle(SalahTheme.teal)
-                        .frame(width: 28, height: 28)
-                        .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(settings.t("Dua auf Arabisch vorlesen", "Duayı Arapça seslendir"))
-                .accessibilityHint(settings.t("Spielt die arabische Aussprache ab.", "Arapça okunuşu seslendirir."))
+                Image(systemName: "text.book.closed.fill")
+                    .font(.system(size: 11.5, weight: .bold))
+                    .foregroundStyle(SalahTheme.teal)
+                    .frame(width: 28, height: 28)
+                    .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
+                    .accessibilityHidden(true)
             }
 
             Text(dua.arabic)
@@ -862,6 +857,13 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+
+            if let repetition = dua.repetition {
+                Text(repetition)
+                    .font(.system(size: 7.8, weight: .bold))
+                    .foregroundStyle(SalahTheme.teal)
+                    .frame(maxWidth: .infinity)
+            }
 
             Text(dua.source)
                 .font(.system(size: 7.4, weight: .semibold))
