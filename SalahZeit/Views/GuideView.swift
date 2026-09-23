@@ -8575,7 +8575,9 @@ private struct QuranPageAyah: Decodable, Identifiable {
 private final class QuranPageStore: ObservableObject {
     @Published var arabic: QuranPageData?
     @Published var translation: QuranPageData?
+    @Published var transliteration: QuranPageData?
     @Published var translationUnavailable = false
+    @Published var transliterationUnavailable = false
     @Published var isLoading = false
     @Published var error: String?
     private var loadRevision = 0
@@ -8604,20 +8606,26 @@ private final class QuranPageStore: ObservableObject {
         do {
             async let arabicPage = fetch(page: page, edition: "quran-uthmani")
             async let translatedPage: QuranPageData? = try? fetch(page: page, edition: translationEdition)
+            async let transliteratedPage: QuranPageData? = try? fetch(page: page, edition: "en.transliteration")
 
             let arabicResult = try await arabicPage
             let translatedResult = await translatedPage
+            let transliteratedResult = await transliteratedPage
 
             guard revision == loadRevision else { return }
             arabic = arabicResult
             translation = translatedResult
+            transliteration = transliteratedResult
             translationUnavailable = translatedResult == nil
+            transliterationUnavailable = transliteratedResult == nil
             error = nil
         } catch {
             guard revision == loadRevision else { return }
             arabic = nil
             translation = nil
+            transliteration = nil
             translationUnavailable = false
+            transliterationUnavailable = false
             self.error = error.localizedDescription
         }
     }
@@ -8662,6 +8670,10 @@ struct QuranPageReaderView: View {
 
     private var translationByAyah: [Int: QuranPageAyah] {
         Dictionary(uniqueKeysWithValues: (store.translation?.ayahs ?? []).map { ($0.number, $0) })
+    }
+
+    private var transliterationByAyah: [Int: QuranPageAyah] {
+        Dictionary(uniqueKeysWithValues: (store.transliteration?.ayahs ?? []).map { ($0.number, $0) })
     }
 
     var body: some View {
@@ -8716,6 +8728,25 @@ struct QuranPageReaderView: View {
                                 Text(settings.t(
                                     "Arabischer Quran ist verfügbar; die gewählte Übersetzung konnte gerade nicht geladen werden.",
                                     "Arapça Kur'an kullanılabilir; seçili meal şu anda yüklenemedi."
+                                ))
+                                .font(.caption)
+                                .foregroundStyle(SalahTheme.mutedInk)
+                                .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 0)
+                            }
+                            .padding(10)
+                            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
+                        }
+
+                        if settings.quranShowTransliteration && store.transliterationUnavailable {
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "icloud.slash.fill")
+                                    .foregroundStyle(SalahTheme.gold)
+                                Text(settings.t(
+                                    "Arabischer Quran ist verfügbar; die Umschrift konnte gerade nicht geladen werden.",
+                                    "Arapça Kur'an kullanılabilir; Latin harfli okunuş şu anda yüklenemedi."
                                 ))
                                 .font(.caption)
                                 .foregroundStyle(SalahTheme.mutedInk)
@@ -8814,6 +8845,16 @@ struct QuranPageReaderView: View {
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                         .multilineTextAlignment(.trailing)
                                         .textSelection(.enabled)
+
+                                    if settings.quranShowTransliteration,
+                                       let transliterated = transliterationByAyah[ayah.number] {
+                                        Divider().opacity(0.18)
+                                        Text(transliterated.text)
+                                            .font(.subheadline.weight(.medium))
+                                            .foregroundStyle(SalahTheme.mutedInk)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                            .textSelection(.enabled)
+                                    }
 
                                     if settings.quranShowTranslation,
                                        let translated = translationByAyah[ayah.number] {
