@@ -3619,6 +3619,162 @@ struct EsmaulHusnaView: View {
     }
 }
 
+// MARK: - Farewell Sermon
+
+struct FarewellSermonView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private var principles: [(String, String, String, String)] {
+        [
+            (
+                "shield.lefthalf.filled",
+                "Schutz von Leben, Vermögen und Würde",
+                "Can, mal ve onur dokunulmazlığı",
+                settings.t(
+                    "Der Prophet betonte während der Abschiedspilgerfahrt die Unverletzlichkeit von Leben, Vermögen und persönlicher Würde und stellte sie in den Zusammenhang der Heiligkeit von Tag, Monat und Ort.",
+                    "Hz. Peygamber Veda Haccı sırasında canın, malın ve kişilik onurunun dokunulmazlığını vurguladı; bunu günün, ayın ve Mekke'nin dokunulmazlığıyla birlikte anlattı."
+                )
+            ),
+            (
+                "banknote.fill",
+                "Ende von Riba und alten Vergeltungsforderungen",
+                "Faiz ve eski kan davalarının kaldırılması",
+                settings.t(
+                    "Überlieferungen der Abschiedspilgerfahrt erklären vorislamische Zinsforderungen und alte Blutracheansprüche für aufgehoben. Damit wurden wirtschaftliche Ausbeutung und fortgesetzte Vergeltung ausdrücklich zurückgewiesen.",
+                    "Veda Haccı rivayetlerinde cahiliye döneminden kalan faiz alacaklarının ve kan davalarının kaldırıldığı bildirilir. Böylece ekonomik sömürü ve bitmeyen intikam döngüsü reddedilmiştir."
+                )
+            ),
+            (
+                "person.2.fill",
+                "Rechte und Verantwortung in der Familie",
+                "Ailede hak ve sorumluluk",
+                settings.t(
+                    "Die Überlieferungen erinnern Ehepartner an gegenseitige Rechte und Pflichten und fordern einen verantwortungsvollen und guten Umgang miteinander.",
+                    "Rivayetler eşlerin karşılıklı hak ve sorumluluklarını hatırlatır; aile içinde sorumlu ve güzel muameleyi öğütler."
+                )
+            ),
+            (
+                "hand.raised.fill",
+                "Treuhand, Schulden und Eigentum",
+                "Emanet, borç ve mülkiyet",
+                settings.t(
+                    "Anvertrautes soll seinem Eigentümer zurückgegeben, Schulden sollen erfüllt und fremdes Vermögen nicht ohne Zustimmung angeeignet werden.",
+                    "Emanet sahibine verilmeli, borçlar ödenmeli ve başkasının malı rızası olmadan alınmamalıdır."
+                )
+            ),
+            (
+                "person.3.fill",
+                "Gemeinschaft ohne Stammesüberheblichkeit",
+                "Irk ve sınıf üstünlüğünü reddeden toplum",
+                settings.t(
+                    "Diyanets Darstellung hebt die gemeinsame menschliche Herkunft hervor und liest die Abschiedsrede als Absage an Überheblichkeit aufgrund von Herkunft, Hautfarbe oder gesellschaftlicher Stellung.",
+                    "Diyanet'in açıklaması insanların ortak kökenine dikkat çeker; Veda Hutbesi'ni ırk, renk veya toplumsal sınıf sebebiyle üstünlük iddiasının reddi olarak açıklar."
+                )
+            ),
+            (
+                "book.closed.fill",
+                "An Offenbarung und prophetischer Orientierung festhalten",
+                "Vahye ve peygamberî rehberliğe bağlılık",
+                settings.t(
+                    "In den überlieferten Abschiedsworten wird die Gemeinschaft dazu aufgerufen, an Allahs Buch und der prophetischen Orientierung festzuhalten und die anvertraute Botschaft weiterzugeben.",
+                    "Veda sözlerinin rivayetlerinde ümmete Allah'ın kitabına ve peygamberî rehberliğe bağlı kalması, kendisine ulaşan mesajı başkalarına aktarması öğütlenir."
+                )
+            )
+        ]
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Veda Hutbesi · Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote")
+                        .font(.title2.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Während der Abschiedspilgerfahrt im Jahr 10 n. H. / 632 hielt der Prophet Muhammad Ansprachen in Arafat und Mina. Diese Worte gehören zu den bekanntesten überlieferten Zusammenfassungen seiner sozialen und religiösen Mahnungen.",
+                        "Hz. Muhammed hicretin 10. yılında / 632'de yaptığı Veda Haccı sırasında Arafat ve Mina'da konuşmalar yaptı. Bu sözler onun dinî ve toplumsal öğütlerinin en çok bilinen özetleri arasındadır."
+                    ))
+                    .font(.subheadline)
+                    .foregroundStyle(SalahTheme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.cardStroke(), lineWidth: 1)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Wichtiger Quellenhinweis", "Önemli kaynak notu"), systemImage: "info.circle.fill")
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Die heute verbreitete „Veda-Hutbe“ ist kein einzelner wortgleich überlieferter Block. Diyanet weist darauf hin, dass Aussagen aus mehreren Reden der Abschiedspilgerfahrt und aus verschiedenen Hadith- und Sīra-Überlieferungen zusammengeführt wurden. SalahPath präsentiert deshalb die gut belegten Kernaussagen als Lernübersicht und behauptet keinen einzigen verbindlichen Wortlaut.",
+                        "Bugün yaygın biçimde okunan „Veda Hutbesi“ tek parça ve kelimesi kelimesine tek rivayet değildir. Diyanet, Veda Haccı sırasındaki farklı konuşmalardan ve çeşitli hadis/siyer rivayetlerinden bölümlerin bir araya getirildiğini belirtir. Bu yüzden SalahPath iyi belgelenmiş ana mesajları öğrenme özeti olarak sunar ve tek bir zorunlu tam metin iddiasında bulunmaz."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1)
+                }
+
+                ForEach(Array(principles.enumerated()), id: \.offset) { _, item in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label(
+                            settings.language == .german ? item.1 : item.2,
+                            systemImage: item.0
+                        )
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                        Text(item.3)
+                            .font(.subheadline)
+                            .foregroundStyle(SalahTheme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quellenbasis", "Kaynak temeli"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Diyanet Din İşleri Yüksek Kurulu · „Veda haccı ve veda hutbesi nedir?“; Diyanet Aylık Dergi · „İnsan Hakları Bağlamında Nebevi Emanet: Veda Hutbesi“; einschlägige Überlieferungen bei Buhārī und Muslim.",
+                        "Diyanet Din İşleri Yüksek Kurulu · „Veda haccı ve veda hutbesi nedir?“; Diyanet Aylık Dergi · „İnsan Hakları Bağlamında Nebevi Emanet: Veda Hutbesi“; Buhârî ve Müslim'deki ilgili rivayetler."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 2)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Abschiedsrede", "Veda Hutbesi"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Four Rightly Guided Caliphs
 
 private struct CaliphLesson: Identifiable {
