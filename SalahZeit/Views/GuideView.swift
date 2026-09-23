@@ -3619,6 +3619,268 @@ struct EsmaulHusnaView: View {
     }
 }
 
+// MARK: - Four Rightly Guided Caliphs
+
+private struct CaliphLesson: Identifiable {
+    let id: String
+    let order: Int
+    let arabic: String
+    let deName: String
+    let trName: String
+    let years: String
+    let deIntro: String
+    let trIntro: String
+    let dePoints: [String]
+    let trPoints: [String]
+    let source: String
+}
+
+struct FourCaliphsView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private let lessons: [CaliphLesson] = [
+        .init(
+            id: "abu_bakr",
+            order: 1,
+            arabic: "أبو بكر",
+            deName: "Abū Bakr as-Siddīq",
+            trName: "Hz. Ebû Bekir es-Sıddîk",
+            years: "632–634",
+            deIntro: "Einer der frühesten Muslime, enger Gefährte des Propheten Muhammad und der erste Kalif nach dessen Tod.",
+            trIntro: "İlk Müslümanlardan, Hz. Muhammed'in yakın dostu ve vefatından sonra ilk halifedir.",
+            dePoints: [
+                "Begleitete den Propheten bei der Hidschra von Mekka nach Medina.",
+                "Nach dem Tod des Propheten wurde er in Medina zum ersten Kalifen gewählt.",
+                "Während seiner Amtszeit wurden schwere innere Krisen der jungen muslimischen Gemeinschaft bewältigt.",
+                "Nach hohen Verlusten unter Quran-Rezitatoren in der Yamāma-Schlacht unterstützte er die Sammlung des Quran in einem Mushaf; Zayd ibn Thābit leitete die Arbeit."
+            ],
+            trPoints: [
+                "Mekke'den Medine'ye hicrette Hz. Peygamber'e yol arkadaşlığı yaptı.",
+                "Hz. Peygamber'in vefatından sonra Medine'de ilk halife seçildi.",
+                "Halifeliği sırasında genç Müslüman toplumun ciddi iç krizleriyle karşılaşıldı.",
+                "Yemâme'de çok sayıda hâfızın şehit olmasının ardından Kur'an'ın mushaf hâlinde toplanmasını destekledi; çalışmayı Zeyd b. Sâbit yürüttü."
+            ],
+            source: "TDV İslâm Ansiklopedisi · Ebû Bekir; Diyanet · Cem'u'l-Kur'ân"
+        ),
+        .init(
+            id: "umar",
+            order: 2,
+            arabic: "عمر",
+            deName: "ʿUmar ibn al-Khattāb",
+            trName: "Hz. Ömer b. Hattâb",
+            years: "634–644",
+            deIntro: "Der zweite Kalif. Er gehörte zu den engen Gefährten des Propheten und war bereits unter Abū Bakr ein wichtiger Berater.",
+            trIntro: "İkinci halifedir. Hz. Peygamber'in yakın sahabilerindendi ve Hz. Ebû Bekir döneminde önemli bir danışmandı.",
+            dePoints: [
+                "Nahm den Islam in Mekka an und wanderte später nach Medina aus.",
+                "Übernahm 634 nach Abū Bakrs Tod das Kalifat.",
+                "Seine Regierungszeit war von starkem territorialem Wachstum und dem Aufbau dauerhafter Verwaltungsstrukturen geprägt.",
+                "Er setzte Richter ein und entwickelte staatliche Verwaltungs- und Finanzstrukturen weiter.",
+                "In seiner Zeit wurde die Hidschra als Ausgangspunkt der islamischen Zeitrechnung festgelegt."
+            ],
+            trPoints: [
+                "Mekke'de Müslüman oldu ve daha sonra Medine'ye hicret etti.",
+                "Hz. Ebû Bekir'in vefatından sonra 634 yılında halifeliği devraldı.",
+                "Döneminde İslâm coğrafyası büyük ölçüde genişledi ve kalıcı idarî kurumlar gelişti.",
+                "Kadılar görevlendirdi; devlet ve maliye teşkilatını geliştirdi.",
+                "Hicret, onun döneminde İslâm takviminin başlangıcı olarak kabul edildi."
+            ],
+            source: "TDV İslâm Ansiklopedisi · Ömer; Diyanet yayınları"
+        ),
+        .init(
+            id: "uthman",
+            order: 3,
+            arabic: "عثمان",
+            deName: "ʿUthmān ibn ʿAffān",
+            trName: "Hz. Osman b. Affân",
+            years: "644–656",
+            deIntro: "Einer der frühesten Muslime, Schwiegersohn des Propheten und der dritte Kalif.",
+            trIntro: "İlk Müslümanlardan, Hz. Peygamber'in damadı ve üçüncü halifedir.",
+            dePoints: [
+                "Nahm früh den Islam an und gehörte zu den Muslimen, die nach Abessinien auswanderten.",
+                "War mit Ruqayya und nach deren Tod mit Umm Kulthūm, zwei Töchtern des Propheten, verheiratet; daher ist der Beiname Dhū n-Nūrayn bekannt.",
+                "Wurde nach dem von ʿUmar eingesetzten Schūrā-Verfahren zum dritten Kalifen gewählt.",
+                "Unter seiner Leitung wurde der bereits gesammelte Qurantext durch eine Kommission vervielfältigt und an wichtige Zentren versandt.",
+                "Die letzten Jahre seiner Amtszeit waren von schweren politischen Spannungen geprägt; historische Quellen zu Ursachen und Verantwortlichkeiten enthalten unterschiedliche und teils widersprüchliche Berichte."
+            ],
+            trPoints: [
+                "İslâm'ı erken dönemde kabul etti ve Habeşistan'a hicret eden Müslümanlar arasında yer aldı.",
+                "Hz. Peygamber'in kızları Rukıyye ve onun vefatından sonra Ümmü Külsûm ile evlendi; bu sebeple Zinnûreyn lakabıyla tanındı.",
+                "Hz. Ömer'in belirlediği şûra sürecinin ardından üçüncü halife seçildi.",
+                "Daha önce toplanan Kur'an metni onun döneminde bir komisyon tarafından çoğaltılarak önemli merkezlere gönderildi.",
+                "Halifeliğinin son yılları ciddi siyasî gerilimlerle geçti; sebepler ve sorumluluklar hakkında tarihî kaynaklarda farklı ve birbiriyle çelişen rivayetler bulunur."
+            ],
+            source: "TDV İslâm Ansiklopedisi · Osman; Diyanet · Cem'u'l-Kur'ân"
+        ),
+        .init(
+            id: "ali",
+            order: 4,
+            arabic: "علي",
+            deName: "ʿAlī ibn Abī Tālib",
+            trName: "Hz. Ali b. Ebî Tâlib",
+            years: "656–661",
+            deIntro: "Cousin und Schwiegersohn des Propheten, einer der frühesten Muslime und der vierte Kalif.",
+            trIntro: "Hz. Peygamber'in amcasının oğlu ve damadı, ilk Müslümanlardan ve dördüncü halifedir.",
+            dePoints: [
+                "Wuchs bereits als Kind im Haushalt des Propheten auf und gehörte zu den frühesten Gläubigen.",
+                "Blieb bei der Hidschra zunächst in Mekka, um ihm anvertraute Güter ihren Eigentümern zurückzugeben, und wanderte anschließend nach Medina aus.",
+                "Heiratete Fātima, die Tochter des Propheten; zu ihren Kindern gehörten Hasan und Husayn.",
+                "War für sein Wissen über Quran, Hadith und Fiqh bekannt und wurde auch von früheren Kalifen in Rechtsfragen konsultiert.",
+                "Seine Amtszeit fiel in eine Phase schwerer innerer Konflikte. SalahPath behandelt die unterschiedlichen historischen und konfessionellen Deutungen nicht als eine einzige unumstrittene Version."
+            ],
+            trPoints: [
+                "Çocukluğundan itibaren Hz. Peygamber'in yanında yetişti ve ilk iman edenler arasında yer aldı.",
+                "Hicret sırasında emanetleri sahiplerine ulaştırmak için önce Mekke'de kaldı, ardından Medine'ye hicret etti.",
+                "Hz. Peygamber'in kızı Fâtıma ile evlendi; Hasan ve Hüseyin çocukları arasındaydı.",
+                "Kur'an, hadis ve özellikle fıkıh bilgisiyle tanındı; önceki halifeler de hukukî konularda görüşüne başvurdu.",
+                "Halifeliği ağır iç çatışmaların yaşandığı bir döneme denk geldi. SalahPath farklı tarihî ve mezhebî yorumları tek ve tartışmasız bir anlatım gibi sunmaz."
+            ],
+            source: "TDV İslâm Ansiklopedisi · Ali"
+        )
+    ]
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Die ersten vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Dieser Lernbereich fasst die vier als Hulefâ-yi Râşidîn bekannten frühen Kalifen biografisch zusammen. Politisch und konfessionell umstrittene Ereignisse werden bewusst neutral beschrieben.",
+                        "Bu bölüm Hulefâ-yi Râşidîn olarak bilinen ilk dört halifeyi biyografik olarak özetler. Siyasî ve mezhebî açıdan ihtilaflı olaylar özellikle tarafsız biçimde anlatılır."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section(settings.t("Chronologische Reihenfolge", "Kronolojik sıra")) {
+                ForEach(lessons) { lesson in
+                    NavigationLink {
+                        FourCaliphDetailView(lesson: lesson)
+                    } label: {
+                        HStack(spacing: 11) {
+                            Text("\(lesson.order)")
+                                .font(.caption.bold())
+                                .foregroundStyle(.white)
+                                .frame(width: 36, height: 36)
+                                .background(SalahTheme.navigationTeal, in: Circle())
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(settings.language == .german ? lesson.deName : lesson.trName)
+                                    .font(.headline)
+                                    .foregroundStyle(SalahTheme.ink)
+                                Text(lesson.years)
+                                    .font(.caption.bold().monospacedDigit())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+
+                            Spacer()
+
+                            Text(lesson.arabic)
+                                .font(.system(size: 20, weight: .medium))
+                                .foregroundStyle(SalahTheme.deepTeal)
+                        }
+                        .padding(.vertical, 3)
+                    }
+                }
+            }
+
+            Section(settings.t("Quellen", "Kaynaklar")) {
+                Text(settings.t(
+                    "Biografische Grundlage: TDV İslâm Ansiklopedisi und Diyanet-Veröffentlichungen. Bei Ereignissen der ersten innerislamischen Konflikte gibt es in den historischen Quellen unterschiedliche Bewertungen.",
+                    "Biyografik temel: TDV İslâm Ansiklopedisi ve Diyanet yayınları. İlk iç çatışmalarla ilgili tarihî kaynaklarda farklı değerlendirmeler bulunur."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Vier Kalifen", "Dört Halife"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct FourCaliphDetailView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    let lesson: CaliphLesson
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                VStack(spacing: 5) {
+                    Text(lesson.arabic)
+                        .font(.system(size: 34, weight: .medium))
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.language == .german ? lesson.deName : lesson.trName)
+                        .font(.title2.bold())
+                        .foregroundStyle(SalahTheme.ink)
+
+                    Text(settings.t("\(lesson.order). Kalif · \(lesson.years)", "\(lesson.order). Halife · \(lesson.years)"))
+                        .font(.subheadline.bold().monospacedDigit())
+                        .foregroundStyle(SalahTheme.teal)
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.cardStroke(), lineWidth: 1)
+                }
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.language == .german ? lesson.deIntro : lesson.trIntro)
+                        .font(.body)
+                        .foregroundStyle(SalahTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Divider().opacity(0.3)
+
+                    let points = settings.language == .german ? lesson.dePoints : lesson.trPoints
+                    ForEach(Array(points.enumerated()), id: \.offset) { index, point in
+                        HStack(alignment: .top, spacing: 9) {
+                            Text("\(index + 1)")
+                                .font(.caption.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+                                .frame(width: 25, height: 25)
+                                .background(SalahTheme.gold.opacity(0.18), in: Circle())
+
+                            Text(point)
+                                .font(.subheadline)
+                                .foregroundStyle(SalahTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            Spacer(minLength: 0)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.cardStroke(), lineWidth: 1)
+                }
+
+                Label(lesson.source, systemImage: "checkmark.seal.fill")
+                    .font(.caption)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.language == .german ? lesson.deName : lesson.trName)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Ilmihal directory
 
 private struct IlmihalTopic: Identifiable {
