@@ -51,8 +51,16 @@ struct SalahPathApp: App {
             return "disabled|\(notificationScheduleRevision)"
         }
 
-        let lat = Int((location.coordinate.latitude * 1_000).rounded())
-        let lon = Int((location.coordinate.longitude * 1_000).rounded())
+        let coordinate = location.coordinate
+        guard coordinate.latitude.isFinite,
+              coordinate.longitude.isFinite,
+              (-90.0...90.0).contains(coordinate.latitude),
+              (-180.0...180.0).contains(coordinate.longitude) else {
+            return "invalid-location|\(notificationScheduleRevision)"
+        }
+
+        let lat = Int((coordinate.latitude * 1_000).rounded())
+        let lon = Int((coordinate.longitude * 1_000).rounded())
         let prayerFlags = [
             settings.fajrNotificationEnabled,
             settings.dhuhrNotificationEnabled,
