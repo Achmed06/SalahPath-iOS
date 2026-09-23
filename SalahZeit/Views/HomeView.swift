@@ -247,7 +247,7 @@ private enum DailyDuaStore {
         .init(deTitle: "Rabbana atina", trTitle: "Rabbenâ âtinâ", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.", repetition: nil, source: "Quran 2:201"),
         .init(deTitle: "Rabbi zidni ilma", trTitle: "Rabbî zidnî ilmâ", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", deMeaning: "Mein Herr, mehre mein Wissen.", trMeaning: "Rabbim, ilmimi artır.", repetition: nil, source: "Quran 20:114"),
         .init(deTitle: "Hasbunallahu", trTitle: "Hasbünallahu", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl", deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.", trMeaning: "Allah bize yeter, O ne güzel vekildir.", repetition: nil, source: "Quran 3:173"),
-        .init(deTitle: "Sayyidul Istighfar", trTitle: "Seyyidü'l-istiğfar", arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ...", transliteration: "Allāhumma anta rabbī lā ilāha illā anta...", deMeaning: "Große Bittformel um Vergebung.", trMeaning: "Bağışlanma için çok faziletli dua.", repetition: "Morgens / agşam", source: "Bukhari 6306")
+        .init(deTitle: "Sayyidul Istighfar", trTitle: "Seyyidü'l-istiğfar", arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ...", transliteration: "Allāhumma anta rabbī lā ilāha illā anta...", deMeaning: "Große Bittformel um Vergebung.", trMeaning: "Bağışlanma için çok faziletli dua.", repetition: "Morgens / akşam", source: "Bukhari 6306")
     ]
 
     static func item(for date: Date) -> DailyDuaEntry {
@@ -816,22 +816,23 @@ struct HomeView: View {
                         .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(settings.t("Dua auf Arabisch vorlesen", "Duayı Arapça seslendir"))
+                .accessibilityHint(settings.t("Spielt die arabische Aussprache ab.", "Arapça okunuşu seslendirir."))
             }
 
             Text(dua.arabic)
                 .font(.system(size: 18.2, weight: .regular))
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
-                .lineLimit(1)
-                .minimumScaleFactor(0.82)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityLanguage("ar")
 
             Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
                 .font(.system(size: 9.2, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
-                .lineLimit(1)
-                .minimumScaleFactor(0.80)
+                .fixedSize(horizontal: false, vertical: true)
 
             Text(dua.source)
                 .font(.system(size: 7.4, weight: .semibold))
@@ -1132,7 +1133,7 @@ struct HomeView: View {
                 Spacer()
                 Button { locationManager.refresh() } label: { Image(systemName: "arrow.clockwise") }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(settings.t("Standort agtualisieren", "Konumu güncelle"))
+                    .accessibilityLabel(settings.t("Standort aktualisieren", "Konumu güncelle"))
             }
             .padding(.bottom, 8)
 
