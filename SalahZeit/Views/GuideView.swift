@@ -2506,6 +2506,221 @@ struct PrayerTermsView: View {
     }
 }
 
+// MARK: - Supplementary reference utilities
+
+struct PrayerDebtTrackerView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    @AppStorage("salahpath.qada.fajr") private var fajr = 0
+    @AppStorage("salahpath.qada.dhuhr") private var dhuhr = 0
+    @AppStorage("salahpath.qada.asr") private var asr = 0
+    @AppStorage("salahpath.qada.maghrib") private var maghrib = 0
+    @AppStorage("salahpath.qada.isha") private var isha = 0
+    @AppStorage("salahpath.qada.witr") private var witr = 0
+    @AppStorage("salahpath.qada.fasting") private var fasting = 0
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Ein persönlicher Zähler für nachzuholende Gebete und Fastentage. SalahPath entscheidet hier nicht, ob oder wie viele Qada-Pflichten bei dir bestehen.",
+                        "Kaza namazları ve oruç günleri için kişisel sayaç. SalahPath burada sende kaç kaza bulunduğuna dair hüküm vermez."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+
+                qadaRow(title: settings.t("Fajr", "Sabah"), value: $fajr)
+                qadaRow(title: settings.t("Dhuhr", "Öğle"), value: $dhuhr)
+                qadaRow(title: settings.t("Asr", "İkindi"), value: $asr)
+                qadaRow(title: settings.t("Maghrib", "Akşam"), value: $maghrib)
+                qadaRow(title: settings.t("Isha", "Yatsı"), value: $isha)
+                qadaRow(title: settings.t("Witr", "Vitir"), value: $witr)
+                qadaRow(title: settings.t("Fastentage", "Oruç"), value: $fasting)
+
+                Button(role: .destructive) {
+                    fajr = 0
+                    dhuhr = 0
+                    asr = 0
+                    maghrib = 0
+                    isha = 0
+                    witr = 0
+                    fasting = 0
+                } label: {
+                    Label(settings.t("Alle Zähler zurücksetzen", "Tüm sayaçları sıfırla"), systemImage: "arrow.counterclockwise")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Qada-Tracker", "Kaza Takibi"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func qadaRow(title: String, value: Binding<Int>) -> some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(SalahTheme.softTeal)
+                .frame(width: 12, height: 12)
+
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(SalahTheme.ink)
+
+            Spacer()
+
+            Button {
+                value.wrappedValue = max(0, value.wrappedValue - 1)
+            } label: {
+                Image(systemName: "minus")
+                    .font(.headline.bold())
+                    .frame(width: 38, height: 38)
+            }
+            .buttonStyle(.bordered)
+            .disabled(value.wrappedValue == 0)
+
+            Text("\(value.wrappedValue)")
+                .font(.title3.bold().monospacedDigit())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(minWidth: 42)
+
+            Button {
+                value.wrappedValue += 1
+            } label: {
+                Image(systemName: "plus")
+                    .font(.headline.bold())
+                    .frame(width: 38, height: 38)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SalahTheme.teal)
+        }
+        .padding(12)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.32), lineWidth: 1)
+        }
+    }
+}
+
+struct ThirtyTwoFardView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private struct SectionData: Identifiable {
+        let id = UUID()
+        let deTitle: String
+        let trTitle: String
+        let deItems: [String]
+        let trItems: [String]
+    }
+
+    private var sections: [SectionData] {
+        [
+            .init(
+                deTitle: "6 Grundlagen des Glaubens",
+                trTitle: "İmanın 6 şartı",
+                deItems: ["Glaube an Allah", "Glaube an die Engel", "Glaube an die offenbarten Bücher", "Glaube an die Propheten", "Glaube an den Jüngsten Tag", "Glaube an Qadar und göttliche Bestimmung"],
+                trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Ahiret gününe iman", "Kader ve kazaya iman"]
+            ),
+            .init(
+                deTitle: "5 Säulen / Bedingungen des Islam",
+                trTitle: "İslam’ın 5 şartı",
+                deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Hajj verrichten, wenn die Voraussetzungen erfüllt sind"],
+                trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Hacca gitmek"]
+            ),
+            .init(
+                deTitle: "4 Farz des Wudu",
+                trTitle: "Abdestin 4 farzı",
+                deItems: ["Gesicht waschen", "Arme einschließlich Ellenbogen waschen", "Mindestens ein Viertel des Kopfes wischen", "Füße einschließlich Knöchel waschen"],
+                trItems: ["Yüzü yıkamak", "Kolları dirseklerle beraber yıkamak", "Başın dörtte birini mesh etmek", "Ayakları topuklarla beraber yıkamak"]
+            ),
+            .init(
+                deTitle: "3 Farz des Ghusl",
+                trTitle: "Guslün 3 farzı",
+                deItems: ["Mund ausspülen", "Nase mit Wasser reinigen", "Den ganzen Körper vollständig waschen"],
+                trItems: ["Ağza su vermek", "Buruna su vermek", "Bütün bedeni kuru yer kalmayacak şekilde yıkamak"]
+            ),
+            .init(
+                deTitle: "2 Farz des Tayammum",
+                trTitle: "Teyemmümün 2 farzı",
+                deItems: ["Absicht fassen", "Mit sauberer Erde oder erdähnlicher Oberfläche die vorgeschriebenen Wischhandlungen ausführen"],
+                trItems: ["Niyet etmek", "Temiz toprağa elleri vurup gerekli meshleri yapmak"]
+            ),
+            .init(
+                deTitle: "6 äußere Bedingungen des Gebets",
+                trTitle: "Namazın dışındaki 6 farz",
+                deItems: ["Rituelle Reinheit", "Reinheit von Körper, Kleidung und Gebetsplatz", "Bedeckung der ʿAwra", "Ausrichtung zur Qibla", "Eintritt der Gebetszeit", "Absicht"],
+                trItems: ["Hadesten taharet", "Necasetten taharet", "Setr-i avret", "İstikbâl-i kıble", "Vakit", "Niyet"]
+            ),
+            .init(
+                deTitle: "6 innere Bestandteile des Gebets",
+                trTitle: "Namazın içindeki 6 farz",
+                deItems: ["Eröffnungstakbir", "Stehen (Qiyām)", "Qirāʾa / Quran-Rezitation", "Rukūʿ", "Sujud", "Letztes Sitzen"],
+                trItems: ["İftitah tekbiri", "Kıyam", "Kıraat", "Rükû", "Secde", "Ka’de-i âhire"]
+            )
+        ]
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(settings.t("32 Farz – kompakter Lernzettel", "32 Farz – kısa öğrenme özeti"), systemImage: "checklist")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Diese Ansicht ergänzt die ausführlichen SalahPath-Lernbereiche. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
+                        "Bu ekran ayrıntılı SalahPath derslerini tamamlar. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+
+                ForEach(sections) { section in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(settings.language == .german ? section.deTitle : section.trTitle)
+                            .font(.headline.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+
+                        let items = settings.language == .german ? section.deItems : section.trItems
+                        ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                            HStack(alignment: .top, spacing: 9) {
+                                Text("\(index + 1)")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SalahTheme.deepTeal)
+                                    .frame(width: 24, height: 24)
+                                    .background(SalahTheme.gold.opacity(0.20), in: Circle())
+
+                                Text(item)
+                                    .font(.subheadline)
+                                    .foregroundStyle(SalahTheme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
+
+                                Spacer(minLength: 0)
+                            }
+                        }
+                    }
+                    .cardStyle()
+                }
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle("32 Farz")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Human-recorded prayer/Quran audio
 
 actor QuranAudioCache {
