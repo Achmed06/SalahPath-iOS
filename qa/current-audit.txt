@@ -56,7 +56,7 @@ PAGE COVERAGE
 - Wudu sequence and poses.
 - Checked end-to-end.
 - Existing detailed WuduGuideView retained.
-- Corrected right/left arm and foot asset mapping.
+- Verified right/left arm and foot visuals against the rendered assets and PDF. The asset filenames encode screen-side orientation, so the code intentionally maps the mirrored image to the worshipper's anatomical side.
 - Corrected Basmala to use the dedicated wudu_basmala artwork.
 - Existing detailed Farz/Sunnah explanations remain the authoritative SalahPath UI.
 
@@ -72,7 +72,7 @@ PAGE COVERAGE
 38-76
 - Detailed salah sequence, male/female differences, recitations, right-then-left salam, post-prayer material.
 - Existing PrayerHowToView retained.
-- Corrected salam artwork mapping: worshipper’s own RIGHT first, then LEFT.
+- Verified salam artwork directly: worshipper’s own RIGHT is shown first, then LEFT. Because a front-facing person's own right appears on the viewer's left, step 17 intentionally uses the screen-left artwork and step 18 the screen-right artwork.
 - Existing male/female audience switch and 18-step tutorial retained.
 - Added direct links to prayer plan, prayer duas, and short-surah learning.
 
@@ -162,9 +162,8 @@ PAGE COVERAGE
 - Not added as an empty shell; requires complete verified learning content.
 
 IMPLEMENTED FROM THIS AUDIT
-- Prayer salam image direction: RIGHT then LEFT.
-- Wudu right/left arm artwork mapping corrected.
-- Wudu right/left foot artwork mapping corrected.
+- Prayer salam direction verified from actual assets: worshipper's own RIGHT then LEFT.
+- Wudu right/left arm and foot mappings verified from actual rendered assets and kept mirrored where required by the worshipper's anatomical side.
 - Wudu Basmala uses its dedicated artwork.
 - Gebet lernen now exposes Wudu, rak'ah plan, prayer duas, and short-surah learning directly.
 - Added persistent Qada tracker.
