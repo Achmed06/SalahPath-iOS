@@ -3,6 +3,7 @@ import Foundation
 func timeString(_ date: Date, use24Hour: Bool) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = .autoupdatingCurrent
     formatter.dateFormat = use24Hour ? "HH:mm" : "h:mm a"
     return formatter.string(from: date)
 }
@@ -10,6 +11,7 @@ func timeString(_ date: Date, use24Hour: Bool) -> String {
 func gregorianDateString(_ date: Date, language: AppLanguage = .german) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
+    formatter.timeZone = .autoupdatingCurrent
     formatter.dateStyle = .full
     return formatter.string(from: date)
 }
@@ -17,7 +19,10 @@ func gregorianDateString(_ date: Date, language: AppLanguage = .german) -> Strin
 func hijriDateString(_ date: Date, language: AppLanguage = .german) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
-    formatter.calendar = Calendar(identifier: .islamicUmmAlQura)
+    var calendar = Calendar(identifier: .islamicUmmAlQura)
+    calendar.timeZone = .autoupdatingCurrent
+    formatter.calendar = calendar
+    formatter.timeZone = .autoupdatingCurrent
     formatter.dateFormat = "d MMMM yyyy"
     return formatter.string(from: date)
 }
