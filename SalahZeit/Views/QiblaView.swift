@@ -11,8 +11,10 @@ struct QiblaView: View {
             if let location = locationManager.location {
                 let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                 let qibla = Qibla(coordinates: coordinates).direction
+                let qiblaDegrees = qibla.isFinite ? Int(qibla.rounded()) : nil
                 let heading = currentHeading
-                let rotation = heading.map { normalized(qibla - $0) }
+                let headingDegrees = heading.map { Int($0.rounded()) }
+                let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
 
                 ScrollView {
                     VStack(spacing: 11) {
@@ -79,14 +81,9 @@ struct QiblaView: View {
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
                         .accessibilityValue(
-                            heading.map {
-                                settings.t(
-                                    "Qibla \(Int(qibla.rounded())) Grad. Gerät \(Int($0.rounded())) Grad.",
-                                    "Kıble \(Int(qibla.rounded())) derece. Cihaz \(Int($0.rounded())) derece."
-                                )
-                            } ?? settings.t(
-                                "Qibla \(Int(qibla.rounded())) Grad. Geräteausrichtung noch nicht verfügbar.",
-                                "Kıble \(Int(qibla.rounded())) derece. Cihaz yönü henüz mevcut değil."
+                            compassAccessibilityValue(
+                                qiblaDegrees: qiblaDegrees,
+                                headingDegrees: headingDegrees
                             )
                         )
                         .accessibilityHint(settings.t(
@@ -95,11 +92,15 @@ struct QiblaView: View {
                         ))
 
                         HStack(spacing: 8) {
-                            compactInfoTile(icon: "location.north.circle.fill", title: settings.t("Qibla", "Kıble"), value: "\(Int(qibla.rounded()))°")
+                            compactInfoTile(
+                                icon: "location.north.circle.fill",
+                                title: settings.t("Qibla", "Kıble"),
+                                value: qiblaDegrees.map { "\($0)°" } ?? "—"
+                            )
                             compactInfoTile(
                                 icon: "iphone",
                                 title: settings.t("Gerät", "Cihaz"),
-                                value: heading.map { "\(Int($0.rounded()))°" } ?? "—"
+                                value: headingDegrees.map { "\($0)°" } ?? "—"
                             )
                         }
 
@@ -243,6 +244,27 @@ struct QiblaView: View {
             locationManager.stopQiblaHeading()
             UIDevice.current.endGeneratingDeviceOrientationNotifications()
         }
+    }
+
+    private func compassAccessibilityValue(qiblaDegrees: Int?, headingDegrees: Int?) -> String {
+        guard let qiblaDegrees else {
+            return settings.t(
+                "Qibla-Richtung momentan nicht verfügbar.",
+                "Kıble yönü şu anda kullanılamıyor."
+            )
+        }
+
+        if let headingDegrees {
+            return settings.t(
+                "Qibla \(qiblaDegrees) Grad. Gerät \(headingDegrees) Grad.",
+                "Kıble \(qiblaDegrees) derece. Cihaz \(headingDegrees) derece."
+            )
+        }
+
+        return settings.t(
+            "Qibla \(qiblaDegrees) Grad. Geräteausrichtung noch nicht verfügbar.",
+            "Kıble \(qiblaDegrees) derece. Cihaz yönü henüz mevcut değil."
+        )
     }
 
     private func compactInfoTile(icon: String, title: String, value: String) -> some View {
