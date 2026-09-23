@@ -204,8 +204,8 @@ struct NearbyMosquesView: View {
                         ))
                     )
                 } else {
-                    ForEach(Array(store.mapItems.enumerated()), id: .offset) { _, item in
-                        mosqueRow(item)
+                    ForEach(store.mapItems.indices, id: \.self) { index in
+                        mosqueRow(store.mapItems[index])
                     }
                 }
             }
