@@ -9393,6 +9393,13 @@ struct QuranPageReaderView: View {
                     }
                 }
                 .background(SalahTheme.page)
+            } else {
+                ProgressView(settings.t(
+                    "Quran-Seite \(page) wird geladen…",
+                    "Kur'an \(page). sayfa yükleniyor…"
+                ))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(SalahTheme.page)
             }
         }
         .navigationTitle(settings.t("Quran · Seite \(page)", "Kur'an · \(page). Sayfa"))
