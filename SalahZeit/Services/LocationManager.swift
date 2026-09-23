@@ -22,6 +22,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
     private var lastGeocodedLocation: CLLocation?
+    private var pendingDeviceLocationSwitch = false
 
     override init() {
         authorizationStatus = manager.authorizationStatus
@@ -117,8 +118,20 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func useDeviceLocation() {
-        clearManualLocation()
-        requestAccessAndStart()
+        lastError = nil
+        pendingDeviceLocationSwitch = true
+
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.requestLocation()
+        case .denied, .restricted:
+            pendingDeviceLocationSwitch = false
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+        @unknown default:
+            pendingDeviceLocationSwitch = false
+        }
     }
 
     @discardableResult
@@ -168,15 +181,28 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     func clearManualLocation() {
+        pendingDeviceLocationSwitch = false
         usesManualLocation = false
+        clearManualLocationStorage()
+        location = nil
+        locality = nil
+    }
+
+    private func clearManualLocationStorage() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: ManualLocationKeys.latitude)
         defaults.removeObject(forKey: ManualLocationKeys.longitude)
         defaults.removeObject(forKey: ManualLocationKeys.locality)
         defaults.removeObject(forKey: ManualLocationKeys.enabled)
+    }
 
-        location = nil
-        locality = nil
+    private func adoptDeviceLocation(_ newLocation: CLLocation) {
+        pendingDeviceLocationSwitch = false
+        usesManualLocation = false
+        clearManualLocationStorage()
+        location = newLocation
+        lastError = nil
+        updateLocalityIfNeeded(for: newLocation)
     }
 
     private func startUpdates() {
@@ -212,6 +238,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 self.lastError = nil
                 self.startUpdates()
             case .denied, .restricted:
+                self.pendingDeviceLocationSwitch = false
                 self.lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
             default:
                 break
@@ -228,11 +255,18 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }) else { return }
 
         Task { @MainActor in
+            if self.pendingDeviceLocationSwitch {
+                self.adoptDeviceLocation(newest)
+                self.manager.stopUpdatingLocation()
+                return
+            }
+
             if self.usesManualLocation {
                 // The location update was only needed so CLHeading can provide trueHeading.
                 self.manager.stopUpdatingLocation()
                 return
             }
+
             self.location = newest
             self.lastError = nil
             self.updateLocalityIfNeeded(for: newest)
