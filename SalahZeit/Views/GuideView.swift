@@ -7009,7 +7009,6 @@ private struct AyahData: Decodable, Identifiable {
     var id:Int { number }
 }
 
-@MainActor
 actor QuranTextCache {
     static let shared = QuranTextCache()
 
