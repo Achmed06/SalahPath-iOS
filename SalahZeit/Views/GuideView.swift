@@ -7306,12 +7306,28 @@ private final class QuranStore: ObservableObject {
         return try await (arabic, translated, transliterated)
     }
 
-    func loadSurahReference(_ number:Int) async throws -> (SurahData,SurahData,SurahData,SurahData) {
+    struct SurahReferenceBundle {
+        let arabic: SurahData
+        let turkish: SurahData?
+        let german: SurahData?
+        let transliterated: SurahData?
+    }
+
+    func loadSurahReference(_ number:Int) async throws -> SurahReferenceBundle {
         async let arabic = fetch(number:number, edition:"quran-uthmani")
-        async let turkish = fetch(number:number, edition:"tr.diyanet")
-        async let german = fetch(number:number, edition:"de.bubenheim")
-        async let transliterated = fetch(number:number, edition:"en.transliteration")
-        return try await (arabic, turkish, german, transliterated)
+        async let turkish: SurahData? = try? fetch(number:number, edition:"tr.diyanet")
+        async let german: SurahData? = try? fetch(number:number, edition:"de.bubenheim")
+        async let transliterated: SurahData? = try? fetch(number:number, edition:"en.transliteration")
+
+        let arabicResult = try await arabic
+        let optionalResults = await (turkish, german, transliterated)
+
+        return SurahReferenceBundle(
+            arabic: arabicResult,
+            turkish: optionalResults.0,
+            german: optionalResults.1,
+            transliterated: optionalResults.2
+        )
     }
 
     private func fetch(number:Int, edition:String) async throws -> SurahData {
@@ -8008,6 +8024,7 @@ private struct QuranPageAyah: Decodable, Identifiable {
 private final class QuranPageStore: ObservableObject {
     @Published var arabic: QuranPageData?
     @Published var translation: QuranPageData?
+    @Published var translationUnavailable = false
     @Published var isLoading = false
     @Published var error: String?
     private var loadRevision = 0
@@ -8035,16 +8052,21 @@ private final class QuranPageStore: ObservableObject {
 
         do {
             async let arabicPage = fetch(page: page, edition: "quran-uthmani")
-            async let translatedPage = fetch(page: page, edition: translationEdition)
-            let result = try await (arabicPage, translatedPage)
+            async let translatedPage: QuranPageData? = try? fetch(page: page, edition: translationEdition)
+
+            let arabicResult = try await arabicPage
+            let translatedResult = await translatedPage
+
             guard revision == loadRevision else { return }
-            arabic = result.0
-            translation = result.1
+            arabic = arabicResult
+            translation = translatedResult
+            translationUnavailable = translatedResult == nil
             error = nil
         } catch {
             guard revision == loadRevision else { return }
             arabic = nil
             translation = nil
+            translationUnavailable = false
             self.error = error.localizedDescription
         }
     }
@@ -8115,6 +8137,25 @@ struct QuranPageReaderView: View {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         pageNavigation(top: true)
+
+                        if settings.quranShowTranslation && store.translationUnavailable {
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "icloud.slash.fill")
+                                    .foregroundStyle(SalahTheme.gold)
+                                Text(settings.t(
+                                    "Arabischer Quran ist verfügbar; die gewählte Übersetzung konnte gerade nicht geladen werden.",
+                                    "Arapça Kur'an kullanılabilir; seçili meal şu anda yüklenemedi."
+                                ))
+                                .font(.caption)
+                                .foregroundStyle(SalahTheme.mutedInk)
+                                .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 0)
+                            }
+                            .padding(10)
+                            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
+                        }
 
                         VStack(spacing: 0) {
                             ForEach(Array(arabic.ayahs.enumerated()), id: \.element.id) { index, ayah in
@@ -8715,6 +8756,7 @@ private struct QuranSurahView: View {
     @State private var resolvedAudioURLs: [URL] = []
     @State private var isResolvingAudio = false
     @State private var error: String?
+    @State private var contentWarning: String?
     @State private var bookmarkedTokens = QuranBookmarkStore.tokens()
     @State private var hasScrolledToInitial = false
     @State private var displayMode = 0
@@ -8832,6 +8874,18 @@ private struct QuranSurahView: View {
                         .font(.caption2.bold())
                 }
             }
+
+            if let contentWarning {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "icloud.slash.fill")
+                        .foregroundStyle(SalahTheme.gold)
+                    Text(contentWarning)
+                        .font(.caption2)
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                }
+            }
         }
         .padding(11)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
@@ -8840,15 +8894,16 @@ private struct QuranSurahView: View {
 
     @ViewBuilder
     private var versesSection: some View {
-        if let arabic, let turkishTranslation, let germanTranslation, let transliteration {
-            let tr = turkishTranslation.ayahs
-            let de = germanTranslation.ayahs
-            let latin = transliteration.ayahs
+        if let arabic {
             ForEach(Array(arabic.ayahs.enumerated()), id: \.element.number) { index, ar in
-                if let trAyah = tr[safe: index], let deAyah = de[safe: index], let latinAyah = latin[safe: index] {
-                    ayahCard(ar: ar, turkish: trAyah, german: deAyah, transliterated: latinAyah, index: index)
-                        .id(ar.numberInSurah)
-                }
+                ayahCard(
+                    ar: ar,
+                    turkish: turkishTranslation?.ayahs[safe: index],
+                    german: germanTranslation?.ayahs[safe: index],
+                    transliterated: transliteration?.ayahs[safe: index],
+                    index: index
+                )
+                .id(ar.numberInSurah)
             }
         } else if let error {
             VStack(spacing: 12) {
@@ -8872,7 +8927,7 @@ private struct QuranSurahView: View {
         }
     }
 
-    private func ayahCard(ar: AyahData, turkish: AyahData, german: AyahData, transliterated: AyahData, index: Int) -> some View {
+    private func ayahCard(ar: AyahData, turkish: AyahData?, german: AyahData?, transliterated: AyahData?, index: Int) -> some View {
         let token = "\(surah.number):\(ar.numberInSurah)"
         let audioURL = resolvedAudioURLs[safe: index]
         let shareText = shareTextFor(ar: ar, turkish: turkish, german: german)
@@ -8918,7 +8973,7 @@ private struct QuranSurahView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .textSelection(.enabled)
 
-            if settings.quranShowTransliteration {
+            if settings.quranShowTransliteration, let transliterated {
                 Divider().overlay(SalahTheme.gold.opacity(0.30))
                 Text(transliterated.text)
                     .font(.system(size: 12, weight: .semibold))
@@ -8926,7 +8981,7 @@ private struct QuranSurahView: View {
                     .textSelection(.enabled)
             }
 
-            if settings.quranShowTranslation && displayMode == 1 {
+            if settings.quranShowTranslation && displayMode == 1, let turkish {
                 Divider().overlay(SalahTheme.gold.opacity(0.30))
                 VStack(alignment: .leading, spacing: 3) {
                     Text(settings.t("Türkisch", "Türkçe"))
@@ -8939,7 +8994,7 @@ private struct QuranSurahView: View {
                 }
             }
 
-            if settings.quranShowTranslation && displayMode == 2 {
+            if settings.quranShowTranslation && displayMode == 2, let german {
                 Divider().overlay(SalahTheme.gold.opacity(0.30))
                 VStack(alignment: .leading, spacing: 3) {
                     Text(settings.t("Deutsch", "Almanca"))
@@ -8980,13 +9035,26 @@ private struct QuranSurahView: View {
     @MainActor
     private func loadContent() async {
         error = nil
+        contentWarning = nil
         do {
             let result = try await store.loadSurahReference(surah.number)
-            arabic = result.0
-            turkishTranslation = result.1
-            germanTranslation = result.2
-            transliteration = result.3
+            arabic = result.arabic
+            turkishTranslation = result.turkish
+            germanTranslation = result.german
+            transliteration = result.transliterated
+
+            let missingSupplement = result.turkish == nil || result.german == nil || result.transliterated == nil
+            if missingSupplement {
+                contentWarning = settings.t(
+                    "Arabischer Quran ist verfügbar. Einige Übersetzungen oder die Transliteration konnten gerade nicht geladen werden; bereits gecachte Inhalte bleiben nutzbar.",
+                    "Arapça Kur'an kullanılabilir. Bazı mealler veya Latin harfli okunuş şu anda yüklenemedi; daha önce önbelleğe alınan içerikler kullanılmaya devam eder."
+                )
+            }
         } catch {
+            arabic = nil
+            turkishTranslation = nil
+            germanTranslation = nil
+            transliteration = nil
             self.error = error.localizedDescription
             return
         }
@@ -9026,11 +9094,11 @@ private struct QuranSurahView: View {
         }
     }
 
-    private func shareTextFor(ar: AyahData, turkish: AyahData, german: AyahData) -> String {
+    private func shareTextFor(ar: AyahData, turkish: AyahData?, german: AyahData?) -> String {
         var parts = [ar.text]
         if settings.quranShowTranslation {
-            if displayMode == 1 { parts.append(turkish.text) }
-            if displayMode == 2 { parts.append(german.text) }
+            if displayMode == 1, let turkish { parts.append(turkish.text) }
+            if displayMode == 2, let german { parts.append(german.text) }
         }
         parts.append("Quran \(surah.number):\(ar.numberInSurah)")
         return parts.joined(separator: "\n\n")
