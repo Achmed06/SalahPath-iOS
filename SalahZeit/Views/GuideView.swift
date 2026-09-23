@@ -4966,12 +4966,13 @@ final class RemoteAudioPlayer: ObservableObject {
             object: item,
             queue: .main
         ) { [weak self] note in
+            let errorDescription = (note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error)?.localizedDescription
+
             Task { @MainActor in
                 guard let self else { return }
                 self.isLoading = false
                 self.isPlaying = false
-                let error = note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
-                self.lastError = error?.localizedDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
                 if url.isFileURL {
                     Task { await QuranAudioCache.shared.invalidate(url) }
                 }
@@ -6294,22 +6295,27 @@ private struct CalendarEventEditor: UIViewControllerRepresentable {
     @Environment(\.dismiss) private var dismiss
 
     final class Coordinator: NSObject, EKEventEditViewDelegate {
-        let parent: CalendarEventEditor
+        private let onDismiss: @MainActor @Sendable () -> Void
 
-        init(parent: CalendarEventEditor) {
-            self.parent = parent
+        init(onDismiss: @escaping @MainActor @Sendable () -> Void) {
+            self.onDismiss = onDismiss
         }
 
         func eventEditViewController(
             _ controller: EKEventEditViewController,
             didCompleteWith action: EKEventEditViewAction
         ) {
-            parent.dismiss()
+            let onDismiss = onDismiss
+            Task { @MainActor in
+                onDismiss()
+            }
         }
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
+        Coordinator {
+            dismiss()
+        }
     }
 
     func makeUIViewController(context: Context) -> EKEventEditViewController {
