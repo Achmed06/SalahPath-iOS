@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -68,6 +69,225 @@ struct RootTabView: View {
         }
         .preferredColorScheme(.light)
         .tint(SalahTheme.teal)
+    }
+}
+
+@MainActor
+private final class NearbyMosqueStore: ObservableObject {
+    @Published var mapItems: [MKMapItem] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+
+    func load(around location: CLLocation, query: String) async {
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        var request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        request.resultTypes = .pointOfInterest
+        request.region = MKCoordinateRegion(
+            center: location.coordinate,
+            latitudinalMeters: 20_000,
+            longitudinalMeters: 20_000
+        )
+
+        do {
+            let response = try await MKLocalSearch(request: request).start()
+            let origin = location
+
+            mapItems = response.mapItems
+                .filter { $0.placemark.location != nil }
+                .sorted {
+                    let lhs = $0.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
+                    let rhs = $1.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
+                    return lhs < rhs
+                }
+        } catch {
+            mapItems = []
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct NearbyMosquesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @EnvironmentObject private var locationManager: LocationManager
+    @StateObject private var store = NearbyMosqueStore()
+
+    private var taskID: String {
+        guard let location = locationManager.location else { return "no-location" }
+        let lat = Int((location.coordinate.latitude * 10_000).rounded())
+        let lon = Int((location.coordinate.longitude * 10_000).rounded())
+        return "\(lat):\(lon):\(settings.language.rawValue)"
+    }
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Moscheen in der Nähe", "Yakındaki Camiler"), systemImage: "building.columns.fill")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen oder manuell gewählten Standort. Die Treffer stammen von Apple Maps und werden nicht von SalahPath kuratiert.",
+                        "SalahPath, mevcut veya manuel seçtiğin konum çevresinde Apple Haritalar'da canlı arama yapar. Sonuçlar Apple Maps'ten gelir ve SalahPath tarafından düzenlenmez."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+
+                if locationManager.location == nil {
+                    VStack(spacing: 10) {
+                        Image(systemName: "location.slash")
+                            .font(.system(size: 30))
+                            .foregroundStyle(SalahTheme.mutedInk)
+
+                        Text(settings.t(
+                            "Für die Umgebungssuche wird ein Standort benötigt.",
+                            "Yakındaki camileri aramak için konum gerekiyor."
+                        ))
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+
+                        Button {
+                            locationManager.requestAccessAndStart()
+                        } label: {
+                            Label(settings.t("Standort verwenden", "Konumu kullan"), systemImage: "location.fill")
+                                .font(.headline)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(SalahTheme.teal)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(18)
+                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                } else if store.isLoading && store.mapItems.isEmpty {
+                    ProgressView(settings.t("Moscheen werden gesucht …", "Camiler aranıyor …"))
+                        .padding(24)
+                        .frame(maxWidth: .infinity)
+                } else if let error = store.errorMessage, store.mapItems.isEmpty {
+                    VStack(spacing: 10) {
+                        Image(systemName: "wifi.exclamationmark")
+                            .font(.system(size: 30))
+                            .foregroundStyle(SalahTheme.gold)
+
+                        Text(error)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+
+                        Button(settings.t("Erneut versuchen", "Tekrar dene")) {
+                            Task { await reload() }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(SalahTheme.teal)
+                    }
+                    .padding(18)
+                    .frame(maxWidth: .infinity)
+                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                } else if store.mapItems.isEmpty {
+                    ContentUnavailableView(
+                        settings.t("Keine Treffer gefunden", "Sonuç bulunamadı"),
+                        systemImage: "building.columns",
+                        description: Text(settings.t(
+                            "Apple Karten hat in der Umgebung keine passenden Moscheen geliefert.",
+                            "Apple Haritalar yakın çevrede uygun cami sonucu döndürmedi."
+                        ))
+                    )
+                } else {
+                    ForEach(Array(store.mapItems.enumerated()), id: .offset) { _, item in
+                        mosqueRow(item)
+                    }
+                }
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Moscheen", "Camiler"))
+        .navigationBarTitleDisplayMode(.inline)
+        .task(id: taskID) {
+            if locationManager.location == nil {
+                locationManager.requestAccessAndStart()
+            }
+            await reload()
+        }
+        .refreshable {
+            locationManager.refresh()
+            await reload()
+        }
+    }
+
+    @MainActor
+    private func reload() async {
+        guard let location = locationManager.location else { return }
+        await store.load(
+            around: location,
+            query: settings.language == .turkish ? "Cami" : "Moschee"
+        )
+    }
+
+    private func mosqueRow(_ item: MKMapItem) -> some View {
+        let origin = locationManager.location
+        let distance = origin.flatMap { start in
+            item.placemark.location.map { $0.distance(from: start) }
+        }
+
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "building.columns.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(SalahTheme.teal)
+                    .frame(width: 34, height: 34)
+                    .background(SalahTheme.softTeal, in: Circle())
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(item.name ?? settings.t("Moschee", "Cami"))
+                        .font(.headline)
+                        .foregroundStyle(SalahTheme.ink)
+
+                    if let address = item.placemark.title, !address.isEmpty {
+                        Text(address)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    if let distance {
+                        Text(distanceString(distance))
+                            .font(.caption.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+                    }
+                }
+
+                Spacer(minLength: 0)
+            }
+
+            Button {
+                item.openInMaps()
+            } label: {
+                Label(settings.t("In Apple Karten öffnen", "Apple Haritalar'da aç"), systemImage: "map.fill")
+                    .font(.subheadline.bold())
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(SalahTheme.teal)
+        }
+        .padding(12)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+        }
+    }
+
+    private func distanceString(_ meters: CLLocationDistance) -> String {
+        if meters < 1_000 {
+            return String(format: "%.0f m", meters)
+        }
+        return String(format: "%.1f km", meters / 1_000)
     }
 }
 
@@ -146,6 +366,7 @@ private struct ReferenceBottomBar: View {
 
 struct MoreView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @EnvironmentObject private var locationManager: LocationManager
 
     private let columns = [
         GridItem(.flexible(), spacing: 7),
@@ -194,6 +415,13 @@ struct MoreView: View {
                     }
                     NavigationLink { ThirtyTwoFardView() } label: {
                         discoverTile(icon: "checklist", title: "32 Farz", subtitle: settings.t("Kompakter Lernzettel", "Kısa öğrenme özeti"))
+                    }
+                    NavigationLink { NearbyMosquesView() } label: {
+                        discoverTile(
+                            icon: "building.columns.fill",
+                            title: settings.t("Moscheen in der Nähe", "Yakındaki Camiler"),
+                            subtitle: settings.t("Mit Apple Karten", "Apple Haritalar ile")
+                        )
                     }
                 }
                 .buttonStyle(.plain)
