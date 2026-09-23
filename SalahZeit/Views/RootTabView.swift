@@ -407,6 +407,13 @@ struct MoreView: View {
                     NavigationLink { PrayerHowToView() } label: {
                         discoverTile(icon: "figure.mind.and.body", title: settings.t("Gebet lernen", "Namaz Öğren"), subtitle: settings.t("Schritt für Schritt", "Adım adım"))
                     }
+                    NavigationLink { PrayerCatalogView() } label: {
+                        discoverTile(
+                            icon: "rectangle.stack.badge.play.fill",
+                            title: settings.t("Alle Gebete", "Tüm Namazlar"),
+                            subtitle: settings.t("Jedes Gebet einzeln", "Her namaz ayrı")
+                        )
+                    }
                     NavigationLink { WuduGuideView() } label: {
                         discoverTile(icon: "drop.fill", title: settings.t("Wudu", "Abdest Rehberi"), subtitle: settings.t("Schritt für Schritt", "Adım adım"))
                     }
