@@ -6,6 +6,8 @@ struct SettingsView: View {
     @State private var notificationStatusText: String?
     @State private var audioCacheText = "—"
     @State private var isClearingAudioCache = false
+    @State private var quranTextCacheText = "—"
+    @State private var isClearingQuranTextCache = false
     @State private var manualLocationText = ""
     @State private var manualLocationError: String?
     @State private var isResolvingManualLocation = false
@@ -94,6 +96,44 @@ struct SettingsView: View {
                     referenceToggle(icon: "character.cursor.ibeam", title: settings.t("Transliteration anzeigen", "Latin harfli okunuşu göster"), isOn: $settings.quranShowTransliteration)
 
                     profileRow(
+                        icon: "doc.text.fill",
+                        title: settings.t("Offline-Qurantext", "Çevrimdışı Kur'an metni"),
+                        value: quranTextCacheText,
+                        showsChevron: false
+                    )
+
+                    Button {
+                        Task {
+                            isClearingQuranTextCache = true
+                            await QuranTextCache.shared.clear()
+                            await refreshQuranTextCacheText()
+                            isClearingQuranTextCache = false
+                        }
+                    } label: {
+                        HStack(spacing: 9) {
+                            Image(systemName: "trash.circle.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(SalahTheme.teal)
+                                .frame(width: 28, height: 28)
+                                .background(SalahTheme.softTeal, in: Circle())
+
+                            Text(settings.t("Text-Cache leeren", "Metin önbelleğini temizle"))
+                                .font(.system(size: 11.5, weight: .semibold))
+                                .foregroundStyle(SalahTheme.ink)
+
+                            Spacer()
+
+                            if isClearingQuranTextCache {
+                                ProgressView()
+                                    .controlSize(.small)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.plain)
+
+                    profileRow(
                         icon: "arrow.down.circle.fill",
                         title: settings.t("Offline-Audio", "Çevrimdışı ses"),
                         value: audioCacheText,
@@ -132,8 +172,8 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Text(settings.t(
-                        "Bereits gehörte Quran-Audios werden automatisch auf diesem Gerät gespeichert. So können sie später ohne erneuten Download abgespielt werden. Der Cache wird automatisch auf etwa 300 MB begrenzt.",
-                        "Dinlediğin Kur'an sesleri bu cihazda otomatik olarak saklanır. Böylece daha sonra yeniden indirmeden oynatılabilir. Önbellek otomatik olarak yaklaşık 300 MB ile sınırlandırılır."
+                        "Bereits geöffnete Quran-Suren und Mushaf-Seiten werden automatisch lokal gespeichert und funktionieren danach offline. Der Text-Cache wird auf etwa 48 MB begrenzt. Bereits gehörte Quran-Audios werden separat gespeichert; der Audio-Cache wird automatisch auf etwa 300 MB begrenzt.",
+                        "Açtığın Kur'an sûreleri ve Mushaf sayfaları otomatik olarak cihazda saklanır ve daha sonra çevrimdışı çalışır. Metin önbelleği yaklaşık 48 MB ile sınırlandırılır. Dinlediğin Kur'an sesleri ayrı saklanır; ses önbelleği yaklaşık 300 MB ile sınırlandırılır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -388,7 +428,10 @@ struct SettingsView: View {
                 locationManager.authorizationStatus == .authorizedAlways {
                 locationManager.requestAccessAndStart()
             }
-            Task { await refreshAudioCacheText() }
+            Task {
+                await refreshAudioCacheText()
+                await refreshQuranTextCacheText()
+            }
         }
         .onChange(of: settings.notificationsEnabled) { _, enabled in
             if !enabled { NotificationManager.shared.removePrayerNotifications() }
@@ -400,6 +443,15 @@ struct SettingsView: View {
         let stats = await QuranAudioCache.shared.stats()
         let size = ByteCountFormatter.string(fromByteCount: stats.bytes, countStyle: .file)
         audioCacheText = stats.count == 0
+            ? settings.t("Leer", "Boş")
+            : "\(size) · \(stats.count)"
+    }
+
+    @MainActor
+    private func refreshQuranTextCacheText() async {
+        let stats = await QuranTextCache.shared.stats()
+        let size = ByteCountFormatter.string(fromByteCount: stats.bytes, countStyle: .file)
+        quranTextCacheText = stats.count == 0
             ? settings.t("Leer", "Boş")
             : "\(size) · \(stats.count)"
     }
