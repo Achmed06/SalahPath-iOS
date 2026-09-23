@@ -59,7 +59,7 @@ enum PrayerTrackerStore {
     }
 
     static func streak(upTo date: Date) -> Int {
-        let calendar = Calendar.current
+        let calendar = LocalDay.calendar()
         var day = calendar.startOfDay(for: date)
 
         if !isPaused(day) && completedCount(on: day) < requiredKinds.count,
@@ -1131,7 +1131,8 @@ struct HomeView: View {
     }
 
     private func currentWeekDates() -> [Date] {
-        let calendar = Calendar(identifier: .gregorian)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .autoupdatingCurrent
         let today = calendar.startOfDay(for: effectiveNow)
         let weekday = calendar.component(.weekday, from: today)
         let daysFromMonday: Int = (weekday + 5) % 7
@@ -1142,6 +1143,7 @@ struct HomeView: View {
     private func shortWeekdayLetter(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        f.timeZone = .autoupdatingCurrent
         f.dateFormat = "EE"
         return f.string(from: date)
             .replacingOccurrences(of: ".", with: "")
@@ -1151,6 +1153,7 @@ struct HomeView: View {
     private func shortWeekday(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        f.timeZone = .autoupdatingCurrent
         f.dateFormat = "EEEE"
         return f.string(from: date).capitalized
     }
@@ -1328,12 +1331,13 @@ struct HomeView: View {
 
     private func isNext(_ prayer: PrayerOccurrence, location: CLLocation) -> Bool {
         guard let next = engine.nextPrayer(now: now, location: location, settings: settings) else { return false }
-        return prayer.kind == next.kind && Calendar.current.isDate(prayer.date, inSameDayAs: next.date)
+        return prayer.kind == next.kind && LocalDay.calendar().isDate(prayer.date, inSameDayAs: next.date)
     }
 
     private func gregorianDateShort(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        f.timeZone = .autoupdatingCurrent
         f.dateFormat = settings.language == .german ? "dd.MM.yyyy" : "d MMMM yyyy"
         return f.string(from: date)
     }
@@ -1500,7 +1504,7 @@ struct PrayerTimesOverviewView: View {
                     let isNext = isScreenshotQA
                         ? prayer.kind == .asr
                         : (next?.kind == prayer.kind &&
-                           Calendar.current.isDate(prayer.date, inSameDayAs: next?.date ?? .distantPast))
+                           LocalDay.calendar().isDate(prayer.date, inSameDayAs: next?.date ?? .distantPast))
 
                     HStack(spacing: 9) {
                         ZStack {
@@ -1647,7 +1651,7 @@ struct PrayerTimesOverviewView: View {
                         .foregroundStyle(SalahTheme.mutedInk)
                 }
                 Spacer()
-                if Calendar.current.isDateInToday(date) {
+                if LocalDay.calendar().isDateInToday(date) {
                     Text(settings.t("HEUTE", "BUGÜN"))
                         .font(.system(size: 8, weight: .black))
                         .foregroundStyle(SalahTheme.teal)
@@ -1675,13 +1679,14 @@ struct PrayerTimesOverviewView: View {
 
     private var days: [Date] {
         let count = period == 1 ? 7 : 30
-        let start = Calendar.current.startOfDay(for: Date())
-        return (0..<count).compactMap { Calendar.current.date(byAdding: .day, value: $0, to: start) }
+        let start = LocalDay.startOfDay(for: referenceDate)
+        return (0..<count).compactMap { LocalDay.addingDays($0, to: start) }
     }
 
     private func shortDate(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        f.timeZone = .autoupdatingCurrent
         f.dateFormat = "EEE, d. MMM"
         return f.string(from: date)
     }
