@@ -8172,7 +8172,11 @@ private final class QuranPageStore: ObservableObject {
 struct QuranPageReaderView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var store = QuranPageStore()
+    @StateObject private var audio = RemoteAudioPlayer()
     @State private var bookmarkedTokens = QuranBookmarkStore.tokens()
+    @State private var audioURLsBySurah: [String: [URL]] = [:]
+    @State private var resolvingAyahNumber: Int?
+    @State private var audioRequestGeneration = 0
 
     let page: Int
 
@@ -8208,6 +8212,22 @@ struct QuranPageReaderView: View {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         pageNavigation(top: true)
+
+                        if let audioError = audio.lastError {
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(SalahTheme.gold)
+                                Text(audioError)
+                                    .font(.caption)
+                                    .foregroundStyle(SalahTheme.mutedInk)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 0)
+                            }
+                            .padding(10)
+                            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
+                        }
 
                         if settings.quranShowTranslation && store.translationUnavailable {
                             HStack(alignment: .top, spacing: 8) {
@@ -8258,6 +8278,40 @@ struct QuranPageReaderView: View {
                                             surah: ayah.surah.number,
                                             ayah: ayah.numberInSurah
                                         )
+                                        let ayahAudioURL = resolvedAudioURL(for: ayah)
+
+                                        Button {
+                                            Task { await toggleAudio(for: ayah) }
+                                        } label: {
+                                            Group {
+                                                if resolvingAyahNumber == ayah.number {
+                                                    ProgressView()
+                                                        .controlSize(.small)
+                                                } else {
+                                                    Image(systemName:
+                                                        ayahAudioURL != nil &&
+                                                        audio.activeURL == ayahAudioURL &&
+                                                        audio.isPlaying
+                                                        ? "pause.circle.fill"
+                                                        : "play.circle"
+                                                    )
+                                                    .font(.system(size: 17, weight: .semibold))
+                                                }
+                                            }
+                                            .foregroundStyle(SalahTheme.teal)
+                                            .frame(width: 32, height: 32)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .disabled(resolvingAyahNumber != nil && resolvingAyahNumber != ayah.number)
+                                        .accessibilityLabel(settings.t(
+                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                                ? "Vers \(ayah.numberInSurah) pausieren"
+                                                : "Vers \(ayah.numberInSurah) abspielen",
+                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                                ? "\(ayah.numberInSurah). ayeti duraklat"
+                                                : "\(ayah.numberInSurah). ayeti dinle"
+                                        ))
+
                                         Button {
                                             _ = QuranBookmarkStore.toggle(bookmark)
                                             bookmarkedTokens = QuranBookmarkStore.tokens()
@@ -8332,6 +8386,67 @@ struct QuranPageReaderView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: "\(page)-\(settings.language.rawValue)") {
             await store.load(page: page, language: settings.language)
+        }
+        .onChange(of: settings.quranReciter) { _, _ in
+            audioRequestGeneration &+= 1
+            resolvingAyahNumber = nil
+            audioURLsBySurah.removeAll()
+            audio.stop()
+        }
+        .onDisappear {
+            audioRequestGeneration &+= 1
+            resolvingAyahNumber = nil
+            audio.stop()
+        }
+    }
+
+    private func audioKey(surah: Int, reciter: QuranReciter) -> String {
+        "\(reciter.rawValue)-\(surah)"
+    }
+
+    private func resolvedAudioURL(for ayah: QuranPageAyah) -> URL? {
+        let key = audioKey(surah: ayah.surah.number, reciter: settings.quranReciter)
+        guard let urls = audioURLsBySurah[key] else { return nil }
+        return urls[safe: ayah.numberInSurah - 1]
+    }
+
+    @MainActor
+    private func toggleAudio(for ayah: QuranPageAyah) async {
+        if let existing = resolvedAudioURL(for: ayah) {
+            QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
+            audio.toggle(existing)
+            return
+        }
+
+        audioRequestGeneration &+= 1
+        let generation = audioRequestGeneration
+        let reciter = settings.quranReciter
+        let key = audioKey(surah: ayah.surah.number, reciter: reciter)
+        resolvingAyahNumber = ayah.number
+        audio.lastError = nil
+
+        do {
+            let urls = try await QuranAudioResolver.urls(surah: ayah.surah.number, reciter: reciter)
+            guard generation == audioRequestGeneration,
+                  reciter == settings.quranReciter else { return }
+
+            audioURLsBySurah[key] = urls
+            guard let url = urls[safe: ayah.numberInSurah - 1] else {
+                throw URLError(.resourceUnavailable)
+            }
+
+            QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
+            audio.toggle(url)
+        } catch {
+            guard generation == audioRequestGeneration else { return }
+            audio.lastError = settings.t(
+                "Audio konnte nicht geladen werden. Prüfe die Verbindung und versuche es erneut.",
+                "Ses yüklenemedi. Bağlantıyı kontrol edip tekrar dene."
+            )
+        }
+
+        if generation == audioRequestGeneration {
+            resolvingAyahNumber = nil
         }
     }
 
