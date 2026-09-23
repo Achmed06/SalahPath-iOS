@@ -8500,14 +8500,28 @@ struct QuranView: View {
     private var readingProgress: Double? {
         guard let lastRead, !store.chapters.isEmpty else { return nil }
 
-        let totalAyahs = store.chapters.reduce(0) { $0 + $1.numberOfAyahs }
+        var totalAyahs = 0
+        var ayahsBeforeSurah = 0
+
+        for chapter in store.chapters {
+            guard chapter.numberOfAyahs >= 0 else { return nil }
+
+            let (nextTotal, totalOverflow) = totalAyahs.addingReportingOverflow(chapter.numberOfAyahs)
+            guard !totalOverflow else { return nil }
+            totalAyahs = nextTotal
+
+            if chapter.number < lastRead.surah {
+                let (nextBefore, beforeOverflow) = ayahsBeforeSurah.addingReportingOverflow(chapter.numberOfAyahs)
+                guard !beforeOverflow else { return nil }
+                ayahsBeforeSurah = nextBefore
+            }
+        }
+
         guard totalAyahs > 0 else { return nil }
 
-        let ayahsBeforeSurah = store.chapters
-            .filter { $0.number < lastRead.surah }
-            .reduce(0) { $0 + $1.numberOfAyahs }
+        let (current, currentOverflow) = ayahsBeforeSurah.addingReportingOverflow(lastRead.ayah)
+        guard !currentOverflow else { return 1 }
 
-        let current = ayahsBeforeSurah + lastRead.ayah
         return min(max(Double(current) / Double(totalAyahs), 0), 1)
     }
 
