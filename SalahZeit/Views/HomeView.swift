@@ -1428,11 +1428,61 @@ struct PrayerTimesOverviewView: View {
                         }
                     }
                 } else {
-                    ContentUnavailableView(
-                        settings.t("Standort benötigt", "Konum gerekli"),
-                        systemImage: "location.slash",
-                        description: Text(settings.t("Für Gebetszeiten wird dein aktueller Standort benötigt.", "Namaz vakitleri için mevcut konumun gerekir."))
-                    )
+                    VStack(spacing: 12) {
+                        ContentUnavailableView(
+                            settings.t("Standort benötigt", "Konum gerekli"),
+                            systemImage: "location.slash",
+                            description: Text(settings.t(
+                                "Für Gebetszeiten wird ein Standort benötigt. Verwende GPS oder lege einen Ort im Profil manuell fest.",
+                                "Namaz vakitleri için bir konum gerekir. GPS kullan veya profilde manuel bir yer belirle."
+                            ))
+                        )
+
+                        Button {
+                            if locationManager.authorizationStatus == .denied ||
+                                locationManager.authorizationStatus == .restricted {
+                                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                                UIApplication.shared.open(url)
+                            } else {
+                                locationManager.useDeviceLocation()
+                            }
+                        } label: {
+                            Label(
+                                settings.t(
+                                    locationManager.authorizationStatus == .denied ||
+                                        locationManager.authorizationStatus == .restricted
+                                        ? "iPhone-Einstellungen öffnen"
+                                        : "Aktuellen Standort verwenden",
+                                    locationManager.authorizationStatus == .denied ||
+                                        locationManager.authorizationStatus == .restricted
+                                        ? "iPhone ayarlarını aç"
+                                        : "Mevcut konumu kullan"
+                                ),
+                                systemImage: locationManager.authorizationStatus == .denied ||
+                                    locationManager.authorizationStatus == .restricted
+                                    ? "gear"
+                                    : "location.fill"
+                            )
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(SalahTheme.teal)
+
+                        NavigationLink {
+                            SettingsView()
+                        } label: {
+                            Label(
+                                settings.t("Ort manuell festlegen", "Konumu manuel belirle"),
+                                systemImage: "mappin.and.ellipse"
+                            )
+                            .font(.headline)
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(SalahTheme.teal)
+                    }
+                    .padding(.vertical, 8)
                 }
             }
             .padding(.horizontal, 11)
