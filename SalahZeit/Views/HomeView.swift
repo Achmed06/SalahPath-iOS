@@ -3,6 +3,10 @@ import CoreLocation
 import UIKit
 
 
+extension Notification.Name {
+    static let prayerTrackerDidChange = Notification.Name("salahpath.prayerTrackerDidChange")
+}
+
 enum PrayerTrackerStore {
     private static let prefix = "prayerTracker-"
 
@@ -17,7 +21,9 @@ enum PrayerTrackerStore {
     }
 
     static func completedKinds(for date: Date) -> Set<String> {
-        Set(UserDefaults.standard.stringArray(forKey: key(for: date)) ?? [])
+        let allowed = Set(requiredKinds.map(\.rawValue))
+        let stored = Set(UserDefaults.standard.stringArray(forKey: key(for: date)) ?? [])
+        return stored.intersection(allowed)
     }
 
     static func isCompleted(_ kind: PrayerKind, on date: Date) -> Bool {
@@ -36,6 +42,7 @@ enum PrayerTrackerStore {
             inserted = true
         }
         UserDefaults.standard.set(Array(current).sorted(), forKey: key(for: date))
+        NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)
         return inserted
     }
 
@@ -51,6 +58,7 @@ enum PrayerTrackerStore {
 
     static func togglePause(_ date: Date) {
         UserDefaults.standard.set(!isPaused(date), forKey: pauseKey(for: date))
+        NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)
     }
 
     static func completedCount(on date: Date) -> Int {
@@ -169,6 +177,10 @@ struct PrayerTrackerOverviewView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
+            refresh &+= 1
+            now = Date()
+        }
     }
 }
 
@@ -226,6 +238,10 @@ struct TrackerPauseView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
+            refresh &+= 1
             now = Date()
         }
     }
@@ -470,6 +486,10 @@ struct HomeView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
+            trackerRefresh &+= 1
             now = Date()
         }
         .sheet(item: $selectedPrayer) { prayer in
@@ -979,6 +999,7 @@ struct HomeView: View {
     }
 
     private var streakCard: some View {
+        let _ = trackerRefresh
         let streakValue = isScreenshotQA ? 12 : PrayerTrackerStore.streak(upTo: effectiveNow)
         let weekDates = currentWeekDates()
 
