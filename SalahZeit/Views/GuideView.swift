@@ -4642,8 +4642,11 @@ actor QuranAudioCache {
         for url in files {
             guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
                   values.isRegularFile == true else { continue }
-            count += 1
-            total += Int64(values.fileSize ?? 0)
+
+            if count < Int.max { count += 1 }
+            let bytes = max(Int64(values.fileSize ?? 0), 0)
+            let (nextTotal, overflow) = total.addingReportingOverflow(bytes)
+            total = overflow ? Int64.max : nextTotal
         }
         return (count, total)
     }
@@ -4708,8 +4711,9 @@ actor QuranAudioCache {
             ),
             values.isRegularFile == true else { continue }
 
-            let size = Int64(values.fileSize ?? 0)
-            total += size
+            let size = max(Int64(values.fileSize ?? 0), 0)
+            let (nextTotal, overflow) = total.addingReportingOverflow(size)
+            total = overflow ? Int64.max : nextTotal
             entries.append((url, size, values.contentModificationDate ?? .distantPast))
         }
 
@@ -7747,8 +7751,11 @@ actor QuranTextCache {
         for url in files {
             guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
                   values.isRegularFile == true else { continue }
-            count += 1
-            total += Int64(values.fileSize ?? 0)
+
+            if count < Int.max { count += 1 }
+            let bytes = max(Int64(values.fileSize ?? 0), 0)
+            let (nextTotal, overflow) = total.addingReportingOverflow(bytes)
+            total = overflow ? Int64.max : nextTotal
         }
 
         return (count, total)
@@ -7800,8 +7807,9 @@ actor QuranTextCache {
             ),
             values.isRegularFile == true else { continue }
 
-            let bytes = Int64(values.fileSize ?? 0)
-            total += bytes
+            let bytes = max(Int64(values.fileSize ?? 0), 0)
+            let (nextTotal, overflow) = total.addingReportingOverflow(bytes)
+            total = overflow ? Int64.max : nextTotal
             entries.append((url, bytes, values.contentModificationDate ?? .distantPast))
         }
 
