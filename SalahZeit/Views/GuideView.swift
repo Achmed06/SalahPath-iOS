@@ -686,9 +686,9 @@ private enum PrayerText {
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. In jedem Rakʿah wird al-Fātiha rezitiert; nach ihrem Ende sagt man Âmîn.",
-        trMeaning: "Açılış sûresi. Her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Für den Wortlaut und Audio kannst du zusätzlich den Quran-Bereich öffnen.", trNote: "Metin ve ses için ayrıca Kur'an bölümünü açabilirsin.")
+        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jedem Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
+        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
+        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -806,8 +806,8 @@ struct PrayerHowToView: View {
                 trTitle: "Kıyam – 1. rekât",
                 deAction: "Stehe ruhig mit gebundenen Händen und schaue zum Ort der Niederwerfung. Im ersten Rakʿah liest du Sübhaneke, danach Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sura oder passende Verse.",
                 trAction: "Eller bağlı şekilde sakin dur ve secde edeceğin yere bak. İlk rekâtta Sübhâneke, ardından Eûzü, Besmele, Fâtiha, Âmin ve sonra zamm-ı sûre veya uygun ayetler okunur.",
-                deHanafi: settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.",
-                trHanafi: settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.",
+                deHanafi: (settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.") + " Hinter einem Imam werden Fātiha und Zusatzsura nicht selbst rezitiert.",
+                trHanafi: (settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.") + " İmama uyarken Fâtiha ve zamm-ı sûre ayrıca okunmaz.",
                 recitations: [PrayerText.subhanaka, PrayerText.audhu, PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
             ),
             .init(
@@ -5505,9 +5505,9 @@ struct QuranicDuaLibraryView: View {
 
     private let items: [QuranicDua] = [
         .init(reference: "Quran 2:201", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", de: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", tr: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru."),
-        .init(reference: "Quran 20:114", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", de: "Mein Herr, mehre mein Wissen.", tr: "Rabbim, ilmimi artır."),
+        .init(reference: "Quran 20:114 · excerpt", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", de: "Mein Herr, mehre mein Wissen.", tr: "Rabbim, ilmimi artır."),
         .init(reference: "Quran 25:74", arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.", de: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.", tr: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle."),
-        .init(reference: "Quran 3:8", arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً", transliteration: "Rabbanā lā tuzigh qulūbanā baʿda idh hadaytanā wa hab lanā min ladunka raḥmah", de: "Unser Herr, lass unsere Herzen nicht abweichen, nachdem Du uns rechtgeleitet hast, und schenke uns Barmherzigkeit von Dir.", tr: "Rabbimiz, bize hidayet verdikten sonra kalplerimizi eğriltme; bize katından rahmet bağışla.")
+        .init(reference: "Quran 3:8", arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ", transliteration: "Rabbanā lā tuzigh qulūbanā baʿda idh hadaytanā wa hab lanā min ladunka raḥmatan innaka anta-l-Wahhāb", de: "Unser Herr, lass unsere Herzen nicht abweichen, nachdem Du uns rechtgeleitet hast, und schenke uns Barmherzigkeit von Dir. Du bist wahrlich der Schenkende.", tr: "Rabbimiz, bize hidayet verdikten sonra kalplerimizi eğriltme; bize katından rahmet bağışla. Şüphesiz Sen çok bağışta bulunansın.")
     ]
 
     var body: some View {
@@ -5563,9 +5563,9 @@ struct MorningEveningAdhkarView: View {
 
     private let items: [AdhkarEntry] = [
         .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
-        .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Die drei kurzen Suren werden in dieser Morgen-/Abend-Überlieferung jeweils dreimal rezitiert.", trMeaning: "Bu sabah-akşam zikrinde üç kısa sûre ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
+        .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
-        .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung.", trMeaning: "Allah'tan bağışlanma dilerim.", count: 33, source: "Dhikr / İstiğfar"),
+        .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
         .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86 · Abu Dawud / Tirmidhi"),
         .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87 · Ahmad / Tirmidhi")
     ]
@@ -5761,12 +5761,12 @@ struct MorningEveningAdhkarView: View {
 
     private func displayArabic(for item: AdhkarEntry) -> String {
         guard item.id == "bika", category == 1 else { return item.arabic }
-        return "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ"
+        return "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ"
     }
 
     private func displayTransliteration(for item: AdhkarEntry) -> String {
         guard item.id == "bika", category == 1 else { return item.transliteration }
-        return "Allāhumma bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr."
+        return "Allāhumma bika amsaynā wa bika aṣbaḥnā wa bika naḥyā wa bika namūtu wa ilayka-l-maṣīr."
     }
 
     private var visibleItems: [AdhkarEntry] {
@@ -6450,8 +6450,8 @@ private struct IslamicCalendarEventDetailView: View {
             Text(settings.t("Quelle & Kalenderhinweis", "Kaynak ve takvim notu"))
                 .font(.headline)
             Text(settings.t(
-                "Religiöse Einordnung nach Qur'an, authentischen Hadithen und Diyanet-Grunddarstellung. Das angezeigte Hijri-Datum wird mit Umm-al-Qura berechnet; regionale Mondsichtung kann den tatsächlichen Monatsbeginn verschieben.",
-                "Dinî açıklama Kur'an, sahih hadisler ve Diyanet temel anlatımına dayanır. Gösterilen hicrî tarih Ummü'l-Kurâ hesabıdır; bölgesel hilal gözlemi gerçek ay başlangıcını değiştirebilir."
+                "Religiöse Einordnung nach Qur'an, Hadithquellen und Diyanet-Grunddarstellung. Bei Überlieferungen können unterschiedliche Einstufungen bestehen. Das angezeigte Hijri-Datum wird mit Umm-al-Qura berechnet; regionale Mondsichtung kann den tatsächlichen Monatsbeginn verschieben.",
+                "Dinî açıklama Kur'an, hadis kaynakları ve Diyanet temel anlatımına dayanır. Rivayetlerin değerlendirilmesinde farklılıklar bulunabilir. Gösterilen hicrî tarih Ummü'l-Kurâ hesabıdır; bölgesel hilal gözlemi gerçek ay başlangıcını değiştirebilir."
             ))
             .font(.footnote)
             .foregroundStyle(.secondary)
@@ -6920,8 +6920,8 @@ private struct IslamLearningLessonView: View {
             Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
                 .font(.headline)
             Text(settings.t(
-                "Grundlage: Qur'an, authentische Hadithe und Diyanet Temel İslâm Bilgileri / İlmihal. SalahPath erklärt Grundlagen; bei strittigen Fiqh-Fragen werden Rechtsschulunterschiede gesondert gekennzeichnet.",
-                "Temel kaynak: Kur'an, sahih hadisler ve Diyanet Temel İslâm Bilgileri / İlmihal. SalahPath temel bilgileri açıklar; ihtilaflı fıkıh konularında mezhep farkları ayrıca belirtilir."
+                "Grundlage: Qur'an, Hadithquellen und Diyanet Temel İslâm Bilgileri / İlmihal. Bei Hadith-Einstufungen und strittigen Fiqh-Fragen können Unterschiede bestehen; Rechtsschulunterschiede werden soweit relevant gekennzeichnet.",
+                "Temel kaynak: Kur'an, hadis kaynakları ve Diyanet Temel İslâm Bilgileri / İlmihal. Hadis değerlendirmelerinde ve ihtilaflı fıkıh konularında farklılıklar olabilir; ilgili mezhep farkları ayrıca belirtilir."
             ))
             .font(.footnote)
             .foregroundStyle(.secondary)
