@@ -254,14 +254,36 @@ struct NearbyMosquesView: View {
                     .frame(maxWidth: .infinity)
                     .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 } else if store.mapItems.isEmpty {
-                    ContentUnavailableView(
-                        settings.t("Keine Treffer gefunden", "Sonuç bulunamadı"),
-                        systemImage: "building.columns",
-                        description: Text(settings.t(
-                            "Apple Karten hat in der Umgebung keine passenden Moscheen geliefert.",
-                            "Apple Haritalar yakın çevrede uygun cami sonucu döndürmedi."
-                        ))
-                    )
+                    VStack(spacing: 12) {
+                        ContentUnavailableView(
+                            settings.t("Keine Treffer gefunden", "Sonuç bulunamadı"),
+                            systemImage: "building.columns",
+                            description: Text(settings.t(
+                                "Apple Karten hat in der Umgebung keine passenden Moscheen geliefert. Du kannst erneut suchen oder im Profil einen anderen Ort festlegen.",
+                                "Apple Haritalar yakın çevrede uygun cami sonucu döndürmedi. Tekrar arayabilir veya profilde başka bir konum belirleyebilirsin."
+                            ))
+                        )
+
+                        Button {
+                            Task { await reload() }
+                        } label: {
+                            Label(settings.t("Erneut suchen", "Tekrar ara"), systemImage: "arrow.clockwise")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(SalahTheme.teal)
+
+                        NavigationLink {
+                            SettingsView()
+                        } label: {
+                            Label(settings.t("Anderen Ort festlegen", "Başka konum belirle"), systemImage: "mappin.and.ellipse")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(SalahTheme.teal)
+                    }
                 } else {
                     ForEach(store.mapItems.indices, id: \.self) { index in
                         mosqueRow(store.mapItems[index])
