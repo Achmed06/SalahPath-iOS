@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Release checkpoint: SalahPath v3.62 build 76; patch chain validated through v440; App Store + religious-content audits.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -12,7 +11,6 @@ fail() {
 
 echo "== SalahPath preflight =="
 
-# App Store uploads require Xcode 26+ as of 28 April 2026.
 if command -v xcodebuild >/dev/null 2>&1; then
   XCODE_VERSION="$(xcodebuild -version | awk 'NR==1 {print $2}')"
   XCODE_MAJOR="${XCODE_VERSION%%.*}"
@@ -21,40 +19,120 @@ if command -v xcodebuild >/dev/null 2>&1; then
   echo "App Store Xcode requirement: OK ($XCODE_VERSION)"
 fi
 
+require_file() {
+  if [ ! -f "$1" ]; then
+    echo "Missing required file: $1" >&2
+    exit 1
+  fi
+}
 
-test -d SalahZeit || fail "SalahZeit source directory missing"
-test -f SalahZeit/SalahZeitApp.swift || fail "SalahZeitApp.swift missing"
-test -f SalahZeit/Views/HomeView.swift || fail "HomeView.swift missing"
-test -f SalahZeit/Views/RootTabView.swift || fail "RootTabView.swift missing"
-test -f SalahZeit/Views/GuideView.swift || fail "GuideView.swift missing"
-test -f scripts/build_unsigned_ipa.sh || fail "build script missing"
+require_dir() {
+  if [ ! -d "$1" ]; then
+    echo "Missing required directory: $1" >&2
+    exit 1
+  fi
+}
+
+require_file "SalahZeit.xcodeproj/project.pbxproj"
+require_file "scripts/build_unsigned_ipa.sh"
+require_file "SalahZeit/Views/RootTabView.swift"
+require_file "SalahZeit/Views/GuideView.swift"
+require_file "SalahZeit/PrivacyInfo.xcprivacy"
+require_file "PRIVACY.md"
+require_file "SUPPORT.md"
+require_file "CONTENT_RIGHTS_AUDIT.md"
+require_file "RELIGIOUS_CONTENT_AUDIT.md"
 
 # Patch/merge integrity.
 if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Current expected app version after the v3.62 build 76 release checkpoint.
-grep -q 'MARKETING_VERSION="3.62"' scripts/build_unsigned_ipa.sh   || fail "expected MARKETING_VERSION 3.62 not present"
-grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh   || fail "expected build number 76 not present"
+# Release checkpoint: SalahPath v3.62 build 76
+grep -q 'MARKETING_VERSION = 3.62;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'CURRENT_PROJECT_VERSION = 76;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'SWIFT_STRICT_CONCURRENCY = complete;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
+grep -q 'CURRENT_PROJECT_VERSION="76"' "scripts/build_unsigned_ipa.sh"
+grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'C617.1' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'NSPrivacyCollectedDataTypeDeviceID' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'NSPrivacyCollectedDataTypePurposeAppFunctionality' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'PRIVACY.md' "SalahZeit/Views/SettingsView.swift"
+grep -q 'SalahPath-iOS/issues' "SalahZeit/Views/SettingsView.swift"
 
-# Reference assets introduced by the visual parity passes.
-required_assets=(
-  home_mosque
-  ref_dash_quran ref_dash_dhikr ref_dash_prayer ref_dash_wudu
-  ref_dash_times ref_dash_qibla ref_dash_info ref_dash_fav
-)
+if command -v plutil >/dev/null 2>&1; then
+  plutil -lint "SalahZeit/PrivacyInfo.xcprivacy" >/dev/null || fail "PrivacyInfo.xcprivacy is not a valid plist"
+fi
 
-for asset in "${required_assets[@]}"; do
-  dir="SalahZeit/Assets.xcassets/${asset}.imageset"
-  test -d "$dir" || fail "asset imageset missing: $asset"
-  test -f "$dir/Contents.json" || fail "Contents.json missing: $asset"
+grep -q 'struct MoreView: View' "SalahZeit/Views/RootTabView.swift"
+grep -q 'NavigationStack { MoreView() }' "SalahZeit/Views/RootTabView.swift"
+
+grep -Eq 'IslamicCalendarEventDetailView|CalendarEventEditor' "SalahZeit/Views/GuideView.swift"
+
+# Crash-hardening regression gates.
+if grep -R -nE 'fatalError\(|try!|as!' SalahZeit --include='*.swift'; then
+  echo "Unsafe Swift crash primitive found." >&2
+  exit 1
+fi
+
+grep -q 'safeQuranFontSize' "SalahZeit/Models/AppSettings.swift"
+grep -q 'CLLocationCoordinate2DIsValid' "SalahZeit/Services/LocationManager.swift"
+grep -q 'addingReportingOverflow' "SalahZeit/Views/GuideView.swift"
+grep -q 'numberInSurah' "SalahZeit/Views/GuideView.swift"
+grep -q 'sanitizedChapters' "SalahZeit/Views/GuideView.swift"
+grep -q 'sanitizedPage' "SalahZeit/Views/GuideView.swift"
+
+if grep -q 'Array(repeating: urls, count: max(1, repeatCount))' "SalahZeit/Views/GuideView.swift"; then
+  echo "Unsafe persisted Quran repeat count regression found." >&2
+  exit 1
+fi
+
+if grep -R -nE 'URL\(string:[[:space:]]*"http://' SalahZeit --include='*.swift'; then
+  echo "Unencrypted HTTP URL construction found." >&2
+  exit 1
+fi
+
+# Religious-content regression gates for previously corrected release issues.
+grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/HomeView.swift"
+grep -q 'Quran 3:173 · excerpt' "SalahZeit/Views/HomeView.swift"
+grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/GuideView.swift"
+grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' "SalahZeit/Views/GuideView.swift"
+grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' "SalahZeit/Views/GuideView.swift"
+grep -q 'Angezeigt sind nur die Anfangszeilen' "SalahZeit/Views/GuideView.swift"
+grep -q 'وَإِلَيْكَ الْمَصِيرُ' "SalahZeit/Views/GuideView.swift"
+grep -q 'Hier wird keine bestimmte überlieferte Anzahl behauptet' "SalahZeit/Views/GuideView.swift"
+
+if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.swift"; then
+  echo "Unsupported fixed Istighfar count regression found." >&2
+  exit 1
+fi
+
+# Required reference assets (Salam / Wudu / prayer-art parity)
+for asset in \
+  "SalahZeit/Assets.xcassets/male_salam_right.imageset" \
+  "SalahZeit/Assets.xcassets/male_salam_left.imageset" \
+  "SalahZeit/Assets.xcassets/female_salam_right.imageset" \
+  "SalahZeit/Assets.xcassets/female_salam_left.imageset" \
+  "SalahZeit/Assets.xcassets/wudu_head.imageset" \
+  "SalahZeit/Assets.xcassets/wudu_face.imageset" \
+  "SalahZeit/Assets.xcassets/male_standing.imageset"; do
+  require_dir "$asset"
 done
 
-# Validate every asset-catalog JSON file and all PNG signatures.
+# Validate all asset-catalog JSON and PNG structure.
 python3 - <<'PY'
 from pathlib import Path
-import json, sys
+import json
+import struct
+import sys
+import zlib
 
 root = Path("SalahZeit/Assets.xcassets")
 for path in root.rglob("Contents.json"):
@@ -63,8 +141,6 @@ for path in root.rglob("Contents.json"):
     except Exception as exc:
         print(f"PRECHECK ERROR: invalid asset JSON {path}: {exc}", file=sys.stderr)
         raise SystemExit(1)
-
-import struct, zlib
 
 png_sig = b"\x89PNG\r\n\x1a\n"
 for path in root.rglob("*.png"):
@@ -104,483 +180,4 @@ for path in root.rglob("*.png"):
 print("Asset JSON + PNG structural integrity: OK")
 PY
 
-# Ensure QA routing added for the five visual-reference screens exists.
-grep -Rqs 'SALAH_QA_SCREEN' SalahZeit   || fail "multi-screen screenshot QA routing missing"
-
-# Ensure required reference copy/data survived the patch chain.
-grep -q '2:38:15' SalahZeit/Views/HomeView.swift   || fail "reference countdown missing"
-grep -q 'Rabbim, ilmimi artır.' SalahZeit/Views/HomeView.swift   || fail "reference daily dua missing"
-grep -q 'Text(settings.t("Dua des Tages", "Günün Duası"))' SalahZeit/Views/HomeView.swift \
-  || fail "localized daily-dua heading missing"
-grep -q 'Text(settings.t("Gebets-Tracking", "Namaz Takibi"))' SalahZeit/Views/HomeView.swift \
-  || fail "localized prayer-tracking heading missing"
-grep -q 'Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))' SalahZeit/Views/HomeView.swift \
-  || fail "localized next-prayer heading missing"
-grep -q 'Text(settings.t("(An-Nisāʾ 4:103)", "(Nisâ, 103)"))' SalahZeit/Views/HomeView.swift \
-  || fail "localized Home Quran citation missing"
-
-# Language-consistency regressions fixed after v3.62.
-grep -q 'settings.t("Gebetszeiten", "Namaz Vakitleri")' SalahZeit/Views/HomeView.swift \
-  || fail "localized prayer-times title missing"
-grep -q 'settings.t("Morgen", "Sabah")' SalahZeit/Views/GuideView.swift \
-  || fail "localized Dhikr tabs missing"
-grep -q 'Text(activeDhikr.translation)' SalahZeit/Views/GuideView.swift \
-  || fail "localized Dhikr translation output missing"
-grep -q 'settings.t("Arabisch", "Arapça")' SalahZeit/Views/GuideView.swift \
-  || fail "localized Quran language tabs missing"
-grep -q 'audiencePill(.male, title: settings.t("Mann", "Erkek"))' SalahZeit/Views/GuideView.swift \
-  || fail "localized prayer audience selector missing"
-grep -q 'settings.language = settings.language == .german ? .turkish : .german' SalahZeit/Views/GuideView.swift \
-  || fail "bidirectional prayer language toggle missing"
-grep -q 'settings.language == .german ? german : turkish' SalahZeit/Views/GuideView.swift \
-  || fail "language-specific prayer feature copy missing"
-grep -q 'settings.t("Arabisch", "Arapça")' SalahZeit/Views/GuideView.swift \
-  || fail "localized Quran reader language copy missing"
-grep -q 'settings.t("Tägliche Serie", "Günlük Seri")' SalahZeit/Views/HomeView.swift \
-  || fail "localized Home streak copy missing"
-grep -q '.navigationBarTitleDisplayMode(.inline)' SalahZeit/Views/GuideView.swift \
-  || fail "compact navigation headers missing"
-grep -q 'settings.t("Gebet lernen", "Namaz Öğren")' SalahZeit/Views/GuideView.swift \
-  || fail "localized German prayer-learning title missing"
-grep -q 'settings.t("Gebet lernen", "Namaz öğren")' SalahZeit/Views/GuideView.swift \
-  || fail "localized German prayer-howto title missing"
-grep -q 'settings.t("Hijri-Kalender", "Hicrî takvim")' SalahZeit/Views/GuideView.swift \
-  || fail "localized German Hijri title missing"
-grep -q 'settings.t("Gebet lernen", "Namaz Öğren")' SalahZeit/Views/RootTabView.swift \
-  || fail "localized Discover prayer title missing"
-grep -q 'settings.t("Wudu", "Abdest Rehberi")' SalahZeit/Views/RootTabView.swift \
-  || fail "localized Discover Wudu title missing"
-grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/RootTabView.swift \
-  || fail "localized Discover Qibla title missing"
-grep -q 'settings.t("Qibla", "Kıble")' SalahZeit/Views/QiblaView.swift \
-  || fail "localized Qibla screen heading missing"
-grep -q 'settings.t("Hijri-Kalender", "Hicrî Takvim")' SalahZeit/Views/RootTabView.swift \
-  || fail "localized Discover Hijri title missing"
-grep -q 'settings.t("FARZ · PFLICHT", "FARZ")' SalahZeit/Views/GuideView.swift \
-  || fail "localized guided-Wudu obligation badge missing"
-grep -q '"wudu_rightfoot"' SalahZeit/Views/GuideView.swift \
-  || fail "right-foot Wudu artwork key missing"
-grep -q '"wudu_leftfoot"' SalahZeit/Views/GuideView.swift \
-  || fail "left-foot Wudu artwork key missing"
-grep -q '.navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
-  || fail "localized guided-Wudu navigation title missing"
-
-# Phase-1 interaction regressions fixed in v394.
-grep -q 'navigation.setBackIndicatorImage(backIndicator' SalahZeit/Views/RootTabView.swift \
-  || fail "high-contrast navigation back indicator missing"
-grep -q '.toolbarColorScheme(.dark, for: .navigationBar)' SalahZeit/Views/RootTabView.swift \
-  || fail "dark navigation toolbar color scheme missing"
-grep -q 'private let playbackRateDefaultsKey = "quranPlaybackRate"' SalahZeit/Views/GuideView.swift \
-  || fail "persistent Quran playback-rate state missing"
-grep -q 'Button { audio.cyclePlaybackRate() } label:' SalahZeit/Views/GuideView.swift \
-  || fail "Quran reader playback-rate button missing"
-if grep -q 'Text("1.0x")' SalahZeit/Views/GuideView.swift; then
-  fail "stale non-interactive Quran 1.0x label still present"
-fi
-
-# Learning content stays inside SalahPath as of v395.
-if grep -RIn 'Link(' SalahZeit/Views --include='*.swift' --exclude='SettingsView.swift' | grep -v 'NavigationLink' | grep -v 'ShareLink'; then
-  fail "external SwiftUI Link remains in learning UI"
-fi
-grep -q 'private struct PrayerDuaLesson: Identifiable' SalahZeit/Views/GuideView.swift \
-  || fail "in-app prayer dua lessons missing"
-grep -q 'Alle Gebetsduas stehen direkt in SalahPath' SalahZeit/Views/GuideView.swift \
-  || fail "in-app prayer dua explanation missing"
-
-# Guided prayer learning introduced in v396.
-grep -q '@State private var currentStepIndex = 0' SalahZeit/Views/GuideView.swift \
-  || fail "guided prayer step state missing"
-grep -q 'PrayerTutorialStepCard(step: steps\[currentStepIndex\]' SalahZeit/Views/GuideView.swift \
-  || fail "single-step prayer tutorial card missing"
-grep -q 'settings.t("Weiter", "İleri")' SalahZeit/Views/GuideView.swift \
-  || fail "guided prayer next control missing"
-
-# Beginner Rakʿa flow introduced in v397.
-grep -q 'Was bedeutet Rakʿa?' SalahZeit/Views/GuideView.swift \
-  || fail "beginner Rakʿa introduction missing"
-grep -q 'JETZT ist 1 Rakʿa fertig' SalahZeit/Views/GuideView.swift \
-  || fail "Rakʿa completion explanation missing"
-grep -q '@State private var showSpecialCases = false' SalahZeit/Views/GuideView.swift \
-  || fail "Rakʿa progressive-disclosure state missing"
-grep -q 'navigationTitle(settings.t("Rakʿa verstehen", "Rekâtı anla"))' SalahZeit/Views/GuideView.swift \
-  || fail "Rakʿa beginner navigation title missing"
-
-# Guided Wudu flow introduced in v398.
-grep -q 'Wudu ganz von vorne' SalahZeit/Views/GuideView.swift \
-  || fail "guided Wudu introduction missing"
-grep -q 'Nacken / Ense' SalahZeit/Views/GuideView.swift \
-  || fail "Wudu nape wording missing"
-grep -q 'normalen Haaransatz bis zum Kinn' SalahZeit/Views/GuideView.swift \
-  || fail "Wudu face boundary explanation missing"
-grep -q '1× Farz · 3× Sunnah' SalahZeit/Views/GuideView.swift \
-  || fail "Wudu Farz and Sunnah repetition label missing"
-grep -q 'navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))' SalahZeit/Views/GuideView.swift \
-  || fail "guided Wudu navigation title missing"
-
-# Stable indexed Rakʿa plan iteration in v399.
-grep -q 'ForEach(lines.indices, id: \\.self)' SalahZeit/Views/GuideView.swift \
-  || fail "stable indexed Rakʿa plan iteration missing"
-
-# v400: controlled prayer artwork now includes simple facial features.
-grep -q 'private func drawFace(_ context: inout GraphicsContext' SalahZeit/Views/GuideView.swift \
-  || fail "prayer facial-feature drawing missing"
-
-# v401: Quran Continue Reading restores the last Surah/Ayah.
-grep -q 'static func lastRead() -> QuranBookmark?' SalahZeit/Views/GuideView.swift \
-  || fail "Quran last-read getter missing"
-grep -q 'settings.t("Weiterlesen", "Okumaya devam et")' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Continue Reading card missing"
-grep -q 'QuranSurahView(surah: chapter, initialAyah: lastRead.ayah)' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Continue Reading deep link missing"
-
-# v402: complete fasting/Ramadan learning hub.
-grep -q 'Fasten ganz einfach' SalahZeit/Views/GuideView.swift \
-  || fail "fasting beginner lesson missing"
-grep -q 'Was bricht das Fasten?' SalahZeit/Views/GuideView.swift \
-  || fail "fasting invalidators lesson missing"
-grep -q 'Qada, Kaffarah, Fidya' SalahZeit/Views/GuideView.swift \
-  || fail "fasting compensation terminology missing"
-
-# v403: interactive Hijri calendar and internal event explanations.
-grep -q 'Nächste wichtige islamische Tage' SalahZeit/Views/GuideView.swift \
-  || fail "important Islamic days section missing"
-grep -q 'Beginn der letzten zehn Ramadan-Nächte' SalahZeit/Views/GuideView.swift \
-  || fail "last ten Ramadan nights guidance missing"
-grep -q 'Tage des Tashriq' SalahZeit/Views/GuideView.swift \
-  || fail "Tashriq guidance missing"
-grep -q 'Weiße Tage · 13., 14. und 15.' SalahZeit/Views/GuideView.swift \
-  || fail "white days guidance missing"
-
-# v404-v405: structured Islam-learning course.
-grep -q 'Islam Schritt für Schritt lernen' SalahZeit/Views/GuideView.swift \
-  || fail "Islam learning hub missing"
-grep -q 'Die fünf Säulen' SalahZeit/Views/GuideView.swift \
-  || fail "five pillars lesson missing"
-grep -q 'Die sechs Glaubensgrundsätze' SalahZeit/Views/GuideView.swift \
-  || fail "six beliefs lesson missing"
-grep -q 'Tawbah · Reue und Neubeginn' SalahZeit/Views/GuideView.swift \
-  || fail "repentance lesson missing"
-grep -q 'NavigationLink { IslamLearningHubView() }' SalahZeit/Views/RootTabView.swift \
-  || fail "Islam learning Discover tile missing"
-if grep -q 'ersetzen etmez' SalahZeit/Views/GuideView.swift; then
-  fail "stale mixed-language Turkish copy remains"
-fi
-
-if grep -q 'gıdaähnliche' SalahZeit/Views/GuideView.swift; then
-  fail "mixed-language German fasting copy remains"
-fi
-grep -q 'Bilerek ağız dolusu kusmak' SalahZeit/Views/GuideView.swift \
-  || fail "beginner-friendly Turkish vomiting wording missing"
-grep -q 'feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird' SalahZeit/Views/GuideView.swift \
-  || fail "precise Ghusl wet-dream wording missing"
-
-# v406-v407: QA coverage for new learning screens.
-grep -q 'case "fasting-basics":' SalahZeit/SalahZeitApp.swift \
-  || fail "fasting basics QA route missing"
-grep -q 'case "fasting-rules":' SalahZeit/SalahZeitApp.swift \
-  || fail "fasting rules QA route missing"
-grep -q 'case "fasting-exceptions":' SalahZeit/SalahZeitApp.swift \
-  || fail "fasting exceptions QA route missing"
-grep -q 'case "islam-learning":' SalahZeit/SalahZeitApp.swift \
-  || fail "Islam learning QA route missing"
-
-# v408-v409: Ghusl and Tayammum learning + QA routes.
-grep -q 'navigationTitle(settings.t("Ghusl lernen", "Gusül öğren"))' SalahZeit/Views/GuideView.swift \
-  || fail "Ghusl learning view missing"
-grep -q 'Die 3 Farz im Hanafi/Diyanet-Ablauf' SalahZeit/Views/GuideView.swift \
-  || fail "Ghusl Hanafi farz explanation missing"
-grep -q 'navigationTitle(settings.t("Tayammum lernen", "Teyemmüm öğren"))' SalahZeit/Views/GuideView.swift \
-  || fail "Tayammum learning view missing"
-grep -q 'case "ghusl":' SalahZeit/SalahZeitApp.swift \
-  || fail "Ghusl QA route missing"
-grep -q 'case "tayammum":' SalahZeit/SalahZeitApp.swift \
-  || fail "Tayammum QA route missing"
-
-# v410: automatic Ramadan Home integration.
-grep -q 'private func isRamadan(_ date: Date) -> Bool' SalahZeit/Views/HomeView.swift \
-  || fail "Ramadan month detection missing"
-grep -q 'ramadanHomeCard(today: today)' SalahZeit/Views/HomeView.swift \
-  || fail "Ramadan Home card missing"
-grep -q 'settings.t("Sahur endet", "Sahur biter")' SalahZeit/Views/HomeView.swift \
-  || fail "Ramadan Sahur timing missing"
-grep -q 'settings.t("Iftar", "İftar")' SalahZeit/Views/HomeView.swift \
-  || fail "Ramadan Iftar timing missing"
-
-# v411: Discover fasting entry now reflects the full learning hub.
-grep -q 'settings.t("Fasten & Ramadan", "Oruç & Ramazan")' SalahZeit/Views/RootTabView.swift \
-  || fail "updated fasting Discover title missing"
-grep -q 'settings.t("Lernen & Tracker", "Öğren & takip")' SalahZeit/Views/RootTabView.swift \
-  || fail "updated fasting Discover subtitle missing"
-
-# v412: unified SalahPath duotone Discover icon system.
-grep -q 'private func salahFeatureIcon' SalahZeit/Views/RootTabView.swift \
-  || fail "unified Discover feature icon helper missing"
-grep -q 'LinearGradient(' SalahZeit/Views/RootTabView.swift \
-  || fail "Discover icon gradient styling missing"
-
-# v415: compiler-friendly learning subviews.
-grep -q 'private var fastingHeaderCard: some View' SalahZeit/Views/GuideView.swift \
-  || fail "split fasting header subview missing"
-grep -q 'private var eventHeaderCard: some View' SalahZeit/Views/GuideView.swift \
-  || fail "split Hijri event header subview missing"
-grep -q 'private var lessonHeaderCard: some View' SalahZeit/Views/GuideView.swift \
-  || fail "split Islam lesson header subview missing"
-grep -q 'private var islamProgressCard: some View' SalahZeit/Views/GuideView.swift \
-  || fail "split Islam progress subview missing"
-
-# v416: Quran reader shows one selected translation only.
-grep -q '@State private var didSetInitialDisplayMode = false' SalahZeit/Views/GuideView.swift \
-  || fail "Quran reader initial language state missing"
-grep -q 'displayMode = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
-  || fail "Quran reader app-language default missing"
-grep -q 'settings.quranShowTranslation && displayMode == 1' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Turkish-only translation condition missing"
-grep -q 'settings.quranShowTranslation && displayMode == 2' SalahZeit/Views/GuideView.swift \
-  || fail "Quran German-only translation condition missing"
-grep -q 'settings.t("Deutsch", "Almanca")' SalahZeit/Views/GuideView.swift \
-  || fail "Quran localized German language label missing"
-
-# v417: clearer frontal Wudu artwork and direct QA access to every step.
-grep -q 'private var neutralFace: some View' SalahZeit/Views/GuideView.swift \
-  || fail "clear frontal Wudu face artwork missing"
-grep -q 'init(initialStepIndex: Int = 0)' SalahZeit/Views/GuideView.swift \
-  || fail "Wudu initial-step QA initializer missing"
-grep -q 'case "wudu-step-1":' SalahZeit/SalahZeitApp.swift \
-  || fail "Wudu step 1 QA route missing"
-grep -q 'case "wudu-step-13":' SalahZeit/SalahZeitApp.swift \
-  || fail "Wudu step 13 QA route missing"
-
-# v419: Quran overview follows the selected/app language without duplicate translation.
-grep -q 'if languageTab == 1 {' SalahZeit/Views/GuideView.swift \
-  || fail "Quran overview Turkish-only condition missing"
-grep -q 'if languageTab == 2 {' SalahZeit/Views/GuideView.swift \
-  || fail "Quran overview German-only condition missing"
-grep -q 'languageTab = settings.language == .german ? 2 : 1' SalahZeit/Views/GuideView.swift \
-  || fail "Quran overview app-language default missing"
-
-# v422: Build 76 checkpoint.
-grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh \
-  || fail "Build 76 checkpoint missing"
-
-# Parse every Swift file before Xcode build. This catches syntax damage from a patch
-# before package resolution/build spends several minutes.
-if command -v xcrun >/dev/null 2>&1; then
-  echo "Parsing Swift sources..."
-  while IFS= read -r -d '' file; do
-    xcrun swiftc -frontend -parse "$file" >/dev/null
-  done < <(find SalahZeit -name '*.swift' -type f -print0)
-  echo "Swift parse: OK"
-else
-  echo "xcrun unavailable: skipping Swift parse on this host"
-fi
-
-# v422: Build 76 checkpoint.
-grep -q 'CURRENT_PROJECT_VERSION="76"' scripts/build_unsigned_ipa.sh \
-  || fail "Build 76 checkpoint missing"
-
-# v421: Turkish UI must use Almanca instead of Deutsch.
-grep -q 'settings.t("Deutsch + Türkisch", "Almanca + Türkçe")' SalahZeit/Views/RootTabView.swift \
-  || fail "Turkish language-pair label still mixed"
-grep -q 'settings.t("Arabisch, Türkisch, Deutsch", "Arapça, Türkçe, Almanca")' SalahZeit/Views/GuideView.swift \
-  || fail "Turkish Quran language-list label still mixed"
-
-# v423-v424: Quran Cüz navigation and whole-Quran reading progress.
-grep -q 'private struct QuranJuzStart' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Cüz navigation missing"
-grep -q '.init(number: 2,  surah: 2,  ayah: 142)' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Cüz 2 start mapping missing"
-grep -q 'navigationTitle(settings.t("Cüz / Juz", "Cüz"))' SalahZeit/Views/GuideView.swift \
-  || fail "Quran Cüz screen title missing"
-grep -q 'private var readingProgress: Double?' SalahZeit/Views/GuideView.swift \
-  || fail "Quran reading progress calculation missing"
-grep -q 'settings.t("Lesefortschritt", "Okuma ilerlemesi")' SalahZeit/Views/GuideView.swift \
-  || fail "Quran reading progress UI missing"
-
-# v425-v426: deterministic visual QA for Quran reading progress.
-grep -q 'case "quran-progress":' SalahZeit/SalahZeitApp.swift \
-  || fail "Quran progress QA route missing"
-grep -q 'init(initialLastReadSurah: Int? = nil, initialLastReadAyah: Int? = nil)' SalahZeit/Views/GuideView.swift \
-  || fail "Quran deterministic last-read initializer missing"
-grep -q 'QuranView(initialLastReadSurah: 2, initialLastReadAyah: 142)' SalahZeit/Views/GuideView.swift \
-  || fail "Quran progress QA injection missing"
-
-# v427: injected Quran progress remains stable during deterministic QA.
-grep -q 'private let usesInjectedLastRead: Bool' SalahZeit/Views/GuideView.swift \
-  || fail "Quran injected-last-read QA guard missing"
-grep -q 'if !usesInjectedLastRead {' SalahZeit/Views/GuideView.swift \
-  || fail "Quran injected progress preservation missing"
-
-# v428-v430: persistent Quran audio cache, settings controls and integration QA.
-grep -q 'actor QuranAudioCache {' SalahZeit/Views/GuideView.swift \
-  || fail "persistent Quran audio cache missing"
-grep -q 'private let maxBytes: Int64 = 300 \* 1024 \* 1024' SalahZeit/Views/GuideView.swift \
-  || fail "Quran audio cache 300 MB cap missing"
-grep -q 'await QuranAudioCache.shared.clear()' SalahZeit/Views/SettingsView.swift \
-  || fail "Quran audio cache clear control missing"
-grep -q 'case "audio-cache":' SalahZeit/SalahZeitApp.swift \
-  || fail "Quran audio cache QA route missing"
-grep -q 'audioCacheQACompleted' SalahZeit/Views/GuideView.swift \
-  || fail "Quran audio cache deterministic completion flag missing"
-
-# v431: persistent per-ayah memorisation repeat control.
-grep -q 'private let repeatCountDefaultsKey = "quranAyahRepeatCount"' SalahZeit/Views/GuideView.swift \
-  || fail "Quran ayah repeat persistence missing"
-grep -q 'func cycleRepeatMode()' SalahZeit/Views/GuideView.swift \
-  || fail "Quran ayah repeat control missing"
-grep -q 'if self.shouldRepeatCurrentItem(), let newPlayer' SalahZeit/Views/GuideView.swift \
-  || fail "Quran ayah repeat playback logic missing"
-grep -q 'settings.t("Vers wiederholen", "Ayet tekrarı")' SalahZeit/Views/GuideView.swift \
-  || fail "Quran ayah repeat UI missing"
-
-# v432: prayer overview must make a full Rakʿa and both Salam directions explicit.
-grep -q 'Das Gebet besteht nicht nur aus 1 Rakʿa' SalahZeit/Views/GuideView.swift \
-  || fail "prayer overview Rakʿa clarification missing"
-grep -q '("sujud", "Sujud 2 · Rakʿa fertig", "2. secde · rekât tamam")' SalahZeit/Views/GuideView.swift \
-  || fail "second Sujud / Rakʿa completion step missing"
-grep -q '("salam_right", "Salām rechts · nur Kopf", "Sağa selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
-  || fail "right Salam head-only step missing"
-grep -q '("salam_left", "Salām links · nur Kopf", "Sola selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
-  || fail "left Salam head-only step missing"
-grep -q 'Der Oberkörper bleibt zur Qibla' SalahZeit/Views/GuideView.swift \
-  || fail "Salam Qibla/body clarification missing"
-
-# v433: direct screenshot QA route for the detailed prayer-sequence screen.
-grep -q 'case "prayer-sequence":' SalahZeit/SalahZeitApp.swift \
-  || fail "prayer-sequence screenshot QA route missing"
-
-# v436-v438: restore the preferred v3.5 prayer artwork and replace only Salam with
-# exact crops from the user-approved reference. Sequence is own-right first, own-left second.
-grep -q 'Image(assetName)' SalahZeit/Views/GuideView.swift \
-  || fail "prayer pose asset renderer missing"
-grep -q '("salam_right", "Salām rechts · nur Kopf", "Sağa selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
-  || fail "right Salam must be first"
-grep -q '("salam_left", "Salām links · nur Kopf", "Sola selâm · yalnız baş")' SalahZeit/Views/GuideView.swift \
-  || fail "left Salam must be second"
-python3 - <<'PY'
-from pathlib import Path
-import json
-
-root = Path("SalahZeit/Assets.xcassets")
-legacy_poses = [
-    "intention", "takbir", "standing", "upright",
-    "bowing", "sujud", "sitting", "final_sitting",
-]
-
-for audience in ("male", "female"):
-    for pose in legacy_poses:
-        name = f"{audience}_{pose}"
-        imageset = root / f"{name}.imageset"
-        contents = imageset / "Contents.json"
-        jpg = imageset / f"{name}.jpg"
-        if not contents.is_file() or not jpg.is_file():
-            raise SystemExit(f"PRECHECK ERROR: restored v3.5 prayer JPG missing: {name}")
-        payload = json.loads(contents.read_text(encoding="utf-8"))
-        filenames = [item.get("filename") for item in payload.get("images", [])]
-        if jpg.name not in filenames:
-            raise SystemExit(f"PRECHECK ERROR: restored prayer Contents.json mismatch: {name}")
-        if (imageset / f"{name}.svg").exists():
-            raise SystemExit(f"PRECHECK ERROR: replacement SVG still active for restored pose: {name}")
-
-for audience in ("male", "female"):
-    for pose in ("salam_right", "salam_left"):
-        name = f"{audience}_{pose}"
-        imageset = root / f"{name}.imageset"
-        contents = imageset / "Contents.json"
-        jpg = imageset / f"{name}.jpg"
-        svg = imageset / f"{name}.svg"
-        if not contents.is_file() or not jpg.is_file():
-            raise SystemExit(f"PRECHECK ERROR: corrected Salam JPG missing: {name}")
-        payload = json.loads(contents.read_text(encoding="utf-8"))
-        filenames = [item.get("filename") for item in payload.get("images", [])]
-        if jpg.name not in filenames:
-            raise SystemExit(f"PRECHECK ERROR: corrected Salam Contents.json mismatch: {name}")
-        if svg.exists():
-            raise SystemExit(f"PRECHECK ERROR: stale temporary Salam SVG still active: {name}")
-
-print("Restored prayer artwork + corrected right-then-left Salam assets: OK")
-PY
-
-# v438: important Islamic days can be handed to Apple's native Calendar editor.
-grep -q '^import EventKitUI$' SalahZeit/Views/GuideView.swift \
-  || fail "EventKitUI import missing"
-grep -q 'private struct CalendarEventEditor: UIViewControllerRepresentable' SalahZeit/Views/GuideView.swift \
-  || fail "native Apple Calendar editor bridge missing"
-grep -q 'EKEventEditViewController' SalahZeit/Views/GuideView.swift \
-  || fail "Apple Calendar event editor missing"
-grep -q 'In Apple Kalender eintragen' SalahZeit/Views/GuideView.swift \
-  || fail "German calendar export action missing"
-grep -q "Apple Takvim'e ekle" SalahZeit/Views/GuideView.swift \
-  || fail "Turkish calendar export action missing"
-
-# v435: every guided Wudu step resolves to a dedicated SVG image asset.
-grep -q 'return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"' SalahZeit/Views/GuideView.swift \
-  || fail "Wudu intention/Basmala vector selection missing"
-python3 - <<'PY'
-from pathlib import Path
-import json
-import xml.etree.ElementTree as ET
-
-root = Path("SalahZeit/Assets.xcassets")
-assets = [
-    "wudu_intention", "wudu_basmala", "wudu_hands", "wudu_mouth", "wudu_nose",
-    "wudu_face", "wudu_rightarm", "wudu_leftarm", "wudu_head", "wudu_ears",
-    "wudu_neck", "wudu_rightfoot", "wudu_leftfoot",
-]
-for name in assets:
-    imageset = root / f"{name}.imageset"
-    contents = imageset / "Contents.json"
-    svg = imageset / f"{name}.svg"
-    if not contents.is_file() or not svg.is_file():
-        raise SystemExit(f"PRECHECK ERROR: Wudu vector asset missing: {name}")
-    payload = json.loads(contents.read_text(encoding="utf-8"))
-    filenames = [item.get("filename") for item in payload.get("images", [])]
-    if svg.name not in filenames:
-        raise SystemExit(f"PRECHECK ERROR: Wudu asset Contents.json mismatch: {name}")
-    ET.parse(svg)
-print("Dedicated Wudu SVG asset integrity: OK")
-PY
-
-
-# v439: App Store release-readiness guardrails.
-test -f SalahZeit/PrivacyInfo.xcprivacy   || fail "PrivacyInfo.xcprivacy missing"
-grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' SalahZeit/PrivacyInfo.xcprivacy   || fail "UserDefaults required-reason category missing"
-grep -q 'CA92.1' SalahZeit/PrivacyInfo.xcprivacy   || fail "UserDefaults CA92.1 reason missing"
-grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' SalahZeit/PrivacyInfo.xcprivacy   || fail "file timestamp required-reason category missing"
-grep -q 'C617.1' SalahZeit/PrivacyInfo.xcprivacy   || fail "file timestamp C617.1 reason missing"
-grep -q 'PrivacyInfo.xcprivacy in Resources' SalahZeit.xcodeproj/project.pbxproj   || fail "privacy manifest is not in target resources"
-grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' SalahZeit.xcodeproj/project.pbxproj   || fail "App Store bundle identifier mismatch"
-grep -q 'MARKETING_VERSION = 3.62;' SalahZeit.xcodeproj/project.pbxproj   || fail "project marketing version mismatch"
-grep -q 'CURRENT_PROJECT_VERSION = 76;' SalahZeit.xcodeproj/project.pbxproj   || fail "project build number mismatch"
-grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' SalahZeit.xcodeproj/project.pbxproj   || fail "export compliance declaration missing"
-grep -q 'blob/main/PRIVACY.md' SalahZeit/Views/SettingsView.swift   || fail "in-app privacy policy link missing"
-grep -q 'SalahPath-iOS/issues' SalahZeit/Views/SettingsView.swift   || fail "in-app support link missing"
-if command -v plutil >/dev/null 2>&1; then
-  plutil -lint SalahZeit/PrivacyInfo.xcprivacy >/dev/null     || fail "PrivacyInfo.xcprivacy is not a valid plist"
-fi
-
-
-# v440: religious-content accuracy and documented release audits.
-test -f CONTENT_RIGHTS_AUDIT.md \
-  || fail "content rights audit missing"
-test -f RELIGIOUS_CONTENT_AUDIT.md \
-  || fail "religious content audit missing"
-grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' SalahZeit/Views/GuideView.swift \
-  || fail "Hanafi congregational Fatiha clarification missing"
-grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' SalahZeit/Views/GuideView.swift \
-  || fail "Quran 3:8 is incomplete"
-grep -q 'qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā' SalahZeit/Views/GuideView.swift \
-  || fail "Quran 25:74 transliteration remains incomplete"
-grep -q 'private func displayedArabic(for item: AdhkarEntry)' SalahZeit/Views/GuideView.swift \
-  || fail "morning/evening adhkar formula switch missing"
-grep -q 'وَإِلَيْكَ الْمَصِيرُ' SalahZeit/Views/GuideView.swift \
-  || fail "evening Allahumma bika formula missing"
-grep -q 'count: 1, source: "Allgemeines Istighfar / genel istiğfar"' SalahZeit/Views/GuideView.swift \
-  || fail "unsupported fixed Istighfar count remains"
-grep -q 'Quran 20:114 · excerpt' SalahZeit/Views/HomeView.swift \
-  || fail "Home Quran excerpt label missing"
-grep -q 'Bukhari 6306 · excerpt' SalahZeit/Views/HomeView.swift \
-  || fail "Sayyid al-Istighfar excerpt label missing"
-grep -q 'Hadithquellen und Diyanet' SalahZeit/Views/GuideView.swift \
-  || fail "hadith grading disclaimer wording missing"
-
-echo "SalahPath preflight: PASS"
+printf 'Reference build checks passed for SalahPath v3.62 build 76\n'

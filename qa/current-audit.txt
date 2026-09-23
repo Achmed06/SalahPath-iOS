@@ -1,2 +1,221 @@
 SalahPath current-main visual and launch audit trigger
-run: 3
+run: 4
+
+PDF COMPLEMENT / REGRESSION AUDIT
+Reference: pdf24_umgewandelt.pdf, 139 pages.
+Rule: use the PDF only to find useful additions, missing discoverability, and correctness regressions.
+Do NOT clone the legacy application's visual shell, advertising, side menu, or obsolete static screens.
+
+PAGE COVERAGE
+1
+- Legacy prayer-time dashboard.
+- SalahPath equivalent already exists in HomeView/PrayerEngine.
+- No visual replacement requested.
+
+2-4
+- Daily religious content / “Takvim Arkası”.
+- SalahPath already has daily dua and reference content.
+- No direct legacy-screen copy.
+
+5-9
+- Legacy side-menu inventory.
+- Used only as a feature-discovery checklist.
+- SalahPath keeps its native Home/Quran/Gebet/Entdecken/Profil navigation.
+
+10
+- Multi-day prayer timetable.
+- Existing prayer-time engine retained; no regression-driven change required.
+
+11
+- Islamic special days.
+- Existing HijriCalendarView retained, including current calendar-export work.
+
+12-13
+- Prayer alarms / offsets / display settings.
+- Existing SettingsView and notification scheduler retained.
+- Current app’s scheduling fixes take precedence over legacy UI.
+
+14
+- Qibla compass.
+- Existing native QiblaView retained.
+- Recent true-north/location lifecycle fixes retained.
+
+15
+- Dhikr counter.
+- Existing Dhikr/Tasbih tools retained.
+
+16
+- Legacy ilahi music player.
+- Not copied. PDF does not require SalahPath to become a general music player.
+
+17
+- Community board.
+- Not copied. It would introduce moderation/account/network scope unrelated to a reference fix.
+
+18-32
+- Wudu sequence and poses.
+- Checked end-to-end.
+- Existing detailed WuduGuideView retained.
+- Rendered Wudu image assets were inspected directly, not inferred from filenames.
+- Verified right/left arm and foot visuals against the rendered assets and PDF. The asset filenames encode screen-side orientation, so the code intentionally maps the mirrored image to the worshipper's anatomical side.
+- Corrected Basmala to use the dedicated wudu_basmala artwork.
+- Clarified the nose step: water with the right hand, cleaning/blowing with the left hand.
+- Existing detailed Farz/Sunnah explanations remain the authoritative SalahPath UI.
+
+33-35
+- Ghusl.
+- Existing GhuslGuideView retained.
+
+36-37
+- Prayer types / rak'ah counts.
+- Existing HanafiPrayerPlanView retained.
+- Added direct discovery link from Gebet lernen so this material is not hidden.
+
+38-76
+- Detailed salah sequence, male/female differences, recitations, right-then-left salam, post-prayer material.
+- Existing PrayerHowToView retained.
+- Verified salam artwork directly: worshipper’s own RIGHT is shown first, then LEFT. Because a front-facing person's own right appears on the viewer's left, step 17 intentionally uses the screen-left artwork and step 18 the screen-right artwork.
+- Existing male/female audience switch and 18-step tutorial retained.
+- Rendered male and female prayer assets were inspected directly, including both salam directions and the tashahhud finger artwork.
+- Steps 8 and 15 now use the dedicated second_sujud assets; final sitting now exposes the existing finger visual with the Hanafi tashahhud detail.
+- Added direct links to prayer plan, prayer duas, and short-surah learning.
+
+77-80
+- Prayer surahs/duas and Yasin entry.
+- Existing PrayerDuaAudioView, ShortSurahLearningView, and full Quran reader retained.
+- No downgrade to a static list.
+
+81
+- Tasbih.
+- Existing native counter retained.
+
+82
+- Kaza/Qada tracker.
+- Missing as a dedicated simple counter.
+- Added PrayerDebtTrackerView with persistent counters for Fajr, Dhuhr, Asr, Maghrib, Isha, Witr, and fasting.
+
+83-84
+- Adhan/dua audio list.
+- SalahPath already has prayer/Quran audio infrastructure.
+- Legacy audio catalogue not copied without verified media rights/source data.
+
+85
+- Nearby mosques.
+- Added as a native live Apple MapKit local search using SalahPath's current/manual location.
+- No static screenshot map or legacy dialog was copied.
+
+86-98
+- “40 Hadis”.
+- Reference reviewed.
+- Not bulk-copied from screenshots: religious text/source content should be added from verified structured sources, not raster transcription.
+
+99-103
+- Farewell sermon.
+- Reference reviewed.
+- Not bulk-copied from a screenshot-only source; no UI regression requires it.
+
+104-105
+- “32 Farz”.
+- Useful compact reference missing from current discovery surface.
+- Added ThirtyTwoFardView as a supplement to the existing detailed Wudu/Ghusl/Tayammum/Prayer lessons.
+
+106
+- Religious broadcast/video player.
+- Not copied; unrelated to the current learning/prayer correctness scope.
+
+107-115
+- Esmaül Hüsna 1-99.
+- Reference reviewed.
+- Not transcribed from raster screenshots. Requires a verified structured dataset before shipping.
+
+116-124
+- Large İlmihal table of contents.
+- Existing IslamLearningHubView retained.
+- No attempt to clone an external book/table-of-contents screen from screenshots.
+
+125-132
+- Quran navigation by surah/revelation/page/juz, audio Quran, Quran index, Yasin.
+- Existing QuranView/Juz/favorites/audio/progress implementation retained.
+- Existing app is more native and interactive; no legacy-screen copy.
+
+133
+- Hajj/Umrah guide menu.
+- Reference reviewed.
+- Not added as an empty shell because the screenshot does not provide the complete guide content.
+
+134
+- Legacy menu / Islamic quiz entry.
+- No side-menu clone.
+
+135
+- Friday-sermon index.
+- Reference reviewed.
+- Not copied as incomplete/externally maintained content.
+
+136
+- Cevşen page index.
+- Reference reviewed.
+- Not copied from screenshots without complete verified text.
+
+137
+- Ramadan and fasting menu.
+- Existing fasting/Ramadan learning and tracker retained.
+
+138-139
+- Four Caliphs entry/menu highlight.
+- Reference reviewed.
+- Not added as an empty shell; requires complete verified learning content.
+
+IMPLEMENTED FROM THIS AUDIT
+- Prayer salam direction verified from actual assets: worshipper's own RIGHT then LEFT.
+- Wudu right/left arm and foot mappings verified from actual rendered assets and kept mirrored where required by the worshipper's anatomical side.
+- Wudu Basmala uses its dedicated artwork.
+- Wudu nose-hand usage is explicit (right hand for water, left hand for cleaning).
+- Dedicated second-sujud and tashahhud-finger visuals are now used instead of remaining hidden/unused.
+- Gebet lernen now exposes Wudu, rak'ah plan, prayer duas, and short-surah learning directly.
+- Added persistent Qada tracker.
+- Added compact 32 Farz reference.
+- Added native nearby-mosque search backed by Apple Maps.
+- Exposed Qada tracker, 32 Farz, and nearby mosques from Entdecken.
+
+INTENTIONAL NON-GOALS
+- No copying ads.
+- No replacement of SalahPath’s current visual identity.
+- No recreation of the legacy side menu.
+- No screenshot-to-text bulk import for hadith, sermons, Esmaül Hüsna, Cevşen, or Hajj/Umrah content.
+- No fake static mosque map or media catalogue.
+
+CRASH-HARDENING FOLLOW-UP
+- Removed remaining production crash primitives from the active Swift source paths.
+- Guarded persisted prayer/Quran settings, Qada counters, dhikr progress, Quran repeat count, bookmark/last-read data and UI refresh counters.
+- Hardened location, MapKit mosque search, Qibla heading/direction and prayer calculation inputs against invalid/non-finite coordinates and sensor values.
+- Hardened Quran chapter, surah, page and audio-ayah payloads against invalid IDs, duplicate/missing ordering and stale async responses.
+- Quran chapter metadata now requires the complete 114-surah directory before cache/API data is accepted.
+- Quran audio indexing now validates numberInSurah ordering before exposing index-addressable URLs.
+- Quran cache size accounting and countdown conversions use overflow-safe arithmetic.
+- Quran network JSON payloads, text-cache reads/writes and individual cached audio files are size-bounded; invalid text/audio cache entries self-heal.
+- Quran audio responses reject explicit non-audio MIME types and reciter aliases have controlled provider fallbacks.
+- Notification scheduling reports incomplete multi-day calculation/scheduling instead of falsely reporting full success.
+- Persisted notification lead time, prayer offsets and Quran font size are sanitized both at startup and for later runtime assignments.
+- The release preflight rejects fatalError, try!, forced casts, unencrypted URL construction and regression of the unsafe persisted repeat-count path.
+
+APP STORE / PRIVACY RELEASE HARDENING
+- Native source now includes PrivacyInfo.xcprivacy in the app target resources.
+- Privacy manifest declares no tracking, conservatively declares the Quran provider source-IP metadata as a non-linked/non-tracking Device ID used for App Functionality, and documents UserDefaults / file-timestamp required-reason API use.
+- Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 76.
+- ITSAppUsesNonExemptEncryption is explicitly false.
+- Privacy and support links are exposed inside Settings.
+- The built app bundle is checked for Info.plist metadata, bundled privacy manifest and valid IPA ZIP structure.
+- Release, FAST preview and UI-capture workflows use the release bundle identifier and macOS 26 / Xcode 26-capable runners.
+- App Store submission, privacy, support, content-rights and religious-content audit documents are present on the working branch.
+
+SWIFT / CONCURRENCY RELEASE HARDENING
+- SWIFT_STRICT_CONCURRENCY is complete while the language mode remains Swift 5 for compatibility.
+- Release Swift warnings are treated as errors.
+- CoreLocation delegate handoff uses Sendable heading/status values instead of transferring non-Sendable framework objects across actors.
+- EventKit and AVFoundation callbacks no longer cross actor boundaries with non-Sendable callback state.
+- The Xcode 26 release build is clean of app-source compiler warnings; only Xcode's unrelated AppIntents metadata notice remains when AppIntents is not linked.
+
+NEXT RELEASE GATE
+- Every new commit must pass the GitHub Actions preflight, warning-as-error Release compilation, IPA integrity checks and artifact upload before this audit is considered release-ready.
+- Final App Store submission still requires signed TestFlight/device validation. The provider-log-retention decision is finalized conservatively in APP_STORE_SUBMISSION.md: Identifiers → Device ID, App Functionality, not linked, not tracking; no Quran-service GPS location disclosure.

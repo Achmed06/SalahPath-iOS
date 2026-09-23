@@ -17,7 +17,7 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Restore SalahPath source
         shell: bash
@@ -278,7 +278,7 @@ jobs:
           capture times SalahPath-v3.62-B76-DE-PrayerTimes.png
 
       - name: Upload UI previews
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: SalahPath-v3.62-build76-ui-preview
           path: ui-preview/*.png
