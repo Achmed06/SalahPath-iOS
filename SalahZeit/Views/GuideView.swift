@@ -5627,11 +5627,13 @@ private struct CalendarEventEditor: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> EKEventEditViewController {
         let eventStore = EKEventStore()
         let event = EKEvent(eventStore: eventStore)
-        let start = Calendar.current.startOfDay(for: draft.date)
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = .autoupdatingCurrent
+        let start = calendar.startOfDay(for: draft.date)
 
         event.title = draft.title
         event.startDate = start
-        event.endDate = Calendar.current.date(byAdding: .day, value: 1, to: start) ?? start
+        event.endDate = calendar.date(byAdding: .day, value: 1, to: start) ?? start
         event.isAllDay = true
         event.notes = draft.notes
 
@@ -5784,8 +5786,18 @@ private struct IslamicCalendarEventDetailView: View {
 
 struct HijriCalendarView: View {
     @EnvironmentObject private var settings: SettingsStore
-    private let calendar = Calendar.current
-    private let hijri = Calendar(identifier: .islamicUmmAlQura)
+
+    private var localCalendar: Calendar {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = .autoupdatingCurrent
+        return calendar
+    }
+
+    private var hijriCalendar: Calendar {
+        var calendar = Calendar(identifier: .islamicUmmAlQura)
+        calendar.timeZone = .autoupdatingCurrent
+        return calendar
+    }
 
     var body: some View {
         List {
@@ -5883,7 +5895,7 @@ struct HijriCalendarView: View {
 
             Spacer()
 
-            if calendar.isDateInToday(date) {
+            if localCalendar.isDateInToday(date) {
                 Text(settings.t("Heute", "Bugün"))
                     .font(.caption.bold())
                     .foregroundStyle(.tint)
@@ -5919,7 +5931,7 @@ struct HijriCalendarView: View {
     }
 
     private var days: [Date] {
-        (0..<30).compactMap { calendar.date(byAdding: .day, value: $0, to: calendar.startOfDay(for: Date())) }
+        (0..<30).compactMap { localCalendar.date(byAdding: .day, value: $0, to: localCalendar.startOfDay(for: Date())) }
     }
 
     private struct DatedEvent: Identifiable {
@@ -5930,13 +5942,13 @@ struct HijriCalendarView: View {
 
     private var nextImportantEvents: [DatedEvent] {
         var result: [DatedEvent] = []
-        let start = calendar.startOfDay(for: Date())
+        let start = localCalendar.startOfDay(for: Date())
 
         for offset in 0..<400 {
-            guard let date = calendar.date(byAdding: .day, value: offset, to: start),
+            guard let date = localCalendar.date(byAdding: .day, value: offset, to: start),
                   let event = eventInfo(date) else { continue }
 
-            let components = hijri.dateComponents([.year, .month, .day], from: date)
+            let components = hijriCalendar.dateComponents([.year, .month, .day], from: date)
             let token = "\(components.year ?? 0)-\(components.month ?? 0)-\(components.day ?? 0)-\(event.deTitle)"
             result.append(.init(id: token, date: date, event: event))
 
@@ -5947,8 +5959,8 @@ struct HijriCalendarView: View {
     }
 
     private func eventInfo(_ date: Date) -> IslamicCalendarEvent? {
-        let m = hijri.component(.month, from: date)
-        let d = hijri.component(.day, from: date)
+        let m = hijriCalendar.component(.month, from: date)
+        let d = hijriCalendar.component(.day, from: date)
 
         if m == 1 && d == 1 {
             return .init(
