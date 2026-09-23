@@ -259,8 +259,8 @@ private struct DailyDuaEntry {
 private enum DailyDuaStore {
     static let items: [DailyDuaEntry] = [
         .init(deTitle: "Rabbana atina", trTitle: "Rabbenâ âtinâ", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.", repetition: nil, source: "Quran 2:201"),
-        .init(deTitle: "Rabbi zidni ilma", trTitle: "Rabbî zidnî ilmâ", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", deMeaning: "Mein Herr, mehre mein Wissen.", trMeaning: "Rabbim, ilmimi artır.", repetition: nil, source: "Quran 20:114"),
-        .init(deTitle: "Hasbunallahu", trTitle: "Hasbünallahu", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl", deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.", trMeaning: "Allah bize yeter, O ne güzel vekildir.", repetition: nil, source: "Quran 3:173"),
+        .init(deTitle: "Rabbi zidni ilma", trTitle: "Rabbî zidnî ilmâ", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", deMeaning: "Mein Herr, mehre mein Wissen.", trMeaning: "Rabbim, ilmimi artır.", repetition: nil, source: "Quran 20:114 · excerpt"),
+        .init(deTitle: "Hasbunallahu", trTitle: "Hasbünallahu", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl", deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.", trMeaning: "Allah bize yeter, O ne güzel vekildir.", repetition: nil, source: "Quran 3:173 · excerpt"),
         .init(
             deTitle: "Sayyidul Istighfar",
             trTitle: "Seyyidü'l-istiğfar",
