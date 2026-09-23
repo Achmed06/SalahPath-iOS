@@ -3,11 +3,17 @@ import CoreLocation
 import Combine
 import UIKit
 
+struct HeadingSnapshot: Sendable {
+    let trueHeading: CLLocationDirection
+    let magneticHeading: CLLocationDirection
+    let headingAccuracy: CLLocationDirection
+}
+
 @MainActor
 final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published private(set) var location: CLLocation?
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
-    @Published private(set) var heading: CLHeading?
+    @Published private(set) var heading: HeadingSnapshot?
     @Published private(set) var lastError: String?
     @Published private(set) var locality: String?
     @Published private(set) var usesManualLocation = false
@@ -246,9 +252,11 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = manager.authorizationStatus
+
         Task { @MainActor in
-            self.authorizationStatus = manager.authorizationStatus
-            switch manager.authorizationStatus {
+            self.authorizationStatus = status
+            switch status {
             case .authorizedWhenInUse, .authorizedAlways:
                 self.lastError = nil
                 self.startUpdates()
@@ -291,10 +299,18 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        guard newHeading.headingAccuracy >= 0 else { return }
+        let snapshot = HeadingSnapshot(
+            trueHeading: newHeading.trueHeading,
+            magneticHeading: newHeading.magneticHeading,
+            headingAccuracy: newHeading.headingAccuracy
+        )
+
+        guard snapshot.headingAccuracy.isFinite,
+              snapshot.headingAccuracy >= 0 else { return }
+
         Task { @MainActor in
-            if newHeading.headingAccuracy <= 50 || self.heading == nil {
-                self.heading = newHeading
+            if snapshot.headingAccuracy <= 50 || self.heading == nil {
+                self.heading = snapshot
             }
         }
     }
