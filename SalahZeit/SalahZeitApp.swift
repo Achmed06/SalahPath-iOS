@@ -88,6 +88,7 @@ struct SalahPathApp: App {
             settings.asrRule.rawValue,
             String(settings.notificationLeadMinutes),
             settings.notifyAtPrayerTime ? "1" : "0",
+            settings.adhanSoundEnabled ? "adhan" : "system",
             prayerFlags,
             offsets,
             settings.language.rawValue,

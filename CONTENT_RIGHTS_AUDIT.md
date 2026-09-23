@@ -1,7 +1,7 @@
 # SalahPath content-rights audit
 
 Audit date: 21 September 2026  
-Target build: SalahPath 3.62 (76)
+Target build: SalahPath 3.62 (77)
 
 ## Current Quran integration
 
@@ -32,6 +32,12 @@ https://community.islamic.network/d/257-commercial-use-of-quran-audio-text-via-y
 For the current build, the documented provider terms support the way SalahPath uses the Quran service: reading, streaming and local audio caching are not paywalled, source/translator attribution is present, and the app does not redistribute the files as a separate media product.
 
 Because reciters and translation rightsholders retain their rights, this audit is not a transfer of copyright. If SalahPath later introduces paid Quran access, subscriptions that gate Quran content, advertising tied to Quran access, resale, redistribution outside the app, or a different Quran/audio provider, the rights review must be repeated before release.
+
+## Bundled Adhan notification audio
+
+Build 77 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
+
+This audio is not sourced from AlQuran.cloud and is not subject to the Quran recitation terms above.
 
 ## App Store evidence
 

@@ -195,6 +195,7 @@ final class SettingsStore: ObservableObject {
         static let use24Hour = "use24Hour"
         static let notifications = "notificationsEnabled"
         static let notifyAtPrayerTime = "notifyAtPrayerTime"
+        static let adhanSoundEnabled = "adhanSoundEnabled"
         static let leadMinutes = "notificationLeadMinutes"
         static let fajrNotification = "fajrNotificationEnabled"
         static let dhuhrNotification = "dhuhrNotificationEnabled"
@@ -221,6 +222,7 @@ final class SettingsStore: ObservableObject {
     @Published var use24Hour: Bool { didSet { defaults.set(use24Hour, forKey: Keys.use24Hour) } }
     @Published var notificationsEnabled: Bool { didSet { defaults.set(notificationsEnabled, forKey: Keys.notifications) } }
     @Published var notifyAtPrayerTime: Bool { didSet { defaults.set(notifyAtPrayerTime, forKey: Keys.notifyAtPrayerTime) } }
+    @Published var adhanSoundEnabled: Bool { didSet { defaults.set(adhanSoundEnabled, forKey: Keys.adhanSoundEnabled) } }
     @Published var notificationLeadMinutes: Int {
         didSet {
             let sanitized = Self.sanitizedLeadMinutes(notificationLeadMinutes)
@@ -292,6 +294,7 @@ final class SettingsStore: ObservableObject {
         self.use24Hour = defaults.object(forKey: Keys.use24Hour) as? Bool ?? true
         self.notificationsEnabled = defaults.object(forKey: Keys.notifications) as? Bool ?? false
         self.notifyAtPrayerTime = defaults.object(forKey: Keys.notifyAtPrayerTime) as? Bool ?? true
+        self.adhanSoundEnabled = defaults.object(forKey: Keys.adhanSoundEnabled) as? Bool ?? false
         let storedLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 10
         self.notificationLeadMinutes = Self.sanitizedLeadMinutes(storedLeadMinutes)
         self.fajrNotificationEnabled = defaults.object(forKey: Keys.fajrNotification) as? Bool ?? true

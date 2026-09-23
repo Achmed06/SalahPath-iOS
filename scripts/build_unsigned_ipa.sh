@@ -19,7 +19,7 @@ xcodebuild \
   PRODUCT_NAME="SalahPath" \
   PRODUCT_BUNDLE_IDENTIFIER="com.achmed06.salahpath" \
   MARKETING_VERSION="3.62" \
-  CURRENT_PROJECT_VERSION="76" \
+  CURRENT_PROJECT_VERSION="77" \
   INFOPLIST_KEY_CFBundleDisplayName="SalahPath" \
   build
 
@@ -32,6 +32,8 @@ fi
 APP_BINARY="$APP_PATH/SalahPath"
 INFO_PLIST="$APP_PATH/Info.plist"
 PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
+ADHAN_STANDARD_SOUND="$APP_PATH/adhan-standard.caf"
+ADHAN_FAJR_SOUND="$APP_PATH/adhan-fajr.caf"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
@@ -48,6 +50,24 @@ if [ ! -f "$PRIVACY_MANIFEST" ]; then
   exit 1
 fi
 
+for sound in "$ADHAN_STANDARD_SOUND" "$ADHAN_FAJR_SOUND"; do
+  if [ ! -s "$sound" ]; then
+    echo "Gebetsruf-Datei fehlt oder ist leer: $sound" >&2
+    exit 1
+  fi
+done
+
+FAJR_SHA256="$(/usr/bin/shasum -a 256 "$ADHAN_FAJR_SOUND" | awk '{print $1}')"
+STANDARD_SHA256="$(/usr/bin/shasum -a 256 "$ADHAN_STANDARD_SOUND" | awk '{print $1}')"
+if [ "$FAJR_SHA256" != "e0641b2e4a04f38f38c7cc8479a0a3e4d8c5d9a577d04e9acd32c135fb2df47f" ]; then
+  echo "Unerwarteter Inhalt für adhan-fajr.caf." >&2
+  exit 1
+fi
+if [ "$STANDARD_SHA256" != "8752346b8fab95baa41b991790233ef99e85e86728fb8d296113aba274eeef43" ]; then
+  echo "Unerwarteter Inhalt für adhan-standard.caf." >&2
+  exit 1
+fi
+
 /usr/bin/plutil -lint "$PRIVACY_MANIFEST" >/dev/null
 
 BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST")"
@@ -55,7 +75,7 @@ VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO
 BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
 USES_NONEXEMPT_ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
 
-if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "76" ]; then
+if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "77" ]; then
   echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
   exit 1
 fi

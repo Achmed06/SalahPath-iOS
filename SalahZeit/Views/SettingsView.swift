@@ -222,6 +222,59 @@ struct SettingsView: View {
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
+                    referenceToggle(
+                        icon: "speaker.wave.3.fill",
+                        title: settings.t("Gebetsruf (Adhan) abspielen", "Ezan sesi çal"),
+                        isOn: $settings.adhanSoundEnabled
+                    )
+                    .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime)
+                    .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime ? 1 : 0.45)
+
+                    HStack(spacing: 8) {
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
+                                notificationStatusText = scheduled
+                                    ? settings.t("Standard-Gebetsruf startet gleich.", "Standart ezan birazdan çalacak.")
+                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                            }
+                        } label: {
+                            Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
+                        }
+                        .buttonStyle(.bordered)
+
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: true)
+                                notificationStatusText = scheduled
+                                    ? settings.t("Fajr-Gebetsruf startet gleich.", "Sabah ezanı birazdan çalacak.")
+                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                            }
+                        } label: {
+                            Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .tint(SalahTheme.teal)
+                    .padding(.horizontal, 12)
+                    .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime || !settings.adhanSoundEnabled)
+                    .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime && settings.adhanSoundEnabled ? 1 : 0.45)
+
+                    Text(settings.t(
+                        "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
+                        "Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Her ikisi de Internet Archive'daki „Adhan Recordings from Doha, Qatar“ kamu malı koleksiyonundandır. Ön hatırlatmalar normal iOS sesini kullanır."
+                    ))
+                    .font(.system(size: 9.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+
                     Picker(settings.t("Vorwarnung", "Ön hatırlatma"), selection: $settings.notificationLeadMinutes) {
                         Text(settings.t("Keine", "Kapalı")).tag(0)
                         Text(settings.t("5 Min. vorher", "5 dk önce")).tag(5)

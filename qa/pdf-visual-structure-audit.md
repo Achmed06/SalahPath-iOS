@@ -75,7 +75,7 @@ The audit is intentionally stricter than the earlier feature-only audit:
 | 80 | Yasin: Arabic text, Turkish reading, Turkish meaning, tafsir. | Full Quran reader plus Yasin/reference entry. | **PARTIAL** only if a dedicated tafsir mode is expected; Quran reading itself is complete. |
 | 81 | Tesbih counter with bead visual, count, audio/reset/settings. | `DhikrView` / `TasbihCounterView`. | **COMPLETE core use case**. |
 | 82 | Qada counters for Fajr, Dhuhr, Asr, Maghrib, Isha, Witr and fasting with +/−. | `PrayerDebtTrackerView`, persistent counters. | **COMPLETE**. |
-| 83–84 | “Ezan / Dua Dinle”: multiple adhans by prayer/makam, Mecca adhan, extra adhans, Sela, adhan dua, Lebbeyk, iftar dua. | Existing `PrayerDuaAudioView` is for prayer recitations, not an adhan/sela catalogue. | **MISSING / SOURCE-GATED**. Requires verified/licensed audio assets or a clearly licensed provider. |
+| 83–84 | “Ezan / Dua Dinle”: multiple adhans by prayer/makam, Mecca adhan, extra adhans, Sela, adhan dua, Lebbeyk, iftar dua. | Build 77 now has separate optional 28-second Fajr and standard Doha Adhan notification sounds at exact prayer time plus Settings test actions. `PrayerDuaAudioView` remains separate prayer-recitation content. | **PARTIAL / SOURCE-GATED**. The core prayer-time Adhan is implemented; the broader Sela/makam/dua catalogue still requires separately verified audio rights. |
 | 85 | Nearby mosques using map/location. | `NearbyMosquesView` backed by Apple MapKit local search. | **COMPLETE / stronger native equivalent**. |
 | 86–98 | “40 Hadis”: long vertically scrolling set of 40 hadith cards with citations. | No dedicated Forty Hadith view found. | **MISSING / SOURCE-GATED**. Valuable addition only from verified hadith dataset; do not transcribe screenshots. |
 | 99–103 | Veda Hutbesi long text with A+/A−. | `FarewellSermonView` now exists and intentionally presents sourced core messages while explaining that the commonly circulated sermon is compiled from multiple reports. | **COMPLETE as a safer native learning view**, not a screenshot transcript. |
@@ -187,8 +187,9 @@ The current source contains and exposes these real views:
    - Each item should include source/reference metadata and search/filtering.
 
 3. **Adhan / Sela audio hub**
-   - Separate this from prayer-dua recitations.
-   - Ship only audio with clear rights/provenance.
+   - Core notification Adhan is now implemented with pinned Fajr and standard derivatives from the Internet Archive Doha collection marked Public Domain Mark 1.0.
+   - Keep it separate from prayer-dua recitations.
+   - Any additional Sela, makam variant or catalogue recording must have clear rights/provenance before shipping.
 
 4. **İlmihal expansion**
    - Keep the native SalahPath presentation but extend the current condensed directory toward the useful hierarchy visible on pages 116–124.

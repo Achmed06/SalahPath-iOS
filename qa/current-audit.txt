@@ -98,8 +98,9 @@ PAGE COVERAGE
 
 83-84
 - Adhan/dua audio list.
-- SalahPath already has prayer/Quran audio infrastructure.
-- Legacy audio catalogue not copied without verified media rights/source data.
+- Build 77 adds real optional 28-second Adhan notification sounds at exact prayer time from the Internet Archive public-domain Doha collection: a dedicated Fajr recording plus a standard recording for the other four prayers.
+- Advance reminders remain on the normal iOS sound; a Settings preview schedules the same real notification sound for testing.
+- The broader legacy Adhan/Sela/dua audio catalogue remains intentionally unimplemented until each additional recording has verified redistribution rights.
 
 85
 - Nearby mosques.
@@ -180,6 +181,7 @@ IMPLEMENTED FROM THIS AUDIT
 - Added compact 32 Farz reference.
 - Added native nearby-mosque search backed by Apple Maps.
 - Exposed Qada tracker, 32 Farz, and nearby mosques from Entdecken.
+- Added separate Fajr and standard public-domain Doha Adhan sounds for exact prayer-time notifications, with in-app test actions and release hash gates.
 
 INTENTIONAL NON-GOALS
 - No copying ads.
@@ -206,7 +208,7 @@ CRASH-HARDENING FOLLOW-UP
 APP STORE / PRIVACY RELEASE HARDENING
 - Native source now includes PrivacyInfo.xcprivacy in the app target resources.
 - Privacy manifest declares no tracking, conservatively declares the Quran provider source-IP metadata as a non-linked/non-tracking Device ID used for App Functionality, and documents UserDefaults / file-timestamp required-reason API use.
-- Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 76.
+- Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 77.
 - ITSAppUsesNonExemptEncryption is explicitly false.
 - Privacy and support links are exposed inside Settings.
 - The built app bundle is checked for Info.plist metadata, bundled privacy manifest and valid IPA ZIP structure.
