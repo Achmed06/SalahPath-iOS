@@ -99,6 +99,7 @@ struct PrayerTrackerOverviewView: View {
     @State private var now = Date()
 
     var body: some View {
+        let _ = refresh
         let today = now
         let completed = PrayerTrackerStore.completedCount(on: today)
         let streak = PrayerTrackerStore.streak(upTo: today)
@@ -191,6 +192,7 @@ struct TrackerPauseView: View {
     @State private var now = Date()
 
     var body: some View {
+        let _ = refresh
         let today = now
         let paused = PrayerTrackerStore.isPaused(today)
         List {
