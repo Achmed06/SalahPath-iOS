@@ -58,6 +58,7 @@ final class NotificationManager {
             guard revision == schedulingRevision else { return false }
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
                   let day = engine.calculateDay(for: date, location: location, settings: settings, calendar: calendar) else {
+                allRequestsScheduled = false
                 continue
             }
 
