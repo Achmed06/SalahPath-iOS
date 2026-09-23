@@ -418,6 +418,58 @@ struct SettingsView: View {
                     .padding(.vertical, 10)
                 }
 
+                referenceSection(settings.t("Rechtliches & Hilfe", "Yasal bilgiler & yardım")) {
+                    if let privacyURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md") {
+                        Link(destination: privacyURL) {
+                            HStack(spacing: 9) {
+                                Image(systemName: "hand.raised.fill")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.teal)
+                                    .frame(width: 28, height: 28)
+                                    .background(SalahTheme.softTeal, in: Circle())
+
+                                Text(settings.t("Datenschutzerklärung", "Gizlilik politikası"))
+                                    .font(.system(size: 11.5, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.ink)
+
+                                Spacer()
+
+                                Image(systemName: "arrow.up.right.square")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    if let supportURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/issues") {
+                        Link(destination: supportURL) {
+                            HStack(spacing: 9) {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.teal)
+                                    .frame(width: 28, height: 28)
+                                    .background(SalahTheme.softTeal, in: Circle())
+
+                                Text(settings.t("Support", "Destek"))
+                                    .font(.system(size: 11.5, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.ink)
+
+                                Spacer()
+
+                                Image(systemName: "arrow.up.right.square")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 10)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
                 referenceSection(settings.t("Feinabstimmung", "İnce ayar")) {
                     offsetRow(settings.language == .german ? "Fajr" : "Sabah", value: $settings.fajrOffset)
                     offsetRow(settings.language == .german ? "Dhuhr" : "Öğle", value: $settings.dhuhrOffset)
