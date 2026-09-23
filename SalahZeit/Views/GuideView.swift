@@ -5251,17 +5251,7 @@ private enum FastingStore {
     private static let key = "fastingDays"
 
     static func token(_ date: Date) -> String {
-        var calendar = Calendar.autoupdatingCurrent
-        calendar.timeZone = .autoupdatingCurrent
-        let parts = calendar.dateComponents([.year, .month, .day], from: date)
-
-        guard let year = parts.year,
-              let month = parts.month,
-              let day = parts.day else {
-            return "unknown"
-        }
-
-        return String(format: "%04d-%02d-%02d", year, month, day)
+        LocalDay.token(for: date)
     }
     static func tokens() -> Set<String> { Set(UserDefaults.standard.stringArray(forKey: key) ?? []) }
     static func contains(_ date: Date) -> Bool { tokens().contains(token(date)) }
@@ -5274,13 +5264,12 @@ private enum FastingStore {
 
 struct FastingTrackerView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var refresh = 0
     @State private var now = Date()
 
     private var localCalendar: Calendar {
-        var calendar = Calendar.autoupdatingCurrent
-        calendar.timeZone = .autoupdatingCurrent
-        return calendar
+        LocalDay.calendar()
     }
 
     private var hijriCalendar: Calendar {
@@ -5303,6 +5292,14 @@ struct FastingTrackerView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Fasten & Ramadan", "Oruç ve Ramazan"))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            now = Date()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                now = Date()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
         }
