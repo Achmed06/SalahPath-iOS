@@ -392,47 +392,12 @@ struct MoreView: View {
             VStack(spacing: 8) {
                 discoverHero
 
+                discoverSectionTitle(
+                    settings.t("Gebet & Ibadah", "Namaz & İbadet"),
+                    icon: "figure.mind.and.body"
+                )
+
                 LazyVGrid(columns: columns, spacing: 7) {
-                    NavigationLink { MorningEveningAdhkarView() } label: {
-                        discoverTile(icon: "hands.sparkles.fill", title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Morgen & Abend", "Sabah & Akşam"))
-                    }
-                    NavigationLink { DhikrView() } label: {
-                        discoverTile(icon: "circle.grid.cross.fill", title: settings.t("Dhikr & Tasbih", "Zikir & Tesbih"), subtitle: settings.t("Zähler", "Sayaç"))
-                    }
-                    NavigationLink { QuranicDuaLibraryView() } label: {
-                        discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Quranische Duas", "Kur'an duaları"))
-                    }
-                    NavigationLink { RamadanGuideIndexView() } label: {
-                        discoverTile(
-                            icon: "moon.stars.fill",
-                            title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"),
-                            subtitle: settings.t("Lernen · Gebete · Tracker", "Öğren · namaz · takip")
-                        )
-                    }
-                    NavigationLink { HajjUmrahGuideView() } label: {
-                        discoverTile(
-                            icon: "map.fill",
-                            title: settings.t("Hajj & Umrah", "Hac & Umre"),
-                            subtitle: settings.t("Ablauf · Orte · Duas", "Akış · ziyaret · dualar")
-                        )
-                    }
-                    NavigationLink { IslamLearningHubView() } label: {
-                        discoverTile(icon: "book.pages.fill", title: settings.t("Islam lernen", "İslâm'ı Öğren"), subtitle: settings.t("Von den Grundlagen", "Temelden başla"))
-                    }
-                    NavigationLink { IlmihalDirectoryView() } label: {
-                        discoverTile(
-                            icon: "books.vertical.fill",
-                            title: settings.t("İlmihal", "İlmihal"),
-                            subtitle: settings.t("Glaube · عبادات · Alltag", "İman · ibadet · hayat")
-                        )
-                    }
-                    NavigationLink { EsmaulHusnaView() } label: {
-                        discoverTile(
-                            icon: "sparkles",
-                            title: settings.t("Esmaül Hüsna", "Esmâü'l-Hüsnâ"),
-                            subtitle: settings.t("Allahs 99 schöne Namen", "Allah'ın 99 güzel ismi")
-                        )
-                    }
                     NavigationLink { PrayerHowToView() } label: {
                         discoverTile(icon: "figure.mind.and.body", title: settings.t("Gebet lernen", "Namaz Öğren"), subtitle: settings.t("Schritt für Schritt", "Adım adım"))
                     }
@@ -445,16 +410,6 @@ struct MoreView: View {
                     }
                     NavigationLink { WuduGuideView() } label: {
                         discoverTile(icon: "drop.fill", title: settings.t("Wudu", "Abdest Rehberi"), subtitle: settings.t("Schritt für Schritt", "Adım adım"))
-                    }
-                    NavigationLink { ShortSurahLearningView() } label: {
-                        discoverTile(icon: "play.square.stack.fill", title: settings.t("Kurze Suren", "Kısa Sûreler"), subtitle: settings.t("Lernen & hören", "Öğren & dinle"))
-                    }
-                    NavigationLink { QuranDirectoryView() } label: {
-                        discoverTile(
-                            icon: "books.vertical.fill",
-                            title: settings.t("Quran-Verzeichnis", "Kur'an Dizini"),
-                            subtitle: settings.t("Suren · Seiten · Juz", "Sûre · sayfa · cüz")
-                        )
                     }
                     NavigationLink { PrayerTextsHubView() } label: {
                         discoverTile(
@@ -472,6 +427,72 @@ struct MoreView: View {
                     NavigationLink { ThirtyTwoFardView() } label: {
                         discoverTile(icon: "checklist", title: "32 Farz", subtitle: settings.t("Kompakter Lernzettel", "Kısa öğrenme özeti"))
                     }
+                }
+
+                discoverSectionTitle(
+                    settings.t("Quran, Dua & Dhikr", "Kur'an, Dua & Zikir"),
+                    icon: "text.book.closed.fill"
+                )
+
+                LazyVGrid(columns: columns, spacing: 7) {
+                    NavigationLink { QuranDirectoryView() } label: {
+                        discoverTile(
+                            icon: "books.vertical.fill",
+                            title: settings.t("Quran-Verzeichnis", "Kur'an Dizini"),
+                            subtitle: settings.t("Suren · Seiten · Juz", "Sûre · sayfa · cüz")
+                        )
+                    }
+                    NavigationLink { ShortSurahLearningView() } label: {
+                        discoverTile(icon: "play.square.stack.fill", title: settings.t("Kurze Suren", "Kısa Sûreler"), subtitle: settings.t("Lernen & hören", "Öğren & dinle"))
+                    }
+                    NavigationLink { MorningEveningAdhkarView() } label: {
+                        discoverTile(icon: "hands.sparkles.fill", title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Morgen & Abend", "Sabah & Akşam"))
+                    }
+                    NavigationLink { DhikrView() } label: {
+                        discoverTile(icon: "circle.grid.cross.fill", title: settings.t("Dhikr & Tasbih", "Zikir & Tesbih"), subtitle: settings.t("Zähler", "Sayaç"))
+                    }
+                    NavigationLink { QuranicDuaLibraryView() } label: {
+                        discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Quranische Duas", "Kur'an duaları"))
+                    }
+                }
+
+                discoverSectionTitle(
+                    settings.t("Lernen & Alltag", "Öğrenme & Günlük Hayat"),
+                    icon: "book.pages.fill"
+                )
+
+                LazyVGrid(columns: columns, spacing: 7) {
+                    NavigationLink { IslamLearningHubView() } label: {
+                        discoverTile(icon: "book.pages.fill", title: settings.t("Islam lernen", "İslâm'ı Öğren"), subtitle: settings.t("Von den Grundlagen", "Temelden başla"))
+                    }
+                    NavigationLink { IlmihalDirectoryView() } label: {
+                        discoverTile(
+                            icon: "books.vertical.fill",
+                            title: "İlmihal",
+                            subtitle: settings.t("Glaube · Gottesdienst · Alltag", "İman · ibadet · hayat")
+                        )
+                    }
+                    NavigationLink { EsmaulHusnaView() } label: {
+                        discoverTile(
+                            icon: "sparkles",
+                            title: settings.t("Esmaül Hüsna", "Esmâü'l-Hüsnâ"),
+                            subtitle: settings.t("Allahs 99 schöne Namen", "Allah'ın 99 güzel ismi")
+                        )
+                    }
+                    NavigationLink { RamadanGuideIndexView() } label: {
+                        discoverTile(
+                            icon: "moon.stars.fill",
+                            title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"),
+                            subtitle: settings.t("Lernen · Gebete · Tracker", "Öğren · namaz · takip")
+                        )
+                    }
+                    NavigationLink { HajjUmrahGuideView() } label: {
+                        discoverTile(
+                            icon: "map.fill",
+                            title: settings.t("Hajj & Umrah", "Hac & Umre"),
+                            subtitle: settings.t("Ablauf · Orte · Duas", "Akış · ziyaret · dualar")
+                        )
+                    }
                     NavigationLink { NearbyMosquesView() } label: {
                         discoverTile(
                             icon: "building.columns.fill",
@@ -481,6 +502,11 @@ struct MoreView: View {
                     }
                 }
                 .buttonStyle(.plain)
+
+                discoverSectionTitle(
+                    settings.t("Werkzeuge", "Araçlar"),
+                    icon: "slider.horizontal.3"
+                )
 
                 VStack(spacing: 0) {
                     NavigationLink { QiblaView() } label: {
@@ -523,6 +549,24 @@ struct MoreView: View {
         .navigationTitle(settings.t("Entdecken", "Keşfet"))
         .navigationBarTitleDisplayMode(.inline)
         .tint(SalahTheme.teal)
+    }
+
+    private func discoverSectionTitle(_ title: String, icon: String) -> some View {
+        HStack(spacing: 7) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(SalahTheme.gold)
+                .frame(width: 24, height: 24)
+                .background(SalahTheme.deepTeal, in: Circle())
+
+            Text(title)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            Spacer()
+        }
+        .padding(.top, 4)
+        .accessibilityAddTraits(.isHeader)
     }
 
     private var discoverHero: some View {
