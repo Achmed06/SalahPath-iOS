@@ -4364,6 +4364,17 @@ final class RemoteAudioPlayer: ObservableObject {
         player.playImmediately(atRate: playbackRate)
     }
 
+    func setPlaybackRate(_ rate: Float) {
+        let supported: [Float] = [0.75, 1.0, 1.25, 1.5]
+        let selected = supported.min(by: { abs($0 - rate) < abs($1 - rate) }) ?? 1.0
+        playbackRate = selected
+        player?.defaultRate = selected
+
+        if isPlaying {
+            player?.rate = selected
+        }
+    }
+
     func stop() {
         playbackRevision &+= 1
         removeObservers()
@@ -4511,6 +4522,54 @@ final class RemoteAudioPlayer: ObservableObject {
         if let failedObserver { NotificationCenter.default.removeObserver(failedObserver) }
         endObserver = nil
         failedObserver = nil
+    }
+}
+
+private struct AudioSpeedControl: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @ObservedObject var audio: RemoteAudioPlayer
+    var compact = false
+
+    private let rates: [Float] = [0.75, 1.0, 1.25, 1.5]
+
+    var body: some View {
+        Menu {
+            ForEach(rates, id: \.self) { rate in
+                Button {
+                    audio.setPlaybackRate(rate)
+                } label: {
+                    if audio.playbackRate == rate {
+                        Label(rateLabel(rate), systemImage: "checkmark")
+                    } else {
+                        Text(rateLabel(rate))
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: compact ? 2 : 3) {
+                Text(rateLabel(audio.playbackRate))
+                    .font(.system(size: compact ? 9 : 11.5, weight: .bold))
+                Image(systemName: "chevron.down")
+                    .font(.system(size: compact ? 7 : 8, weight: .bold))
+            }
+            .foregroundStyle(SalahTheme.ink)
+            .padding(.horizontal, compact ? 7 : 9)
+            .padding(.vertical, compact ? 5 : 6)
+            .background(SalahTheme.softTeal, in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(settings.t("Wiedergabegeschwindigkeit", "Oynatma hızı"))
+        .accessibilityValue(rateLabel(audio.playbackRate))
+    }
+
+    private func rateLabel(_ rate: Float) -> String {
+        switch rate {
+        case 0.75: return "0.75x"
+        case 1.0: return "1.0x"
+        case 1.25: return "1.25x"
+        case 1.5: return "1.5x"
+        default: return String(format: "%.2gx", rate)
+        }
     }
 }
 
@@ -7690,11 +7749,7 @@ struct QuranView: View {
 
                                     Spacer()
 
-                                    Text("1.0x")
-                                        .font(.system(size: 11.5, weight: .bold))
-                                        .padding(.horizontal, 9)
-                                        .padding(.vertical, 6)
-                                        .background(SalahTheme.softTeal, in: Capsule())
+                                    AudioSpeedControl(audio: previewAudio)
                                 }
                                 .foregroundStyle(SalahTheme.teal)
                             }
@@ -8697,12 +8752,7 @@ private struct QuranSurahView: View {
                         .lineLimit(1)
                 }
 
-                Text("1.0x")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(SalahTheme.ink)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 5)
-                    .background(Color.white.opacity(0.70), in: Capsule())
+                AudioSpeedControl(audio: audio, compact: true)
             }
             .foregroundStyle(SalahTheme.teal)
 
