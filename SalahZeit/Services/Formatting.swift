@@ -1,5 +1,36 @@
 import Foundation
 
+enum LocalDay {
+    static func calendar() -> Calendar {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = .autoupdatingCurrent
+        return calendar
+    }
+
+    static func token(for date: Date) -> String {
+        let parts = calendar().dateComponents([.year, .month, .day], from: date)
+        guard let year = parts.year,
+              let month = parts.month,
+              let day = parts.day else {
+            return "unknown"
+        }
+        return String(format: "%04d-%02d-%02d", year, month, day)
+    }
+
+    static func ordinal(for date: Date) -> Int {
+        calendar().ordinality(of: .day, in: .era, for: date) ?? 1
+    }
+
+    static func startOfDay(for date: Date) -> Date {
+        calendar().startOfDay(for: date)
+    }
+
+    static func addingDays(_ value: Int, to date: Date) -> Date? {
+        calendar().date(byAdding: .day, value: value, to: date)
+    }
+}
+
+
 func timeString(_ date: Date, use24Hour: Bool) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "en_US_POSIX")
