@@ -1,6 +1,6 @@
 # SalahPath App Store submission checklist
 
-Prepared for SalahPath v3.62 / build 76 / bundle identifier `com.achmed06.salahpath`.
+Prepared for SalahPath v3.62 / build 77 / bundle identifier `com.achmed06.salahpath`.
 
 ## Store identity
 
@@ -10,7 +10,7 @@ Prepared for SalahPath v3.62 / build 76 / bundle identifier `com.achmed06.salahp
 - Primary category: `Lifestyle`
 - Bundle identifier: `com.achmed06.salahpath`
 - Version: `3.62`
-- Build: `76`
+- Build: `77`
 - Minimum iOS version: `17.0`
 
 ## Required URLs
@@ -26,7 +26,7 @@ SalahPath does not require an account or login.
 
 Location permission is used while the app is in use to calculate prayer times, determine Qibla direction, resolve a nearby locality label, and search for nearby mosques through Apple MapKit. Device-location updates are not intentionally retained as a location history or sent to a SalahPath-operated server. If the user chooses a city or postal code manually, the resolved latitude, longitude, and locality are stored locally so that manual selection persists until the user clears it.
 
-Prayer reminders are local notifications. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
+Prayer reminders are local notifications. Build 77 adds an optional 18-second custom Adhan sound for the notification exactly at prayer time; advance reminders keep the normal iOS notification sound. The recording is a CC0-licensed Wikimedia Commons source and its provenance is recorded in `AUDIO_LICENSES.md`. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
 
 Quran text, translations, and recitation audio are loaded from AlQuran.cloud / Islamic Network. The app attributes the Quran sources in the reader. A dated rights audit is stored in `CONTENT_RIGHTS_AUDIT.md`.
 
@@ -66,7 +66,7 @@ The project declares `ITSAppUsesNonExemptEncryption = NO`. Current network encry
 
 ## Content rights and attribution
 
-The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`.
+The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`. Bundled audio provenance is recorded in `AUDIO_LICENSES.md`.
 
 The current build uses AlQuran.cloud / Islamic Network for Quran text/translations/recitations and visibly attributes the service, Diyanet, Bubenheim & Elyas, and the selected reciter. AlQuran.cloud's terms reviewed on 21 September 2026 support the current free/non-paywalled use while retaining the underlying rights with translators and reciters/rightsholders. If monetisation or a paywall is introduced, repeat the rights review before release.
 
