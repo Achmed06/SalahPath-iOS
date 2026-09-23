@@ -46,6 +46,31 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
 
+                referenceSection(settings.t("Darstellung", "Görünüm")) {
+                    Menu {
+                        ForEach(AppAppearance.allCases) { appearance in
+                            Button(appearance.title(settings.language)) {
+                                settings.appearance = appearance
+                            }
+                        }
+                    } label: {
+                        profileRow(
+                            icon: "circle.lefthalf.filled",
+                            title: settings.t("Farbschema", "Renk düzeni"),
+                            value: settings.appearance.title(settings.language)
+                        )
+                    }
+
+                    Text(settings.t(
+                        "System folgt automatisch der iPhone-Einstellung. Hell und Dunkel erzwingen das gewählte SalahPath-Farbschema.",
+                        "Sistem seçeneği iPhone görünümünü otomatik izler. Açık ve Koyu seçenekleri SalahPath görünümünü sabitler."
+                    ))
+                    .font(.system(size: 9.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                }
+
                 referenceSection(settings.t("Gebetszeiten", "Namaz vakitleri")) {
                     Menu {
                         ForEach(CalculationPreset.allCases) { method in
