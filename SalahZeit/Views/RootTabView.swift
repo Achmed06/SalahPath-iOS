@@ -512,7 +512,7 @@ struct MoreView: View {
                 }
                 .padding(.vertical, 10)
                 .frame(maxWidth: .infinity)
-                .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.55), lineWidth: 1) }
             }
             .padding(.horizontal, 11)
