@@ -690,10 +690,10 @@ struct HomeView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(settings.t("Bugün namazları işaretle", "Heutige Gebete markieren"))
+                        Text(settings.t("Heutige Gebete markieren", "Bugün namazları işaretle"))
                             .font(.system(size: 10.5, weight: .bold))
                             .foregroundStyle(SalahTheme.ink)
-                        Text(settings.t("İlerleme ve seri", "Fortschritt & Serie"))
+                        Text(settings.t("Fortschritt & Serie", "İlerleme ve seri"))
                             .font(.system(size: 8.4, weight: .medium))
                             .foregroundStyle(SalahTheme.mutedInk)
                     }
@@ -722,7 +722,7 @@ struct HomeView: View {
             } label: {
                 quickActionPill(
                     icon: "clock.fill",
-                    title: settings.t("Vakitler", "Vakitler"),
+                    title: settings.t("Zeiten", "Vakitler"),
                     subtitle: settings.t("Heute", "Bugün")
                 )
             }
@@ -1010,37 +1010,37 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Kur'an", "Kur'an"), subtitle: settings.t("Oku & Dinle", "Oku & Dinle"), icon: "quran")
             }
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Quran Audio", "Kur'an Audio"), subtitle: settings.t("Dinle", "Dinle"), icon: "quran_audio")
+                DashboardTile(title: settings.t("Quran-Audio", "Kur'an Sesi"), subtitle: settings.t("Anhören", "Dinle"), icon: "quran_audio")
             }
             NavigationLink { QuranFavoritesLandingView() } label: {
-                DashboardTile(title: settings.t("Juz & Favoriler", "Cüz & Favoriler"), subtitle: settings.t("İşaretler", "İşaretler"), icon: "fav")
+                DashboardTile(title: settings.t("Juz & Favoriten", "Cüz & Favoriler"), subtitle: settings.t("Lesezeichen", "İşaretler"), icon: "fav")
             }
             NavigationLink { PrayerTimesOverviewView() } label: {
-                DashboardTile(title: settings.t("Gebetszeiten", "Namaz Vakitleri"), subtitle: settings.t("Vakitler", "Vakitler"), icon: "times")
+                DashboardTile(title: settings.t("Gebetszeiten", "Namaz Vakitleri"), subtitle: settings.t("Zeiten", "Vakitler"), icon: "times")
             }
             NavigationLink { GuideView() } label: {
-                DashboardTile(title: settings.t("Namaz\nÖğren", "Namaz\nÖğren"), subtitle: settings.t("Adım adım", "Adım adım"), icon: "prayer")
+                DashboardTile(title: settings.t("Gebet\nlernen", "Namaz\nÖğren"), subtitle: settings.t("Schritt für Schritt", "Adım adım"), icon: "prayer")
             }
             NavigationLink { WuduGuideView() } label: {
-                DashboardTile(title: settings.t("Abdest\nRehberi", "Abdest\nRehberi"), subtitle: settings.t("Temel", "Temel"), icon: "wudu")
+                DashboardTile(title: settings.t("Wudu\nAnleitung", "Abdest\nRehberi"), subtitle: settings.t("Grundlagen", "Temel"), icon: "wudu")
             }
             NavigationLink { HijriCalendarView() } label: {
-                DashboardTile(title: settings.t("İslami Takvim", "İslami Takvim"), subtitle: settings.t("Olaylar", "Olaylar"), icon: "calendar")
+                DashboardTile(title: settings.t("Islamischer\nKalender", "İslami Takvim"), subtitle: settings.t("Ereignisse", "Olaylar"), icon: "calendar")
             }
             NavigationLink { DhikrView() } label: {
-                DashboardTile(title: settings.t("Dua & Zikir", "Dua & Zikir"), subtitle: settings.t("Günlük", "Günlük"), icon: "dhikr")
+                DashboardTile(title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Täglich", "Günlük"), icon: "dhikr")
             }
             NavigationLink { QiblaView() } label: {
-                DashboardTile(title: settings.t("Kıble Yönü", "Kıble Yönü"), subtitle: settings.t("Qibla", "Qibla"), icon: "qibla")
+                DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Qibla"), icon: "qibla")
             }
             NavigationLink { PrayerTermsView() } label: {
-                DashboardTile(title: settings.t("İslami Bilgiler", "İslami Bilgiler"), subtitle: settings.t("Bilgi", "Bilgi"), icon: "info")
+                DashboardTile(title: settings.t("Islamwissen", "İslami Bilgiler"), subtitle: settings.t("Wissen", "Bilgi"), icon: "info")
             }
             NavigationLink { PrayerTrackerOverviewView() } label: {
-                DashboardTile(title: settings.t("Namaz Takibi", "Namaz Takibi"), subtitle: settings.t("İlerleme", "İlerleme"), icon: "checkmark")
+                DashboardTile(title: settings.t("Gebets-Tracker", "Namaz Takibi"), subtitle: settings.t("Fortschritt", "İlerleme"), icon: "checkmark")
             }
             NavigationLink { SettingsView() } label: {
-                DashboardTile(title: settings.t("Ayarlar", "Ayarlar"), subtitle: settings.t("Ayarlar", "Ayarlar"), icon: "settings")
+                DashboardTile(title: settings.t("Einstellungen", "Ayarlar"), subtitle: settings.t("Einstellungen", "Ayarlar"), icon: "settings")
             }
         }
         .buttonStyle(.plain)
