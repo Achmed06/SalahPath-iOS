@@ -8561,7 +8561,7 @@ struct QuranView: View {
                             .padding(.horizontal, 15)
                             .padding(.top, 17)
                             .padding(.bottom, 8)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(maxWidth: .infinity)
 
                             Divider()
                                 .opacity(0.25)
@@ -8608,7 +8608,6 @@ struct QuranView: View {
                             .padding(.bottom, 6)
                         }
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(0.64, contentMode: .fit)
                         .background(
                             SalahTheme.cream,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -8617,9 +8616,6 @@ struct QuranView: View {
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .stroke(SalahTheme.gold.opacity(0.40), lineWidth: 0.7)
                         }
-
-                        Color.clear
-                            .frame(height: 100)
 
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
@@ -8835,6 +8831,28 @@ private struct QuranPageData: Decodable {
     let ayahs: [QuranPageAyah]
 }
 
+private struct QuranFullResponse: Decodable {
+    let data: QuranFullData
+}
+
+private struct QuranFullData: Decodable {
+    let surahs: [QuranFullSurah]
+}
+
+private struct QuranFullSurah: Decodable {
+    let number: Int
+    let name: String
+    let englishName: String
+    let ayahs: [QuranFullAyah]
+}
+
+private struct QuranFullAyah: Decodable {
+    let number: Int
+    let text: String
+    let numberInSurah: Int
+    let page: Int
+}
+
 private struct QuranPageSurah: Decodable {
     let number: Int
     let name: String
@@ -8938,29 +8956,97 @@ private final class QuranPageStore: ObservableObject {
             await QuranTextCache.shared.remove(for: cacheKey)
         }
 
-        guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
-            throw URLError(.badURL)
+        do {
+            guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
+                throw URLError(.badURL)
+            }
+
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 20
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+
+            let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
+            guard let sanitized = sanitizedPage(decoded.data, expectedPage: page) else {
+                throw URLError(.cannotParseResponse)
+            }
+
+            await QuranTextCache.shared.store(data, for: cacheKey)
+            return sanitized
+        } catch {
+            let fallback = try await fetchPageFromFullQuran(page: page, edition: edition)
+            guard let sanitized = sanitizedPage(fallback, expectedPage: page) else {
+                throw error
+            }
+            return sanitized
+        }
+    }
+
+    private func fetchPageFromFullQuran(page: Int, edition: String) async throws -> QuranPageData {
+        let fullCacheKey = "quran-full-\(edition).json"
+        let data: Data
+
+        if let cached = await QuranTextCache.shared.data(for: fullCacheKey) {
+            data = cached
+        } else {
+            guard let url = URL(string: "https://api.alquran.cloud/v1/quran/\(edition)") else {
+                throw URLError(.badURL)
+            }
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 30
+            let (downloaded, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            // Full Quran text is larger than one page response, but still bounded.
+            guard downloaded.count <= 24 * 1024 * 1024 else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+            data = downloaded
+            await QuranTextCache.shared.store(downloaded, for: fullCacheKey)
         }
 
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 20
+        let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+        var pageAyahs: [QuranPageAyah] = []
 
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse,
-              (200...299).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
-            throw URLError(.dataLengthExceedsMaximum)
+        for surah in decoded.data.surahs {
+            guard (1...114).contains(surah.number),
+                  !surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                continue
+            }
+
+            let pageSurah = QuranPageSurah(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName
+            )
+
+            for ayah in surah.ayahs where ayah.page == page {
+                pageAyahs.append(
+                    QuranPageAyah(
+                        number: ayah.number,
+                        text: ayah.text,
+                        numberInSurah: ayah.numberInSurah,
+                        surah: pageSurah
+                    )
+                )
+            }
         }
 
-        let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
-        guard let sanitized = sanitizedPage(decoded.data, expectedPage: page) else {
+        pageAyahs.sort { $0.number < $1.number }
+        guard !pageAyahs.isEmpty else {
             throw URLError(.cannotParseResponse)
         }
-
-        await QuranTextCache.shared.store(data, for: cacheKey)
-        return sanitized
+        return QuranPageData(number: page, ayahs: pageAyahs)
     }
 
     private func sanitizedPage(_ value: QuranPageData, expectedPage: Int) -> QuranPageData? {
