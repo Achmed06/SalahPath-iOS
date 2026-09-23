@@ -6,18 +6,25 @@ import AVFoundation
 
 enum PrayerTrackerStore {
     private static let prefix = "prayerTracker-"
-    private static let formatter: DateFormatter = {
-        let f = DateFormatter()
-        f.calendar = .current
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "yyyy-MM-dd"
-        return f
-    }()
 
     static let requiredKinds: [PrayerKind] = [.fajr, .dhuhr, .asr, .maghrib, .isha]
 
+    private static func localDayToken(for date: Date) -> String {
+        var calendar = Calendar.current
+        calendar.timeZone = .current
+        let parts = calendar.dateComponents([.year, .month, .day], from: date)
+
+        guard let year = parts.year,
+              let month = parts.month,
+              let day = parts.day else {
+            return "unknown"
+        }
+
+        return String(format: "%04d-%02d-%02d", year, month, day)
+    }
+
     private static func key(for date: Date) -> String {
-        prefix + formatter.string(from: date)
+        prefix + localDayToken(for: date)
     }
 
     static func completedKinds(for date: Date) -> Set<String> {
@@ -46,7 +53,7 @@ enum PrayerTrackerStore {
     private static let pausePrefix = "prayerTrackerPause-"
 
     private static func pauseKey(for date: Date) -> String {
-        pausePrefix + formatter.string(from: date)
+        pausePrefix + localDayToken(for: date)
     }
 
     static func isPaused(_ date: Date) -> Bool {
