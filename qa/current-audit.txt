@@ -185,5 +185,16 @@ INTENTIONAL NON-GOALS
 - No screenshot-to-text bulk import for hadith, sermons, Esmaül Hüsna, Cevşen, or Hajj/Umrah content.
 - No fake static mosque map or media catalogue.
 
+CRASH-HARDENING FOLLOW-UP
+- Removed remaining production crash primitives from the active Swift source paths.
+- Guarded persisted prayer/Quran settings, Qada counters, dhikr progress, Quran repeat count, bookmark/last-read data and UI refresh counters.
+- Hardened location, MapKit mosque search, Qibla heading/direction and prayer calculation inputs against invalid/non-finite coordinates and sensor values.
+- Hardened Quran chapter, surah, page and audio-ayaha payloads against invalid IDs, duplicate/missing ordering and stale async responses.
+- Quran chapter metadata now requires the complete 114-surah directory before cache/API data is accepted.
+- Quran audio indexing now validates numberInSurah ordering before exposing index-addressable URLs.
+- Quran cache size accounting and countdown conversions use overflow-safe arithmetic.
+- The release preflight now rejects fatalError, try!, forced casts and regression of the unsafe persisted repeat-count path.
+- GitHub Actions runs the release preflight before resolving packages and producing the unsigned IPA.
+
 NEXT RELEASE GATE
-- All new commits must pass the existing GitHub Actions build before this audit is considered release-ready.
+- All new commits must pass the GitHub Actions preflight and unsigned-IPA build before this audit is considered release-ready.
