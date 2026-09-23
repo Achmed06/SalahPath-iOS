@@ -7811,8 +7811,11 @@ private final class QuranStore: ObservableObject {
 
         if let cached = await QuranTextCache.shared.data(for: cacheKey),
            let decoded = try? JSONDecoder().decode(SurahListResponse.self, from: cached) {
-            chapters = decoded.data
-            return
+            let sanitized = sanitizedChapters(decoded.data)
+            if !sanitized.isEmpty {
+                chapters = sanitized
+                return
+            }
         }
 
         do {
@@ -7828,11 +7831,30 @@ private final class QuranStore: ObservableObject {
             }
 
             let decoded = try JSONDecoder().decode(SurahListResponse.self, from: data)
-            chapters = decoded.data
+            let sanitized = sanitizedChapters(decoded.data)
+            guard !sanitized.isEmpty else {
+                throw URLError(.cannotParseResponse)
+            }
+
+            chapters = sanitized
             await QuranTextCache.shared.store(data, for: cacheKey)
             error = nil
         } catch {
             self.error = error.localizedDescription
+        }
+    }
+
+    private func sanitizedChapters(_ values: [SurahMeta]) -> [SurahMeta] {
+        var seen = Set<Int>()
+
+        return values.filter { chapter in
+            guard (1...114).contains(chapter.number),
+                  chapter.numberOfAyahs > 0,
+                  !chapter.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !chapter.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                return false
+            }
+            return seen.insert(chapter.number).inserted
         }
     }
 
