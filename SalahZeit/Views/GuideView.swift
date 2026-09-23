@@ -5014,13 +5014,8 @@ private struct AdhkarEntry: Identifiable {
 }
 
 private enum AdhkarProgressStore {
-    private static func dayToken(_ date: Date) -> String {
-        let f = DateFormatter(); f.calendar = .current; f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: date)
-    }
-
     static func key(id: String, period: String, date: Date) -> String {
-        "adhkar-\(dayToken(date))-\(period)-\(id)"
+        "adhkar-\(LocalDay.token(for: date))-\(period)-\(id)"
     }
 
     static func value(id: String, period: String, date: Date) -> Int {
@@ -5034,10 +5029,11 @@ private enum AdhkarProgressStore {
 
 struct MorningEveningAdhkarView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var category = 0
     @State private var selectedID = "istighfar"
     @State private var refresh = 0
-    private let today = Date()
+    @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
         .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
@@ -5117,8 +5113,19 @@ struct MorningEveningAdhkarView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Dua & Dhikr", "Dua & Zikir"))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { normalizeSelection() }
+        .onAppear {
+            now = Date()
+            normalizeSelection()
+        }
         .onChange(of: category) { _, _ in normalizeSelection() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active {
+                now = Date()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
     }
 
     private func featuredDhikr(_ item: AdhkarEntry) -> some View {
@@ -5229,11 +5236,11 @@ struct MorningEveningAdhkarView: View {
     }
 
     private func progress(_ item: AdhkarEntry) -> Int {
-        AdhkarProgressStore.value(id: item.id, period: periodKey, date: today)
+        AdhkarProgressStore.value(id: item.id, period: periodKey, date: now)
     }
 
     private func setProgress(_ value: Int, _ item: AdhkarEntry) {
-        AdhkarProgressStore.set(value, id: item.id, period: periodKey, date: today)
+        AdhkarProgressStore.set(value, id: item.id, period: periodKey, date: now)
         refresh += 1
     }
 }
