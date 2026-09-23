@@ -107,7 +107,7 @@ struct SettingsView: View {
                                 .font(.system(size: 11.5, weight: .semibold))
                                 .foregroundStyle(SalahTheme.ink)
                             Spacer()
-                            Text("\(Int(settings.quranFontSize))")
+                            Text("\(Int(settings.safeQuranFontSize))")
                                 .font(.system(size: 11, weight: .bold).monospacedDigit())
                                 .foregroundStyle(SalahTheme.teal)
                         }
