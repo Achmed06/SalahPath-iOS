@@ -851,7 +851,7 @@ struct PrayerHowToView: View {
             .init(
                 number: "8",
                 pose: .prostration,
-                imageKey: "sujud",
+                imageKey: "second_sujud",
                 deTitle: "Zweite Secde – 1. Rakʿah",
                 trTitle: "İkinci secde – 1. rekât",
                 deAction: "Sage Allāhu akbar, gehe erneut in die Secde und sprich den Dhikr dreimal. Damit ist die erste Rakʿah beendet.",
@@ -935,7 +935,7 @@ struct PrayerHowToView: View {
             .init(
                 number: "15",
                 pose: .prostration,
-                imageKey: "sujud",
+                imageKey: "second_sujud",
                 deTitle: "Zweite Secde – 2. Rakʿah",
                 trTitle: "İkinci secde – 2. rekât",
                 deAction: "Sage Allāhu akbar und gehe in die zweite Secde. Sprich den Secde-Dhikr dreimal. Danach ist auch die zweite Rakʿah beendet.",
@@ -1217,6 +1217,35 @@ private struct PrayerTutorialStepCard: View {
                         .frame(height: 205)
                         .padding(.vertical, 6)
                         .background(SalahTheme.cream)
+                }
+
+                if step.number == "16" {
+                    HStack(alignment: .center, spacing: 12) {
+                        PrayerPoseArtwork(
+                            assetName: "\(audience == .male ? "male" : "female")_finger"
+                        )
+                        .frame(width: 92, height: 120)
+                        .background(SalahTheme.cream)
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(settings.t("Zeigefinger im Tashahhud", "Teşehhüdde işaret parmağı"))
+                                .font(.subheadline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Text(settings.t(
+                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
+                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                            ))
+                            .font(.caption)
+                            .foregroundStyle(SalahTheme.mutedInk)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        Spacer(minLength: 0)
+                    }
+                    .padding(10)
+                    .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
