@@ -9825,6 +9825,8 @@ private struct QuranSurahView: View {
     @State private var hasScrolledToInitial = false
     @State private var displayMode = 0
     @State private var didSetInitialDisplayMode = false
+    @State private var contentLoadRevision = 0
+    @State private var audioLoadRevision = 0
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -9852,7 +9854,12 @@ private struct QuranSurahView: View {
                     didSetInitialDisplayMode = true
                 }
             }
-            .onDisappear { audio.stop() }
+            .onDisappear {
+                contentLoadRevision &+= 1
+                audioLoadRevision &+= 1
+                isResolvingAudio = false
+                audio.stop()
+            }
         }
     }
 
@@ -10126,10 +10133,15 @@ private struct QuranSurahView: View {
 
     @MainActor
     private func loadContent() async {
+        contentLoadRevision &+= 1
+        let revision = contentLoadRevision
         error = nil
         contentWarning = nil
+
         do {
             let result = try await store.loadSurahReference(surah.number)
+            guard revision == contentLoadRevision else { return }
+
             arabic = result.arabic
             turkishTranslation = result.turkish
             germanTranslation = result.german
@@ -10143,6 +10155,8 @@ private struct QuranSurahView: View {
                 )
             }
         } catch {
+            guard revision == contentLoadRevision else { return }
+
             arabic = nil
             turkishTranslation = nil
             germanTranslation = nil
@@ -10150,20 +10164,37 @@ private struct QuranSurahView: View {
             self.error = error.localizedDescription
             return
         }
+
+        guard revision == contentLoadRevision else { return }
         await loadAudio()
     }
 
     @MainActor
     private func loadAudio() async {
+        audioLoadRevision &+= 1
+        let revision = audioLoadRevision
+        let reciter = settings.quranReciter
+
         isResolvingAudio = true
         audio.lastError = nil
-        defer { isResolvingAudio = false }
+        defer {
+            if revision == audioLoadRevision {
+                isResolvingAudio = false
+            }
+        }
+
         do {
-            resolvedAudioURLs = try await QuranAudioResolver.urls(surah: surah.number, reciter: settings.quranReciter)
-            if resolvedAudioURLs.isEmpty {
+            let urls = try await QuranAudioResolver.urls(surah: surah.number, reciter: reciter)
+            guard revision == audioLoadRevision,
+                  reciter == settings.quranReciter else { return }
+
+            resolvedAudioURLs = urls
+            if urls.isEmpty {
                 audio.lastError = settings.t("Audio derzeit nicht verfügbar.", "Ses şu anda mevcut değil.")
             }
         } catch {
+            guard revision == audioLoadRevision else { return }
+
             resolvedAudioURLs = []
             audio.lastError = settings.t("Audio konnte nicht geladen werden. Erneut versuchen.", "Ses yüklenemedi. Tekrar dene.")
         }
