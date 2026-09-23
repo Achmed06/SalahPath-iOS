@@ -4420,22 +4420,25 @@ struct PrayerDebtTrackerView: View {
             Spacer()
 
             Button {
-                value.wrappedValue = max(0, value.wrappedValue - 1)
+                let current = max(0, value.wrappedValue)
+                value.wrappedValue = current > 0 ? current - 1 : 0
             } label: {
                 Image(systemName: "minus")
                     .font(.headline.bold())
                     .frame(width: 38, height: 38)
             }
             .buttonStyle(.bordered)
-            .disabled(value.wrappedValue == 0)
+            .disabled(value.wrappedValue <= 0)
 
-            Text("\(value.wrappedValue)")
+            Text("\(max(0, value.wrappedValue))")
                 .font(.title3.bold().monospacedDigit())
                 .foregroundStyle(SalahTheme.deepTeal)
                 .frame(minWidth: 42)
 
             Button {
-                value.wrappedValue += 1
+                let current = max(0, value.wrappedValue)
+                let (next, overflow) = current.addingReportingOverflow(1)
+                value.wrappedValue = overflow ? Int.max : next
             } label: {
                 Image(systemName: "plus")
                     .font(.headline.bold())
