@@ -1039,7 +1039,7 @@ struct PrayerHowToView: View {
         .padding(13)
         .background(
             LinearGradient(
-                colors: [SalahTheme.cream, Color.white.opacity(0.80)],
+                colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.72)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
@@ -5153,7 +5153,7 @@ struct MorningEveningAdhkarView: View {
                     Image(systemName: "minus")
                         .font(.system(size: 16, weight: .bold))
                         .frame(width: 38, height: 38)
-                        .background(Color.white.opacity(0.72), in: Circle())
+                        .background(SalahTheme.softTeal, in: Circle())
                 }
                 .buttonStyle(.plain)
                 .disabled(current == 0)
@@ -5197,7 +5197,7 @@ struct MorningEveningAdhkarView: View {
         .padding(15)
         .background(
             LinearGradient(
-                colors: [SalahTheme.cream, Color.white.opacity(0.82)],
+                colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.64)],
                 startPoint: .top,
                 endPoint: .bottom
             ),
@@ -7902,7 +7902,7 @@ struct QuranView: View {
                         }
                         .padding(.horizontal, 12)
                         .frame(height: 42)
-                        .background(Color.white.opacity(0.76), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
 
                         if filtered.isEmpty {
                             VStack(spacing: 10) {
