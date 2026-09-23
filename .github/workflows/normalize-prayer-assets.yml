@@ -1,0 +1,43 @@
+name: Normalize prayer pose artwork
+
+on:
+  push:
+    branches:
+      - fix/quran-tracker-visual-pass
+    paths:
+      - scripts/normalize_prayer_assets.py
+      - .github/workflows/normalize-prayer-assets.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/quran-tracker-visual-pass
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - name: Normalize pose images
+        run: python scripts/normalize_prayer_assets.py
+      - name: Commit normalized binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add SalahZeit/Assets.xcassets/male_*.imageset/*.png SalahZeit/Assets.xcassets/female_*.imageset/*.png
+          if git diff --cached --quiet; then
+            echo "No pose image changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Normalize prayer pose artwork transparency"
+          git fetch origin fix/quran-tracker-visual-pass
+          git rebase origin/fix/quran-tracker-visual-pass
+          git push origin HEAD:fix/quran-tracker-visual-pass
