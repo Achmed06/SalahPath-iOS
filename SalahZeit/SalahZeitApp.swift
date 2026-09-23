@@ -133,6 +133,11 @@ struct SalahPathApp: App {
     @ViewBuilder
     private var qaRoot: some View {
         switch ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] {
+        case "home":
+            NavigationStack {
+                HomeView()
+                    .toolbar { referenceQAToolbar }
+            }
         case "quran":
             NavigationStack {
                 QuranView()
@@ -169,6 +174,8 @@ struct SalahPathApp: App {
             }
         case "quran-reader":
             NavigationStack { QuranReaderQAView() }
+        case "quran-page":
+            NavigationStack { QuranPageReaderView(page: 1) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
         case "tasbih":
@@ -207,6 +214,8 @@ struct SalahPathApp: App {
             NavigationStack { RakatOverviewView() }
         case "hanafi-plan":
             NavigationStack { HanafiPrayerPlanView() }
+        case "prayer-tracker":
+            NavigationStack { PrayerTrackerOverviewView() }
         case "tracker-pause":
             NavigationStack { TrackerPauseView() }
         default:
