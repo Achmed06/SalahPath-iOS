@@ -1,0 +1,47 @@
+name: Vendor licensed adhan audio
+
+on:
+  push:
+    branches:
+      - feature/adhan-notification-sounds
+    paths:
+      - .github/workflows/vendor-adhan-audio.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/adhan-notification-sounds
+
+      - name: Download pinned CC0 adhan clip
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p SalahZeit/Resources
+          curl --fail --location --retry 3 \
+            "https://raw.githubusercontent.com/wali1984/Darul-Irfan/47f1ed0e1330a6e75b0f3ec981e0f8d86f3a5cc1/DarulIrfanApp/Resources/Audio/azan-short.caf" \
+            --output SalahZeit/Resources/adhan-short.caf
+          actual="$(git hash-object SalahZeit/Resources/adhan-short.caf)"
+          expected="3145c872878db49bcab080a10efb6545faec423d"
+          test "$actual" = "$expected"
+
+      - name: Commit verified audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add SalahZeit/Resources/adhan-short.caf
+          if git diff --cached --quiet; then
+            echo "Verified audio already vendored."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Vendor verified CC0 adhan audio"
+          git push origin HEAD:feature/adhan-notification-sounds
