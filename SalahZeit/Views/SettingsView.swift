@@ -230,34 +230,45 @@ struct SettingsView: View {
                     .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime)
                     .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime ? 1 : 0.45)
 
-                    Button {
-                        Task {
-                            let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings)
-                            notificationStatusText = scheduled
-                                ? settings.t("Test-Gebetsruf startet gleich.", "Test ezanı birazdan çalacak.")
-                                : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                    HStack(spacing: 8) {
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
+                                notificationStatusText = scheduled
+                                    ? settings.t("Standard-Gebetsruf startet gleich.", "Standart ezan birazdan çalacak.")
+                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                            }
+                        } label: {
+                            Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
                         }
-                    } label: {
-                        HStack {
-                            Image(systemName: "play.circle.fill")
-                            Text(settings.t("Gebetsruf testen", "Ezanı test et"))
-                                .font(.system(size: 11.5, weight: .bold))
-                            Spacer()
-                            Text("18 s")
-                                .font(.system(size: 9.5, weight: .semibold).monospacedDigit())
-                                .foregroundStyle(SalahTheme.mutedInk)
+                        .buttonStyle(.bordered)
+
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: true)
+                                notificationStatusText = scheduled
+                                    ? settings.t("Fajr-Gebetsruf startet gleich.", "Sabah ezanı birazdan çalacak.")
+                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                            }
+                        } label: {
+                            Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")
+                                .font(.system(size: 10.5, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
                         }
-                        .foregroundStyle(SalahTheme.teal)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
+                        .buttonStyle(.bordered)
                     }
-                    .buttonStyle(.plain)
+                    .tint(SalahTheme.teal)
+                    .padding(.horizontal, 12)
                     .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime || !settings.adhanSoundEnabled)
                     .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime && settings.adhanSoundEnabled ? 1 : 0.45)
 
                     Text(settings.t(
-                        "Der Gebetsruf wird nur genau zum Gebetsbeginn verwendet. Vorwarnungen behalten den normalen iOS-Ton. Quelle: Wikimedia Commons · „Beautiful adhan“ · CC0.",
-                        "Ezan yalnız tam namaz vaktinde çalar. Ön hatırlatmalar normal iOS sesini kullanır. Kaynak: Wikimedia Commons · „Beautiful adhan“ · CC0."
+                        "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
+                        "Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Her ikisi de Internet Archive'daki „Adhan Recordings from Doha, Qatar“ kamu malı koleksiyonundandır. Ön hatırlatmalar normal iOS sesini kullanır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
