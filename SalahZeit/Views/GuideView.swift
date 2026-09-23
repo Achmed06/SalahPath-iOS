@@ -5017,7 +5017,11 @@ private struct AudioSpeedControl: View {
 
 private struct AudioEditionResponse: Decodable { let data: AudioSurahData }
 private struct AudioSurahData: Decodable { let ayahs: [AudioAyahData] }
-private struct AudioAyahData: Decodable { let number: Int; let audio: String? }
+private struct AudioAyahData: Decodable {
+    let number: Int
+    let numberInSurah: Int
+    let audio: String?
+}
 
 private enum QuranAudioResolver {
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
@@ -5036,26 +5040,39 @@ private enum QuranAudioResolver {
         }
 
         let decoded = try JSONDecoder().decode(AudioEditionResponse.self, from: data)
-        let urls = decoded.data.ayahs.compactMap { item -> URL? in
+        let ayahs = decoded.data.ayahs.sorted { $0.numberInSurah < $1.numberInSurah }
+        guard !ayahs.isEmpty else {
+            throw URLError(.resourceUnavailable)
+        }
+
+        var urls: [URL] = []
+        var seenAyahs = Set<Int>()
+
+        for item in ayahs {
+            let expectedNumberInSurah = urls.count + 1
+            guard item.number > 0,
+                  item.numberInSurah == expectedNumberInSurah,
+                  seenAyahs.insert(item.numberInSurah).inserted else {
+                throw URLError(.cannotParseResponse)
+            }
+
             if let raw = item.audio {
                 let secureRaw = raw.replacingOccurrences(of: "http://", with: "https://")
                 if let resolved = URL(string: secureRaw),
                    resolved.scheme?.lowercased() == "https" {
-                    return resolved
+                    urls.append(resolved)
+                    continue
                 }
             }
 
             let fallback = "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/\(item.number).mp3"
             guard let resolved = URL(string: fallback),
                   resolved.scheme?.lowercased() == "https" else {
-                return nil
+                throw URLError(.resourceUnavailable)
             }
-            return resolved
+            urls.append(resolved)
         }
 
-        guard !urls.isEmpty else {
-            throw URLError(.resourceUnavailable)
-        }
         return urls
     }
 }
