@@ -4567,6 +4567,11 @@ struct ThirtyTwoFardView: View {
 
 // MARK: - Human-recorded prayer/Quran audio
 
+private enum QuranNetworkLimits {
+    static let maxJSONBytes = 5 * 1024 * 1024
+    static let maxAudioCacheFileBytes: Int64 = 32 * 1024 * 1024
+}
+
 actor QuranAudioCache {
     static let shared = QuranAudioCache()
 
@@ -4613,6 +4618,9 @@ actor QuranAudioCache {
             let attributes = try fileManager.attributesOfItem(atPath: temporaryURL.path)
             let size = (attributes[.size] as? NSNumber)?.int64Value ?? 0
             guard size > 0 else { throw URLError(.zeroByteResource) }
+            guard size <= QuranNetworkLimits.maxAudioCacheFileBytes else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
 
             if fileManager.fileExists(atPath: localURL.path) {
                 try fileManager.removeItem(at: localURL)
@@ -4698,7 +4706,7 @@ actor QuranAudioCache {
               let size = (attributes[.size] as? NSNumber)?.int64Value else {
             return false
         }
-        return size > 0
+        return size > 0 && size <= QuranNetworkLimits.maxAudioCacheFileBytes
     }
 
     private func touch(_ url: URL) {
@@ -5091,6 +5099,9 @@ private enum QuranAudioResolver {
         guard let http = response as? HTTPURLResponse,
               (200...299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
+        }
+        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+            throw URLError(.dataLengthExceedsMaximum)
         }
 
         let decoded = try JSONDecoder().decode(AudioEditionResponse.self, from: data)
@@ -7915,6 +7926,9 @@ private final class QuranStore: ObservableObject {
                   (200...299).contains(http.statusCode) else {
                 throw URLError(.badServerResponse)
             }
+            guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
 
             let decoded = try JSONDecoder().decode(SurahListResponse.self, from: data)
             let sanitized = sanitizedChapters(decoded.data)
@@ -8006,6 +8020,9 @@ private final class QuranStore: ObservableObject {
         guard let http = response as? HTTPURLResponse,
               (200...299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
+        }
+        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+            throw URLError(.dataLengthExceedsMaximum)
         }
 
         let decoded = try JSONDecoder().decode(SurahResponse.self, from: data)
@@ -8903,6 +8920,9 @@ private final class QuranPageStore: ObservableObject {
         guard let http = response as? HTTPURLResponse,
               (200...299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
+        }
+        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+            throw URLError(.dataLengthExceedsMaximum)
         }
 
         let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
