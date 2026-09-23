@@ -8859,7 +8859,7 @@ struct QuranPageReaderView: View {
                         }
 
                         VStack(spacing: 0) {
-                            ForEach(Array(arabic.ayahs.enumerated()), id: \.element.id) { index, ayah in
+                            ForEach(Array(arabic.ayahs.enumerated()), id: \.offset) { index, ayah in
                                 if index == 0 || arabic.ayahs[index - 1].surah.number != ayah.surah.number {
                                     VStack(spacing: 5) {
                                         Text(ayah.surah.name)
@@ -9804,7 +9804,7 @@ private struct QuranSurahView: View {
     @ViewBuilder
     private var versesSection: some View {
         if let arabic {
-            ForEach(Array(arabic.ayahs.enumerated()), id: \.element.number) { index, ar in
+            ForEach(Array(arabic.ayahs.enumerated()), id: \.offset) { index, ar in
                 ayahCard(
                     ar: ar,
                     turkish: turkishTranslation?.ayahs[safe: index],
