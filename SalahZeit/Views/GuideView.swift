@@ -5400,8 +5400,14 @@ struct ShortSurahLearningView: View {
             guard generation == audioRequestGeneration,
                   reciter == settings.quranReciter else { return }
 
+            let allowedRepeatCounts = [1, 3, 5]
+            let safeRepeatCount = allowedRepeatCounts.contains(repeatCount) ? repeatCount : 1
+            if repeatCount != safeRepeatCount {
+                repeatCount = safeRepeatCount
+            }
+
             audio.playQueue(
-                Array(repeating: urls, count: max(1, repeatCount)).flatMap { $0 }
+                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 }
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
