@@ -343,7 +343,7 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
-                        .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 9))
+                        .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 9))
                         .disabled(manualLocationText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isResolvingManualLocation)
                     }
                     .padding(.horizontal, 12)
