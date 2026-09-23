@@ -7891,11 +7891,16 @@ private final class QuranStore: ObservableObject {
     }
 
     private func fetch(number:Int, edition:String) async throws -> SurahData {
+        guard (1...114).contains(number) else {
+            throw URLError(.badURL)
+        }
+
         let cacheKey = "surah-\(number)-\(edition).json"
 
         if let cached = await QuranTextCache.shared.data(for: cacheKey),
-           let decoded = try? JSONDecoder().decode(SurahResponse.self, from: cached) {
-            return decoded.data
+           let decoded = try? JSONDecoder().decode(SurahResponse.self, from: cached),
+           let sanitized = sanitizedSurah(decoded.data, expectedNumber: number) {
+            return sanitized
         }
 
         guard let url = URL(string: "https://api.alquran.cloud/v1/surah/\(number)/\(edition)") else {
@@ -7911,8 +7916,39 @@ private final class QuranStore: ObservableObject {
         }
 
         let decoded = try JSONDecoder().decode(SurahResponse.self, from: data)
+        guard let sanitized = sanitizedSurah(decoded.data, expectedNumber: number) else {
+            throw URLError(.cannotParseResponse)
+        }
+
         await QuranTextCache.shared.store(data, for: cacheKey)
-        return decoded.data
+        return sanitized
+    }
+
+    private func sanitizedSurah(_ value: SurahData, expectedNumber: Int) -> SurahData? {
+        guard value.number == expectedNumber,
+              (1...114).contains(value.number),
+              !value.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+              !value.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+
+        var seenAyahs = Set<Int>()
+        let ayahs = value.ayahs.filter { ayah in
+            guard ayah.number > 0,
+                  ayah.numberInSurah > 0,
+                  !ayah.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                return false
+            }
+            return seenAyahs.insert(ayah.numberInSurah).inserted
+        }
+
+        guard !ayahs.isEmpty else { return nil }
+        return SurahData(
+            number: value.number,
+            name: value.name,
+            englishName: value.englishName,
+            ayahs: ayahs
+        )
     }
 }
 
@@ -8714,11 +8750,16 @@ private final class QuranPageStore: ObservableObject {
     }
 
     private func fetch(page: Int, edition: String) async throws -> QuranPageData {
+        guard (1...604).contains(page) else {
+            throw URLError(.badURL)
+        }
+
         let cacheKey = "page-\(page)-\(edition).json"
 
         if let cached = await QuranTextCache.shared.data(for: cacheKey),
-           let decoded = try? JSONDecoder().decode(QuranPageResponse.self, from: cached) {
-            return decoded.data
+           let decoded = try? JSONDecoder().decode(QuranPageResponse.self, from: cached),
+           let sanitized = sanitizedPage(decoded.data, expectedPage: page) {
+            return sanitized
         }
 
         guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
@@ -8735,8 +8776,34 @@ private final class QuranPageStore: ObservableObject {
         }
 
         let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
+        guard let sanitized = sanitizedPage(decoded.data, expectedPage: page) else {
+            throw URLError(.cannotParseResponse)
+        }
+
         await QuranTextCache.shared.store(data, for: cacheKey)
-        return decoded.data
+        return sanitized
+    }
+
+    private func sanitizedPage(_ value: QuranPageData, expectedPage: Int) -> QuranPageData? {
+        guard value.number == expectedPage, (1...604).contains(value.number) else {
+            return nil
+        }
+
+        var seenAyahs = Set<Int>()
+        let ayahs = value.ayahs.filter { ayah in
+            guard ayah.number > 0,
+                  ayah.numberInSurah > 0,
+                  (1...114).contains(ayah.surah.number),
+                  !ayah.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !ayah.surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !ayah.surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                return false
+            }
+            return seenAyahs.insert(ayah.number).inserted
+        }
+
+        guard !ayahs.isEmpty else { return nil }
+        return QuranPageData(number: value.number, ayahs: ayahs)
     }
 }
 
