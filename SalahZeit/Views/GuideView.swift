@@ -3140,6 +3140,276 @@ private struct PrayerCatalogDetailView: View {
     }
 }
 
+// MARK: - Hajj / Umrah and Ramadan hierarchy
+
+struct HajjUmrahGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @State private var section = 0
+
+    private let makkahPlaces = [
+        ("Kâbe", "Mescid-i Harâm'ın merkezindeki kıble ve tavafın merkezi.", "Die Kaaba im Zentrum von al-Masjid al-Haram; Qibla und Mittelpunkt des Tawaf."),
+        ("Mescid-i Haram", "Kâbe'yi çevreleyen kutsal mescid.", "Die heilige Moschee, die die Kaaba umgibt."),
+        ("Safa", "Sa'y ibadetinin başladığı nokta.", "Startpunkt des Saʿy."),
+        ("Merve", "Sa'y ibadetinin tamamlandığı nokta.", "Endpunkt des Saʿy."),
+        ("Arafat", "Haccın temel rükünlerinden vakfenin yapıldığı bölge.", "Gebiet der Arafat-Wuqūf, eines zentralen Hajj-Ritus."),
+        ("Müzdelife", "Arafat'tan sonra vakfe ve geceleme bölgesi.", "Station nach Arafat für Wuqūf/Übernachtung."),
+        ("Mina", "Cemrelere taş atma ve hac günlerindeki konaklama bölgesi.", "Bereich für die Jamarat-Riten und Aufenthalt an den Hajj-Tagen.")
+    ]
+
+    private let medinaPlaces = [
+        ("Mescid-i Nebevî", "Medine'deki Peygamber Mescidi.", "Die Prophetenmoschee in Medina."),
+        ("Kubâ Mescidi", "Medine'deki tarihî mescidlerden biri.", "Eine der historischen Moscheen Medinas."),
+        ("Uhud", "Uhud Gazvesi'nin gerçekleştiği bölge.", "Gebiet der Schlacht von Uhud."),
+        ("Cennetü'l-Bakî", "Medine'deki tarihî mezarlık.", "Historischer Friedhof in Medina.")
+    ]
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                Picker("", selection: $section) {
+                    Text("Umrah").tag(0)
+                    Text("Hajj").tag(1)
+                    Text(settings.t("Orte", "Ziyaret")).tag(2)
+                    Text(settings.t("Duas", "Dualar")).tag(3)
+                }
+                .pickerStyle(.segmented)
+
+                switch section {
+                case 0: umrahContent
+                case 1: hajjContent
+                case 2: placesContent
+                default: duaContent
+                }
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Hajj & Umrah", "Hac & Umre"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var umrahContent: some View {
+        VStack(spacing: 12) {
+            infoCard(
+                title: settings.t("Umrah Schritt für Schritt", "Umre adım adım"),
+                icon: "figure.walk",
+                lines: settings.language == .german ? [
+                    "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
+                    "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
+                    "Nach dem Tawaf zwei Rakʿah Tawaf-Gebet an einem geeigneten Ort verrichten.",
+                    "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
+                    "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
+                ] : [
+                    "Mikat sınırını geçmeden ihrama gir, umreye niyet et ve telbiye getir.",
+                    "Mescid-i Haram'da umre tavafını yap: Hacerülesved hizasından başlayarak Kâbe sol tarafta kalacak şekilde yedi şavt.",
+                    "Tavaftan sonra uygun bir yerde iki rekât tavaf namazı kıl.",
+                    "Sa'y: Safa'dan başla ve yedi şavt yap; Safa→Merve 1, Merve→Safa 2 sayılır ve 7. şavt Merve'de biter.",
+                    "Ardından saçları kısalt veya erkek için tıraş/kısalt. Böylece ihramdan çıkılır."
+                ]
+            )
+
+            infoCard(
+                title: settings.t("Hanafi-Hinweis", "Hanefî notu"),
+                icon: "info.circle.fill",
+                lines: settings.language == .german ? [
+                    "Tawaf ist für die Umrah grundlegend/fard.",
+                    "Saʿy ist im Hanafi-Madhhab wajib und folgt einem gültigen Tawaf.",
+                    "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen."
+                ] : [
+                    "Umre tavafı umrenin farzıdır.",
+                    "Sa'y Hanefî mezhebinde vaciptir ve geçerli bir tavaftan sonra yapılır.",
+                    "Tavaf, sa'y ve ardından saç tıraşını gereksiz uzun ara vermeden peş peşe yapmak sünnettir."
+                ]
+            )
+        }
+    }
+
+    private var hajjContent: some View {
+        VStack(spacing: 12) {
+            infoCard(
+                title: settings.t("Hajj-Ablauf · Orientierung", "Hac akışı · genel rehber"),
+                icon: "map.fill",
+                lines: settings.language == .german ? [
+                    "Für Hajj gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
+                    "Zu den zentralen Hajj-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Hajj-Form und Reihenfolge – Saʿy.",
+                    "Für die konkrete Reise soll der Ablauf der eigenen Hajj-Art und die Anleitung der zuständigen Hajj-Gruppe/Religionsbegleitung beachtet werden.",
+                    "SalahPath verwendet diesen Bereich als Lernübersicht und ersetzt keine individuelle Fatwa bei Fehlern, Krankheit, Menstruation oder ausgelassenen Riten."
+                ] : [
+                    "Hac; ifrad, kıran ve temettu çeşitlerine ayrılır. Bu nedenle bazı ihram zamanları ve ayrıntılar değişir.",
+                    "Temel hac menasiki arasında ihram/niyet, Arafat vakfesi, Müzdelife, Mina'daki görevler, ziyaret/ifâda tavafı ve hac türüne göre sa'y bulunur.",
+                    "Gerçek yolculukta kendi hac türünün sırasına ve kafile din görevlisinin rehberliğine uy.",
+                    "SalahPath bu alanı öğrenme özeti olarak sunar; eksik menasik, hastalık veya özel hâller için kişisel fetvanın yerini tutmaz."
+                ]
+            )
+
+            infoCard(
+                title: settings.t("Tawaf", "Tavaf"),
+                icon: "arrow.triangle.2.circlepath",
+                lines: settings.language == .german ? [
+                    "Ein Tawaf besteht aus sieben Shawt.",
+                    "Beginn an der Linie des Schwarzen Steins; die Kaaba bleibt links.",
+                    "Bei großem Gedränge niemals andere Menschen gefährden, nur um Sunnah-Handlungen wie Ramal auszuführen."
+                ] : [
+                    "Bir tavaf yedi şavttan oluşur.",
+                    "Hacerülesved hizasından başlanır ve Kâbe sol tarafta tutulur.",
+                    "İzdihamda remel gibi sünnetleri yapacağım diye insanlara eziyet verilmez."
+                ]
+            )
+        }
+    }
+
+    private var placesContent: some View {
+        VStack(spacing: 12) {
+            placeGroup(title: settings.t("Mekka", "Mekke"), items: makkahPlaces)
+            placeGroup(title: settings.t("Medina", "Medine"), items: medinaPlaces)
+            Text(settings.t(
+                "Diese Liste ist eine Lernübersicht. Öffnungszeiten, Zugang, Verkehrsführung und aktuelle Besuchsregeln können sich ändern.",
+                "Bu liste öğrenme amaçlı bir özettir. Açılış, erişim, ulaşım ve güncel ziyaret kuralları değişebilir."
+            ))
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    private var duaContent: some View {
+        VStack(spacing: 12) {
+            infoCard(
+                title: settings.t("Talbiyah", "Telbiye"),
+                icon: "quote.bubble.fill",
+                lines: [
+                    "لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ",
+                    "Labbayka-llāhumma labbayk, labbayka lā sharīka laka labbayk. Inna-l-ḥamda wa-n-niʿmata laka wa-l-mulk, lā sharīka lak."
+                ]
+            )
+
+            infoCard(
+                title: settings.t("Tawaf- & Saʿy-Duas", "Tavaf ve Sa'y Duaları"),
+                icon: "hands.sparkles.fill",
+                lines: settings.language == .german ? [
+                    "Diyanets Hajj-Ausbildung stellt Duas für einzelne Shawt bereit, erklärt aber ausdrücklich: Diese Formulierungen sind nicht verpflichtend.",
+                    "Du darfst Quran-Duas, authentisch überlieferte Duas, Dhikr oder eigene aufrichtige Bitten sprechen.",
+                    "Zwischen der jemenitischen Ecke und dem Schwarzen Stein ist „Rabbanā ātinā fi-d-dunyā ḥasanah …“ eine bekannte überlieferte Dua."
+                ] : [
+                    "Diyanet Hac Eğitimi her şavt için dua örnekleri verir; ancak bu metinlerin okunmasının zorunlu olmadığını açıkça belirtir.",
+                    "Kur'an duaları, rivayet edilen dualar, zikirler veya içinden gelen samimi dualar okunabilir.",
+                    "Rükn-i Yemânî ile Hacerülesved arasında „Rabbenâ âtinâ fi'd-dünyâ haseneten …“ duası bilinen bir sünnet duadır."
+                ]
+            )
+
+            NavigationLink { QuranicDuaLibraryView() } label: {
+                Label(settings.t("SalahPath Dua-Sammlung öffnen", "SalahPath dua koleksiyonunu aç"), systemImage: "text.book.closed.fill")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SalahTheme.teal)
+        }
+    }
+
+    private func infoCard(title: String, icon: String, lines: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Label(title, systemImage: icon)
+                .font(.headline.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
+                Text(line)
+                    .font(line.first?.isArabicLetter == true ? .title3 : .subheadline)
+                    .foregroundStyle(SalahTheme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: line.first?.isArabicLetter == true ? .trailing : .leading)
+            }
+        }
+        .cardStyle()
+    }
+
+    private func placeGroup(title: String, items: [(String, String, String)]) -> some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text(title)
+                .font(.title3.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(item.0)
+                        .font(.headline)
+                    Text(settings.language == .german ? item.2 : item.1)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Divider().opacity(0.28)
+            }
+        }
+        .cardStyle()
+    }
+}
+
+private extension Character {
+    var isArabicLetter: Bool {
+        unicodeScalars.contains { scalar in
+            (0x0600...0x06FF).contains(Int(scalar.value)) ||
+            (0x0750...0x077F).contains(Int(scalar.value))
+        }
+    }
+}
+
+struct RamadanGuideIndexView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section {
+                Text(settings.t(
+                    "Die PDF führt Ramadan als eigenen Bereich mit Fastenwissen, Tarawih, Tasbih-/Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr. SalahPath verbindet diese Unterpunkte jetzt an einer Stelle.",
+                    "PDF Ramazan'ı; oruç bilgisi, teravih, tesbih/bayram namazı, dualar, ayetler ve Kadir Gecesi ile ayrı bir bölüm olarak gösteriyor. SalahPath artık bu alt başlıkları tek yerde topluyor."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Fasten", "Oruç")) {
+                NavigationLink { FastingBasicsView() } label: {
+                    Label(settings.t("Grundlagen & Weisheiten", "Temel bilgiler & hikmetler"), systemImage: "moon.stars.fill")
+                }
+                NavigationLink { FastingRulesView() } label: {
+                    Label(settings.t("Regeln: was bricht das Fasten?", "Hükümler: orucu ne bozar?"), systemImage: "checklist")
+                }
+                NavigationLink { FastingExceptionsView() } label: {
+                    Label(settings.t("Ausnahmen & Erleichterungen", "Mazeretler & ruhsatlar"), systemImage: "cross.case.fill")
+                }
+                NavigationLink { FastingTrackerView() } label: {
+                    Label(settings.t("Fasten-Tracker", "Oruç takibi"), systemImage: "checkmark.circle.fill")
+                }
+            }
+
+            Section(settings.t("Ramadan-Gebete", "Ramazan Namazları")) {
+                NavigationLink { PrayerCatalogView() } label: {
+                    Label(settings.t("Tarawih, Tasbih & Eid-Gebet", "Teravih, Tesbih & Bayram Namazı"), systemImage: "figure.mind.and.body")
+                }
+            }
+
+            Section(settings.t("Quran & Dua", "Kur'an & Dua")) {
+                QuranReferenceLink(
+                    surah: 2, ayah: 183,
+                    title: settings.t("Fasten-Ayat · Al-Baqara 183 ff.", "Oruç Ayetleri · Bakara 183 vd.")
+                )
+                QuranReferenceLink(
+                    surah: 97, ayah: 1,
+                    title: settings.t("Laylat al-Qadr · Sura 97", "Kadir Gecesi · Kadir Sûresi")
+                )
+                NavigationLink { QuranicDuaLibraryView() } label: {
+                    Label(settings.t("Duas", "Dualar"), systemImage: "hands.sparkles.fill")
+                }
+            }
+        }
+        .navigationTitle(settings.t("Ramadan", "Ramazan"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Supplementary reference utilities
 
 struct PrayerDebtTrackerView: View {
