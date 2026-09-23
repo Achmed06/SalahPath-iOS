@@ -119,7 +119,7 @@ struct PrayerTrackerOverviewView: View {
                     let done = PrayerTrackerStore.isCompleted(kind, on: today)
                     Button {
                         _ = PrayerTrackerStore.toggle(kind, on: today)
-                        refresh += 1
+                        refresh &+= 1
                     } label: {
                         HStack {
                             Text(kind.localizedName(settings.language))
@@ -141,7 +141,7 @@ struct PrayerTrackerOverviewView: View {
                         if PrayerTrackerStore.isPaused(today) != newValue {
                             PrayerTrackerStore.togglePause(today)
                         }
-                        refresh += 1
+                        refresh &+= 1
                     }
                 )) {
                     Label(settings.t("Tracker heute pausieren", "Bugün takibi duraklat"), systemImage: "pause.circle")
@@ -185,7 +185,7 @@ struct TrackerPauseView: View {
             Section {
                 Toggle(isOn: Binding(
                     get: { PrayerTrackerStore.isPaused(today) },
-                    set: { _ in PrayerTrackerStore.togglePause(today); refresh += 1 }
+                    set: { _ in PrayerTrackerStore.togglePause(today); refresh &+= 1 }
                 )) {
                     Label(settings.t("Tracker heute pausieren", "Bugün takibi duraklat"), systemImage: "pause.circle")
                 }
@@ -1123,7 +1123,7 @@ struct HomeView: View {
                 let checked = DailyDeenStore.isDone(task.0, now)
                 Button {
                     DailyDeenStore.toggle(task.0, now)
-                    dailyDeenRefresh += 1
+                    dailyDeenRefresh &+= 1
                 } label: {
                     HStack(spacing: 10) {
                         Image(systemName: task.2).frame(width: 22).foregroundStyle(SalahTheme.teal)
