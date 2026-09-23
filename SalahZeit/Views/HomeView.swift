@@ -825,7 +825,6 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-                .accessibilityLanguage("ar")
 
             Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
                 .font(.system(size: 9.2, weight: .semibold))
