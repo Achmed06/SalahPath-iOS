@@ -6738,6 +6738,450 @@ struct QuranView: View {
 }
 
 
+// MARK: - Complete Quran directory (Surah · revelation · page · Juz)
+
+private struct QuranPageResponse: Decodable {
+    let data: QuranPageData
+}
+
+private struct QuranPageData: Decodable {
+    let number: Int
+    let ayahs: [QuranPageAyah]
+}
+
+private struct QuranPageSurah: Decodable {
+    let number: Int
+    let name: String
+    let englishName: String
+}
+
+private struct QuranPageAyah: Decodable, Identifiable {
+    let number: Int
+    let text: String
+    let numberInSurah: Int
+    let surah: QuranPageSurah
+
+    var id: Int { number }
+}
+
+@MainActor
+private final class QuranPageStore: ObservableObject {
+    @Published var arabic: QuranPageData?
+    @Published var translation: QuranPageData?
+    @Published var isLoading = false
+    @Published var error: String?
+
+    func load(page: Int, language: AppLanguage) async {
+        guard (1...604).contains(page) else {
+            error = "Invalid Mushaf page."
+            return
+        }
+
+        isLoading = true
+        error = nil
+        defer { isLoading = false }
+
+        let translationEdition = language == .german ? "de.bubenheim" : "tr.diyanet"
+
+        do {
+            async let arabicPage = fetch(page: page, edition: "quran-uthmani")
+            async let translatedPage = fetch(page: page, edition: translationEdition)
+            let result = try await (arabicPage, translatedPage)
+            arabic = result.0
+            translation = result.1
+        } catch {
+            arabic = nil
+            translation = nil
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func fetch(page: Int, edition: String) async throws -> QuranPageData {
+        guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 20
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse,
+              (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+
+        return try JSONDecoder().decode(QuranPageResponse.self, from: data).data
+    }
+}
+
+struct QuranPageReaderView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @StateObject private var store = QuranPageStore()
+
+    let page: Int
+
+    private var translationByAyah: [Int: QuranPageAyah] {
+        Dictionary(uniqueKeysWithValues: (store.translation?.ayahs ?? []).map { ($0.number, $0) })
+    }
+
+    var body: some View {
+        Group {
+            if store.isLoading && store.arabic == nil {
+                ProgressView(settings.t(
+                    "Quran-Seite \(page) wird geladen…",
+                    "Kur'an \(page). sayfa yükleniyor…"
+                ))
+            } else if let error = store.error, store.arabic == nil {
+                VStack(spacing: 12) {
+                    ContentUnavailableView(
+                        settings.t("Seite konnte nicht geladen werden", "Sayfa yüklenemedi"),
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(error)
+                    )
+
+                    Button {
+                        Task { await store.load(page: page, language: settings.language) }
+                    } label: {
+                        Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+                .padding()
+            } else if let arabic = store.arabic {
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        pageNavigation(top: true)
+
+                        VStack(spacing: 0) {
+                            ForEach(Array(arabic.ayahs.enumerated()), id: \.element.id) { index, ayah in
+                                if index == 0 || arabic.ayahs[index - 1].surah.number != ayah.surah.number {
+                                    VStack(spacing: 5) {
+                                        Text(ayah.surah.name)
+                                            .font(.system(size: 25, weight: .semibold))
+                                            .foregroundStyle(SalahTheme.deepTeal)
+                                        Text("\(ayah.surah.englishName) · \(ayah.surah.number)")
+                                            .font(.caption.bold())
+                                            .foregroundStyle(SalahTheme.mutedInk)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                                    .background(SalahTheme.gold.opacity(0.10))
+                                }
+
+                                VStack(alignment: .leading, spacing: 9) {
+                                    HStack(alignment: .top, spacing: 9) {
+                                        Text("\(ayah.numberInSurah)")
+                                            .font(.caption.bold().monospacedDigit())
+                                            .foregroundStyle(SalahTheme.deepTeal)
+                                            .frame(width: 30, height: 30)
+                                            .background(SalahTheme.gold.opacity(0.20), in: Circle())
+
+                                        Text(ayah.text)
+                                            .font(.system(size: 23))
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                            .multilineTextAlignment(.trailing)
+                                    }
+
+                                    if let translated = translationByAyah[ayah.number] {
+                                        Text(translated.text)
+                                            .font(.subheadline)
+                                            .foregroundStyle(SalahTheme.ink)
+                                            .fixedSize(horizontal: false, vertical: true)
+                                    }
+                                }
+                                .padding(.horizontal, 13)
+                                .padding(.vertical, 12)
+
+                                if index < arabic.ayahs.count - 1 {
+                                    Divider().opacity(0.28)
+                                }
+                            }
+                        }
+                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                        }
+                        .padding(.horizontal)
+
+                        pageNavigation(top: false)
+
+                        Text(settings.t(
+                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen. Die Mushaf-Navigation umfasst 604 Seiten.",
+                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir. Mushaf gezinmesi 604 sayfadır."
+                        ))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                        .padding(.bottom, 16)
+                    }
+                }
+                .background(SalahTheme.page)
+            }
+        }
+        .navigationTitle(settings.t("Quran · Seite \(page)", "Kur'an · \(page). Sayfa"))
+        .navigationBarTitleDisplayMode(.inline)
+        .task(id: "\(page)-\(settings.language.rawValue)") {
+            await store.load(page: page, language: settings.language)
+        }
+    }
+
+    @ViewBuilder
+    private func pageNavigation(top: Bool) -> some View {
+        HStack(spacing: 10) {
+            if page > 1 {
+                NavigationLink {
+                    QuranPageReaderView(page: page - 1)
+                } label: {
+                    Label(settings.t("Zurück", "Önceki"), systemImage: "chevron.left")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            } else {
+                Color.clear.frame(maxWidth: .infinity, minHeight: 32)
+            }
+
+            Text(settings.t("Seite \(page) / 604", "Sayfa \(page) / 604"))
+                .font(.subheadline.bold().monospacedDigit())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .fixedSize()
+
+            if page < 604 {
+                NavigationLink {
+                    QuranPageReaderView(page: page + 1)
+                } label: {
+                    Label(settings.t("Weiter", "Sonraki"), systemImage: "chevron.right")
+                        .labelStyle(.titleAndIcon)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            } else {
+                Color.clear.frame(maxWidth: .infinity, minHeight: 32)
+            }
+        }
+        .tint(SalahTheme.teal)
+        .padding(.horizontal)
+        .padding(.vertical, top ? 12 : 14)
+    }
+}
+
+struct QuranDirectoryView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @StateObject private var store = QuranStore()
+    @State private var tab = 0
+    @State private var search = ""
+
+    // Diyanet's common nuzul-order list, indexed by Mushaf surah number.
+    // 0 is an unused sentinel so array index == surah number.
+    private let revelationOrderBySurah: [Int] = [
+        0,
+        5, 87, 89, 92, 112, 55, 39, 88, 113, 51, 52, 53, 96, 72, 54, 70, 50, 69, 44, 45,
+        73, 103, 74, 102, 42, 47, 48, 49, 85, 84, 57, 75, 90, 58, 43, 41, 56, 38, 59, 60,
+        61, 62, 63, 64, 65, 66, 95, 111, 106, 34, 67, 76, 23, 37, 97, 46, 94, 105, 101, 91,
+        109, 110, 104, 108, 99, 107, 77, 2, 78, 79, 71, 40, 3, 4, 31, 98, 33, 80, 81, 24,
+        7, 82, 86, 83, 27, 36, 8, 68, 10, 35, 26, 9, 11, 12, 28, 1, 25, 100, 93, 14,
+        30, 16, 13, 32, 19, 29, 17, 15, 18, 114, 6, 22, 20, 21
+    ]
+
+    private var filteredChapters: [SurahMeta] {
+        let q = search.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return store.chapters }
+
+        return store.chapters.filter { chapter in
+            chapter.name.localizedCaseInsensitiveContains(q) ||
+            chapter.englishName.localizedCaseInsensitiveContains(q) ||
+            chapter.englishNameTranslation.localizedCaseInsensitiveContains(q) ||
+            String(chapter.number) == q
+        }
+    }
+
+    private var revelationChapters: [SurahMeta] {
+        filteredChapters.sorted {
+            revelationNumber(for: $0.number) < revelationNumber(for: $1.number)
+        }
+    }
+
+    var body: some View {
+        Group {
+            if store.isLoading && store.chapters.isEmpty {
+                ProgressView(settings.t("Quran-Verzeichnis wird geladen…", "Kur'an dizini yükleniyor…"))
+            } else if let error = store.error, store.chapters.isEmpty {
+                ContentUnavailableView(
+                    settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
+                    systemImage: "wifi.exclamationmark",
+                    description: Text(error)
+                )
+            } else {
+                VStack(spacing: 8) {
+                    Picker("", selection: $tab) {
+                        Text(settings.t("Suren", "Sûreler")).tag(0)
+                        Text(settings.t("Offenbarung", "İniş Sırası")).tag(1)
+                        Text(settings.t("Seiten", "Sayfa")).tag(2)
+                        Text(settings.t("Juz", "Cüz")).tag(3)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+
+                    if tab == 0 || tab == 1 {
+                        searchField
+                    }
+
+                    content
+                }
+                .background(SalahTheme.page)
+            }
+        }
+        .navigationTitle(settings.t("Quran-Verzeichnis", "Kur'an Dizini"))
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await store.loadChapters() }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch tab {
+        case 0:
+            surahList(filteredChapters, showRevelation: false)
+        case 1:
+            surahList(revelationChapters, showRevelation: true)
+        case 2:
+            pageGrid
+        default:
+            juzList
+        }
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(SalahTheme.teal)
+            TextField(settings.t("Sura suchen", "Sûre ara"), text: $search)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 42)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.35), lineWidth: 1)
+        }
+        .padding(.horizontal)
+    }
+
+    private func surahList(_ chapters: [SurahMeta], showRevelation: Bool) -> some View {
+        List(chapters) { chapter in
+            NavigationLink {
+                QuranSurahView(surah: chapter, initialAyah: nil)
+            } label: {
+                HStack(spacing: 10) {
+                    VStack(spacing: 2) {
+                        Text(showRevelation ? "#\(revelationNumber(for: chapter.number))" : "\(chapter.number)")
+                            .font(.caption.bold().monospacedDigit())
+                            .foregroundStyle(SalahTheme.deepTeal)
+                        if showRevelation {
+                            Text(settings.t("Nüzul", "Nüzul"))
+                                .font(.system(size: 8, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(width: 42, height: 42)
+                    .background(SalahTheme.gold.opacity(0.18), in: Circle())
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(chapter.englishName)
+                            .font(.headline)
+                            .foregroundStyle(SalahTheme.ink)
+                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "ayet")) · \(chapter.revelationType)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Text(chapter.name)
+                        .font(.system(size: 18))
+                        .foregroundStyle(SalahTheme.ink)
+                }
+                .padding(.vertical, 2)
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+    }
+
+    private var pageGrid: some View {
+        ScrollView {
+            LazyVGrid(columns: [
+                GridItem(.adaptive(minimum: 64), spacing: 8)
+            ], spacing: 8) {
+                ForEach(1...604, id: \.self) { page in
+                    NavigationLink {
+                        QuranPageReaderView(page: page)
+                    } label: {
+                        VStack(spacing: 3) {
+                            Text("\(page)")
+                                .font(.headline.bold().monospacedDigit())
+                                .foregroundStyle(SalahTheme.deepTeal)
+                            Text(settings.t("Seite", "Sayfa"))
+                                .font(.caption2)
+                                .foregroundStyle(SalahTheme.mutedInk)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 58)
+                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                                .stroke(SalahTheme.gold.opacity(0.32), lineWidth: 1)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding()
+        }
+    }
+
+    private var juzList: some View {
+        List(QuranJuzStart.all) { juz in
+            if let chapter = store.chapters.first(where: { $0.number == juz.surah }) {
+                NavigationLink {
+                    QuranSurahView(surah: chapter, initialAyah: juz.ayah)
+                } label: {
+                    HStack(spacing: 11) {
+                        Text("\(juz.number)")
+                            .font(.caption.bold())
+                            .foregroundStyle(.white)
+                            .frame(width: 36, height: 36)
+                            .background(SalahTheme.deepTeal, in: Circle())
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(settings.t("Juz \(juz.number)", "\(juz.number). Cüz"))
+                                .font(.headline)
+                            Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(juz.ayah)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+                        Text(chapter.name)
+                            .font(.system(size: 17))
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+    }
+
+    private func revelationNumber(for surah: Int) -> Int {
+        guard revelationOrderBySurah.indices.contains(surah) else { return 999 }
+        return revelationOrderBySurah[surah]
+    }
+}
+
 private struct QuranJuzStart: Identifiable {
     let number: Int
     let surah: Int
