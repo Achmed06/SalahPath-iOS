@@ -37,17 +37,28 @@ There are no ads, advertising SDKs, analytics SDKs, StoreKit purchases, subscrip
 The binary includes `PrivacyInfo.xcprivacy` and declares:
 
 - Tracking: No
-- App-declared collected data types: none
+- Collected data type: Device ID — used only for App Functionality; not linked to the user; not used for tracking. This is a conservative disclosure for the source IP necessarily visible to AlQuran.cloud / Islamic Network while serving Quran API/CDN requests.
 - Required Reason API: UserDefaults — `CA92.1`
 - Required Reason API: File timestamps inside the app container — `C617.1`
 
-### App Store Connect privacy answer for the Quran service
+### Final App Store Connect privacy answer for the Quran service
 
-Apple defines data as “collected” when it is transmitted off device and retained by the developer or a third party longer than needed to service the request in real time. Apple specifically says an IP address that is sent with a server request and not retained does not need to be disclosed; if it is retained, the relevant data category must be declared according to how the IP address is used.
+Apple defines data as “collected” when it is transmitted off device and retained by the developer or a third party longer than needed to service the request in real time. Apple also instructs developers who collect and store IP addresses to disclose the data category according to how the IP address is used.
 
-AlQuran.cloud publicly documents per-source-IP rate limiting, so the service necessarily processes the requesting IP address. Its public AlQuran documentation reviewed on 21 September 2026 does not state whether AlQuran/API/CDN request metadata is retained beyond real-time request/rate-limit handling.
+AlQuran.cloud's current terms state that the API applies a per-IP rate limit. As of 23 September 2026, the public AlQuran.cloud / Islamic Network material reviewed for release still does not provide a request-log retention period. Because retention cannot be confirmed, SalahPath will not rely on the “real-time only” exception.
 
-Therefore do **not** publish the App Store Connect answer “No data collected” merely by assumption. Before the final App Privacy submission, obtain a current statement from Islamic Network on AlQuran API/CDN log retention, or conservatively disclose the retained connection metadata under the Apple category that matches the provider's actual use. Do not declare GPS location for the Quran service: SalahPath does not send GPS coordinates to AlQuran.cloud / Islamic Network.
+For App Store Connect, answer **Yes, data is collected** and disclose:
+
+- Category: **Identifiers → Device ID**
+- Purpose: **App Functionality**
+- Linked to the user: **No**
+- Used for tracking: **No**
+
+This is intentionally conservative: the provider receives the source IP as normal connection metadata and uses it for API rate limiting / service protection. SalahPath does not create an account identifier and does not use the IP for advertising, analytics, profiling, or cross-app tracking.
+
+Do **not** declare Precise Location or Coarse Location for the Quran service. SalahPath does not send GPS coordinates, manually selected latitude/longitude, prayer history, fasting state, Quran bookmarks, or other local worship data to AlQuran.cloud / Islamic Network.
+
+If Islamic Network later publishes a verifiable statement that API/CDN source IPs and request metadata are discarded immediately after servicing the request, the App Store Connect disclosure can be revisited.
 
 ## Export compliance
 
@@ -68,7 +79,7 @@ The dated religious-content audit is in `RELIGIOUS_CONTENT_AUDIT.md`. The curren
 - Create the App ID for `com.achmed06.salahpath`.
 - Create the App Store Connect app record.
 - Complete the age-rating questionnaire.
-- Enter App Privacy answers and the Privacy Policy URL using the privacy decision above.
+- Enter App Privacy answers and the Privacy Policy URL using the final privacy decision above.
 - Upload screenshots for the required iPhone display sizes.
 - Provide the Support URL.
 - Sign/archive with the paid Apple Developer team and upload the signed build.
