@@ -7816,6 +7816,12 @@ actor QuranTextCache {
         try? fileManager.removeItem(at: directoryURL)
     }
 
+    func remove(for key: String) {
+        let url = fileURL(for: key)
+        guard fileManager.fileExists(atPath: url.path) else { return }
+        try? fileManager.removeItem(at: url)
+    }
+
     private func ensureDirectory() throws {
         if !fileManager.fileExists(atPath: directoryURL.path) {
             try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
@@ -7887,13 +7893,15 @@ private final class QuranStore: ObservableObject {
 
         let cacheKey = "chapters-v1.json"
 
-        if let cached = await QuranTextCache.shared.data(for: cacheKey),
-           let decoded = try? JSONDecoder().decode(SurahListResponse.self, from: cached) {
-            let sanitized = sanitizedChapters(decoded.data)
-            if !sanitized.isEmpty {
-                chapters = sanitized
-                return
+        if let cached = await QuranTextCache.shared.data(for: cacheKey) {
+            if let decoded = try? JSONDecoder().decode(SurahListResponse.self, from: cached) {
+                let sanitized = sanitizedChapters(decoded.data)
+                if !sanitized.isEmpty {
+                    chapters = sanitized
+                    return
+                }
             }
+            await QuranTextCache.shared.remove(for: cacheKey)
         }
 
         do {
@@ -7980,10 +7988,12 @@ private final class QuranStore: ObservableObject {
 
         let cacheKey = "surah-\(number)-\(edition).json"
 
-        if let cached = await QuranTextCache.shared.data(for: cacheKey),
-           let decoded = try? JSONDecoder().decode(SurahResponse.self, from: cached),
-           let sanitized = sanitizedSurah(decoded.data, expectedNumber: number) {
-            return sanitized
+        if let cached = await QuranTextCache.shared.data(for: cacheKey) {
+            if let decoded = try? JSONDecoder().decode(SurahResponse.self, from: cached),
+               let sanitized = sanitizedSurah(decoded.data, expectedNumber: number) {
+                return sanitized
+            }
+            await QuranTextCache.shared.remove(for: cacheKey)
         }
 
         guard let url = URL(string: "https://api.alquran.cloud/v1/surah/\(number)/\(edition)") else {
@@ -8874,10 +8884,12 @@ private final class QuranPageStore: ObservableObject {
 
         let cacheKey = "page-\(page)-\(edition).json"
 
-        if let cached = await QuranTextCache.shared.data(for: cacheKey),
-           let decoded = try? JSONDecoder().decode(QuranPageResponse.self, from: cached),
-           let sanitized = sanitizedPage(decoded.data, expectedPage: page) {
-            return sanitized
+        if let cached = await QuranTextCache.shared.data(for: cacheKey) {
+            if let decoded = try? JSONDecoder().decode(QuranPageResponse.self, from: cached),
+               let sanitized = sanitizedPage(decoded.data, expectedPage: page) {
+                return sanitized
+            }
+            await QuranTextCache.shared.remove(for: cacheKey)
         }
 
         guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
