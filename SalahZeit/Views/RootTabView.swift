@@ -285,8 +285,8 @@ struct NearbyMosquesView: View {
                         .tint(SalahTheme.teal)
                     }
                 } else {
-                    ForEach(store.mapItems.indices, id: \.self) { index in
-                        mosqueRow(store.mapItems[index])
+                    ForEach(Array(store.mapItems.enumerated()), id: \.offset) { _, item in
+                        mosqueRow(item)
                     }
                 }
             }
