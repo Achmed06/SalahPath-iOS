@@ -270,6 +270,11 @@ final class SettingsStore: ObservableObject {
         self.onboardingCompleted = defaults.object(forKey: Keys.onboardingCompleted) as? Bool ?? false
     }
 
+    var safeQuranFontSize: Double {
+        guard quranFontSize.isFinite else { return 28 }
+        return min(max(quranFontSize, 20), 40)
+    }
+
     func t(_ de: String, _ tr: String) -> String { language == .german ? de : tr }
 
     func completeOnboarding() {
