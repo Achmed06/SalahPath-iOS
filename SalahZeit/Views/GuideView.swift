@@ -4315,8 +4315,12 @@ final class RemoteAudioPlayer: ObservableObject {
     var hasPrevious: Bool { queueIndex > 0 }
 
     func toggle(_ url: URL) {
-        if activeURL == url, let player {
-            if isPlaying { player.pause() } else { lastError = nil; player.play() }
+        if activeURL == url, player != nil {
+            if isPlaying {
+                pause()
+            } else {
+                resume()
+            }
             return
         }
         playQueue([url])
