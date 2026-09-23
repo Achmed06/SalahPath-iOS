@@ -57,6 +57,17 @@ for sound in "$ADHAN_STANDARD_SOUND" "$ADHAN_FAJR_SOUND"; do
   fi
 done
 
+FAJR_SHA256="$(/usr/bin/shasum -a 256 "$ADHAN_FAJR_SOUND" | awk '{print $1}')"
+STANDARD_SHA256="$(/usr/bin/shasum -a 256 "$ADHAN_STANDARD_SOUND" | awk '{print $1}')"
+if [ "$FAJR_SHA256" != "e0641b2e4a04f38f38c7cc8479a0a3e4d8c5d9a577d04e9acd32c135fb2df47f" ]; then
+  echo "Unerwarteter Inhalt für adhan-fajr.caf." >&2
+  exit 1
+fi
+if [ "$STANDARD_SHA256" != "8752346b8fab95baa41b991790233ef99e85e86728fb8d296113aba274eeef43" ]; then
+  echo "Unerwarteter Inhalt für adhan-standard.caf." >&2
+  exit 1
+fi
+
 /usr/bin/plutil -lint "$PRIVACY_MANIFEST" >/dev/null
 
 BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST")"
