@@ -118,6 +118,14 @@ struct GuideView: View {
 
     private var quickLearningLinks: some View {
         VStack(spacing: 0) {
+            NavigationLink { PrayerCatalogView() } label: {
+                referenceRow(
+                    icon: "rectangle.stack.badge.play.fill",
+                    title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
+                    subtitle: settings.t("Fajr bis Jumuah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
+                )
+            }
+
             NavigationLink { WuduGuideView() } label: {
                 referenceRow(
                     icon: "drop.fill",
