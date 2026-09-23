@@ -18,10 +18,15 @@ on:
       - "SalahZeit.xcodeproj/**"
       - "scripts/preflight_reference_build.sh"
 
+concurrency:
+  group: capture-ui-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   screenshot:
-    if: ${{ !startsWith(github.event.head_commit.message, 'FAST') }}
+    if: ${{ github.event_name == 'pull_request' || !startsWith(github.event.head_commit.message, 'FAST') }}
     runs-on: macos-26
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -85,8 +90,26 @@ jobs:
       - name: Boot and capture reference screens
         shell: bash
         run: |
-          xcrun simctl boot "$SIM_UDID" || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
+          run_timeout() {
+            local seconds="$1"
+            shift
+            python3 - "$seconds" "$@" <<'PY'
+          import subprocess
+          import sys
+
+          seconds = int(sys.argv[1])
+          command = sys.argv[2:]
+          try:
+              subprocess.run(command, check=True, timeout=seconds)
+          except subprocess.TimeoutExpired:
+              print(f"Timed out after {seconds}s: {' '.join(command)}", file=sys.stderr)
+              raise SystemExit(124)
+          PY
+          }
+
+          xcrun simctl shutdown "$SIM_UDID" || true
+          run_timeout 30 xcrun simctl boot "$SIM_UDID"
+          run_timeout 180 xcrun simctl bootstatus "$SIM_UDID" -b
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
@@ -104,17 +127,17 @@ jobs:
           capture() {
             SCREEN="$1"
             NAME="$2"
-            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
+            run_timeout 20 xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
             if [ "$SCREEN" = "home" ]; then
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+                run_timeout 30 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             else
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
-                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+                run_timeout 30 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             fi
             sleep 5
-            xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
+            run_timeout 30 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
           capture home  SalahPath-v3.62-B76-TR-Home.png
