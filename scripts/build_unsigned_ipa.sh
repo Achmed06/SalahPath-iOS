@@ -31,7 +31,8 @@ fi
 
 APP_BINARY="$APP_PATH/SalahPath"
 INFO_PLIST="$APP_PATH/Info.plist"
-PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"\nADHAN_SOUND="$APP_PATH/adhan-short.caf"
+PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
+ADHAN_SOUND="$APP_PATH/adhan-short.caf"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
