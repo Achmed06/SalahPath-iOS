@@ -8737,6 +8737,61 @@ struct QuranPageReaderView: View {
                             .padding(.bottom, 8)
                         }
 
+                        if audio.activeURL != nil {
+                            HStack(spacing: 9) {
+                                Button {
+                                    if audio.isPlaying {
+                                        audio.pause()
+                                    } else {
+                                        audio.resume()
+                                    }
+                                } label: {
+                                    Image(systemName: audio.isPlaying ? "pause.fill" : "play.fill")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .frame(width: 34, height: 34)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(SalahTheme.teal)
+                                .accessibilityLabel(settings.t(
+                                    audio.isPlaying ? "Audio pausieren" : "Audio fortsetzen",
+                                    audio.isPlaying ? "Sesi duraklat" : "Sesi sürdür"
+                                ))
+
+                                VStack(alignment: .leading, spacing: 3) {
+                                    ProgressView(
+                                        value: audio.currentTime,
+                                        total: max(audio.duration, 1)
+                                    )
+                                    .tint(SalahTheme.teal)
+
+                                    Text("\(audioTimeString(audio.currentTime)) / \(audioTimeString(audio.duration))")
+                                        .font(.caption2.monospacedDigit())
+                                        .foregroundStyle(SalahTheme.mutedInk)
+                                }
+
+                                AudioSpeedControl(audio: audio, compact: true)
+
+                                Button {
+                                    audio.stop()
+                                } label: {
+                                    Image(systemName: "stop.fill")
+                                        .font(.system(size: 11, weight: .bold))
+                                        .frame(width: 30, height: 30)
+                                }
+                                .buttonStyle(.bordered)
+                                .tint(SalahTheme.teal)
+                                .accessibilityLabel(settings.t("Audio stoppen", "Sesi durdur"))
+                            }
+                            .padding(10)
+                            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                            }
+                            .padding(.horizontal)
+                            .padding(.bottom, 8)
+                        }
+
                         if settings.quranShowTranslation && store.translationUnavailable {
                             HStack(alignment: .top, spacing: 8) {
                                 Image(systemName: "icloud.slash.fill")
@@ -8990,6 +9045,12 @@ struct QuranPageReaderView: View {
         if generation == audioRequestGeneration {
             resolvingAyahNumber = nil
         }
+    }
+
+    private func audioTimeString(_ seconds: Double) -> String {
+        guard seconds.isFinite, seconds > 0 else { return "0:00" }
+        let total = Int(seconds.rounded(.down))
+        return String(format: "%d:%02d", total / 60, total % 60)
     }
 
     @ViewBuilder
