@@ -7484,7 +7484,7 @@ struct DhikrView: View {
                             }
 
                         Button {
-                            counter += 1
+                            if counter < Int.max { counter += 1 }
                         } label: {
                             Image(systemName: "plus")
                                 .font(.system(size: 17, weight: .bold))
@@ -7632,7 +7632,7 @@ struct TasbihCounterView: View {
                 }
 
                 Button {
-                    count += 1
+                    if count < Int.max { count += 1 }
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.bold())
