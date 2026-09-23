@@ -4140,6 +4140,9 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { EsmaulHusnaView() } label: {
                     Label(settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), systemImage: "sparkles")
                 }
+                NavigationLink { FourCaliphsView() } label: {
+                    Label(settings.t("Die vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                }
             }
 
             Section(settings.t("Reinheit", "Taharet")) {
