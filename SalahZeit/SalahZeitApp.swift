@@ -71,7 +71,7 @@ struct SalahPathApp: App {
         ]
         .map(String.init)
         .joined(separator: ",")
-        let dayKey = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
+        let dayKey = LocalDay.ordinal(for: Date())
 
         return [
             String(lat),
