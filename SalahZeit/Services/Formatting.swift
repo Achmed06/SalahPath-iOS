@@ -59,7 +59,11 @@ func hijriDateString(_ date: Date, language: AppLanguage = .german) -> String {
 }
 
 func countdownString(from now: Date, to future: Date) -> String {
-    let seconds = max(0, Int(future.timeIntervalSince(now)))
+    let interval = future.timeIntervalSince(now)
+    guard interval.isFinite, interval > 0 else { return "00:00" }
+
+    let cappedInterval = min(interval.rounded(.down), Double(Int.max))
+    let seconds = Int(cappedInterval)
     let hours = seconds / 3600
     let minutes = (seconds % 3600) / 60
     let secs = seconds % 60
