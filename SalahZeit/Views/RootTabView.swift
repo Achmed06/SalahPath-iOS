@@ -132,7 +132,11 @@ private final class NearbyMosqueStore: ObservableObject {
         mapItems = combined
             .filter { $0.placemark.location != nil }
             .filter { item in
-                guard let coordinate = item.placemark.location?.coordinate else { return false }
+                guard let coordinate = item.placemark.location?.coordinate,
+                      CLLocationCoordinate2DIsValid(coordinate),
+                      coordinate.latitude.isFinite,
+                      coordinate.longitude.isFinite else { return false }
+
                 let name = (item.name ?? "").lowercased()
                 let lat = Int((coordinate.latitude * 100_000).rounded())
                 let lon = Int((coordinate.longitude * 100_000).rounded())
