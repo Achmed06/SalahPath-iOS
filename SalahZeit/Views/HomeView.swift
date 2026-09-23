@@ -704,7 +704,7 @@ struct HomeView: View {
 
                     Spacer()
 
-                    Text(timeString(prayer.date, use24Hour: settings.use24Hour))
+                    Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
                         .font(.system(size: 11, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundStyle(active ? SalahTheme.deepTeal : SalahTheme.ink)
                 }
@@ -1199,10 +1199,10 @@ struct HomeView: View {
                 Label(settings.t("Nacht", "Gece"), systemImage: "moon.stars.fill")
                     .font(.headline).foregroundStyle(SalahTheme.teal)
                 if let middle = day.middleOfNight {
-                    valueRow(settings.t("Mitte der Nacht", "Gecenin yarısı"), timeString(middle, use24Hour: settings.use24Hour))
+                    valueRow(settings.t("Mitte der Nacht", "Gecenin yarısı"), timeString(middle, use24Hour: settings.use24Hour, language: settings.language))
                 }
                 if let lastThird = day.lastThirdOfNight {
-                    valueRow(settings.t("Letztes Drittel beginnt", "Son üçte birlik bölüm başlar"), timeString(lastThird, use24Hour: settings.use24Hour))
+                    valueRow(settings.t("Letztes Drittel beginnt", "Son üçte birlik bölüm başlar"), timeString(lastThird, use24Hour: settings.use24Hour, language: settings.language))
                 }
             }
             .salahCard()
@@ -1555,7 +1555,7 @@ struct PrayerTimesOverviewView: View {
             case .isha: return "20:19"
             }
         }
-        return timeString(actual, use24Hour: settings.use24Hour)
+        return timeString(actual, use24Hour: settings.use24Hour, language: settings.language)
     }
 
     private var referenceQiblaTile: some View {
@@ -1666,7 +1666,7 @@ struct PrayerTimesOverviewView: View {
                     Text(referencePrayerName(prayer.kind))
                         .font(.system(size: 10.5, weight: .semibold))
                     Spacer()
-                    Text(timeString(prayer.date, use24Hour: settings.use24Hour))
+                    Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
                         .font(.system(size: 10.5, weight: .bold).monospacedDigit())
                 }
                 .foregroundStyle(SalahTheme.ink)
@@ -2406,7 +2406,7 @@ private struct PrayerRow: View {
                     .lineLimit(2)
             }
             Spacer()
-            Text(timeString(prayer.date, use24Hour: settings.use24Hour))
+            Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(SalahTheme.ink)
         }
