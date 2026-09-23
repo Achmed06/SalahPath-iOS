@@ -189,6 +189,12 @@ struct MoreView: View {
                     NavigationLink { PrayerDuaAudioView() } label: {
                         discoverTile(icon: "text.book.closed.fill", title: settings.t("Gebetsduas", "Namaz Duaları"), subtitle: settings.t("Lesen & lernen", "Oku & öğren"))
                     }
+                    NavigationLink { PrayerDebtTrackerView() } label: {
+                        discoverTile(icon: "clock.arrow.circlepath", title: settings.t("Qada-Tracker", "Kaza Takibi"), subtitle: settings.t("Gebet & Fasten", "Namaz & oruç"))
+                    }
+                    NavigationLink { ThirtyTwoFardView() } label: {
+                        discoverTile(icon: "checklist", title: "32 Farz", subtitle: settings.t("Kompakter Lernzettel", "Kısa öğrenme özeti"))
+                    }
                 }
                 .buttonStyle(.plain)
 
