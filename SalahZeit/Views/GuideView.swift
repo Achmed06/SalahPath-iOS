@@ -2199,7 +2199,7 @@ struct WuduGuideView: View {
                     .foregroundStyle(SalahTheme.deepTeal)
             }
             .padding(14)
-            .background(SalahTheme.deepTeal)
+            .background(SalahTheme.navigationTeal)
 
             VStack(alignment: .leading, spacing: 14) {
                 if let image = step.image {
@@ -3579,7 +3579,7 @@ struct EsmaulHusnaView: View {
                                 .font(.caption.bold().monospacedDigit())
                                 .foregroundStyle(.white)
                                 .frame(width: 34, height: 34)
-                                .background(SalahTheme.deepTeal, in: Circle())
+                                .background(SalahTheme.navigationTeal, in: Circle())
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(item.name)
@@ -5310,7 +5310,7 @@ struct FastingTrackerView: View {
                     .font(.title2)
                     .foregroundStyle(SalahTheme.gold)
                     .frame(width: 44, height: 44)
-                    .background(SalahTheme.deepTeal, in: Circle())
+                    .background(SalahTheme.navigationTeal, in: Circle())
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.headline.bold())
@@ -7477,7 +7477,7 @@ struct QuranView: View {
                                     .font(.system(size: 18, weight: .semibold))
                                     .foregroundStyle(SalahTheme.gold)
                                     .frame(width: 42, height: 42)
-                                    .background(SalahTheme.deepTeal, in: Circle())
+                                    .background(SalahTheme.navigationTeal, in: Circle())
 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(settings.t("Vollständiges Quran-Verzeichnis", "Tam Kur'an Dizini"))
@@ -7517,7 +7517,7 @@ struct QuranView: View {
                                             .font(.system(size: 18, weight: .bold))
                                             .foregroundStyle(SalahTheme.gold)
                                             .frame(width: 42, height: 42)
-                                            .background(SalahTheme.deepTeal, in: Circle())
+                                            .background(SalahTheme.navigationTeal, in: Circle())
 
                                         VStack(alignment: .leading, spacing: 3) {
                                             Text(settings.t("Weiterlesen", "Okumaya devam et"))
@@ -7631,7 +7631,7 @@ struct QuranView: View {
                                     } label: {
                                         ZStack {
                                             Circle()
-                                                .fill(SalahTheme.deepTeal)
+                                                .fill(SalahTheme.navigationTeal)
                                                 .frame(width: 54, height: 54)
                                             if isResolvingPreviewAudio || previewAudio.isLoading {
                                                 ProgressView()
@@ -8306,7 +8306,7 @@ struct QuranDirectoryView: View {
                             .font(.caption.bold())
                             .foregroundStyle(.white)
                             .frame(width: 36, height: 36)
-                            .background(SalahTheme.deepTeal, in: Circle())
+                            .background(SalahTheme.navigationTeal, in: Circle())
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(settings.t("Juz \(juz.number)", "\(juz.number). Cüz"))
@@ -8408,7 +8408,7 @@ private struct QuranJuzLandingView: View {
                                     .font(.caption.bold())
                                     .foregroundStyle(.white)
                                     .frame(width: 34, height: 34)
-                                    .background(SalahTheme.deepTeal, in: Circle())
+                                    .background(SalahTheme.navigationTeal, in: Circle())
 
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text(settings.t("Cüz \(juz.number)", "\(juz.number). Cüz"))
