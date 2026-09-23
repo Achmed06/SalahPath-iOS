@@ -321,10 +321,21 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        if let clError = error as? CLError, clError.code == .locationUnknown {
-            return
-        }
+        let isLocationUnknown = (error as? CLError)?.code == .locationUnknown
+
         Task { @MainActor in
+            let wasSwitchingToDeviceLocation = self.pendingDeviceLocationSwitch
+            if wasSwitchingToDeviceLocation {
+                self.pendingDeviceLocationSwitch = false
+            }
+
+            if isLocationUnknown {
+                if wasSwitchingToDeviceLocation {
+                    self.lastError = "Aktueller Standort ist vorübergehend nicht verfügbar. Bitte erneut versuchen."
+                }
+                return
+            }
+
             self.lastError = error.localizedDescription
         }
     }
