@@ -8092,12 +8092,24 @@ private enum QuranBookmarkStore {
     static let lastReadKey = "quranLastRead"
 
     static func tokens() -> Set<String> {
-        Set(UserDefaults.standard.stringArray(forKey: key) ?? [])
+        let defaults = UserDefaults.standard
+        let stored = defaults.stringArray(forKey: key) ?? []
+        let sanitized = Set(stored.compactMap { parse($0)?.token })
+
+        if Set(stored) != sanitized {
+            defaults.set(Array(sanitized).sorted(), forKey: key)
+        }
+        return sanitized
     }
 
-    static func contains(_ bookmark: QuranBookmark) -> Bool { tokens().contains(bookmark.token) }
+    static func contains(_ bookmark: QuranBookmark) -> Bool {
+        guard isValid(bookmark) else { return false }
+        return tokens().contains(bookmark.token)
+    }
 
     static func toggle(_ bookmark: QuranBookmark) -> Bool {
+        guard isValid(bookmark) else { return false }
+
         var values = tokens()
         let added: Bool
         if values.contains(bookmark.token) { values.remove(bookmark.token); added = false }
@@ -8107,18 +8119,36 @@ private enum QuranBookmarkStore {
     }
 
     static func setLastRead(surah: Int, ayah: Int) {
-        UserDefaults.standard.set("\(surah):\(ayah)", forKey: lastReadKey)
+        let bookmark = QuranBookmark(surah: surah, ayah: ayah)
+        guard isValid(bookmark) else {
+            UserDefaults.standard.removeObject(forKey: lastReadKey)
+            return
+        }
+        UserDefaults.standard.set(bookmark.token, forKey: lastReadKey)
     }
 
     static func lastRead() -> QuranBookmark? {
-        guard let token = UserDefaults.standard.string(forKey: lastReadKey) else { return nil }
-        let parts = token.split(separator: ":")
+        let defaults = UserDefaults.standard
+        guard let token = defaults.string(forKey: lastReadKey) else { return nil }
+        guard let bookmark = parse(token) else {
+            defaults.removeObject(forKey: lastReadKey)
+            return nil
+        }
+        return bookmark
+    }
+
+    private static func parse(_ token: String) -> QuranBookmark? {
+        let parts = token.split(separator: ":", omittingEmptySubsequences: false)
         guard parts.count == 2,
               let surah = Int(parts[0]),
-              let ayah = Int(parts[1]),
-              surah > 0,
-              ayah > 0 else { return nil }
-        return QuranBookmark(surah: surah, ayah: ayah)
+              let ayah = Int(parts[1]) else { return nil }
+
+        let bookmark = QuranBookmark(surah: surah, ayah: ayah)
+        return isValid(bookmark) ? bookmark : nil
+    }
+
+    private static func isValid(_ bookmark: QuranBookmark) -> Bool {
+        (1...114).contains(bookmark.surah) && bookmark.ayah > 0
     }
 }
 
@@ -8135,7 +8165,10 @@ struct QuranView: View {
     private let usesInjectedLastRead: Bool
 
     init(initialLastReadSurah: Int? = nil, initialLastReadAyah: Int? = nil) {
-        if let surah = initialLastReadSurah, let ayah = initialLastReadAyah {
+        if let surah = initialLastReadSurah,
+           let ayah = initialLastReadAyah,
+           (1...114).contains(surah),
+           ayah > 0 {
             _lastRead = State(initialValue: QuranBookmark(surah: surah, ayah: ayah))
             usesInjectedLastRead = true
         } else {
