@@ -34,6 +34,24 @@ grep -q 'NavigationStack { MoreView() }' "SalahZeit/Views/RootTabView.swift"
 
 grep -Eq 'IslamicCalendarEventDetailView|CalendarEventEditor' "SalahZeit/Views/GuideView.swift"
 
+# Crash-hardening regression gates.
+if grep -R -nE 'fatalError\(|try!|as!' SalahZeit --include='*.swift'; then
+  echo "Unsafe Swift crash primitive found." >&2
+  exit 1
+fi
+
+grep -q 'safeQuranFontSize' "SalahZeit/Models/AppSettings.swift"
+grep -q 'CLLocationCoordinate2DIsValid' "SalahZeit/Services/LocationManager.swift"
+grep -q 'addingReportingOverflow' "SalahZeit/Views/GuideView.swift"
+grep -q 'numberInSurah' "SalahZeit/Views/GuideView.swift"
+grep -q 'sanitizedChapters' "SalahZeit/Views/GuideView.swift"
+grep -q 'sanitizedPage' "SalahZeit/Views/GuideView.swift"
+
+if grep -q 'Array(repeating: urls, count: max(1, repeatCount))' "SalahZeit/Views/GuideView.swift"; then
+  echo "Unsafe persisted Quran repeat count regression found." >&2
+  exit 1
+fi
+
 # Required reference assets (Salam / Wudu / prayer-art parity)
 for asset in \
   "SalahZeit/Assets.xcassets/male_salam_right.imageset" \
