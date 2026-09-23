@@ -23,19 +23,18 @@ final class NotificationManager {
     func removePrayerNotifications() {
         schedulingRevision &+= 1
         let revision = schedulingRevision
-        let center = center
-        let prefix = prayerIdentifierPrefix
 
-        center.getPendingNotificationRequests { requests in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            let requests = await center.pendingNotificationRequests()
+            guard revision == schedulingRevision else { return }
+
             let ids = requests
                 .map(\.identifier)
-                .filter { $0.hasPrefix(prefix) }
+                .filter { $0.hasPrefix(prayerIdentifierPrefix) }
             guard !ids.isEmpty else { return }
 
-            Task { @MainActor [weak self] in
-                guard let self, revision == self.schedulingRevision else { return }
-                center.removePendingNotificationRequests(withIdentifiers: ids)
-            }
+            center.removePendingNotificationRequests(withIdentifiers: ids)
         }
     }
 
