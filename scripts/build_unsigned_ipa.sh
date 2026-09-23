@@ -31,6 +31,7 @@ fi
 
 APP_BINARY="$APP_PATH/SalahPath"
 INFO_PLIST="$APP_PATH/Info.plist"
+PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
@@ -42,12 +43,25 @@ if [ ! -f "$INFO_PLIST" ]; then
   exit 1
 fi
 
+if [ ! -f "$PRIVACY_MANIFEST" ]; then
+  echo "PrivacyInfo.xcprivacy fehlt im gebauten App-Bundle." >&2
+  exit 1
+fi
+
+/usr/bin/plutil -lint "$PRIVACY_MANIFEST" >/dev/null
+
 BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST")"
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO_PLIST")"
 BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
+USES_NONEXEMPT_ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
 
 if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "76" ]; then
   echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
+  exit 1
+fi
+
+if [ "$USES_NONEXEMPT_ENCRYPTION" != "false" ] && [ "$USES_NONEXEMPT_ENCRYPTION" != "NO" ]; then
+  echo "ITSAppUsesNonExemptEncryption ist nicht auf false gesetzt: $USES_NONEXEMPT_ENCRYPTION" >&2
   exit 1
 fi
 
