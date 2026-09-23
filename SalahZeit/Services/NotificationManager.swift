@@ -68,13 +68,18 @@ final class NotificationManager {
 
                 let prayerName = prayer.kind.localizedName(settings.language)
 
-                if settings.notificationLeadMinutes > 0 {
-                    let reminderDate = prayer.date.addingTimeInterval(TimeInterval(-settings.notificationLeadMinutes * 60))
+                let allowedLeadMinutes = [0, 5, 10, 15, 30]
+                let leadMinutes = allowedLeadMinutes.contains(settings.notificationLeadMinutes)
+                    ? settings.notificationLeadMinutes
+                    : 10
+
+                if leadMinutes > 0 {
+                    let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
                     if reminderDate > now {
                         let reminder = UNMutableNotificationContent()
                         reminder.title = settings.t(
-                            "\(prayerName) in \(settings.notificationLeadMinutes) Min.",
-                            "\(prayerName) için \(settings.notificationLeadMinutes) dk kaldı"
+                            "\(prayerName) in \(leadMinutes) Min.",
+                            "\(prayerName) için \(leadMinutes) dk kaldı"
                         )
                         reminder.body = settings.t(
                             "Gebetszeit: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))",
