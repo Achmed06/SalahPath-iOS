@@ -10,17 +10,7 @@ enum PrayerTrackerStore {
     static let requiredKinds: [PrayerKind] = [.fajr, .dhuhr, .asr, .maghrib, .isha]
 
     private static func localDayToken(for date: Date) -> String {
-        var calendar = Calendar.current
-        calendar.timeZone = .current
-        let parts = calendar.dateComponents([.year, .month, .day], from: date)
-
-        guard let year = parts.year,
-              let month = parts.month,
-              let day = parts.day else {
-            return "unknown"
-        }
-
-        return String(format: "%04d-%02d-%02d", year, month, day)
+        LocalDay.token(for: date)
     }
 
     private static func key(for date: Date) -> String {
@@ -227,8 +217,7 @@ struct TrackerPauseView: View {
 
 private enum DailyDeenStore {
     static func dayKey(_ date: Date) -> String {
-        let f = DateFormatter(); f.calendar = .current; f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "yyyy-MM-dd"
-        return "dailyDeen-" + f.string(from: date)
+        "dailyDeen-" + LocalDay.token(for: date)
     }
     static func values(_ date: Date) -> Set<String> { Set(UserDefaults.standard.stringArray(forKey: dayKey(date)) ?? []) }
     static func isDone(_ id: String, _ date: Date) -> Bool { values(date).contains(id) }
@@ -259,7 +248,7 @@ private enum DailyDuaStore {
     ]
 
     static func item(for date: Date) -> DailyDuaEntry {
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: date) ?? 1
+        let day = LocalDay.ordinal(for: date)
         return items[(day - 1) % items.count]
     }
 }
