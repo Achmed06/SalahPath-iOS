@@ -101,7 +101,8 @@ PAGE COVERAGE
 
 85
 - Nearby mosques.
-- Not added from the screenshot alone. A production implementation needs live MapKit/local-search behavior and should not be a fake static map.
+- Added as a native live Apple MapKit local search using SalahPath's current/manual location.
+- No static screenshot map or legacy dialog was copied.
 
 86-98
 - “40 Hadis”.
@@ -174,7 +175,8 @@ IMPLEMENTED FROM THIS AUDIT
 - Gebet lernen now exposes Wudu, rak'ah plan, prayer duas, and short-surah learning directly.
 - Added persistent Qada tracker.
 - Added compact 32 Farz reference.
-- Exposed Qada tracker and 32 Farz from Entdecken.
+- Added native nearby-mosque search backed by Apple Maps.
+- Exposed Qada tracker, 32 Farz, and nearby mosques from Entdecken.
 
 INTENTIONAL NON-GOALS
 - No copying ads.
