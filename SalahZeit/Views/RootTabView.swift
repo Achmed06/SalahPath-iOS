@@ -86,11 +86,18 @@ private final class NearbyMosqueStore: ObservableObject {
     @Published var mapItems: [MKMapItem] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    private var searchRevision = 0
 
     func load(around location: CLLocation) async {
+        searchRevision &+= 1
+        let revision = searchRevision
         isLoading = true
         errorMessage = nil
-        defer { isLoading = false }
+        defer {
+            if revision == searchRevision {
+                isLoading = false
+            }
+        }
 
         let region = MKCoordinateRegion(
             center: location.coordinate,
@@ -110,12 +117,15 @@ private final class NearbyMosqueStore: ObservableObject {
 
             do {
                 let response = try await MKLocalSearch(request: request).start()
+                guard revision == searchRevision else { return }
                 combined.append(contentsOf: response.mapItems)
             } catch {
+                guard revision == searchRevision else { return }
                 lastSearchError = error
             }
         }
 
+        guard revision == searchRevision else { return }
         let origin = location
         var seen = Set<String>()
 
