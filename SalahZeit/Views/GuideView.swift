@@ -5137,9 +5137,19 @@ struct MorningEveningAdhkarView: View {
 
 private enum FastingStore {
     private static let key = "fastingDays"
+
     static func token(_ date: Date) -> String {
-        let f = DateFormatter(); f.calendar = .current; f.locale = Locale(identifier: "en_US_POSIX"); f.dateFormat = "yyyy-MM-dd"
-        return f.string(from: date)
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = .autoupdatingCurrent
+        let parts = calendar.dateComponents([.year, .month, .day], from: date)
+
+        guard let year = parts.year,
+              let month = parts.month,
+              let day = parts.day else {
+            return "unknown"
+        }
+
+        return String(format: "%04d-%02d-%02d", year, month, day)
     }
     static func tokens() -> Set<String> { Set(UserDefaults.standard.stringArray(forKey: key) ?? []) }
     static func contains(_ date: Date) -> Bool { tokens().contains(token(date)) }
@@ -5153,8 +5163,18 @@ private enum FastingStore {
 struct FastingTrackerView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var refresh = 0
-    private let calendar = Calendar.current
-    private let hijri = Calendar(identifier: .islamicUmmAlQura)
+
+    private var localCalendar: Calendar {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = .autoupdatingCurrent
+        return calendar
+    }
+
+    private var hijriCalendar: Calendar {
+        var calendar = Calendar(identifier: .islamicUmmAlQura)
+        calendar.timeZone = .autoupdatingCurrent
+        return calendar
+    }
 
     var body: some View {
         ScrollView {
@@ -5185,11 +5205,11 @@ struct FastingTrackerView: View {
             .font(.subheadline)
             .fixedSize(horizontal: false, vertical: true)
 
-            if hijri.component(.month, from: Date()) == 9 {
+            if hijriCalendar.component(.month, from: Date()) == 9 {
                 Label(
                     settings.t(
-                        "Ramadan · Tag \(hijri.component(.day, from: Date()))",
-                        "Ramazan · \(hijri.component(.day, from: Date())). gün"
+                        "Ramadan · Tag \(hijriCalendar.component(.day, from: Date()))",
+                        "Ramazan · \(hijriCalendar.component(.day, from: Date())). gün"
                     ),
                     systemImage: "sparkles"
                 )
@@ -5331,7 +5351,10 @@ struct FastingTrackerView: View {
     }
 
     private var lastDays: [Date] {
-        (0..<14).compactMap { calendar.date(byAdding: .day, value: -$0, to: calendar.startOfDay(for: Date())) }
+        let calendar = localCalendar
+        return (0..<14).compactMap {
+            calendar.date(byAdding: .day, value: -$0, to: calendar.startOfDay(for: Date()))
+        }
     }
 }
 
