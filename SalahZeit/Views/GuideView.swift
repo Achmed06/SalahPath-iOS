@@ -3618,6 +3618,315 @@ struct EsmaulHusnaView: View {
     }
 }
 
+// MARK: - Ilmihal directory
+
+private struct IlmihalTopic: Identifiable {
+    let id: String
+    let icon: String
+    let deTitle: String
+    let trTitle: String
+    let deIntro: String
+    let trIntro: String
+    let dePoints: [String]
+    let trPoints: [String]
+}
+
+private struct IlmihalTopicView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    let topic: IlmihalTopic
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(
+                        settings.language == .german ? topic.deTitle : topic.trTitle,
+                        systemImage: topic.icon
+                    )
+                    .font(.title2.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.language == .german ? topic.deIntro : topic.trIntro)
+                        .font(.subheadline)
+                        .foregroundStyle(SalahTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(settings.t("Lernübersicht", "Öğrenme özeti"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    let points = settings.language == .german ? topic.dePoints : topic.trPoints
+                    ForEach(Array(points.enumerated()), id: \.offset) { index, point in
+                        HStack(alignment: .top, spacing: 9) {
+                            Text("\(index + 1)")
+                                .font(.caption.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+                                .frame(width: 25, height: 25)
+                                .background(SalahTheme.gold.opacity(0.18), in: Circle())
+
+                            Text(point)
+                                .font(.subheadline)
+                                .foregroundStyle(SalahTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            Spacer(minLength: 0)
+                        }
+                    }
+                }
+                .cardStyle()
+
+                Text(settings.t(
+                    "Dieser Bereich ist eine kompakte Lernorientierung. Für individuelle Fälle, strittige Fragen oder konkrete Rechtsfolgen sollte eine qualifizierte religiöse Beratungsstelle gefragt werden.",
+                    "Bu bölüm kısa bir öğrenme rehberidir. Kişisel durumlar, ihtilaflı meseleler veya özel fıkhî sonuçlar için ehil bir dinî danışmana başvurulmalıdır."
+                ))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.language == .german ? topic.deTitle : topic.trTitle)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct IlmihalDirectoryView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private let zakat = IlmihalTopic(
+        id: "zakat", icon: "banknote.fill",
+        deTitle: "Zakat & Sadaqa", trTitle: "Zekât & Sadaka",
+        deIntro: "Zakat ist eine verpflichtende Vermögensabgabe, wenn die persönlichen und vermögensbezogenen Voraussetzungen erfüllt sind. Sadaqa bezeichnet freiwillige Wohltätigkeit.",
+        trIntro: "Zekât, kişisel ve malî şartlar oluştuğunda farz olan malî ibadettir. Sadaka ise gönüllü yardımlaşmayı kapsar.",
+        dePoints: [
+            "Nicht jedes Vermögen wird gleich behandelt; Art des Vermögens, Besitzdauer und Nisab können entscheidend sein.",
+            "Zakat darf nur an die religiös vorgesehenen Empfängergruppen gegeben werden.",
+            "Zakat, Sadaqat al-Fitr/Fitra und freiwillige Sadaqa sind unterschiedliche Kategorien.",
+            "Bei Geschäftswaren, Schulden, Gold, Sparguthaben oder gemischten Vermögen sollte die konkrete Berechnung separat geprüft werden."
+        ],
+        trPoints: [
+            "Her mal aynı hükme tabi değildir; malın türü, üzerinden geçen süre ve nisap önemlidir.",
+            "Zekât dinen belirlenen hak sahibi gruplara verilir.",
+            "Zekât, fitre ve gönüllü sadaka farklı hükümlere sahiptir.",
+            "Ticaret malı, borç, altın, birikim ve karma mal varlığında özel hesap ayrıca kontrol edilmelidir."
+        ]
+    )
+
+    private let sacrifice = IlmihalTopic(
+        id: "sacrifice", icon: "gift.fill",
+        deTitle: "Kurban / Opfer", trTitle: "Kurban",
+        deIntro: "Das Opferfest und das rituelle Opfer haben eigene Voraussetzungen, Zeiten und Regeln. Im hanafitischen Fiqh wird die Opferpflicht für entsprechend vermögende Personen als wajib behandelt.",
+        trIntro: "Kurban ibadetinin şartları, vakti ve uygulama hükümleri vardır. Hanefî fıkhında gerekli malî şartları taşıyan kişi için kurban vacip kabul edilir.",
+        dePoints: [
+            "Opferzeit, Opferfähigkeit der Person und Eignung des Tieres müssen zusammen geprüft werden.",
+            "Das Tier darf bestimmte gesundheitliche Mängel nicht aufweisen.",
+            "Vertretung/Vollmacht beim Opfer ist möglich; Absicht und Eigentumsfragen müssen klar sein.",
+            "Fleischverteilung ist Teil guter Praxis; konkrete Pflichtanteile sollten nicht ohne Beleg behauptet werden."
+        ],
+        trPoints: [
+            "Kurban vakti, kişinin yükümlülüğü ve hayvanın uygunluğu birlikte değerlendirilir.",
+            "Hayvanda kurbana engel olacak belirli kusurlar bulunmamalıdır.",
+            "Vekâletle kurban mümkündür; niyet ve mülkiyet açık olmalıdır.",
+            "Etin paylaşımı güzel bir uygulamadır; delilsiz zorunlu oranlar ileri sürülmemelidir."
+        ]
+    )
+
+    private let vows = IlmihalTopic(
+        id: "vows", icon: "signature",
+        deTitle: "Gelübde, Eide & Sühne", trTitle: "Adak, Yemin & Kefaret",
+        deIntro: "Gelübde, Eide und Kaffara haben unterschiedliche Voraussetzungen. Umgangssprache und rechtlich bindende Formulierungen sind nicht automatisch dasselbe.",
+        trIntro: "Adak, yemin ve kefaretin şartları farklıdır. Günlük konuşmadaki her söz fıkhen bağlayıcı yemin veya adak sayılmaz.",
+        dePoints: [
+            "Zuerst klären, ob überhaupt ein religiös bindendes Gelübde oder ein Eid entstanden ist.",
+            "Ein Gelübde macht eine ursprünglich verbotene Handlung nicht erlaubt.",
+            "Kaffara hängt vom konkreten Anlass ab; Fasten-Kaffara, Eid-Kaffara und andere Fälle dürfen nicht vermischt werden.",
+            "Bei unklaren eigenen Formulierungen sollte der exakte Wortlaut fachkundig geprüft werden."
+        ],
+        trPoints: [
+            "Önce dinen bağlayıcı bir adak veya yeminin gerçekten oluşup oluşmadığı belirlenir.",
+            "Adak, haram olan bir işi helal hâle getirmez.",
+            "Kefaret sebebe göre değişir; oruç kefareti, yemin kefareti ve diğerleri karıştırılmamalıdır.",
+            "Kendi sözünün hükmü belirsizse kullanılan ifade aynen aktarılıp ehil kişiye sorulmalıdır."
+        ]
+    )
+
+    private let family = IlmihalTopic(
+        id: "family", icon: "house.and.flag.fill",
+        deTitle: "Familie, Ehe & Scheidung", trTitle: "Aile, Nikâh & Boşanma",
+        deIntro: "Das islamische Familienrecht behandelt Ehe, Ehehindernisse, gegenseitige Rechte, Unterhalt, Scheidung, Wartezeit und verwandte Themen.",
+        trIntro: "İslâm aile hukuku nikâh, evlenme engelleri, karşılıklı haklar, nafaka, boşanma, iddet ve ilgili konuları kapsar.",
+        dePoints: [
+            "Eine gültige Ehe hat definierte Voraussetzungen; kulturelle Bräuche ersetzen diese nicht automatisch.",
+            "Ehepartner haben gegenseitige Rechte und Verantwortlichkeiten; Gewalt oder Unrecht werden dadurch nicht legitimiert.",
+            "Scheidungsfragen hängen stark vom exakten Wortlaut, der Situation und der Rechtsschule ab.",
+            "Staatliches Familienrecht und religiöse Bewertung können unterschiedliche Ebenen betreffen; beides muss beachtet werden."
+        ],
+        trPoints: [
+            "Geçerli nikâhın belirli şartları vardır; kültürel adetler bu şartların yerini otomatik olarak tutmaz.",
+            "Eşlerin karşılıklı hak ve sorumlulukları vardır; bunlar şiddet veya haksızlığı meşrulaştırmaz.",
+            "Boşama hükümleri kullanılan tam ifadeye, duruma ve mezhebe göre değişebilir.",
+            "Devlet aile hukuku ile dinî değerlendirme farklı düzlemlerdir; ikisi de dikkate alınmalıdır."
+        ]
+    )
+
+    private let inheritance = IlmihalTopic(
+        id: "inheritance", icon: "doc.text.fill",
+        deTitle: "Testament, Erbe & Stiftung", trTitle: "Vasiyet, Miras & Vakıf",
+        deIntro: "Vermögensnachfolge umfasst Schulden, Testament/Vermächtnis, Erbanteile und gegebenenfalls Stiftungen. Diese Themen sind rechnerisch und rechtlich sensibel.",
+        trIntro: "Malın ölüm sonrası intikali; borçlar, vasiyet, miras payları ve vakıf gibi konuları kapsar. Bu alan hem hesap hem hukuk bakımından hassastır.",
+        dePoints: [
+            "Vor einer Erbverteilung werden relevante Nachlasspflichten und Schulden berücksichtigt.",
+            "Nicht jede gewünschte testamentarische Verteilung ist religiös oder staatlich ohne Weiteres wirksam.",
+            "Erbanteile hängen von der tatsächlich vorhandenen Verwandtschaftskonstellation ab.",
+            "Für einen realen Nachlass sind qualifizierte religiöse und staatlich-rechtliche Beratung sinnvoll."
+        ],
+        trPoints: [
+            "Miras paylaşımından önce ilgili tereke yükümlülükleri ve borçlar dikkate alınır.",
+            "İstenen her vasiyet düzenlemesi dinen veya hukukta otomatik olarak geçerli değildir.",
+            "Miras payları mevcut mirasçıların kim olduğuna göre değişir.",
+            "Gerçek bir tereke için hem dinî hem resmî hukuk açısından uzman desteği gerekir."
+        ]
+    )
+
+    private let commerce = IlmihalTopic(
+        id: "commerce", icon: "cart.fill",
+        deTitle: "Handel & Erwerb", trTitle: "Ticaret & Kazanç",
+        deIntro: "Islamische Handelsregeln betonen freiwillige Zustimmung, Klarheit, Ehrlichkeit und den Schutz vor unrechtmäßiger Vermögensaneignung.",
+        trIntro: "İslâm ticaret ahlakı rızayı, açıklığı, dürüstlüğü ve haksız mal edinmekten kaçınmayı öne çıkarır.",
+        dePoints: [
+            "Täuschung, Betrug, Bestechung und unrechtmäßige Aneignung sind keine legitimen Erwerbswege.",
+            "Verträge und Versprechen sollen klar und eingehalten werden.",
+            "Riba/Zinsfragen sind juristisch differenziert; konkrete moderne Finanzprodukte müssen einzeln geprüft werden.",
+            "Arbeitnehmer und Arbeitgeber tragen wechselseitige Rechte und Pflichten."
+        ],
+        trPoints: [
+            "Aldatma, hile, rüşvet ve haksız mal edinme meşru kazanç değildir.",
+            "Akitler ve verilen sözler açık olmalı ve yerine getirilmelidir.",
+            "Faiz/riba meseleleri ayrıntılıdır; modern finans ürünleri tek tek değerlendirilmelidir.",
+            "İşçi ve işverenin karşılıklı hak ve sorumlulukları vardır."
+        ]
+    )
+
+    private let social = IlmihalTopic(
+        id: "social", icon: "person.3.fill",
+        deTitle: "Soziales Leben & Rechte", trTitle: "Sosyal Hayat & Haklar",
+        deIntro: "Nachbarschaft, Familie, Öffentlichkeit, Eigentum und persönliche Würde gehören ebenfalls zum praktischen islamischen Leben.",
+        trIntro: "Komşuluk, aile, toplum, mülkiyet ve insan onuru da günlük dinî hayatın konularındandır.",
+        dePoints: [
+            "Rechte anderer Menschen dürfen nicht durch vermeintliche Frömmigkeit übergangen werden.",
+            "Üble Nachrede, Verleumdung, Spott und ungerechte Verdächtigung sind ethisch-religiöse Probleme.",
+            "Nachbarschaft und Verwandtschaft beinhalten Verantwortung, aber auch persönliche Grenzen und Schutzrechte.",
+            "Gutes Verhalten gilt auch gegenüber Menschen anderer Religionen und Überzeugungen."
+        ],
+        trPoints: [
+            "Başkalarının hakları dindarlık iddiasıyla çiğnenemez.",
+            "Gıybet, iftira, alay ve haksız suizan ahlâkî ve dinî sorunlardır.",
+            "Komşuluk ve akrabalık sorumluluk getirir; aynı zamanda kişisel sınırlar ve korunma hakları vardır.",
+            "Güzel muamele farklı din ve görüşten insanlara karşı da geçerlidir."
+        ]
+    )
+
+    private let health = IlmihalTopic(
+        id: "health", icon: "cross.case.fill",
+        deTitle: "Medizin & Gesundheit", trTitle: "Tıp & Sağlık",
+        deIntro: "Krankheit kann Einfluss auf Reinheit, Gebet, Fasten und andere Pflichten haben. Medizinische und religiöse Fragen sollten dabei getrennt, aber gemeinsam berücksichtigt werden.",
+        trIntro: "Hastalık; abdest, namaz, oruç ve diğer ibadetleri etkileyebilir. Tıbbî ve dinî değerlendirme birbirine karıştırılmadan birlikte ele alınmalıdır.",
+        dePoints: [
+            "Bei Krankheit kennt der Fiqh Erleichterungen; deren Anwendung hängt von der tatsächlichen Situation ab.",
+            "Medizinische Diagnose und Behandlung gehören in die Hand qualifizierter Gesundheitsfachkräfte.",
+            "Religiöse Fragen zu Medikamenten, Eingriffen, Fasten oder Reinheit benötigen den konkreten medizinischen Sachverhalt.",
+            "Notlagen und ernsthafte Gesundheitsgefahren werden nicht ignoriert, um eine freiwillige Praxis aufrechtzuerhalten."
+        ],
+        trPoints: [
+            "Hastalıkta fıkhın ruhsatları vardır; hangi ruhsatın uygulanacağı gerçek duruma bağlıdır.",
+            "Tıbbî teşhis ve tedavi yetkili sağlık uzmanlarının alanıdır.",
+            "İlaç, ameliyat, oruç veya temizlikle ilgili dinî hüküm için tıbbî durum doğru bilinmelidir.",
+            "Nafile uygulamayı sürdürmek uğruna ciddi sağlık tehlikesi görmezden gelinmez."
+        ]
+    )
+
+    var body: some View {
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("İlmihal · Alltag des Glaubens", "İlmihal · Dini hayat rehberi"), systemImage: "books.vertical.fill")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Die PDF zeigt einen tiefen İlmihal-Themenbaum. SalahPath führt vorhandene ausführliche Bereiche hier zusammen und ergänzt fehlende Hauptkapitel als kompakte Lernorientierung.",
+                        "PDF derin bir ilmihal konu ağacı gösteriyor. SalahPath mevcut ayrıntılı bölümleri burada birleştiriyor ve eksik ana başlıkları kısa öğrenme rehberleriyle tamamlıyor."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .padding(.vertical, 3)
+            }
+
+            Section(settings.t("Glaube & Grundlagen", "İman & Temel Bilgiler")) {
+                NavigationLink { IslamLearningHubView() } label: {
+                    Label(settings.t("Glaubenslehre, Islam & Charakter", "İman, İslâm & Ahlâk"), systemImage: "book.pages.fill")
+                }
+                NavigationLink { ThirtyTwoFardView() } label: {
+                    Label("32 Farz", systemImage: "checklist")
+                }
+                NavigationLink { EsmaulHusnaView() } label: {
+                    Label(settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), systemImage: "sparkles")
+                }
+            }
+
+            Section(settings.t("Reinheit", "Taharet")) {
+                NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
+                NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
+                NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+            }
+
+            Section(settings.t("Gebet", "Namaz")) {
+                NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
+                NavigationLink { PrayerHowToView() } label: { Label(settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat"), systemImage: "figure.mind.and.body") }
+                NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
+                NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
+            }
+
+            Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
+                NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
+                NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
+                NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
+                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
+                NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
+            }
+
+            Section(settings.t("Familie & Vermögen", "Aile & Malî Hayat")) {
+                NavigationLink { IlmihalTopicView(topic: family) } label: { Label(settings.t("Ehe & Familie", "Nikâh & Aile"), systemImage: family.icon) }
+                NavigationLink { IlmihalTopicView(topic: inheritance) } label: { Label(settings.t("Testament & Erbe", "Vasiyet & Miras"), systemImage: inheritance.icon) }
+                NavigationLink { IlmihalTopicView(topic: commerce) } label: { Label(settings.t("Handel & Erwerb", "Ticaret & Kazanç"), systemImage: commerce.icon) }
+            }
+
+            Section(settings.t("Soziales & Gesundheit", "Sosyal Hayat & Sağlık")) {
+                NavigationLink { IlmihalTopicView(topic: social) } label: { Label(settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), systemImage: social.icon) }
+                NavigationLink { IlmihalTopicView(topic: health) } label: { Label(settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), systemImage: health.icon) }
+            }
+
+            Section(settings.t("Quelle & Umfang", "Kaynak & Kapsam")) {
+                Text(settings.t(
+                    "Struktur abgeglichen mit Diyanet İlmihal/Fetva-Hauptbereichen: Glaube, Reinheit, Gebet, Zakat, Fasten, Hajj/Umrah, Kurban, Gelübde/Eide, Quran/Dua, Familie, Erbe, Halal/Haram, soziales, medizinisches und kommerzielles Leben.",
+                    "Yapı Diyanet İlmihal/Fetva ana alanlarıyla eşleştirildi: iman, taharet, namaz, zekât, oruç, hac/umre, kurban, adak/yemin, Kur'an/dua, aile, miras, helal-haram, sosyal, tıbbî ve ticarî hayat."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("İlmihal", "İlmihal"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 // MARK: - Supplementary reference utilities
 
 struct PrayerDebtTrackerView: View {
