@@ -5029,8 +5029,42 @@ private struct AudioAyahData: Decodable {
 
 private enum QuranAudioResolver {
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
-        guard (1...114).contains(surah),
-              let url = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(reciter.edition)") else {
+        guard (1...114).contains(surah) else {
+            throw URLError(.badURL)
+        }
+
+        var sources: [(edition: String, bitrate: Int)] = [
+            (reciter.edition, reciter.bitrate)
+        ]
+        if let alternate = reciter.alternateAudioSource,
+           alternate.edition != reciter.edition {
+            sources.append(alternate)
+        }
+
+        var lastError: Error = URLError(.resourceUnavailable)
+
+        for source in sources {
+            do {
+                return try await urls(
+                    surah: surah,
+                    edition: source.edition,
+                    bitrate: source.bitrate
+                )
+            } catch {
+                if Task.isCancelled { throw CancellationError() }
+                lastError = error
+            }
+        }
+
+        throw lastError
+    }
+
+    private static func urls(
+        surah: Int,
+        edition: String,
+        bitrate: Int
+    ) async throws -> [URL] {
+        guard let url = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(edition)") else {
             throw URLError(.badURL)
         }
 
@@ -5069,7 +5103,7 @@ private enum QuranAudioResolver {
                 }
             }
 
-            let fallback = "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/\(item.number).mp3"
+            let fallback = "https://cdn.islamic.network/quran/audio/\(bitrate)/\(edition)/\(item.number).mp3"
             guard let resolved = URL(string: fallback),
                   resolved.scheme?.lowercased() == "https" else {
                 throw URLError(.resourceUnavailable)
