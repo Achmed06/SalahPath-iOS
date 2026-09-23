@@ -427,6 +427,13 @@ struct MoreView: View {
                             subtitle: settings.t("Suren · Seiten · Juz", "Sûre · sayfa · cüz")
                         )
                     }
+                    NavigationLink { PrayerTextsHubView() } label: {
+                        discoverTile(
+                            icon: "books.vertical.fill",
+                            title: settings.t("Namaz-Texte", "Namaz Metinleri"),
+                            subtitle: settings.t("Suren · Duas · Ayat", "Sûre · dua · ayet")
+                        )
+                    }
                     NavigationLink { PrayerDuaAudioView() } label: {
                         discoverTile(icon: "text.book.closed.fill", title: settings.t("Gebetsduas", "Namaz Duaları"), subtitle: settings.t("Lesen & lernen", "Oku & öğren"))
                     }
