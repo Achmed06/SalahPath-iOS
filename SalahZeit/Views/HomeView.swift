@@ -98,9 +98,10 @@ enum PrayerTrackerStore {
 struct PrayerTrackerOverviewView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var refresh = 0
+    @State private var now = Date()
 
     var body: some View {
-        let today = Date()
+        let today = now
         let completed = PrayerTrackerStore.completedCount(on: today)
         let streak = PrayerTrackerStore.streak(upTo: today)
 
@@ -167,15 +168,19 @@ struct PrayerTrackerOverviewView: View {
         .navigationTitle(settings.t("Gebets-Tracking", "Namaz Takibi"))
         .navigationBarTitleDisplayMode(.inline)
         .tint(SalahTheme.teal)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
     }
 }
 
 struct TrackerPauseView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var refresh = 0
+    @State private var now = Date()
 
     var body: some View {
-        let today = Date()
+        let today = now
         let paused = PrayerTrackerStore.isPaused(today)
         List {
             Section {
@@ -213,6 +218,9 @@ struct TrackerPauseView: View {
         }
         .navigationTitle(settings.t("Tracker-Pause", "Takip duraklatma"))
         .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
     }
 }
 
@@ -483,7 +491,7 @@ struct HomeView: View {
                 colors: [
                     Color.clear,
                     SalahTheme.gold.opacity(0.08),
-                    Color(red: 0.98, green: 0.85, blue: 0.69).opacity(0.18)
+                    SalahTheme.gold.opacity(0.16)
                 ],
                 startPoint: .leading,
                 endPoint: .trailing
@@ -789,7 +797,7 @@ struct HomeView: View {
             HStack(spacing: 6) {
                 ZStack {
                     Circle()
-                        .fill(Color(red: 0.97, green: 0.93, blue: 0.79))
+                        .fill(SalahTheme.gold.opacity(0.20))
                         .frame(width: 27, height: 27)
                     ReferenceLeafMark(color: SalahTheme.teal)
                         .frame(width: 14, height: 18)
