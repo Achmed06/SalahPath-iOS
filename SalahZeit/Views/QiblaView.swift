@@ -287,7 +287,9 @@ struct QiblaView: View {
     }
 
     private var headingAccuracy: Double? {
-        guard let heading = locationManager.heading, heading.headingAccuracy >= 0 else { return nil }
+        guard let heading = locationManager.heading,
+              heading.headingAccuracy.isFinite,
+              heading.headingAccuracy >= 0 else { return nil }
         return heading.headingAccuracy
     }
 
@@ -297,8 +299,11 @@ struct QiblaView: View {
     }
 
     private var currentHeading: Double? {
-        guard let heading = locationManager.heading, heading.headingAccuracy >= 0 else { return nil }
-        guard heading.trueHeading >= 0 else { return nil }
+        guard let heading = locationManager.heading,
+              heading.headingAccuracy.isFinite,
+              heading.headingAccuracy >= 0,
+              heading.trueHeading.isFinite,
+              heading.trueHeading >= 0 else { return nil }
         return heading.trueHeading
     }
 
