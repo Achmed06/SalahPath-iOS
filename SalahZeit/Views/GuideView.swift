@@ -4656,6 +4656,16 @@ actor QuranAudioCache {
         try? fileManager.removeItem(at: directoryURL)
     }
 
+    func invalidate(_ localURL: URL) {
+        guard localURL.isFileURL else { return }
+
+        let cacheDirectory = directoryURL.standardizedFileURL
+        let parentDirectory = localURL.deletingLastPathComponent().standardizedFileURL
+        guard parentDirectory == cacheDirectory else { return }
+
+        try? fileManager.removeItem(at: localURL)
+    }
+
     private func ensureDirectory() throws {
         if !fileManager.fileExists(atPath: directoryURL.path) {
             try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
@@ -4903,6 +4913,9 @@ final class RemoteAudioPlayer: ObservableObject {
                     self.isLoading = false
                     self.isPlaying = false
                     self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                    if url.isFileURL {
+                        Task { await QuranAudioCache.shared.invalidate(url) }
+                    }
                 default:
                     self.isLoading = true
                 }
@@ -4951,6 +4964,9 @@ final class RemoteAudioPlayer: ObservableObject {
                 self.isPlaying = false
                 let error = note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
                 self.lastError = error?.localizedDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                if url.isFileURL {
+                    Task { await QuranAudioCache.shared.invalidate(url) }
+                }
             }
         }
 
