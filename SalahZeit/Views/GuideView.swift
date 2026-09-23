@@ -8001,16 +8001,26 @@ private final class QuranPageStore: ObservableObject {
     @Published var translation: QuranPageData?
     @Published var isLoading = false
     @Published var error: String?
+    private var loadRevision = 0
 
     func load(page: Int, language: AppLanguage) async {
+        loadRevision &+= 1
+        let revision = loadRevision
         guard (1...604).contains(page) else {
-            error = "Invalid Mushaf page."
+            if revision == loadRevision {
+                error = "Invalid Mushaf page."
+                isLoading = false
+            }
             return
         }
 
         isLoading = true
         error = nil
-        defer { isLoading = false }
+        defer {
+            if revision == loadRevision {
+                isLoading = false
+            }
+        }
 
         let translationEdition = language == .german ? "de.bubenheim" : "tr.diyanet"
 
@@ -8018,9 +8028,12 @@ private final class QuranPageStore: ObservableObject {
             async let arabicPage = fetch(page: page, edition: "quran-uthmani")
             async let translatedPage = fetch(page: page, edition: translationEdition)
             let result = try await (arabicPage, translatedPage)
+            guard revision == loadRevision else { return }
             arabic = result.0
             translation = result.1
+            error = nil
         } catch {
+            guard revision == loadRevision else { return }
             arabic = nil
             translation = nil
             self.error = error.localizedDescription
