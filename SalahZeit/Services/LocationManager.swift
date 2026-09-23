@@ -155,7 +155,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         do {
             let placemarks = try await searchGeocoder.geocodeAddressString(query)
             guard revision == locationIntentRevision else { return false }
-            guard let placemark = placemarks.first, let resolvedLocation = placemark.location else {
+            guard let placemark = placemarks.first,
+                  let resolvedLocation = placemark.location,
+                  Self.hasValidCoordinate(resolvedLocation) else {
                 lastError = "Ort wurde nicht gefunden."
                 return false
             }
@@ -262,6 +264,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let now = Date()
         guard let newest = locations.last(where: {
+            Self.hasValidCoordinate($0) &&
+            $0.horizontalAccuracy.isFinite &&
             $0.horizontalAccuracy >= 0 &&
             $0.horizontalAccuracy <= 1_000 &&
             abs($0.timestamp.timeIntervalSince(now)) <= 120
@@ -293,6 +297,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 self.heading = newHeading
             }
         }
+    }
+
+    private nonisolated static func hasValidCoordinate(_ location: CLLocation) -> Bool {
+        let coordinate = location.coordinate
+        return coordinate.latitude.isFinite &&
+            coordinate.longitude.isFinite &&
+            CLLocationCoordinate2DIsValid(coordinate)
     }
 
     private func updateLocalityIfNeeded(for location: CLLocation) {
