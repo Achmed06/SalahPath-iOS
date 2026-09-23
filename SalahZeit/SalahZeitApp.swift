@@ -92,12 +92,14 @@ struct SalahPathApp: App {
 
     @MainActor
     private func refreshPrayerNotificationSchedule() async {
-        guard settings.onboardingCompleted,
-              settings.notificationsEnabled,
-              !isQAMode,
-              let location = locationManager.location else {
+        guard settings.onboardingCompleted, !isQAMode else { return }
+
+        guard settings.notificationsEnabled else {
+            NotificationManager.shared.removePrayerNotifications()
             return
         }
+
+        guard let location = locationManager.location else { return }
 
         _ = await NotificationManager.shared.scheduleNextSevenDays(
             location: location,
