@@ -393,7 +393,7 @@ struct MoreView: View {
                 discoverHero
 
                 discoverSectionTitle(
-                    settings.t("Gebet & Ibadah", "Namaz & İbadet"),
+                    settings.t("Gebet & Gottesdienst", "Namaz & İbadet"),
                     icon: "figure.mind.and.body"
                 )
 
@@ -428,6 +428,7 @@ struct MoreView: View {
                         discoverTile(icon: "checklist", title: "32 Farz", subtitle: settings.t("Kompakter Lernzettel", "Kısa öğrenme özeti"))
                     }
                 }
+                .buttonStyle(.plain)
 
                 discoverSectionTitle(
                     settings.t("Quran, Dua & Dhikr", "Kur'an, Dua & Zikir"),
@@ -455,6 +456,7 @@ struct MoreView: View {
                         discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Quranische Duas", "Kur'an duaları"))
                     }
                 }
+                .buttonStyle(.plain)
 
                 discoverSectionTitle(
                     settings.t("Lernen & Alltag", "Öğrenme & Günlük Hayat"),
