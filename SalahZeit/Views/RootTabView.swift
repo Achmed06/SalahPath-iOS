@@ -563,6 +563,13 @@ struct MoreView: View {
                             subtitle: settings.t("Leben & frühe Geschichte", "Hayatları & ilk dönem")
                         )
                     }
+                    NavigationLink { FarewellSermonView() } label: {
+                        discoverTile(
+                            icon: "text.quote",
+                            title: settings.t("Veda Hutbesi", "Veda Hutbesi"),
+                            subtitle: settings.t("Kernaussagen & Quellen", "Ana mesajlar & kaynaklar")
+                        )
+                    }
                     NavigationLink { RamadanGuideIndexView() } label: {
                         discoverTile(
                             icon: "moon.stars.fill",
