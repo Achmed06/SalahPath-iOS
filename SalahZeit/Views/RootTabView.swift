@@ -161,8 +161,20 @@ struct NearbyMosquesView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @StateObject private var store = NearbyMosqueStore()
 
+    private var usableLocation: CLLocation? {
+        guard let location = locationManager.location else { return nil }
+        let coordinate = location.coordinate
+        guard coordinate.latitude.isFinite,
+              coordinate.longitude.isFinite,
+              (-90.0...90.0).contains(coordinate.latitude),
+              (-180.0...180.0).contains(coordinate.longitude) else { return nil }
+        return location
+    }
+
     private var taskID: String {
-        guard let location = locationManager.location else { return "no-location" }
+        guard let location = usableLocation else {
+            return "no-location:\(settings.language.rawValue)"
+        }
         let lat = Int((location.coordinate.latitude * 10_000).rounded())
         let lon = Int((location.coordinate.longitude * 10_000).rounded())
         return "\(lat):\(lon):\(settings.language.rawValue)"
@@ -191,7 +203,7 @@ struct NearbyMosquesView: View {
                         .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1)
                 }
 
-                if locationManager.location == nil {
+                if usableLocation == nil {
                     VStack(spacing: 10) {
                         Image(systemName: "location.slash")
                             .font(.system(size: 30))
@@ -300,7 +312,7 @@ struct NearbyMosquesView: View {
         .navigationTitle(settings.t("Moscheen", "Camiler"))
         .navigationBarTitleDisplayMode(.inline)
         .task(id: taskID) {
-            if locationManager.location == nil {
+            if usableLocation == nil {
                 locationManager.requestAccessAndStart()
             }
             await reload()
@@ -313,7 +325,7 @@ struct NearbyMosquesView: View {
 
     @MainActor
     private func reload() async {
-        guard let location = locationManager.location else { return }
+        guard let location = usableLocation else { return }
         await store.load(around: location)
     }
 
