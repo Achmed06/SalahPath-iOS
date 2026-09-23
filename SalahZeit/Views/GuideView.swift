@@ -7771,8 +7771,18 @@ actor QuranTextCache {
             try ensureDirectory()
             let url = fileURL(for: key)
             guard fileManager.fileExists(atPath: url.path) else { return nil }
-            let data = try Data(contentsOf: url)
-            guard !data.isEmpty else {
+
+            let attributes = try fileManager.attributesOfItem(atPath: url.path)
+            let size = (attributes[.size] as? NSNumber)?.int64Value ?? 0
+            guard size > 0,
+                  size <= Int64(QuranNetworkLimits.maxJSONBytes) else {
+                try? fileManager.removeItem(at: url)
+                return nil
+            }
+
+            let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+            guard !data.isEmpty,
+                  data.count <= QuranNetworkLimits.maxJSONBytes else {
                 try? fileManager.removeItem(at: url)
                 return nil
             }
@@ -7784,7 +7794,8 @@ actor QuranTextCache {
     }
 
     func store(_ data: Data, for key: String) {
-        guard !data.isEmpty else { return }
+        guard !data.isEmpty,
+              data.count <= QuranNetworkLimits.maxJSONBytes else { return }
 
         do {
             try ensureDirectory()
