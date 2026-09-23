@@ -29,9 +29,38 @@ if [ ! -d "$APP_PATH" ]; then
   exit 1
 fi
 
+APP_BINARY="$APP_PATH/SalahPath"
+INFO_PLIST="$APP_PATH/Info.plist"
+
+if [ ! -f "$APP_BINARY" ]; then
+  echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
+  exit 1
+fi
+
+if [ ! -f "$INFO_PLIST" ]; then
+  echo "Info.plist wurde nicht gefunden: $INFO_PLIST" >&2
+  exit 1
+fi
+
+BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST")"
+VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO_PLIST")"
+BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
+
+if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "76" ]; then
+  echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
+  exit 1
+fi
+
 mkdir -p Payload
 cp -R "$APP_PATH" Payload/
 /usr/bin/zip -qry SalahPath-unsigned.ipa Payload
 rm -rf Payload
 
-echo "Fertig: $ROOT/SalahPath-unsigned.ipa"
+if [ ! -s SalahPath-unsigned.ipa ]; then
+  echo "IPA wurde nicht erstellt oder ist leer." >&2
+  exit 1
+fi
+
+/usr/bin/unzip -tq SalahPath-unsigned.ipa >/dev/null
+
+echo "Fertig geprüft: $ROOT/SalahPath-unsigned.ipa · $BUNDLE_ID · v$VERSION build $BUILD"
