@@ -142,6 +142,14 @@ struct GuideView: View {
                 )
             }
 
+            NavigationLink { PrayerTextsHubView() } label: {
+                referenceRow(
+                    icon: "books.vertical.fill",
+                    title: settings.t("Namaz-Suren, Duas & Ayat", "Namaz Sûreleri, Duaları & Ayetler"),
+                    subtitle: settings.t("Inklusive Yasin und Qunūt", "Yasin ve Kunut dahil")
+                )
+            }
+
             NavigationLink { PrayerDuaAudioView() } label: {
                 referenceRow(
                     icon: "text.book.closed.fill",
