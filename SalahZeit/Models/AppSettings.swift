@@ -74,6 +74,14 @@ enum QuranReciter: String, CaseIterable, Identifiable {
         }
     }
 
+    var alternateAudioSource: (edition: String, bitrate: Int)? {
+        switch self {
+        case .sudais: return ("ar.sudais", 192)
+        case .shuraim: return ("ar.shuraim", 128)
+        default: return nil
+        }
+    }
+
     var title: String {
         switch self {
         case .alafasy: return "Mishary Rashid Alafasy"
