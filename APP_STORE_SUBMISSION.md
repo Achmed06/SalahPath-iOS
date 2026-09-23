@@ -24,7 +24,7 @@ The Privacy Policy link is also exposed inside the app under Profile > Rechtlich
 
 SalahPath does not require an account or login.
 
-Location permission is used while the app is in use to calculate prayer times, determine Qibla direction, and resolve a nearby locality label. The app does not intentionally retain a location history or send GPS coordinates to a SalahPath-operated server.
+Location permission is used while the app is in use to calculate prayer times, determine Qibla direction, resolve a nearby locality label, and search for nearby mosques through Apple MapKit. Device-location updates are not intentionally retained as a location history or sent to a SalahPath-operated server. If the user chooses a city or postal code manually, the resolved latitude, longitude, and locality are stored locally so that manual selection persists until the user clears it.
 
 Prayer reminders are local notifications. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
 
@@ -61,7 +61,7 @@ The current build uses AlQuran.cloud / Islamic Network for Quran text/translatio
 
 ## Religious-content review
 
-The dated religious-content audit is in `RELIGIOUS_CONTENT_AUDIT.md`. v440 corrects or clarifies Quran excerpts, a previously incomplete Quran 3:8 display, morning/evening adhkar wording, the unsupported fixed Istighfar counter, and the Hanafi congregational Fatiha distinction.
+The dated religious-content audit is in `RELIGIOUS_CONTENT_AUDIT.md`. The current native source corrects or clarifies Quran excerpts, a previously incomplete Quran 3:8 display, morning/evening adhkar wording, the unsupported fixed Istighfar counter, and the Hanafi congregational Fatiha distinction.
 
 ## Manual items that require the Apple Developer / App Store Connect account
 
