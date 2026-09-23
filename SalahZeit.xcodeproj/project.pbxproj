@@ -220,7 +220,7 @@
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_CFBundleDisplayName = SalahPath;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SalahPath nutzt deinen Standort für Gebetszeiten und Qibla. / SalahPath namaz vakitleri ve kıble için konumunuzu kullanır.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SalahPath nutzt deinen Standort für Gebetszeiten, Qibla und Moscheen in der Nähe. / SalahPath namaz vakitleri, kıble ve yakındaki camiler için konumunuzu kullanır.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -248,7 +248,7 @@
 				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "SalahPath öffnet den Apple-Kalender, damit islamische Tage als Termine gespeichert werden können.";
 				INFOPLIST_KEY_CFBundleDisplayName = SalahPath;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SalahPath nutzt deinen Standort für Gebetszeiten und Qibla. / SalahPath namaz vakitleri ve kıble için konumunuzu kullanır.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SalahPath nutzt deinen Standort für Gebetszeiten, Qibla und Moscheen in der Nähe. / SalahPath namaz vakitleri, kıble ve yakındaki camiler için konumunuzu kullanır.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
