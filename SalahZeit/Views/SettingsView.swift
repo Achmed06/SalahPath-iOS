@@ -222,6 +222,48 @@ struct SettingsView: View {
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
+                    referenceToggle(
+                        icon: "speaker.wave.3.fill",
+                        title: settings.t("Gebetsruf (Adhan) abspielen", "Ezan sesi çal"),
+                        isOn: $settings.adhanSoundEnabled
+                    )
+                    .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime)
+                    .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime ? 1 : 0.45)
+
+                    Button {
+                        Task {
+                            let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings)
+                            notificationStatusText = scheduled
+                                ? settings.t("Test-Gebetsruf startet gleich.", "Test ezanı birazdan çalacak.")
+                                : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: "play.circle.fill")
+                            Text(settings.t("Gebetsruf testen", "Ezanı test et"))
+                                .font(.system(size: 11.5, weight: .bold))
+                            Spacer()
+                            Text("18 s")
+                                .font(.system(size: 9.5, weight: .semibold).monospacedDigit())
+                                .foregroundStyle(SalahTheme.mutedInk)
+                        }
+                        .foregroundStyle(SalahTheme.teal)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime || !settings.adhanSoundEnabled)
+                    .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime && settings.adhanSoundEnabled ? 1 : 0.45)
+
+                    Text(settings.t(
+                        "Der Gebetsruf wird nur genau zum Gebetsbeginn verwendet. Vorwarnungen behalten den normalen iOS-Ton. Quelle: Wikimedia Commons · „Beautiful adhan“ · CC0.",
+                        "Ezan yalnız tam namaz vaktinde çalar. Ön hatırlatmalar normal iOS sesini kullanır. Kaynak: Wikimedia Commons · „Beautiful adhan“ · CC0."
+                    ))
+                    .font(.system(size: 9.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+
                     Picker(settings.t("Vorwarnung", "Ön hatırlatma"), selection: $settings.notificationLeadMinutes) {
                         Text(settings.t("Keine", "Kapalı")).tag(0)
                         Text(settings.t("5 Min. vorher", "5 dk önce")).tag(5)
