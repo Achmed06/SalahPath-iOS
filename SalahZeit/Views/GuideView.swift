@@ -4384,6 +4384,9 @@ final class RemoteAudioPlayer: ObservableObject {
         removeObservers()
         player?.pause()
         player = nil
+        queueURLs = []
+        queueIndex = 0
+        queueCount = 0
         activeURL = nil
         isPlaying = false
         isLoading = false
@@ -4492,6 +4495,8 @@ final class RemoteAudioPlayer: ObservableObject {
                 if self.hasNext {
                     self.next()
                 } else {
+                    self.player?.seek(to: .zero)
+                    self.currentTime = 0
                     self.isPlaying = false
                     self.isLoading = false
                 }
