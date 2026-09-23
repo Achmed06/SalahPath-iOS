@@ -5859,7 +5859,7 @@ private struct IslamicCalendarEventDetailView: View {
 
 struct HijriCalendarView: View {
     @EnvironmentObject private var settings: SettingsStore
-    @State private var now = now
+    @State private var now = Date()
 
     private var localCalendar: Calendar {
         var calendar = Calendar.autoupdatingCurrent
