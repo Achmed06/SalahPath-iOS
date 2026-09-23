@@ -6373,6 +6373,42 @@ struct QuranView: View {
                         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay { RoundedRectangle(cornerRadius: 8).stroke(SalahTheme.gold.opacity(0.32), lineWidth: 0.7) }
 
+                        NavigationLink {
+                            QuranDirectoryView()
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "books.vertical.fill")
+                                    .font(.system(size: 18, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.gold)
+                                    .frame(width: 42, height: 42)
+                                    .background(SalahTheme.deepTeal, in: Circle())
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(settings.t("Vollständiges Quran-Verzeichnis", "Tam Kur'an Dizini"))
+                                        .font(.headline.bold())
+                                        .foregroundStyle(SalahTheme.deepTeal)
+                                    Text(settings.t(
+                                        "114 Suren · Offenbarungsfolge · 604 Seiten · 30 Juz",
+                                        "114 sûre · İniş sırası · 604 sayfa · 30 cüz"
+                                    ))
+                                    .font(.caption)
+                                    .foregroundStyle(SalahTheme.mutedInk)
+                                }
+
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+                            .padding(11)
+                            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1)
+                            }
+                        }
+                        .buttonStyle(.plain)
+
                         if let lastRead,
                            let chapter = store.chapters.first(where: { $0.number == lastRead.surah }),
                            lastRead.ayah <= chapter.numberOfAyahs {
