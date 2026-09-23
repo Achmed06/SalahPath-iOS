@@ -3827,6 +3827,127 @@ struct PrayerDuaAudioView: View {
     }
 }
 
+struct PrayerTextsHubView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section {
+                Text(settings.t(
+                    "Die PDF teilt den Lernstoff in Namaz-Suren, Namaz-Duas, besondere Ayat und Yasin. SalahPath bildet diese Unterpunkte jetzt direkt ab und öffnet den vollständigen Quran-Text dort, wo er benötigt wird.",
+                    "PDF öğrenme bölümünü Namaz Sûreleri, Namaz Duaları, özel ayetler ve Yasin olarak ayırıyor. SalahPath artık bu alt başlıkları doğrudan gösteriyor ve gereken yerde tam Kur'an metnini açıyor."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Namaz-Suren", "Namaz Sûreleri")) {
+                NavigationLink { ShortSurahLearningView() } label: {
+                    Label(settings.t(
+                        "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
+                        "Fâtiha, Fîl, Kureyş, Mâûn, Kevser, Kâfirûn, Nasr, Tebbet, İhlâs, Felak, Nâs"
+                    ), systemImage: "play.square.stack.fill")
+                }
+            }
+
+            Section(settings.t("Namaz-Duas", "Namaz Duaları")) {
+                NavigationLink { PrayerDuaAudioView() } label: {
+                    Label(settings.t(
+                        "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
+                        "Sübhâneke, Ettehiyyâtü, Salli, Bârik, Rabbenâ ve devamı"
+                    ), systemImage: "text.book.closed.fill")
+                }
+
+                NavigationLink { QunutDuaView() } label: {
+                    Label(settings.t("Qunūt 1 & 2", "Kunut Duaları 1 & 2"), systemImage: "text.quote")
+                }
+            }
+
+            Section(settings.t("Besondere Ayat", "Ayetler")) {
+                QuranReferenceLink(
+                    surah: 2, ayah: 255,
+                    title: settings.t("Āyat al-Kursī · Al-Baqara 255", "Âyetel Kürsî · Bakara 255")
+                )
+                QuranReferenceLink(
+                    surah: 59, ayah: 22,
+                    title: settings.t("Huwa-llāhu lladhī · Al-Hashr 22–24", "Hüvallahüllezi · Haşr 22–24")
+                )
+                QuranReferenceLink(
+                    surah: 2, ayah: 285,
+                    title: settings.t("Āmana-r-Rasūlu · Al-Baqara 285–286", "Âmenerresûlü · Bakara 285–286")
+                )
+            }
+
+            Section("Yasin") {
+                QuranReferenceLink(
+                    surah: 36, ayah: 1,
+                    title: settings.t("Sura Yā-Sīn vollständig öffnen", "Yâsîn Sûresi tam metni aç")
+                )
+                Text(settings.t(
+                    "Im vollständigen Quran-Reader kannst du Arabisch, türkische/deutsche Bedeutung, Audio, Lesezeichen und Lesefortschritt verwenden.",
+                    "Tam Kur'an okuyucusunda Arapça, Türkçe/Almanca meal, ses, yer imi ve okuma ilerlemesini kullanabilirsin."
+                ))
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Namaz-Texte", "Namaz Metinleri"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct QuranReferenceLink: View {
+    @EnvironmentObject private var settings: SettingsStore
+    let surah: Int
+    let ayah: Int
+    let title: String
+
+    var body: some View {
+        NavigationLink {
+            QuranReferenceJumpView(surahNumber: surah, ayah: ayah)
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "book.closed.fill")
+                    .foregroundStyle(SalahTheme.teal)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.headline)
+                    Text("\(surah):\(ayah)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+}
+
+private struct QuranReferenceJumpView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    @StateObject private var store = QuranStore()
+
+    let surahNumber: Int
+    let ayah: Int
+
+    var body: some View {
+        Group {
+            if let chapter = store.chapters.first(where: { $0.number == surahNumber }) {
+                QuranSurahView(surah: chapter, initialAyah: ayah)
+            } else if store.isLoading {
+                ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
+            } else if let error = store.error {
+                ContentUnavailableView(
+                    settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
+                    systemImage: "wifi.exclamationmark",
+                    description: Text(error)
+                )
+            } else {
+                ProgressView()
+            }
+        }
+        .task { await store.loadChapters() }
+    }
+}
+
 private struct ShortSurahAudio: Identifiable {
     let id = UUID()
     let surahNumber: Int
