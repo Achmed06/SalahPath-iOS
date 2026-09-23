@@ -1,0 +1,13 @@
+Internet Archive item: adhan.recordings.from.doha.qatar
+Usage on source page: Public Domain Mark 1.0
+Fajr source: Adhan_Doha_Qatar_01_Fajr_Adhan.mp3
+Dhuhr source used as standard: Adhan_Doha_Qatar_02_Dhuhr_Adhan.mp3
+
+a64afe612048e2e068d9475cf481f34acc1fe3c7f34de700bebe6779fa3d1bc0  .tmp-adhan/fajr.mp3
+106b6c632799eb1da7e87782b3cf160e27a76dde086f9557e920cdcb1883dc3b  .tmp-adhan/standard.mp3
+
+e0641b2e4a04f38f38c7cc8479a0a3e4d8c5d9a577d04e9acd32c135fb2df47f  SalahZeit/Resources/adhan-fajr.caf
+8752346b8fab95baa41b991790233ef99e85e86728fb8d296113aba274eeef43  SalahZeit/Resources/adhan-standard.caf
+
+546fee5cde9e0e4e9041ed02c44bc0dc5290eb19
+5af226c758c556e318f0fe667b415a02807a8c2c
