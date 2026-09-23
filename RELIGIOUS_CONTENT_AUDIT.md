@@ -1,6 +1,6 @@
 # SalahPath religious-content audit
 
-Audit date: 21 September 2026  
+Audit date: 23 September 2026  
 Target build: SalahPath 3.62 (76)
 
 This audit is intended to reduce inaccurate or misleading religious quotations and to make school-specific guidance explicit. It is not a claim that every juristic opinion is universal.
@@ -22,13 +22,13 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 
 - Hisn al-Muslim 78: https://sunnah.com/hisn/79
 
-## Findings and corrections included in v440
+## Findings and corrections present in the current native source
 
 - Corrected the prayer-learning wording so the statement “Fatiha in every rak'ah” is not presented as universal for a Hanafi follower in congregational prayer. The guide now distinguishes praying alone / as imam from following an imam.
 - Completed Quran 3:8 in the dua library; the prior text omitted the final phrase.
 - Completed the transliteration of Quran 25:74.
 - Marked short Quran extracts (20:114 and 3:173) as excerpts instead of implying that the displayed words are the complete verse.
-- Marked the Home-card Sayyid al-Istighfar text as only the beginning of the longer formula rather than presenting a truncated quotation as complete.
+- The Home-card Sayyid al-Istighfar entry now contains the full displayed formula; it is no longer a truncated quotation presented as complete.
 - Corrected the morning/evening “Allahumma bika asbahna / amsayna” display so the evening tab shows the evening wording and the morning wording includes its closing phrase.
 - Clarified that the Three Quls card displays only the opening lines while the practice refers to the complete surahs.
 - Removed the unsupported implication that `Astaghfirullah` has a fixed count of 33 in this morning/evening screen. The counter is no longer presented as a transmitted prescribed number.
