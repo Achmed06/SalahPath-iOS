@@ -1,2 +1,182 @@
 SalahPath current-main visual and launch audit trigger
-run: 3
+run: 4
+
+PDF COMPLEMENT / REGRESSION AUDIT
+Reference: pdf24_umgewandelt.pdf, 139 pages.
+Rule: use the PDF only to find useful additions, missing discoverability, and correctness regressions.
+Do NOT clone the legacy application's visual shell, advertising, side menu, or obsolete static screens.
+
+PAGE COVERAGE
+1
+- Legacy prayer-time dashboard.
+- SalahPath equivalent already exists in HomeView/PrayerEngine.
+- No visual replacement requested.
+
+2-4
+- Daily religious content / “Takvim Arkası”.
+- SalahPath already has daily dua and reference content.
+- No direct legacy-screen copy.
+
+5-9
+- Legacy side-menu inventory.
+- Used only as a feature-discovery checklist.
+- SalahPath keeps its native Home/Quran/Gebet/Entdecken/Profil navigation.
+
+10
+- Multi-day prayer timetable.
+- Existing prayer-time engine retained; no regression-driven change required.
+
+11
+- Islamic special days.
+- Existing HijriCalendarView retained, including current calendar-export work.
+
+12-13
+- Prayer alarms / offsets / display settings.
+- Existing SettingsView and notification scheduler retained.
+- Current app’s scheduling fixes take precedence over legacy UI.
+
+14
+- Qibla compass.
+- Existing native QiblaView retained.
+- Recent true-north/location lifecycle fixes retained.
+
+15
+- Dhikr counter.
+- Existing Dhikr/Tasbih tools retained.
+
+16
+- Legacy ilahi music player.
+- Not copied. PDF does not require SalahPath to become a general music player.
+
+17
+- Community board.
+- Not copied. It would introduce moderation/account/network scope unrelated to a reference fix.
+
+18-32
+- Wudu sequence and poses.
+- Checked end-to-end.
+- Existing detailed WuduGuideView retained.
+- Corrected right/left arm and foot asset mapping.
+- Corrected Basmala to use the dedicated wudu_basmala artwork.
+- Existing detailed Farz/Sunnah explanations remain the authoritative SalahPath UI.
+
+33-35
+- Ghusl.
+- Existing GhuslGuideView retained.
+
+36-37
+- Prayer types / rak'ah counts.
+- Existing HanafiPrayerPlanView retained.
+- Added direct discovery link from Gebet lernen so this material is not hidden.
+
+38-76
+- Detailed salah sequence, male/female differences, recitations, right-then-left salam, post-prayer material.
+- Existing PrayerHowToView retained.
+- Corrected salam artwork mapping: worshipper’s own RIGHT first, then LEFT.
+- Existing male/female audience switch and 18-step tutorial retained.
+- Added direct links to prayer plan, prayer duas, and short-surah learning.
+
+77-80
+- Prayer surahs/duas and Yasin entry.
+- Existing PrayerDuaAudioView, ShortSurahLearningView, and full Quran reader retained.
+- No downgrade to a static list.
+
+81
+- Tasbih.
+- Existing native counter retained.
+
+82
+- Kaza/Qada tracker.
+- Missing as a dedicated simple counter.
+- Added PrayerDebtTrackerView with persistent counters for Fajr, Dhuhr, Asr, Maghrib, Isha, Witr, and fasting.
+
+83-84
+- Adhan/dua audio list.
+- SalahPath already has prayer/Quran audio infrastructure.
+- Legacy audio catalogue not copied without verified media rights/source data.
+
+85
+- Nearby mosques.
+- Not added from the screenshot alone. A production implementation needs live MapKit/local-search behavior and should not be a fake static map.
+
+86-98
+- “40 Hadis”.
+- Reference reviewed.
+- Not bulk-copied from screenshots: religious text/source content should be added from verified structured sources, not raster transcription.
+
+99-103
+- Farewell sermon.
+- Reference reviewed.
+- Not bulk-copied from a screenshot-only source; no UI regression requires it.
+
+104-105
+- “32 Farz”.
+- Useful compact reference missing from current discovery surface.
+- Added ThirtyTwoFardView as a supplement to the existing detailed Wudu/Ghusl/Tayammum/Prayer lessons.
+
+106
+- Religious broadcast/video player.
+- Not copied; unrelated to the current learning/prayer correctness scope.
+
+107-115
+- Esmaül Hüsna 1-99.
+- Reference reviewed.
+- Not transcribed from raster screenshots. Requires a verified structured dataset before shipping.
+
+116-124
+- Large İlmihal table of contents.
+- Existing IslamLearningHubView retained.
+- No attempt to clone an external book/table-of-contents screen from screenshots.
+
+125-132
+- Quran navigation by surah/revelation/page/juz, audio Quran, Quran index, Yasin.
+- Existing QuranView/Juz/favorites/audio/progress implementation retained.
+- Existing app is more native and interactive; no legacy-screen copy.
+
+133
+- Hajj/Umrah guide menu.
+- Reference reviewed.
+- Not added as an empty shell because the screenshot does not provide the complete guide content.
+
+134
+- Legacy menu / Islamic quiz entry.
+- No side-menu clone.
+
+135
+- Friday-sermon index.
+- Reference reviewed.
+- Not copied as incomplete/externally maintained content.
+
+136
+- Cevşen page index.
+- Reference reviewed.
+- Not copied from screenshots without complete verified text.
+
+137
+- Ramadan and fasting menu.
+- Existing fasting/Ramadan learning and tracker retained.
+
+138-139
+- Four Caliphs entry/menu highlight.
+- Reference reviewed.
+- Not added as an empty shell; requires complete verified learning content.
+
+IMPLEMENTED FROM THIS AUDIT
+- Prayer salam image direction: RIGHT then LEFT.
+- Wudu right/left arm artwork mapping corrected.
+- Wudu right/left foot artwork mapping corrected.
+- Wudu Basmala uses its dedicated artwork.
+- Gebet lernen now exposes Wudu, rak'ah plan, prayer duas, and short-surah learning directly.
+- Added persistent Qada tracker.
+- Added compact 32 Farz reference.
+- Exposed Qada tracker and 32 Farz from Entdecken.
+
+INTENTIONAL NON-GOALS
+- No copying ads.
+- No replacement of SalahPath’s current visual identity.
+- No recreation of the legacy side menu.
+- No screenshot-to-text bulk import for hadith, sermons, Esmaül Hüsna, Cevşen, or Hajj/Umrah content.
+- No fake static mosque map or media catalogue.
+
+NEXT RELEASE GATE
+- All new commits must pass the existing GitHub Actions build before this audit is considered release-ready.
