@@ -31,9 +31,9 @@ enum LocalDay {
 }
 
 
-func timeString(_ date: Date, use24Hour: Bool) -> String {
+func timeString(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
     let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
     formatter.timeZone = .autoupdatingCurrent
     formatter.dateFormat = use24Hour ? "HH:mm" : "h:mm a"
     return formatter.string(from: date)
