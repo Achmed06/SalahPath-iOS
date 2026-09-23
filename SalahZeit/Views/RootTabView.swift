@@ -394,11 +394,18 @@ struct MoreView: View {
                     NavigationLink { QuranicDuaLibraryView() } label: {
                         discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Quranische Duas", "Kur'an duaları"))
                     }
-                    NavigationLink { FastingTrackerView() } label: {
+                    NavigationLink { RamadanGuideIndexView() } label: {
                         discoverTile(
                             icon: "moon.stars.fill",
                             title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"),
-                            subtitle: settings.t("Lernen & Tracker", "Öğren & takip")
+                            subtitle: settings.t("Lernen · Gebete · Tracker", "Öğren · namaz · takip")
+                        )
+                    }
+                    NavigationLink { HajjUmrahGuideView() } label: {
+                        discoverTile(
+                            icon: "map.fill",
+                            title: settings.t("Hajj & Umrah", "Hac & Umre"),
+                            subtitle: settings.t("Ablauf · Orte · Duas", "Akış · ziyaret · dualar")
                         )
                     }
                     NavigationLink { IslamLearningHubView() } label: {
