@@ -21,7 +21,8 @@
 		A2000000000000000000000D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000D /* SettingsView.swift */; };
 		A20000000000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000020 /* Assets.xcassets */; };
 		A20000000000000000000021 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000021 /* PrivacyInfo.xcprivacy */; };
-		A20000000000000000000022 /* adhan-short.caf in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000022 /* adhan-short.caf */; };
+		A20000000000000000000022 /* adhan-standard.caf in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000022 /* adhan-standard.caf */; };
+		A20000000000000000000023 /* adhan-fajr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000023 /* adhan-fajr.caf */; };
 		A20000000000000000000030 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = A60000000000000000000001 /* Adhan */; };
 /* End PBXBuildFile section */
 
@@ -41,7 +42,8 @@
 		A1000000000000000000000D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahZeit/Views/SettingsView.swift; sourceTree = "<group>"; };
 		A10000000000000000000020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SalahZeit/Assets.xcassets; sourceTree = "<group>"; };
 		A10000000000000000000021 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SalahZeit/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		A10000000000000000000022 /* adhan-short.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SalahZeit/Resources/adhan-short.caf; sourceTree = "<group>"; };
+		A10000000000000000000022 /* adhan-standard.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SalahZeit/Resources/adhan-standard.caf; sourceTree = "<group>"; };
+		A10000000000000000000023 /* adhan-fajr.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SalahZeit/Resources/adhan-fajr.caf; sourceTree = "<group>"; };
 		A10000000000000000000030 /* SalahZeit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SalahZeit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -75,7 +77,8 @@
 				A1000000000000000000000D /* SettingsView.swift */,
 				A10000000000000000000020 /* Assets.xcassets */,
 				A10000000000000000000021 /* PrivacyInfo.xcprivacy */,
-				A10000000000000000000022 /* adhan-short.caf */,
+				A10000000000000000000022 /* adhan-standard.caf */,
+				A10000000000000000000023 /* adhan-fajr.caf */,
 				A40000000000000000000002 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -150,7 +153,8 @@
 			files = (
 				A20000000000000000000020 /* Assets.xcassets in Resources */,
 				A20000000000000000000021 /* PrivacyInfo.xcprivacy in Resources */,
-				A20000000000000000000022 /* adhan-short.caf in Resources */,
+				A20000000000000000000022 /* adhan-standard.caf in Resources */,
+				A20000000000000000000023 /* adhan-fajr.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
