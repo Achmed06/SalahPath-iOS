@@ -9015,6 +9015,7 @@ struct QuranDirectoryView: View {
     @StateObject private var store = QuranStore()
     @State private var tab = 0
     @State private var search = ""
+    @State private var pageSearch = ""
 
     // Diyanet's common nuzul-order list, indexed by Mushaf surah number.
     // 0 is an unused sentinel so array index == surah number.
@@ -9193,30 +9194,85 @@ struct QuranDirectoryView: View {
     }
 
     private var pageGrid: some View {
-        ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.adaptive(minimum: 64), spacing: 8)
-            ], spacing: 8) {
-                ForEach(1...604, id: \.self) { page in
-                    NavigationLink {
-                        QuranPageReaderView(page: page)
-                    } label: {
-                        VStack(spacing: 3) {
-                            Text("\(page)")
-                                .font(.headline.bold().monospacedDigit())
-                                .foregroundStyle(SalahTheme.deepTeal)
-                            Text(settings.t("Seite", "Sayfa"))
-                                .font(.caption2)
+        let trimmed = pageSearch.trimmingCharacters(in: .whitespacesAndNewlines)
+        let requestedPage = Int(trimmed)
+        let pages: [Int] = {
+            guard !trimmed.isEmpty else { return Array(1...604) }
+            guard let requestedPage, (1...604).contains(requestedPage) else { return [] }
+            return [requestedPage]
+        }()
+
+        return ScrollView {
+            VStack(spacing: 10) {
+                HStack(spacing: 8) {
+                    Image(systemName: "number")
+                        .foregroundStyle(SalahTheme.teal)
+
+                    TextField(settings.t("Seite 1–604", "Sayfa 1–604"), text: $pageSearch)
+                        .keyboardType(.numberPad)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .accessibilityLabel(settings.t("Quran-Seitennummer", "Kur'an sayfa numarası"))
+
+                    if !pageSearch.isEmpty {
+                        Button {
+                            pageSearch = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
                                 .foregroundStyle(SalahTheme.mutedInk)
                         }
-                        .frame(maxWidth: .infinity, minHeight: 58)
-                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 11, style: .continuous)
-                                .stroke(SalahTheme.gold.opacity(0.32), lineWidth: 1)
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(settings.t("Seitensuche löschen", "Sayfa aramasını temizle"))
+                    }
+                }
+                .padding(.horizontal, 12)
+                .frame(height: 42)
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.35), lineWidth: 1)
+                }
+
+                if pages.isEmpty {
+                    ContentUnavailableView(
+                        settings.t("Ungültige Seitennummer", "Geçersiz sayfa numarası"),
+                        systemImage: "number.square",
+                        description: Text(settings.t(
+                            "Gib eine Zahl zwischen 1 und 604 ein.",
+                            "1 ile 604 arasında bir sayı gir."
+                        ))
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 220)
+                } else {
+                    LazyVGrid(columns: [
+                        GridItem(.adaptive(minimum: 64), spacing: 8)
+                    ], spacing: 8) {
+                        ForEach(pages, id: \.self) { page in
+                            NavigationLink {
+                                QuranPageReaderView(page: page)
+                            } label: {
+                                VStack(spacing: 3) {
+                                    Text("\(page)")
+                                        .font(.headline.bold().monospacedDigit())
+                                        .foregroundStyle(SalahTheme.deepTeal)
+                                    Text(settings.t("Seite", "Sayfa"))
+                                        .font(.caption2)
+                                        .foregroundStyle(SalahTheme.mutedInk)
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 58)
+                                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                                        .stroke(SalahTheme.gold.opacity(0.32), lineWidth: 1)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(settings.t(
+                                "Quran Seite \(page) öffnen",
+                                "Kur'an \(page). sayfayı aç"
+                            ))
                         }
                     }
-                    .buttonStyle(.plain)
                 }
             }
             .padding()
