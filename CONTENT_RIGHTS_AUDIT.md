@@ -35,7 +35,7 @@ Because reciters and translation rightsholders retain their rights, this audit i
 
 ## Bundled Adhan notification audio
 
-Build 77 bundles `SalahZeit/Resources/adhan-short.caf` as an optional prayer-time notification sound. It is an 18-second derivative of “Beautiful adhan” by Adam-synagda from Wikimedia Commons, released under CC0 1.0 Universal. The exact source, transformation and audited Git blob SHA are recorded in `AUDIO_LICENSES.md`. The release preflight verifies that the bundled source file still matches that audited blob.
+Build 77 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
 
 This audio is not sourced from AlQuran.cloud and is not subject to the Quran recitation terms above.
 
