@@ -1187,7 +1187,7 @@ struct HomeView: View {
                     .padding(.horizontal, 7)
                     .padding(.top, 3)
                     .padding(.bottom, 5)
-                    .background(SalahTheme.deepTeal)
+                    .background(SalahTheme.navigationTeal)
 
                 LazyVStack(spacing: 5) {
                     VStack(alignment: .leading, spacing: 7) {
@@ -1259,7 +1259,7 @@ struct HomeView: View {
                             }
                             .buttonStyle(.plain)
                             .foregroundStyle(.white)
-                            .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 9))
+                            .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 9))
                             .disabled(manualLocationText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isResolvingManualLocation)
                         }
 
