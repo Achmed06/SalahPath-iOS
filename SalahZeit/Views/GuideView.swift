@@ -1683,12 +1683,26 @@ private struct WuduInstructionVisual: View {
         return key
     }
 
+    private var trimsGeneratedBottomArtifact: Bool {
+        assetName == "wudu_leftarm" || assetName == "wudu_rightarm"
+    }
+
     var body: some View {
         Image(assetName)
             .resizable()
             .scaledToFit()
             .frame(maxWidth: .infinity)
             .frame(height: 188)
+            .mask {
+                VStack(spacing: 0) {
+                    Rectangle().fill(.white)
+                    if trimsGeneratedBottomArtifact {
+                        Rectangle()
+                            .fill(.clear)
+                            .frame(height: 10)
+                    }
+                }
+            }
             .accessibilityHidden(true)
     }
 
