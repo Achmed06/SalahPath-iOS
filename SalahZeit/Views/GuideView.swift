@@ -8686,11 +8686,15 @@ struct QuranPageReaderView: View {
     }
 
     private var translationByAyah: [Int: QuranPageAyah] {
-        Dictionary(uniqueKeysWithValues: (store.translation?.ayahs ?? []).map { ($0.number, $0) })
+        (store.translation?.ayahs ?? []).reduce(into: [:]) { result, ayah in
+            result[ayah.number] = ayah
+        }
     }
 
     private var transliterationByAyah: [Int: QuranPageAyah] {
-        Dictionary(uniqueKeysWithValues: (store.transliteration?.ayahs ?? []).map { ($0.number, $0) })
+        (store.transliteration?.ayahs ?? []).reduce(into: [:]) { result, ayah in
+            result[ayah.number] = ayah
+        }
     }
 
     var body: some View {
