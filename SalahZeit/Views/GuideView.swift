@@ -5859,6 +5859,7 @@ private struct IslamicCalendarEventDetailView: View {
 
 struct HijriCalendarView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @State private var now = now
 
     private var localCalendar: Calendar {
         var calendar = Calendar.autoupdatingCurrent
@@ -5881,6 +5882,9 @@ struct HijriCalendarView: View {
         }
         .navigationTitle(settings.t("Hijri-Kalender", "Hicrî takvim"))
         .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
     }
 
     @ViewBuilder
@@ -5890,10 +5894,10 @@ struct HijriCalendarView: View {
                 Text(settings.t("Heute", "Bugün"))
                     .font(.caption.bold())
                     .foregroundStyle(SalahTheme.teal)
-                Text(hijriDateString(Date(), language: settings.language))
+                Text(hijriDateString(now, language: settings.language))
                     .font(.title2.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
-                Text(gregorianDateString(Date(), language: settings.language))
+                Text(gregorianDateString(now, language: settings.language))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -6004,7 +6008,7 @@ struct HijriCalendarView: View {
     }
 
     private var days: [Date] {
-        (0..<30).compactMap { localCalendar.date(byAdding: .day, value: $0, to: localCalendar.startOfDay(for: Date())) }
+        (0..<30).compactMap { localCalendar.date(byAdding: .day, value: $0, to: localCalendar.startOfDay(for: now)) }
     }
 
     private struct DatedEvent: Identifiable {
@@ -6015,7 +6019,7 @@ struct HijriCalendarView: View {
 
     private var nextImportantEvents: [DatedEvent] {
         var result: [DatedEvent] = []
-        let start = localCalendar.startOfDay(for: Date())
+        let start = localCalendar.startOfDay(for: now)
 
         for offset in 0..<400 {
             guard let date = localCalendar.date(byAdding: .day, value: offset, to: start),
