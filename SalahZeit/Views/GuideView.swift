@@ -8971,7 +8971,7 @@ struct QuranPageReaderView: View {
                                     }
 
                                     Text(ayah.text)
-                                        .font(.system(size: max(settings.quranFontSize, 28)))
+                                        .font(.system(size: max(settings.safeQuranFontSize, 28)))
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                         .multilineTextAlignment(.trailing)
                                         .textSelection(.enabled)
@@ -9936,7 +9936,7 @@ private struct QuranSurahView: View {
             .foregroundStyle(SalahTheme.teal)
 
             Text(ar.text)
-                .font(.system(size: max(settings.quranFontSize, 28), weight: .regular))
+                .font(.system(size: max(settings.safeQuranFontSize, 28), weight: .regular))
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .textSelection(.enabled)
