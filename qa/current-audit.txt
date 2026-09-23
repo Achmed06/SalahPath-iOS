@@ -3,6 +3,8 @@ run: 4
 
 PDF COMPLEMENT / REGRESSION AUDIT
 Reference: pdf24_umgewandelt.pdf, 139 pages.
+Canonical strict visual/structural handoff: qa/pdf-visual-structure-audit.md.
+All 139 PDF pages have now been rendered and visually inspected; the detailed audit supersedes earlier coarse feature-only conclusions where they differ.
 Rule: use the PDF only to find useful additions, missing discoverability, and correctness regressions.
 Do NOT clone the legacy application's visual shell, advertising, side menu, or obsolete static screens.
 
@@ -111,8 +113,8 @@ PAGE COVERAGE
 
 99-103
 - Farewell sermon.
-- Reference reviewed.
-- Not bulk-copied from a screenshot-only source; no UI regression requires it.
+- Current native FarewellSermonView is now present and reachable from Entdecken.
+- It intentionally presents sourced core messages and explains the multi-report nature of the commonly circulated sermon instead of bulk-copying raster text.
 
 104-105
 - “32 Farz”.
@@ -125,13 +127,13 @@ PAGE COVERAGE
 
 107-115
 - Esmaül Hüsna 1-99.
-- Reference reviewed.
-- Not transcribed from raster screenshots. Requires a verified structured dataset before shipping.
+- Current native EsmaulHusnaView is present and reachable from Entdecken.
+- It provides a searchable 99-name list with Arabic forms and German/Turkish meanings; raster transcription is not used.
 
 116-124
-- Large İlmihal table of contents.
-- Existing IslamLearningHubView retained.
-- No attempt to clone an external book/table-of-contents screen from screenshots.
+- Large searchable İlmihal table of contents.
+- Current IlmihalDirectoryView and IslamLearningHubView are present and reachable.
+- Coverage is substantial but intentionally more condensed than the PDF hierarchy; the strict audit tracks further expansion as PARTIAL rather than treating this range as fully equivalent.
 
 125-132
 - Quran navigation by surah/revelation/page/juz, audio Quran, Quran index, Yasin.
@@ -140,8 +142,8 @@ PAGE COVERAGE
 
 133
 - Hajj/Umrah guide menu.
-- Reference reviewed.
-- Not added as an empty shell because the screenshot does not provide the complete guide content.
+- Current HajjUmrahGuideView is present and reachable with Umrah, Hajj, places and duas sections.
+- The strict audit marks it PARTIAL because the PDF additionally exposes glossary, ayat/hadith, sermon/article and video subareas; source-dependent media/content is not fabricated.
 
 134
 - Legacy menu / Islamic quiz entry.
@@ -159,12 +161,13 @@ PAGE COVERAGE
 
 137
 - Ramadan and fasting menu.
-- Existing fasting/Ramadan learning and tracker retained.
+- Current RamadanGuideIndexView is present and links fasting learning/rules/exceptions/tracker, Ramadan prayer material, Quran references and duas.
+- The strict audit marks it PARTIAL for separate stories, sermon/reference and Q&A subareas.
 
 138-139
 - Four Caliphs entry/menu highlight.
-- Reference reviewed.
-- Not added as an empty shell; requires complete verified learning content.
+- Current FourCaliphsView and FourCaliphDetailView are present and reachable with sourced lessons for Abu Bakr, Umar, Uthman and Ali.
+- The legacy side drawer itself remains intentionally excluded.
 
 IMPLEMENTED FROM THIS AUDIT
 - Prayer salam direction verified from actual assets: worshipper's own RIGHT then LEFT.
@@ -182,7 +185,8 @@ INTENTIONAL NON-GOALS
 - No copying ads.
 - No replacement of SalahPath’s current visual identity.
 - No recreation of the legacy side menu.
-- No screenshot-to-text bulk import for hadith, sermons, Esmaül Hüsna, Cevşen, or Hajj/Umrah content.
+- No screenshot-to-text bulk import for hadith books, sermons, Cevşen, Mesnevi or other long-form source material.
+- Esmaül Hüsna, Farewell Sermon, Four Caliphs and Hajj/Umrah now use native, sourced SalahPath content rather than raster transcription.
 - No fake static mosque map or media catalogue.
 
 CRASH-HARDENING FOLLOW-UP
