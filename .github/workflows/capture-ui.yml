@@ -146,6 +146,12 @@ jobs:
           capture times SalahPath-v3.62-B77-TR-PrayerTimes.png
           capture quran-page SalahPath-v3.62-B77-TR-QuranPage1.png
           capture prayer-tracker SalahPath-v3.62-B77-TR-PrayerTracker.png
+          capture namaz-howto SalahPath-v3.62-B77-TR-PrayerHowTo.png
+          capture wudu SalahPath-v3.62-B77-TR-Wudu.png
+          capture ghusl SalahPath-v3.62-B77-TR-Ghusl.png
+          capture qibla SalahPath-v3.62-B77-TR-Qibla.png
+          capture settings SalahPath-v3.62-B77-TR-Settings.png
+          capture more SalahPath-v3.62-B77-TR-More.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
 
@@ -156,6 +162,12 @@ jobs:
           capture times SalahPath-v3.62-B77-DE-PrayerTimes.png
           capture quran-page SalahPath-v3.62-B77-DE-QuranPage1.png
           capture prayer-tracker SalahPath-v3.62-B77-DE-PrayerTracker.png
+          capture namaz-howto SalahPath-v3.62-B77-DE-PrayerHowTo.png
+          capture wudu SalahPath-v3.62-B77-DE-Wudu.png
+          capture ghusl SalahPath-v3.62-B77-DE-Ghusl.png
+          capture qibla SalahPath-v3.62-B77-DE-Qibla.png
+          capture settings SalahPath-v3.62-B77-DE-Settings.png
+          capture more SalahPath-v3.62-B77-DE-More.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v7
