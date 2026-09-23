@@ -3774,6 +3774,12 @@ struct PrayerDuaAudioView: View {
             deDetail: "Abschlussdua im letzten Sitzen vor dem Salam.",
             trDetail: "Son oturuşta selâmdan önce okunan kapanış duası.",
             recitations: [PrayerText.rabbana]
+        ),
+        .init(
+            deTitle: "Rabbighfirli", trTitle: "Rabbenağfirli / Rabbighfir lî",
+            deDetail: "Kurze Bitte um Vergebung; SalahPath zeigt sie auch zwischen den beiden Secden.",
+            trDetail: "Kısa bağışlanma duası; SalahPath iki secde arasındaki oturuşta da gösterir.",
+            recitations: [PrayerText.rabbighfirli]
         )
     ]
 
@@ -3796,6 +3802,12 @@ struct PrayerDuaAudioView: View {
                     ForEach(item.recitations) { recitation in
                         PrayerRecitationView(recitation: recitation)
                     }
+                }
+            }
+
+            Section(settings.t("Witr", "Vitir")) {
+                NavigationLink { QunutDuaView() } label: {
+                    Label(settings.t("Qunūt 1 & 2 vollständig", "Kunut 1 ve 2 tam metin"), systemImage: "text.book.closed.fill")
                 }
             }
 
@@ -3832,9 +3844,13 @@ struct ShortSurahLearningView: View {
 
     private let surahs: [ShortSurahAudio] = [
         .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
-        .init(surahNumber: 103, arabicName: "العصر", latinName: "Al-Asr", deDetail: "Sehr kurze Sura.", trDetail: "Çok kısa bir sûre."),
+        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
+        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
+        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
         .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sura für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
         .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sura.", trDetail: "Bilinen kısa sûre."),
+        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
+        .init(surahNumber: 111, arabicName: "المسد", latinName: "Al-Masad / Tebbet", deDetail: "In der türkischen Lerntradition oft „Tebbet“ genannt.", trDetail: "Türkçe namaz sûreleri eğitiminde genellikle „Tebbet“ diye anılır."),
         .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sura.", trDetail: "Kısa ve çok bilinen sûre."),
         .init(surahNumber: 113, arabicName: "الفلق", latinName: "Al-Falaq", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre."),
         .init(surahNumber: 114, arabicName: "الناس", latinName: "An-Nas", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre.")
