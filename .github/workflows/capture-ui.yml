@@ -3,182 +3,41 @@ name: Capture SalahPath v3.62 Build 76 UI
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/capture-ui.yml"
+      - "SalahZeit/**"
+      - "SalahZeit.xcodeproj/**"
+      - "scripts/preflight_reference_build.sh"
   push:
     branches: [ main ]
     paths:
       - ".github/workflows/capture-ui.yml"
-      - "v3-source/**"
-      - "v*-patch/**"
+      - "SalahZeit/**"
+      - "SalahZeit.xcodeproj/**"
       - "scripts/preflight_reference_build.sh"
+
+concurrency:
+  group: capture-ui-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   screenshot:
-    if: ${{ !startsWith(github.event.head_commit.message, 'FAST') }}
+    if: ${{ github.event_name == 'pull_request' || !startsWith(github.event.head_commit.message, 'FAST') }}
     runs-on: macos-26
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Restore SalahPath source
+      - name: Use checked-in release source
         shell: bash
         run: |
-          cat \
-            v3-source/part-01.b64 \
-            v3-source/part-02a.b64 \
-            v3-source/part-02b.b64 \
-            v3-source/part-03.b64 \
-            v3-source/part-04.b64 \
-            v3-source/part-05.b64 \
-            v3-source/part-06.b64 \
-            v3-source/part-07.b64 \
-            v3-source/part-08.b64 > v3.b64
-          base64 -D -i v3.b64 -o source.zip
-          unzip -oq source.zip
-          rm v3.b64 source.zip
-          python3 v31-patch/apply_v31.py
-          python3 v32-patch/apply_v32.py
-          python3 v33-patch/apply_v33.py
-          python3 v33-patch/apply_v33_hotfix.py
-          python3 v34-patch/apply_v34.py
-          python3 v35-patch/apply_v35.py
-          python3 v36-patch/apply_v36.py
-          python3 v36-patch/apply_v36_hotfix.py
-          python3 v36-patch/apply_v36_audiofallback.py
-          python3 v37-patch/apply_v37.py
-          python3 v38-patch/apply_v38.py
-          python3 v39-patch/apply_v39.py
-          python3 v310-patch/apply_v310.py
-          python3 v311-patch/apply_v311.py
-          python3 v312-patch/apply_v312.py
-          python3 v313-patch/apply_v313.py
-          python3 v314-patch/apply_v314.py
-          python3 v315-patch/apply_v315.py
-          python3 v316-patch/apply_v316.py
-          python3 v317-patch/apply_v317.py
-          python3 v318-patch/apply_v318.py
-          python3 v319-patch/apply_v319.py
-          python3 v320-patch/apply_v320.py
-          python3 v321-patch/apply_v321.py
-          python3 v322-patch/apply_v322.py
-          python3 v323-patch/apply_v323.py
-          python3 v324-patch/apply_v324.py
-          python3 v325-patch/apply_v325.py
-          # v3.26 binary payload was retired; v3.27 supersedes it
-          python3 v327-patch/apply_v327.py
-          python3 v328-patch/apply_v328.py
-          python3 v329-patch/apply_v329.py
-          python3 v330-patch/apply_v330.py
-          python3 v331-patch/apply_v331.py
-          python3 v332-patch/apply_v332.py
-          python3 v333-patch/apply_v333.py
-          python3 v334-patch/apply_v334.py
-          python3 v335-patch/apply_v335.py
-          python3 v336-patch/apply_v336.py
-          python3 v337-patch/apply_v337.py
-          python3 v338-patch/apply_v338.py
-          python3 v339-patch/apply_v339.py
-          python3 v340-patch/apply_v340.py
-          python3 v341-patch/apply_v341.py
-          python3 v342-patch/apply_v342.py
-          python3 v343-patch/apply_v343.py
-          python3 v344-patch/apply_v344.py
-          python3 v345-patch/apply_v345.py
-          python3 v346-patch/apply_v346.py
-          python3 v347-patch/apply_v347.py
-          python3 v348-patch/apply_v348.py
-          python3 v349-patch/apply_v349.py
-          python3 v350-patch/apply_v350.py
-          python3 v351-patch/apply_v351.py
-          python3 v352-patch/apply_v352.py
-          python3 v353-patch/apply_v353.py
-          python3 v354-patch/apply_v354.py
-          python3 v355-patch/apply_v355.py
-          python3 v356-patch/apply_v356.py
-          python3 v357-patch/apply_v357.py
-          python3 v358-patch/apply_v358.py
-          python3 v359-patch/apply_v359.py
-          python3 v360-patch/apply_v360.py
-          python3 v361-patch/apply_v361.py
-          python3 v362-patch/apply_v362.py
-          python3 v363-patch/apply_v363.py
-          python3 v364-patch/apply_v364.py
-          python3 v365-patch/apply_v365.py
-          python3 v366-patch/apply_v366.py
-          python3 v367-patch/apply_v367.py
-          python3 v368-patch/apply_v368.py
-          python3 v369-patch/apply_v369.py
-          python3 v370-patch/apply_v370.py
-          python3 v371-patch/apply_v371.py
-          python3 v372-patch/apply_v372.py
-          python3 v373-patch/apply_v373.py
-          python3 v374-patch/apply_v374.py
-          python3 v375-patch/apply_v375.py
-          python3 v376-patch/apply_v376.py
-          python3 v377-patch/apply_v377.py
-          python3 v378-patch/apply_v378.py
-          python3 v379-patch/apply_v379.py
-          python3 v380-patch/apply_v380.py
-          python3 v381-patch/apply_v381.py
-          python3 v382-patch/apply_v382.py
-          python3 v383-patch/apply_v383.py
-          python3 v384-patch/apply_v384.py
-          python3 v385-patch/apply_v385.py
-          python3 v386-patch/apply_v386.py
-          python3 v387-patch/apply_v387.py
-          python3 v388-patch/apply_v388.py
-          python3 v389-patch/apply_v389.py
-          python3 v390-patch/apply_v390.py
-          python3 v391-patch/apply_v391.py
-          python3 v392-patch/apply_v392.py
-          python3 v393-patch/apply_v393.py
-          python3 v394-patch/apply_v394.py
-          python3 v395-patch/apply_v395.py
-          python3 v396-patch/apply_v396.py
-          python3 v397-patch/apply_v397.py
-          python3 v398-patch/apply_v398.py
-          python3 v399-patch/apply_v399.py
-          python3 v400-patch/apply_v400.py
-          python3 v401-patch/apply_v401.py
-          python3 v402-patch/apply_v402.py
-          python3 v403-patch/apply_v403.py
-          python3 v404-patch/apply_v404.py
-          python3 v405-patch/apply_v405.py
-          python3 v406-patch/apply_v406.py
-          python3 v407-patch/apply_v407.py
-          python3 v408-patch/apply_v408.py
-          python3 v409-patch/apply_v409.py
-          python3 v410-patch/apply_v410.py
-          python3 v411-patch/apply_v411.py
-          python3 v412-patch/apply_v412.py
-          python3 v413-patch/apply_v413.py
-          python3 v414-patch/apply_v414.py
-          python3 v415-patch/apply_v415.py
-          python3 v416-patch/apply_v416.py
-          python3 v417-patch/apply_v417.py
-          python3 v418-patch/apply_v418.py
-          python3 v419-patch/apply_v419.py
-          python3 v420-patch/apply_v420.py
-          python3 v421-patch/apply_v421.py
-          python3 v422-patch/apply_v422.py
-          python3 v423-patch/apply_v423.py
-          python3 v424-patch/apply_v424.py
-          python3 v425-patch/apply_v425.py
-          python3 v426-patch/apply_v426.py
-
-          python3 - <<'PY'
-          from pathlib import Path
-          import subprocess
-
-          future_dirs = []
-          for d in Path(".").glob("v*-patch"):
-              digits = d.name.split("-")[0][1:]
-              if digits.isdigit() and int(digits) >= 427:
-                  future_dirs.append((int(digits), d))
-
-          for _, d in sorted(future_dirs):
-              for script in sorted(d.glob("apply_*.py")):
-                  subprocess.run(["python3", str(script)], check=True)
-          PY
+          test -f SalahZeit.xcodeproj/project.pbxproj
+          test -f SalahZeit/Views/RootTabView.swift
+          test -f SalahZeit/PrivacyInfo.xcprivacy
+          echo "Using checked-in SalahPath release source from $GITHUB_SHA"
 
       - name: Strict source preflight
         shell: bash
@@ -231,8 +90,26 @@ jobs:
       - name: Boot and capture reference screens
         shell: bash
         run: |
-          xcrun simctl boot "$SIM_UDID" || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
+          run_timeout() {
+            local seconds="$1"
+            shift
+            python3 - "$seconds" "$@" <<'PY'
+          import subprocess
+          import sys
+
+          seconds = int(sys.argv[1])
+          command = sys.argv[2:]
+          try:
+              subprocess.run(command, check=True, timeout=seconds)
+          except subprocess.TimeoutExpired:
+              print(f"Timed out after {seconds}s: {' '.join(command)}", file=sys.stderr)
+              raise SystemExit(124)
+          PY
+          }
+
+          xcrun simctl shutdown "$SIM_UDID" || true
+          run_timeout 30 xcrun simctl boot "$SIM_UDID"
+          run_timeout 180 xcrun simctl bootstatus "$SIM_UDID" -b
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
@@ -250,17 +127,17 @@ jobs:
           capture() {
             SCREEN="$1"
             NAME="$2"
-            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
+            run_timeout 20 xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
             if [ "$SCREEN" = "home" ]; then
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+                run_timeout 30 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             else
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
-                xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+                run_timeout 30 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             fi
             sleep 5
-            xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
+            run_timeout 30 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
           capture home  SalahPath-v3.62-B76-TR-Home.png
