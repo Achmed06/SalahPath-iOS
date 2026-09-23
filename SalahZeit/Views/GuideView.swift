@@ -2,6 +2,7 @@ import SwiftUI
 import EventKit
 import EventKitUI
 import AVFoundation
+import UIKit
 
 // MARK: - Learning hub
 
@@ -5231,6 +5232,7 @@ private enum FastingStore {
 struct FastingTrackerView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var refresh = 0
+    @State private var now = Date()
 
     private var localCalendar: Calendar {
         var calendar = Calendar.autoupdatingCurrent
@@ -5258,6 +5260,9 @@ struct FastingTrackerView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Fasten & Ramadan", "Oruç ve Ramazan"))
         .navigationBarTitleDisplayMode(.inline)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
     }
 
     private var fastingHeaderCard: some View {
@@ -5273,11 +5278,11 @@ struct FastingTrackerView: View {
             .font(.subheadline)
             .fixedSize(horizontal: false, vertical: true)
 
-            if hijriCalendar.component(.month, from: Date()) == 9 {
+            if hijriCalendar.component(.month, from: now) == 9 {
                 Label(
                     settings.t(
-                        "Ramadan · Tag \(hijriCalendar.component(.day, from: Date()))",
-                        "Ramazan · \(hijriCalendar.component(.day, from: Date())). gün"
+                        "Ramadan · Tag \(hijriCalendar.component(.day, from: now))",
+                        "Ramazan · \(hijriCalendar.component(.day, from: now)). gün"
                     ),
                     systemImage: "sparkles"
                 )
@@ -5319,9 +5324,9 @@ struct FastingTrackerView: View {
                 .foregroundStyle(SalahTheme.deepTeal)
 
             Toggle(isOn: Binding(
-                get: { FastingStore.contains(Date()) },
+                get: { FastingStore.contains(now) },
                 set: { _ in
-                    FastingStore.toggle(Date())
+                    FastingStore.toggle(now)
                     refresh += 1
                 }
             )) {
@@ -5421,7 +5426,7 @@ struct FastingTrackerView: View {
     private var lastDays: [Date] {
         let calendar = localCalendar
         return (0..<14).compactMap {
-            calendar.date(byAdding: .day, value: -$0, to: calendar.startOfDay(for: Date()))
+            calendar.date(byAdding: .day, value: -$0, to: calendar.startOfDay(for: now))
         }
     }
 }
