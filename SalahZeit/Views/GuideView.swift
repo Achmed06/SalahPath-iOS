@@ -4150,6 +4150,7 @@ actor QuranAudioCache {
 
     private let fileManager = FileManager.default
     private let maxBytes: Int64 = 300 * 1024 * 1024
+    private var inFlightDownloads: Set<String> = []
 
     private var directoryURL: URL {
         let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
@@ -4168,6 +4169,15 @@ actor QuranAudioCache {
                 touch(localURL)
                 return localURL
             }
+
+            let downloadKey = remoteURL.absoluteString
+            guard !inFlightDownloads.contains(downloadKey) else {
+                // Another caller is already filling this cache entry. Stream this
+                // request instead of downloading and writing the same file twice.
+                return remoteURL
+            }
+            inFlightDownloads.insert(downloadKey)
+            defer { inFlightDownloads.remove(downloadKey) }
 
             var request = URLRequest(url: remoteURL)
             request.timeoutInterval = 30
@@ -4589,16 +4599,42 @@ private struct AudioAyahData: Decodable { let number: Int; let audio: String? }
 
 private enum QuranAudioResolver {
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
-        let url = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(reciter.edition)")!
+        guard (1...114).contains(surah),
+              let url = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(reciter.edition)") else {
+            throw URLError(.badURL)
+        }
+
         var request = URLRequest(url: url)
         request.timeoutInterval = 20
+
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else { throw URLError(.badServerResponse) }
-        let decoded = try JSONDecoder().decode(AudioEditionResponse.self, from: data)
-        return decoded.data.ayahs.compactMap { item in
-            if let raw = item.audio, let url = URL(string: raw.replacingOccurrences(of: "http://", with: "https://")) { return url }
-            return URL(string: "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/\(item.number).mp3")
+        guard let http = response as? HTTPURLResponse,
+              (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
         }
+
+        let decoded = try JSONDecoder().decode(AudioEditionResponse.self, from: data)
+        let urls = decoded.data.ayahs.compactMap { item -> URL? in
+            if let raw = item.audio {
+                let secureRaw = raw.replacingOccurrences(of: "http://", with: "https://")
+                if let resolved = URL(string: secureRaw),
+                   resolved.scheme?.lowercased() == "https" {
+                    return resolved
+                }
+            }
+
+            let fallback = "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/\(item.number).mp3"
+            guard let resolved = URL(string: fallback),
+                  resolved.scheme?.lowercased() == "https" else {
+                return nil
+            }
+            return resolved
+        }
+
+        guard !urls.isEmpty else {
+            throw URLError(.resourceUnavailable)
+        }
+        return urls
     }
 }
 
