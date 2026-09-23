@@ -5283,6 +5283,7 @@ struct ShortSurahLearningView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var audio = RemoteAudioPlayer()
     @State private var loadingSurah: Int?
+    @State private var audioRequestGeneration = 0
     @AppStorage("surahRepeatCount") private var repeatCount = 1
 
     private let surahs: [ShortSurahAudio] = [
@@ -5360,18 +5361,44 @@ struct ShortSurahLearningView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Suren lernen", "Sureleri öğren"))
         .navigationBarTitleDisplayMode(.inline)
-        .onDisappear { audio.stop() }
+        .onChange(of: settings.quranReciter) { _, _ in
+            audioRequestGeneration &+= 1
+            loadingSurah = nil
+            audio.stop()
+        }
+        .onDisappear {
+            audioRequestGeneration &+= 1
+            loadingSurah = nil
+            audio.stop()
+        }
     }
 
     @MainActor
     private func play(_ item: ShortSurahAudio) async {
+        audioRequestGeneration &+= 1
+        let generation = audioRequestGeneration
+        let reciter = settings.quranReciter
         loadingSurah = item.surahNumber
-        defer { loadingSurah = nil }
+        audio.lastError = nil
+
         do {
-            let urls = try await QuranAudioResolver.urls(surah: item.surahNumber, reciter: settings.quranReciter)
-            audio.playQueue(Array(repeating: urls, count: max(1, repeatCount)).flatMap { $0 })
+            let urls = try await QuranAudioResolver.urls(
+                surah: item.surahNumber,
+                reciter: reciter
+            )
+            guard generation == audioRequestGeneration,
+                  reciter == settings.quranReciter else { return }
+
+            audio.playQueue(
+                Array(repeating: urls, count: max(1, repeatCount)).flatMap { $0 }
+            )
         } catch {
+            guard generation == audioRequestGeneration else { return }
             audio.lastError = error.localizedDescription
+        }
+
+        if generation == audioRequestGeneration {
+            loadingSurah = nil
         }
     }
 }
