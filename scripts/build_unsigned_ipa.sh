@@ -19,7 +19,7 @@ xcodebuild \
   PRODUCT_NAME="SalahPath" \
   PRODUCT_BUNDLE_IDENTIFIER="com.achmed06.salahpath" \
   MARKETING_VERSION="3.62" \
-  CURRENT_PROJECT_VERSION="76" \
+  CURRENT_PROJECT_VERSION="77" \
   INFOPLIST_KEY_CFBundleDisplayName="SalahPath" \
   build
 
@@ -31,7 +31,7 @@ fi
 
 APP_BINARY="$APP_PATH/SalahPath"
 INFO_PLIST="$APP_PATH/Info.plist"
-PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
+PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"\nADHAN_SOUND="$APP_PATH/adhan-short.caf"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
@@ -55,7 +55,7 @@ VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO
 BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
 USES_NONEXEMPT_ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
 
-if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "76" ]; then
+if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "77" ]; then
   echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
   exit 1
 fi
