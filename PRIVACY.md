@@ -30,11 +30,11 @@ When you choose to add an Islamic date to your calendar, SalahPath opens Apple's
 
 ## Quran content and audio
 
-Quran text, translations, and recitation audio are requested directly from AlQuran.cloud and the Islamic Network media CDN when needed. These services necessarily receive normal network request information such as the requesting IP address while serving content. Their published documentation states that the AlQuran API applies rate limits by source IP.
+Quran text, translations, and recitation audio are requested directly from AlQuran.cloud and the Islamic Network media CDN when needed. These services necessarily receive normal network request information such as the requesting IP address while serving content. Their current published terms state that the AlQuran API applies rate limits by source IP.
 
-SalahPath does not intentionally send your GPS coordinates, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
+SalahPath does not intentionally send your GPS coordinates, manually selected latitude/longitude, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
 
-SalahPath does not control the Quran provider's server logs. The public AlQuran documentation reviewed on 21 September 2026 did not specify a retention period for AlQuran request logs. The provider may process connection metadata for content delivery, rate limiting, abuse prevention, reliability, and other infrastructure purposes under its own terms and privacy practices.
+SalahPath does not control the Quran provider's server logs. As of 23 September 2026, the public AlQuran.cloud / Islamic Network material reviewed for release did not specify a retention period for API/CDN source IPs or request logs. Because retention beyond real-time request handling cannot be ruled out, SalahPath conservatively treats this source-IP connection metadata as collected for App Store privacy disclosure. It is disclosed as a device/network identifier used for app functionality such as service delivery, rate limiting, abuse prevention, reliability, and scalability; it is not used by SalahPath for advertising or cross-app tracking.
 
 Provider terms: https://alquran.cloud/terms-and-conditions
 
