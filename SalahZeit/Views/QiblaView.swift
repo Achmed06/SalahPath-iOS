@@ -76,6 +76,23 @@ struct QiblaView: View {
                                     .offset(y: -25)
                             }
                         }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
+                        .accessibilityValue(
+                            heading.map {
+                                settings.t(
+                                    "Qibla \(Int(qibla.rounded())) Grad. Gerät \(Int($0.rounded())) Grad.",
+                                    "Kıble \(Int(qibla.rounded())) derece. Cihaz \(Int($0.rounded())) derece."
+                                )
+                            } ?? settings.t(
+                                "Qibla \(Int(qibla.rounded())) Grad. Geräteausrichtung noch nicht verfügbar.",
+                                "Kıble \(Int(qibla.rounded())) derece. Cihaz yönü henüz mevcut değil."
+                            )
+                        )
+                        .accessibilityHint(settings.t(
+                            "Drehe das iPhone, bis der Qibla-Pfeil nach oben zeigt.",
+                            "Kıble oku yukarıyı gösterene kadar iPhone'u çevir."
+                        ))
 
                         HStack(spacing: 8) {
                             compactInfoTile(icon: "location.north.circle.fill", title: settings.t("Qibla", "Kıble"), value: "\(Int(qibla.rounded()))°")
