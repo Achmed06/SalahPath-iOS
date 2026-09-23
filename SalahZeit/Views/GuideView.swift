@@ -4330,6 +4330,7 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Soziales & Gesundheit", "Sosyal Hayat & Sağlık")) {
                 NavigationLink { IlmihalTopicView(topic: social) } label: { Label(settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), systemImage: social.icon) }
+                NavigationLink { FarewellSermonView() } label: { Label(settings.t("Veda Hutbesi · Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote") }
                 NavigationLink { IlmihalTopicView(topic: health) } label: { Label(settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), systemImage: health.icon) }
             }
 
