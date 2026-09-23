@@ -32,7 +32,8 @@ fi
 APP_BINARY="$APP_PATH/SalahPath"
 INFO_PLIST="$APP_PATH/Info.plist"
 PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
-ADHAN_SOUND="$APP_PATH/adhan-short.caf"
+ADHAN_STANDARD_SOUND="$APP_PATH/adhan-standard.caf"
+ADHAN_FAJR_SOUND="$APP_PATH/adhan-fajr.caf"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
@@ -48,6 +49,13 @@ if [ ! -f "$PRIVACY_MANIFEST" ]; then
   echo "PrivacyInfo.xcprivacy fehlt im gebauten App-Bundle." >&2
   exit 1
 fi
+
+for sound in "$ADHAN_STANDARD_SOUND" "$ADHAN_FAJR_SOUND"; do
+  if [ ! -s "$sound" ]; then
+    echo "Gebetsruf-Datei fehlt oder ist leer: $sound" >&2
+    exit 1
+  fi
+done
 
 /usr/bin/plutil -lint "$PRIVACY_MANIFEST" >/dev/null
 
