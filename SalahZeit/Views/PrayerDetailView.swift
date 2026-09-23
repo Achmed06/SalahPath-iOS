@@ -34,7 +34,7 @@ struct PrayerDetailView: View {
                     Section(settings.t("Gebets-Tracking", "Namaz Takibi")) {
                         Button {
                             _ = PrayerTrackerStore.toggle(prayer.kind, on: prayer.date)
-                            trackerRefresh += 1
+                            trackerRefresh &+= 1
                         } label: {
                             HStack {
                                 Label(
