@@ -1,8 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+
+fail() {
+  echo "PRECHECK ERROR: $*" >&2
+  exit 1
+}
+
+echo "== SalahPath preflight =="
+
+if command -v xcodebuild >/dev/null 2>&1; then
+  XCODE_VERSION="$(xcodebuild -version | awk 'NR==1 {print $2}')"
+  XCODE_MAJOR="${XCODE_VERSION%%.*}"
+  [[ "$XCODE_MAJOR" =~ ^[0-9]+$ ]] || fail "unable to parse Xcode version: $XCODE_VERSION"
+  (( XCODE_MAJOR >= 26 )) || fail "App Store build requires Xcode 26 or newer; found Xcode $XCODE_VERSION"
+  echo "App Store Xcode requirement: OK ($XCODE_VERSION)"
+fi
 
 require_file() {
   if [ ! -f "$1" ]; then
@@ -22,12 +37,35 @@ require_file "SalahZeit.xcodeproj/project.pbxproj"
 require_file "scripts/build_unsigned_ipa.sh"
 require_file "SalahZeit/Views/RootTabView.swift"
 require_file "SalahZeit/Views/GuideView.swift"
+require_file "SalahZeit/PrivacyInfo.xcprivacy"
+require_file "PRIVACY.md"
+require_file "SUPPORT.md"
+require_file "CONTENT_RIGHTS_AUDIT.md"
+require_file "RELIGIOUS_CONTENT_AUDIT.md"
+
+# Patch/merge integrity.
+if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
+  fail "merge-conflict markers found"
+fi
 
 # Release checkpoint: SalahPath v3.62 build 76
 grep -q 'MARKETING_VERSION = 3.62;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'CURRENT_PROJECT_VERSION = 76;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
 grep -q 'CURRENT_PROJECT_VERSION="76"' "scripts/build_unsigned_ipa.sh"
+grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'C617.1' "SalahZeit/PrivacyInfo.xcprivacy"
+grep -q 'PRIVACY.md' "SalahZeit/Views/SettingsView.swift"
+grep -q 'SalahPath-iOS/issues' "SalahZeit/Views/SettingsView.swift"
+
+if command -v plutil >/dev/null 2>&1; then
+  plutil -lint "SalahZeit/PrivacyInfo.xcprivacy" >/dev/null || fail "PrivacyInfo.xcprivacy is not a valid plist"
+fi
 
 grep -q 'struct MoreView: View' "SalahZeit/Views/RootTabView.swift"
 grep -q 'NavigationStack { MoreView() }' "SalahZeit/Views/RootTabView.swift"
@@ -63,5 +101,59 @@ for asset in \
   "SalahZeit/Assets.xcassets/male_standing.imageset"; do
   require_dir "$asset"
 done
+
+# Validate all asset-catalog JSON and PNG structure.
+python3 - <<'PY'
+from pathlib import Path
+import json
+import struct
+import sys
+import zlib
+
+root = Path("SalahZeit/Assets.xcassets")
+for path in root.rglob("Contents.json"):
+    try:
+        json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        print(f"PRECHECK ERROR: invalid asset JSON {path}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+
+png_sig = b"\x89PNG\r\n\x1a\n"
+for path in root.rglob("*.png"):
+    data = path.read_bytes()
+    if len(data) < 8 or data[:8] != png_sig:
+        print(f"PRECHECK ERROR: invalid PNG signature: {path}", file=sys.stderr)
+        raise SystemExit(1)
+
+    offset = 8
+    saw_iend = False
+    while offset < len(data):
+        if offset + 12 > len(data):
+            print(f"PRECHECK ERROR: truncated PNG chunk header: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        length = struct.unpack(">I", data[offset:offset + 4])[0]
+        chunk_type = data[offset + 4:offset + 8]
+        chunk_end = offset + 12 + length
+        if chunk_end > len(data):
+            print(f"PRECHECK ERROR: truncated PNG chunk payload: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        payload = data[offset + 8:offset + 8 + length]
+        stored_crc = struct.unpack(">I", data[offset + 8 + length:chunk_end])[0]
+        actual_crc = zlib.crc32(chunk_type)
+        actual_crc = zlib.crc32(payload, actual_crc) & 0xffffffff
+        if stored_crc != actual_crc:
+            print(f"PRECHECK ERROR: PNG CRC mismatch: {path}", file=sys.stderr)
+            raise SystemExit(1)
+        offset = chunk_end
+        if chunk_type == b"IEND":
+            saw_iend = True
+            break
+
+    if not saw_iend:
+        print(f"PRECHECK ERROR: PNG missing IEND: {path}", file=sys.stderr)
+        raise SystemExit(1)
+
+print("Asset JSON + PNG structural integrity: OK")
+PY
 
 printf 'Reference build checks passed for SalahPath v3.62 build 76\n'
