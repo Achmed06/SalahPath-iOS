@@ -411,6 +411,13 @@ struct MoreView: View {
                     NavigationLink { IslamLearningHubView() } label: {
                         discoverTile(icon: "book.pages.fill", title: settings.t("Islam lernen", "İslâm'ı Öğren"), subtitle: settings.t("Von den Grundlagen", "Temelden başla"))
                     }
+                    NavigationLink { EsmaulHusnaView() } label: {
+                        discoverTile(
+                            icon: "sparkles",
+                            title: settings.t("Esmaül Hüsna", "Esmâü'l-Hüsnâ"),
+                            subtitle: settings.t("Allahs 99 schöne Namen", "Allah'ın 99 güzel ismi")
+                        )
+                    }
                     NavigationLink { PrayerHowToView() } label: {
                         discoverTile(icon: "figure.mind.and.body", title: settings.t("Gebet lernen", "Namaz Öğren"), subtitle: settings.t("Schritt für Schritt", "Adım adım"))
                     }
