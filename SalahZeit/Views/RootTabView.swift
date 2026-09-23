@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import UIKit
 
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -86,34 +87,57 @@ private final class NearbyMosqueStore: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    func load(around location: CLLocation, query: String) async {
+    func load(around location: CLLocation) async {
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
 
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = query
-        request.resultTypes = .pointOfInterest
-        request.region = MKCoordinateRegion(
+        let region = MKCoordinateRegion(
             center: location.coordinate,
             latitudinalMeters: 20_000,
             longitudinalMeters: 20_000
         )
+        let queries = ["Moschee", "Mosque", "Cami"]
 
-        do {
-            let response = try await MKLocalSearch(request: request).start()
-            let origin = location
+        var combined: [MKMapItem] = []
+        var lastSearchError: Error?
 
-            mapItems = response.mapItems
-                .filter { $0.placemark.location != nil }
-                .sorted {
-                    let lhs = $0.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
-                    let rhs = $1.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
-                    return lhs < rhs
-                }
-        } catch {
-            mapItems = []
-            errorMessage = error.localizedDescription
+        for query in queries {
+            let request = MKLocalSearch.Request()
+            request.naturalLanguageQuery = query
+            request.resultTypes = .pointOfInterest
+            request.region = region
+
+            do {
+                let response = try await MKLocalSearch(request: request).start()
+                combined.append(contentsOf: response.mapItems)
+            } catch {
+                lastSearchError = error
+            }
+        }
+
+        let origin = location
+        var seen = Set<String>()
+
+        mapItems = combined
+            .filter { $0.placemark.location != nil }
+            .filter { item in
+                guard let coordinate = item.placemark.location?.coordinate else { return false }
+                let name = (item.name ?? "").lowercased()
+                let lat = Int((coordinate.latitude * 100_000).rounded())
+                let lon = Int((coordinate.longitude * 100_000).rounded())
+                return seen.insert("\(name)|\(lat)|\(lon)").inserted
+            }
+            .sorted {
+                let lhs = $0.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
+                let rhs = $1.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
+                return lhs < rhs
+            }
+            .prefix(30)
+            .map { $0 }
+
+        if mapItems.isEmpty, let lastSearchError {
+            errorMessage = lastSearchError.localizedDescription
         }
     }
 }
@@ -167,10 +191,27 @@ struct NearbyMosquesView: View {
                         .multilineTextAlignment(.center)
 
                         Button {
-                            locationManager.requestAccessAndStart()
+                            if locationManager.authorizationStatus == .denied ||
+                                locationManager.authorizationStatus == .restricted {
+                                openAppSettings()
+                            } else {
+                                locationManager.useDeviceLocation()
+                            }
                         } label: {
-                            Label(settings.t("Standort verwenden", "Konumu kullan"), systemImage: "location.fill")
-                                .font(.headline)
+                            Label(
+                                settings.t(
+                                    locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                        ? "iPhone-Einstellungen öffnen"
+                                        : "Standort verwenden",
+                                    locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                        ? "iPhone ayarlarını aç"
+                                        : "Konumu kullan"
+                                ),
+                                systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                    ? "gear"
+                                    : "location.fill"
+                            )
+                            .font(.headline)
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(SalahTheme.teal)
@@ -237,10 +278,12 @@ struct NearbyMosquesView: View {
     @MainActor
     private func reload() async {
         guard let location = locationManager.location else { return }
-        await store.load(
-            around: location,
-            query: settings.language == .turkish ? "Cami" : "Moschee"
-        )
+        await store.load(around: location)
+    }
+
+    private func openAppSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
     }
 
     private func mosqueRow(_ item: MKMapItem) -> some View {
