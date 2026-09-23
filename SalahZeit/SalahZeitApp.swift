@@ -189,7 +189,7 @@ private struct OnboardingFlowView: View {
                             }
                             .buttonStyle(.plain)
                             .foregroundStyle(.white)
-                            .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+                            .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 13))
                         }
                     }
                     .frame(maxWidth: 520)
@@ -198,7 +198,15 @@ private struct OnboardingFlowView: View {
             .padding(.horizontal, 18)
             .padding(.vertical, 16)
         }
-        .preferredColorScheme(.light)
+        .preferredColorScheme(preferredColorScheme)
+    }
+
+    private var preferredColorScheme: ColorScheme? {
+        switch settings.appearance {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
     }
 
     private var welcomeStep: some View {
@@ -302,7 +310,7 @@ private struct OnboardingFlowView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
-                .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+                .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 13))
 
                 HStack(spacing: 8) {
                     TextField(settings.t("Stadt oder PLZ", "Şehir veya posta kodu"), text: $manualLocation)
@@ -398,7 +406,7 @@ private struct OnboardingFlowView: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
-                .background(SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 13))
+                .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 13))
             }
         }
     }
