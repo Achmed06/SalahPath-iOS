@@ -556,6 +556,13 @@ struct MoreView: View {
                             subtitle: settings.t("Allahs 99 schöne Namen", "Allah'ın 99 güzel ismi")
                         )
                     }
+                    NavigationLink { FourCaliphsView() } label: {
+                        discoverTile(
+                            icon: "person.3.sequence.fill",
+                            title: settings.t("Vier Kalifen", "Dört Halife"),
+                            subtitle: settings.t("Leben & frühe Geschichte", "Hayatları & ilk dönem")
+                        )
+                    }
                     NavigationLink { RamadanGuideIndexView() } label: {
                         discoverTile(
                             icon: "moon.stars.fill",
