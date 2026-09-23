@@ -7904,10 +7904,33 @@ struct QuranView: View {
                         .frame(height: 42)
                         .background(Color.white.opacity(0.76), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
 
-                        ForEach(filtered.prefix(8)) { surah in
-                            NavigationLink {
-                                QuranSurahView(surah: surah, initialAyah: nil)
-                            } label: {
+                        if filtered.isEmpty {
+                            VStack(spacing: 10) {
+                                ContentUnavailableView(
+                                    settings.t("Keine Sura gefunden", "Sûre bulunamadı"),
+                                    systemImage: "magnifyingglass",
+                                    description: Text(settings.t(
+                                        "Prüfe den Suchbegriff oder lösche die Suche.",
+                                        "Arama ifadesini kontrol et veya aramayı temizle."
+                                    ))
+                                )
+
+                                if !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    Button {
+                                        search = ""
+                                    } label: {
+                                        Label(settings.t("Suche löschen", "Aramayı temizle"), systemImage: "xmark.circle")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(SalahTheme.teal)
+                                }
+                            }
+                            .padding(.vertical, 8)
+                        } else {
+                            ForEach(filtered.prefix(8)) { surah in
+                                NavigationLink {
+                                    QuranSurahView(surah: surah, initialAyah: nil)
+                                } label: {
                                 HStack(spacing: 10) {
                                     Text("\(surah.number)")
                                         .font(.caption.bold())
@@ -7934,7 +7957,8 @@ struct QuranView: View {
                                 .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                                 .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.teal.opacity(0.14), lineWidth: 1) }
                             }
-                            .buttonStyle(.plain)
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
                     .padding(.horizontal, 11)
@@ -8461,11 +8485,36 @@ struct QuranDirectoryView: View {
         .padding(.horizontal)
     }
 
+    @ViewBuilder
     private func surahList(_ chapters: [SurahMeta], showRevelation: Bool) -> some View {
-        List(chapters) { chapter in
-            NavigationLink {
-                QuranSurahView(surah: chapter, initialAyah: nil)
-            } label: {
+        if chapters.isEmpty {
+            VStack(spacing: 10) {
+                ContentUnavailableView(
+                    settings.t("Keine Sura gefunden", "Sûre bulunamadı"),
+                    systemImage: "magnifyingglass",
+                    description: Text(settings.t(
+                        "Für diese Suche gibt es keinen Treffer.",
+                        "Bu arama için sonuç bulunamadı."
+                    ))
+                )
+
+                if !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Button {
+                        search = ""
+                    } label: {
+                        Label(settings.t("Suche löschen", "Aramayı temizle"), systemImage: "xmark.circle")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+            List(chapters) { chapter in
+                NavigationLink {
+                    QuranSurahView(surah: chapter, initialAyah: nil)
+                } label: {
                 HStack(spacing: 10) {
                     VStack(spacing: 2) {
                         Text(showRevelation ? "#\(revelationNumber(for: chapter.number))" : "\(chapter.number)")
@@ -8496,10 +8545,11 @@ struct QuranDirectoryView: View {
                         .foregroundStyle(SalahTheme.ink)
                 }
                 .padding(.vertical, 2)
+                }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
     }
 
     private var pageGrid: some View {
