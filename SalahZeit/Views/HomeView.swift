@@ -329,8 +329,10 @@ enum SalahTheme {
 struct HomeView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var now = Date()
+    @State private var clockTask: Task<Void, Never>?
     @State private var selectedPrayer: PrayerOccurrence?
     @State private var trackerRefresh = 0
     @State private var dailyDeenRefresh = 0
@@ -338,7 +340,6 @@ struct HomeView: View {
     @State private var manualLocationError: String?
     @State private var isResolvingManualLocation = false
     private let engine = PrayerEngine()
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var isScreenshotQA: Bool {
         ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
@@ -380,13 +381,28 @@ struct HomeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
-            guard !isScreenshotQA else { return }
-            if locationManager.authorizationStatus == .authorizedWhenInUse ||
-                locationManager.authorizationStatus == .authorizedAlways {
-                locationManager.requestAccessAndStart()
+            if !isScreenshotQA {
+                if locationManager.authorizationStatus == .authorizedWhenInUse ||
+                    locationManager.authorizationStatus == .authorizedAlways {
+                    locationManager.requestAccessAndStart()
+                }
+                startClock()
             }
         }
-        .onReceive(timer) { now = $0 }
+        .onDisappear {
+            stopClock()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard !isScreenshotQA else { return }
+            if phase == .active {
+                startClock()
+            } else {
+                stopClock()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            now = Date()
+        }
         .sheet(item: $selectedPrayer) { prayer in
             if let location = effectiveLocation,
                let today = engine.calculateDay(for: prayer.date, location: location, settings: settings),
@@ -396,6 +412,28 @@ struct HomeView: View {
                     .environmentObject(settings)
             }
         }
+    }
+
+    private func startClock() {
+        clockTask?.cancel()
+        now = Date()
+
+        clockTask = Task { @MainActor in
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(for: .seconds(1))
+                } catch {
+                    break
+                }
+                guard !Task.isCancelled else { break }
+                now = Date()
+            }
+        }
+    }
+
+    private func stopClock() {
+        clockTask?.cancel()
+        clockTask = nil
     }
 
     @ViewBuilder
