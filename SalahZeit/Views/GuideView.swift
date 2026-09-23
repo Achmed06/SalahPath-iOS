@@ -7010,7 +7010,7 @@ private struct AyahData: Decodable, Identifiable {
 }
 
 @MainActor
-private actor QuranTextCache {
+actor QuranTextCache {
     static let shared = QuranTextCache()
 
     private let fileManager = FileManager.default
@@ -7051,6 +7051,33 @@ private actor QuranTextCache {
         } catch {
             // Quran networking must remain usable even if local caching fails.
         }
+    }
+
+    func stats() -> (count: Int, bytes: Int64) {
+        guard let files = try? fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return (0, 0)
+        }
+
+        var count = 0
+        var total: Int64 = 0
+
+        for url in files {
+            guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                  values.isRegularFile == true else { continue }
+            count += 1
+            total += Int64(values.fileSize ?? 0)
+        }
+
+        return (count, total)
+    }
+
+    func clear() {
+        guard fileManager.fileExists(atPath: directoryURL.path) else { return }
+        try? fileManager.removeItem(at: directoryURL)
     }
 
     private func ensureDirectory() throws {
