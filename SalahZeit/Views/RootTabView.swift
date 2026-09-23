@@ -132,10 +132,15 @@ private final class NearbyMosqueStore: ObservableObject {
         mapItems = combined
             .filter { $0.placemark.location != nil }
             .filter { item in
-                guard let coordinate = item.placemark.location?.coordinate,
-                      CLLocationCoordinate2DIsValid(coordinate),
+                guard let itemLocation = item.placemark.location else { return false }
+                let coordinate = itemLocation.coordinate
+                let distance = itemLocation.distance(from: origin)
+
+                guard CLLocationCoordinate2DIsValid(coordinate),
                       coordinate.latitude.isFinite,
-                      coordinate.longitude.isFinite else { return false }
+                      coordinate.longitude.isFinite,
+                      distance.isFinite,
+                      distance >= 0 else { return false }
 
                 let name = (item.name ?? "").lowercased()
                 let lat = Int((coordinate.latitude * 100_000).rounded())
@@ -389,6 +394,7 @@ struct NearbyMosquesView: View {
     }
 
     private func distanceString(_ meters: CLLocationDistance) -> String {
+        guard meters.isFinite, meters >= 0 else { return "—" }
         if meters < 1_000 {
             return String(format: "%.0f m", meters)
         }
