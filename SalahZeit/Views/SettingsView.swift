@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SettingsView: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -352,12 +353,30 @@ struct SettingsView: View {
                     HStack(spacing: 8) {
                         Button {
                             manualLocationError = nil
-                            locationManager.useDeviceLocation()
+                            if locationManager.authorizationStatus == .denied ||
+                                locationManager.authorizationStatus == .restricted {
+                                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                                UIApplication.shared.open(url)
+                            } else {
+                                locationManager.useDeviceLocation()
+                            }
                         } label: {
-                            Label(settings.t("GPS verwenden", "GPS kullan"), systemImage: "location.fill")
-                                .font(.system(size: 10.5, weight: .bold))
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 9)
+                            Label(
+                                settings.t(
+                                    locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                        ? "iPhone-Einstellungen"
+                                        : "GPS verwenden",
+                                    locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                        ? "iPhone ayarları"
+                                        : "GPS kullan"
+                                ),
+                                systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                    ? "gear"
+                                    : "location.fill"
+                            )
+                            .font(.system(size: 10.5, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 9)
                         }
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
@@ -390,8 +409,8 @@ struct SettingsView: View {
                     }
 
                     Text(settings.t(
-                        "Du kannst GPS verwenden, einen Ort dauerhaft manuell speichern oder ganz ohne Standort weiterarbeiten. Gebetszeiten und Qibla nutzen den ausgewählten Ort.",
-                        "GPS kullanabilir, bir konumu manuel olarak kaydedebilir veya konumsuz devam edebilirsin. Namaz vakitleri ve kıble seçtiğin konumu kullanır."
+                        "Du kannst GPS verwenden, einen Ort dauerhaft manuell speichern oder ganz ohne Standort weiterarbeiten. Beim Wechsel von manuell zu GPS bleibt dein gespeicherter Ort erhalten, bis ein gültiger Geräte-Standort verfügbar ist.",
+                        "GPS kullanabilir, bir konumu manuel olarak kaydedebilir veya konumsuz devam edebilirsin. Manuel konumdan GPS'e geçerken geçerli cihaz konumu alınana kadar kayıtlı konumun korunur."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
