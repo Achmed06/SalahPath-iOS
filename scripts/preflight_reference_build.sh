@@ -51,6 +51,8 @@ fi
 # Release checkpoint: SalahPath v3.62 build 76
 grep -q 'MARKETING_VERSION = 3.62;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'CURRENT_PROJECT_VERSION = 76;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'SWIFT_STRICT_CONCURRENCY = complete;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
 grep -q 'CURRENT_PROJECT_VERSION="76"' "scripts/build_unsigned_ipa.sh"
 grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
