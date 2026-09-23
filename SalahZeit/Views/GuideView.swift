@@ -8600,6 +8600,11 @@ private final class QuranPageStore: ObservableObject {
 
         isLoading = true
         error = nil
+        arabic = nil
+        translation = nil
+        transliteration = nil
+        translationUnavailable = false
+        transliterationUnavailable = false
         defer {
             if revision == loadRevision {
                 isLoading = false
@@ -8674,8 +8679,11 @@ struct QuranPageReaderView: View {
     @State private var audioURLsBySurah: [String: [URL]] = [:]
     @State private var resolvingAyahNumber: Int?
     @State private var audioRequestGeneration = 0
+    @State private var page: Int
 
-    let page: Int
+    init(page: Int) {
+        _page = State(initialValue: min(max(page, 1), 604))
+    }
 
     private var translationByAyah: [Int: QuranPageAyah] {
         Dictionary(uniqueKeysWithValues: (store.translation?.ayahs ?? []).map { ($0.number, $0) })
@@ -9047,6 +9055,16 @@ struct QuranPageReaderView: View {
         }
     }
 
+    private func movePage(by offset: Int) {
+        let next = page + offset
+        guard (1...604).contains(next) else { return }
+
+        audioRequestGeneration &+= 1
+        resolvingAyahNumber = nil
+        audio.stop()
+        page = next
+    }
+
     private func audioTimeString(_ seconds: Double) -> String {
         guard seconds.isFinite, seconds > 0 else { return "0:00" }
         let total = Int(seconds.rounded(.down))
@@ -9057,8 +9075,8 @@ struct QuranPageReaderView: View {
     private func pageNavigation(top: Bool) -> some View {
         HStack(spacing: 10) {
             if page > 1 {
-                NavigationLink {
-                    QuranPageReaderView(page: page - 1)
+                Button {
+                    movePage(by: -1)
                 } label: {
                     Label(settings.t("Zurück", "Önceki"), systemImage: "chevron.left")
                         .frame(maxWidth: .infinity)
@@ -9074,8 +9092,8 @@ struct QuranPageReaderView: View {
                 .fixedSize()
 
             if page < 604 {
-                NavigationLink {
-                    QuranPageReaderView(page: page + 1)
+                Button {
+                    movePage(by: 1)
                 } label: {
                     Label(settings.t("Weiter", "Sonraki"), systemImage: "chevron.right")
                         .labelStyle(.titleAndIcon)
