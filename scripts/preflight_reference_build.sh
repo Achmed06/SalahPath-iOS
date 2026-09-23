@@ -90,6 +90,21 @@ if grep -q 'Array(repeating: urls, count: max(1, repeatCount))' "SalahZeit/Views
   exit 1
 fi
 
+# Religious-content regression gates for previously corrected release issues.
+grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/HomeView.swift"
+grep -q 'Quran 3:173 · excerpt' "SalahZeit/Views/HomeView.swift"
+grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/GuideView.swift"
+grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' "SalahZeit/Views/GuideView.swift"
+grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' "SalahZeit/Views/GuideView.swift"
+grep -q 'Angezeigt sind nur die Anfangszeilen' "SalahZeit/Views/GuideView.swift"
+grep -q 'وَإِلَيْكَ الْمَصِيرُ' "SalahZeit/Views/GuideView.swift"
+grep -q 'Hier wird keine bestimmte überlieferte Anzahl behauptet' "SalahZeit/Views/GuideView.swift"
+
+if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.swift"; then
+  echo "Unsupported fixed Istighfar count regression found." >&2
+  exit 1
+fi
+
 # Required reference assets (Salam / Wudu / prayer-art parity)
 for asset in \
   "SalahZeit/Assets.xcassets/male_salam_right.imageset" \
