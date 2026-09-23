@@ -4980,7 +4980,7 @@ struct QuranicDuaLibraryView: View {
     private let items: [QuranicDua] = [
         .init(reference: "Quran 2:201", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", de: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", tr: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru."),
         .init(reference: "Quran 20:114", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", de: "Mein Herr, mehre mein Wissen.", tr: "Rabbim, ilmimi artır."),
-        .init(reference: "Quran 25:74", arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyun...", de: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.", tr: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle."),
+        .init(reference: "Quran 25:74", arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.", de: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.", tr: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle."),
         .init(reference: "Quran 3:8", arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً", transliteration: "Rabbanā lā tuzigh qulūbanā baʿda idh hadaytanā wa hab lanā min ladunka raḥmah", de: "Unser Herr, lass unsere Herzen nicht abweichen, nachdem Du uns rechtgeleitet hast, und schenke uns Barmherzigkeit von Dir.", tr: "Rabbimiz, bize hidayet verdikten sonra kalplerimizi eğriltme; bize katından rahmet bağışla.")
     ]
 
@@ -5038,7 +5038,7 @@ struct MorningEveningAdhkarView: View {
     private let items: [AdhkarEntry] = [
         .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Die drei kurzen Suren werden in dieser Morgen-/Abend-Überlieferung jeweils dreimal rezitiert.", trMeaning: "Bu sabah-akşam zikrinde üç kısa sûre ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
-        .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūt", deMeaning: "Bitte um Allahs Beistand für Morgen/Abend, Leben und Tod; abends wird die Formulierung entsprechend angepasst.", trMeaning: "Sabah/akşam, hayat ve ölüm için Allah'a yöneliş; akşam ifadesi buna göre değiştirilir.", count: 1, source: "Hisn al-Muslim 78 · Tirmidhi"),
+        .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung.", trMeaning: "Allah'tan bağışlanma dilerim.", count: 33, source: "Dhikr / İstiğfar"),
         .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86 · Abu Dawud / Tirmidhi"),
         .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87 · Ahmad / Tirmidhi")
@@ -5131,8 +5131,8 @@ struct MorningEveningAdhkarView: View {
     private func featuredDhikr(_ item: AdhkarEntry) -> some View {
         let current = progress(item)
         return VStack(spacing: 11) {
-            Text(item.arabic)
-                .font(.system(size: item.arabic.count < 30 ? 34 : 24, weight: .medium))
+            Text(displayArabic(for: item))
+                .font(.system(size: displayArabic(for: item).count < 30 ? 34 : 24, weight: .medium))
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(SalahTheme.ink)
@@ -5145,6 +5145,32 @@ struct MorningEveningAdhkarView: View {
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(SalahTheme.mutedInk)
                 .multilineTextAlignment(.center)
+
+            if item.id == "ayatkursi" {
+                NavigationLink {
+                    QuranReferenceJumpView(surahNumber: 2, ayah: 255)
+                } label: {
+                    Label(
+                        settings.t("Âyetel-Kürsî vollständig öffnen", "Âyetel Kürsî tam metni aç"),
+                        systemImage: "book.closed.fill"
+                    )
+                    .font(.caption.bold())
+                }
+                .buttonStyle(.bordered)
+                .tint(SalahTheme.teal)
+            } else if item.id == "threequls" {
+                NavigationLink {
+                    ShortSurahLearningView()
+                } label: {
+                    Label(
+                        settings.t("Ikhlas, Falaq und Nas vollständig öffnen", "İhlâs, Felak ve Nâs tam metni aç"),
+                        systemImage: "books.vertical.fill"
+                    )
+                    .font(.caption.bold())
+                }
+                .buttonStyle(.bordered)
+                .tint(SalahTheme.teal)
+            }
 
             HStack(spacing: 18) {
                 Button {
@@ -5181,7 +5207,7 @@ struct MorningEveningAdhkarView: View {
                 .scaleEffect(x: 1, y: 0.78, anchor: .center)
 
             HStack {
-                Text(item.transliteration)
+                Text(displayTransliteration(for: item))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(SalahTheme.mutedInk)
                     .lineLimit(2)
@@ -5205,6 +5231,16 @@ struct MorningEveningAdhkarView: View {
         )
         .overlay { RoundedRectangle(cornerRadius: 18).stroke(SalahTheme.gold.opacity(0.58), lineWidth: 1) }
         .shadow(color: SalahTheme.deepTeal.opacity(0.055), radius: 7, y: 3)
+    }
+
+    private func displayArabic(for item: AdhkarEntry) -> String {
+        guard item.id == "bika", category == 1 else { return item.arabic }
+        return "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ"
+    }
+
+    private func displayTransliteration(for item: AdhkarEntry) -> String {
+        guard item.id == "bika", category == 1 else { return item.transliteration }
+        return "Allāhumma bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr."
     }
 
     private var visibleItems: [AdhkarEntry] {
