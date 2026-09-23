@@ -8,6 +8,8 @@ final class NotificationManager {
     private let center = UNUserNotificationCenter.current()
     private let engine = PrayerEngine()
     private let prayerIdentifierPrefix = "salahzeit.prayer."
+    private let adhanPreviewIdentifier = "salahzeit.adhan.preview"
+    private let adhanSoundFileName = "adhan-short.caf"
     private var schedulingRevision = 0
 
     private init() {}
@@ -109,7 +111,7 @@ final class NotificationManager {
                             "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))"
                         )
                     }
-                    content.sound = .default
+                    content.sound = prayerTimeSound(settings: settings)
 
                     var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
                     components.timeZone = .current
@@ -126,6 +128,46 @@ final class NotificationManager {
         }
 
         return revision == schedulingRevision && allRequestsScheduled
+    }
+
+    @discardableResult
+    func scheduleAdhanPreview(settings: SettingsStore) async -> Bool {
+        guard await ensureAuthorization() else { return false }
+
+        center.removePendingNotificationRequests(withIdentifiers: [adhanPreviewIdentifier])
+
+        let content = UNMutableNotificationContent()
+        content.title = settings.t("Gebetsruf · Test", "Ezan · Test")
+        content.body = settings.t(
+            "So klingt der Gebetsruf bei einer Gebetszeit-Benachrichtigung.",
+            "Namaz vakti bildiriminde ezan bu şekilde çalar."
+        )
+        content.sound = adhanSound()
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        do {
+            try await center.add(
+                UNNotificationRequest(
+                    identifier: adhanPreviewIdentifier,
+                    content: content,
+                    trigger: trigger
+                )
+            )
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    private func prayerTimeSound(settings: SettingsStore) -> UNNotificationSound {
+        settings.adhanSoundEnabled ? adhanSound() : .default
+    }
+
+    private func adhanSound() -> UNNotificationSound {
+        guard Bundle.main.url(forResource: "adhan-short", withExtension: "caf") != nil else {
+            return .default
+        }
+        return UNNotificationSound(named: UNNotificationSoundName(adhanSoundFileName))
     }
 
     private func ensureAuthorization() async -> Bool {
