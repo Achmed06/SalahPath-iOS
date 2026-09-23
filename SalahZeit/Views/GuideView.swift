@@ -8582,7 +8582,12 @@ private final class QuranPageStore: ObservableObject {
     @Published var error: String?
     private var loadRevision = 0
 
-    func load(page: Int, language: AppLanguage) async {
+    func load(
+        page: Int,
+        language: AppLanguage,
+        includeTranslation: Bool,
+        includeTransliteration: Bool
+    ) async {
         loadRevision &+= 1
         let revision = loadRevision
         guard (1...604).contains(page) else {
@@ -8605,8 +8610,12 @@ private final class QuranPageStore: ObservableObject {
 
         do {
             async let arabicPage = fetch(page: page, edition: "quran-uthmani")
-            async let translatedPage: QuranPageData? = try? fetch(page: page, edition: translationEdition)
-            async let transliteratedPage: QuranPageData? = try? fetch(page: page, edition: "en.transliteration")
+            async let translatedPage: QuranPageData? = includeTranslation
+                ? (try? fetch(page: page, edition: translationEdition))
+                : nil
+            async let transliteratedPage: QuranPageData? = includeTransliteration
+                ? (try? fetch(page: page, edition: "en.transliteration"))
+                : nil
 
             let arabicResult = try await arabicPage
             let translatedResult = await translatedPage
@@ -8616,8 +8625,8 @@ private final class QuranPageStore: ObservableObject {
             arabic = arabicResult
             translation = translatedResult
             transliteration = transliteratedResult
-            translationUnavailable = translatedResult == nil
-            transliterationUnavailable = transliteratedResult == nil
+            translationUnavailable = includeTranslation && translatedResult == nil
+            transliterationUnavailable = includeTransliteration && transliteratedResult == nil
             error = nil
         } catch {
             guard revision == loadRevision else { return }
@@ -8692,7 +8701,14 @@ struct QuranPageReaderView: View {
                     )
 
                     Button {
-                        Task { await store.load(page: page, language: settings.language) }
+                        Task {
+                            await store.load(
+                                page: page,
+                                language: settings.language,
+                                includeTranslation: settings.quranShowTranslation,
+                                includeTransliteration: settings.quranShowTransliteration
+                            )
+                        }
                     } label: {
                         Label(settings.t("Erneut versuchen", "Tekrar dene"), systemImage: "arrow.clockwise")
                     }
@@ -8905,8 +8921,13 @@ struct QuranPageReaderView: View {
         }
         .navigationTitle(settings.t("Quran · Seite \(page)", "Kur'an · \(page). Sayfa"))
         .navigationBarTitleDisplayMode(.inline)
-        .task(id: "\(page)-\(settings.language.rawValue)") {
-            await store.load(page: page, language: settings.language)
+        .task(id: "\(page)-\(settings.language.rawValue)-\(settings.quranShowTranslation)-\(settings.quranShowTransliteration)") {
+            await store.load(
+                page: page,
+                language: settings.language,
+                includeTranslation: settings.quranShowTranslation,
+                includeTransliteration: settings.quranShowTransliteration
+            )
         }
         .onChange(of: settings.quranReciter) { _, _ in
             audioRequestGeneration &+= 1
