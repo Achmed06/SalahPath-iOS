@@ -8844,25 +8844,33 @@ private final class QuranPageStore: ObservableObject {
     }
 
     private func sanitizedPage(_ value: QuranPageData, expectedPage: Int) -> QuranPageData? {
-        guard value.number == expectedPage, (1...604).contains(value.number) else {
+        guard value.number == expectedPage,
+              (1...604).contains(value.number),
+              !value.ayahs.isEmpty else {
             return nil
         }
 
         var seenAyahs = Set<Int>()
-        let ayahs = value.ayahs.filter { ayah in
+        var previousGlobalNumber: Int?
+
+        for ayah in value.ayahs {
             guard ayah.number > 0,
                   ayah.numberInSurah > 0,
                   (1...114).contains(ayah.surah.number),
                   !ayah.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                   !ayah.surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-                  !ayah.surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return false
+                  !ayah.surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  seenAyahs.insert(ayah.number).inserted else {
+                return nil
             }
-            return seenAyahs.insert(ayah.number).inserted
+
+            if let previousGlobalNumber, ayah.number <= previousGlobalNumber {
+                return nil
+            }
+            previousGlobalNumber = ayah.number
         }
 
-        guard !ayahs.isEmpty else { return nil }
-        return QuranPageData(number: value.number, ayahs: ayahs)
+        return value
     }
 }
 
