@@ -4611,7 +4611,8 @@ actor QuranAudioCache {
 
             let (temporaryURL, response) = try await URLSession.shared.download(for: request)
             guard let http = response as? HTTPURLResponse,
-                  (200...299).contains(http.statusCode) else {
+                  (200...299).contains(http.statusCode),
+                  Self.isAcceptableAudioMIMEType(http.mimeType) else {
                 throw URLError(.badServerResponse)
             }
 
@@ -4683,6 +4684,17 @@ actor QuranAudioCache {
         values.isExcludedFromBackup = true
         var url = directoryURL
         try? url.setResourceValues(values)
+    }
+
+    private nonisolated static func isAcceptableAudioMIMEType(_ mimeType: String?) -> Bool {
+        guard let mimeType = mimeType?.lowercased(), !mimeType.isEmpty else {
+            // Some CDNs omit Content-Type for byte-range/media responses.
+            return true
+        }
+
+        return mimeType.hasPrefix("audio/") ||
+            mimeType == "application/octet-stream" ||
+            mimeType == "binary/octet-stream"
     }
 
     private func destinationURL(for remoteURL: URL) -> URL {
