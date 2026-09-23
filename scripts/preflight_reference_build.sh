@@ -92,6 +92,11 @@ if grep -q 'Array(repeating: urls, count: max(1, repeatCount))' "SalahZeit/Views
   exit 1
 fi
 
+if grep -R -nE 'URL\(string:[[:space:]]*"http://' SalahZeit --include='*.swift'; then
+  echo "Unencrypted HTTP URL construction found." >&2
+  exit 1
+fi
+
 # Religious-content regression gates for previously corrected release issues.
 grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/HomeView.swift"
 grep -q 'Quran 3:173 · excerpt' "SalahZeit/Views/HomeView.swift"
