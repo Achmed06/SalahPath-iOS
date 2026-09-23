@@ -2,8 +2,10 @@ import SwiftUI
 
 @main
 struct SalahPathApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var locationManager = LocationManager()
     @StateObject private var settings = SettingsStore()
+    @State private var notificationScheduleRevision = 0
 
     init() {
         let navigation = UINavigationBarAppearance()
@@ -23,7 +25,84 @@ struct SalahPathApp: App {
             qaRoot
                 .environmentObject(locationManager)
                 .environmentObject(settings)
+                .task(id: prayerNotificationScheduleID) {
+                    await refreshPrayerNotificationSchedule()
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    guard phase == .active else { return }
+                    locationManager.refresh()
+                    notificationScheduleRevision &+= 1
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+                    notificationScheduleRevision &+= 1
+                }
         }
+    }
+
+    private var isQAMode: Bool {
+        ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] != nil
+    }
+
+    private var prayerNotificationScheduleID: String {
+        guard settings.onboardingCompleted,
+              settings.notificationsEnabled,
+              let location = locationManager.location,
+              !isQAMode else {
+            return "disabled|\(notificationScheduleRevision)"
+        }
+
+        let lat = Int((location.coordinate.latitude * 1_000).rounded())
+        let lon = Int((location.coordinate.longitude * 1_000).rounded())
+        let prayerFlags = [
+            settings.fajrNotificationEnabled,
+            settings.dhuhrNotificationEnabled,
+            settings.asrNotificationEnabled,
+            settings.maghribNotificationEnabled,
+            settings.ishaNotificationEnabled
+        ]
+        .map { $0 ? "1" : "0" }
+        .joined()
+        let offsets = [
+            settings.fajrOffset,
+            settings.dhuhrOffset,
+            settings.asrOffset,
+            settings.maghribOffset,
+            settings.ishaOffset
+        ]
+        .map(String.init)
+        .joined(separator: ",")
+        let dayKey = Calendar.current.ordinality(of: .day, in: .era, for: Date()) ?? 0
+
+        return [
+            String(lat),
+            String(lon),
+            settings.calculationPreset.rawValue,
+            settings.asrRule.rawValue,
+            String(settings.notificationLeadMinutes),
+            settings.notifyAtPrayerTime ? "1" : "0",
+            prayerFlags,
+            offsets,
+            settings.language.rawValue,
+            settings.use24Hour ? "24h" : "12h",
+            TimeZone.current.identifier,
+            String(dayKey),
+            String(notificationScheduleRevision)
+        ].joined(separator: "|")
+    }
+
+    @MainActor
+    private func refreshPrayerNotificationSchedule() async {
+        guard settings.onboardingCompleted,
+              settings.notificationsEnabled,
+              !isQAMode,
+              let location = locationManager.location else {
+            return
+        }
+
+        _ = await NotificationManager.shared.scheduleNextSevenDays(
+            location: location,
+            settings: settings
+        )
     }
 
     @ToolbarContentBuilder
