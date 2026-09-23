@@ -1,7 +1,6 @@
 import SwiftUI
 import CoreLocation
 import UIKit
-import AVFoundation
 
 
 enum PrayerTrackerStore {
