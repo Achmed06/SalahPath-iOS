@@ -33,31 +33,31 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $selection) {
             NavigationStack { HomeView() }
-                .toolbarBackground(SalahTheme.deepTeal, for: .navigationBar)
+                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .tag(0)
 
             NavigationStack { QuranView() }
-                .toolbarBackground(SalahTheme.deepTeal, for: .navigationBar)
+                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .tag(1)
 
             NavigationStack { GuideView() }
-                .toolbarBackground(SalahTheme.deepTeal, for: .navigationBar)
+                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .tag(2)
 
             NavigationStack { MoreView() }
-                .toolbarBackground(SalahTheme.deepTeal, for: .navigationBar)
+                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .tag(3)
 
             NavigationStack { SettingsView() }
-                .toolbarBackground(SalahTheme.deepTeal, for: .navigationBar)
+                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .tag(4)
@@ -67,8 +67,16 @@ struct RootTabView: View {
             ReferenceBottomBar(selection: $selection)
                 .environmentObject(settings)
         }
-        .preferredColorScheme(.light)
+        .preferredColorScheme(preferredColorScheme)
         .tint(SalahTheme.teal)
+    }
+
+    private var preferredColorScheme: ColorScheme? {
+        switch settings.appearance {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
     }
 }
 
