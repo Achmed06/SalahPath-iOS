@@ -262,6 +262,64 @@ private enum DailyDuaStore {
 }
 
 
+private struct DailyDuaDetailView: View {
+    @EnvironmentObject private var settings: SettingsStore
+    let dua: DailyDuaEntry
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(settings.language == .german ? dua.deTitle : dua.trTitle)
+                        .font(.title2.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    if let repetition = dua.repetition {
+                        Label(repetition, systemImage: "repeat")
+                            .font(.caption.bold())
+                            .foregroundStyle(SalahTheme.teal)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cardStyle(material: true)
+
+                VStack(spacing: 12) {
+                    Text(dua.arabic)
+                        .font(.system(size: 26, weight: .regular))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .multilineTextAlignment(.trailing)
+                        .textSelection(.enabled)
+
+                    Divider().opacity(0.3)
+
+                    Text(dua.transliteration)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(SalahTheme.ink)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
+
+                    Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
+                        .font(.body)
+                        .foregroundStyle(SalahTheme.ink)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle()
+
+                Label(dua.source, systemImage: "checkmark.seal.fill")
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 2)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Dua des Tages", "Günün Duası"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 enum SalahTheme {
     // The navigation/header tone remains brand-stable; content colors adapt to iOS appearance.
     static let navigationTeal = Color(red: 36/255, green: 79/255, blue: 77/255)
@@ -813,70 +871,82 @@ struct HomeView: View {
 
     private var dailyDuaCard: some View {
         let dua = DailyDuaStore.item(for: now)
-        return VStack(spacing: 3) {
-            HStack(spacing: 6) {
-                ZStack {
-                    Circle()
-                        .fill(SalahTheme.gold.opacity(0.20))
-                        .frame(width: 27, height: 27)
-                    ReferenceLeafMark(color: SalahTheme.teal)
-                        .frame(width: 14, height: 18)
+
+        return NavigationLink {
+            DailyDuaDetailView(dua: dua)
+        } label: {
+            VStack(spacing: 4) {
+                HStack(spacing: 6) {
+                    ZStack {
+                        Circle()
+                            .fill(SalahTheme.gold.opacity(0.20))
+                            .frame(width: 27, height: 27)
+                        ReferenceLeafMark(color: SalahTheme.teal)
+                            .frame(width: 14, height: 18)
+                    }
+
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(settings.t("Dua des Tages", "Günün Duası"))
+                            .font(.system(size: 11.3, weight: .bold))
+                            .foregroundStyle(SalahTheme.ink)
+
+                        Text(settings.language == .german ? dua.deTitle : dua.trTitle)
+                            .font(.system(size: 8.2, weight: .semibold))
+                            .foregroundStyle(SalahTheme.mutedInk)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(SalahTheme.teal)
+                        .frame(width: 28, height: 28)
+                        .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
                 }
 
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(settings.t("Dua des Tages", "Günün Duası"))
-                        .font(.system(size: 11.3, weight: .bold))
-                        .foregroundStyle(SalahTheme.ink)
+                Text(dua.arabic)
+                    .font(.system(size: 17.2, weight: .regular))
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.88)
 
-                    Text(settings.language == .german ? dua.deTitle : dua.trTitle)
-                        .font(.system(size: 8.2, weight: .semibold))
+                Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
+                    .font(.system(size: 9.2, weight: .semibold))
+                    .foregroundStyle(SalahTheme.ink)
+                    .frame(maxWidth: .infinity)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+
+                HStack(spacing: 5) {
+                    if let repetition = dua.repetition {
+                        Text(repetition)
+                            .font(.system(size: 7.6, weight: .bold))
+                            .foregroundStyle(SalahTheme.teal)
+                    }
+
+                    Spacer(minLength: 4)
+
+                    Text(dua.source)
+                        .font(.system(size: 7.2, weight: .semibold))
                         .foregroundStyle(SalahTheme.mutedInk)
                         .lineLimit(1)
                 }
-
-                Spacer()
-
-                Image(systemName: "text.book.closed.fill")
-                    .font(.system(size: 11.5, weight: .bold))
-                    .foregroundStyle(SalahTheme.teal)
-                    .frame(width: 28, height: 28)
-                    .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
-                    .accessibilityHidden(true)
             }
-
-            Text(dua.arabic)
-                .font(.system(size: 18.2, weight: .regular))
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
-                .font(.system(size: 9.2, weight: .semibold))
-                .foregroundStyle(SalahTheme.ink)
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-
-            if let repetition = dua.repetition {
-                Text(repetition)
-                    .font(.system(size: 7.8, weight: .bold))
-                    .foregroundStyle(SalahTheme.teal)
-                    .frame(maxWidth: .infinity)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 7)
+            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.8)
             }
-
-            Text(dua.source)
-                .font(.system(size: 7.4, weight: .semibold))
-                .foregroundStyle(SalahTheme.mutedInk)
-                .frame(maxWidth: .infinity)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.8)
-        }
-        .frame(minHeight: 104)
+        .buttonStyle(.plain)
+        .accessibilityLabel(settings.t(
+            "Dua des Tages öffnen: \(dua.deTitle)",
+            "Günün duasını aç: \(dua.trTitle)"
+        ))
     }
 
     private var streakCard: some View {
