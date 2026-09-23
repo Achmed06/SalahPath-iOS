@@ -1447,7 +1447,9 @@ struct HomeView: View {
 struct PrayerTimesOverviewView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var period = 0
+    @State private var now = Date()
     private let engine = PrayerEngine()
 
     private var isScreenshotQA: Bool {
@@ -1455,7 +1457,7 @@ struct PrayerTimesOverviewView: View {
     }
 
     private var referenceDate: Date {
-        guard isScreenshotQA else { return Date() }
+        guard isScreenshotQA else { return now }
         var c = DateComponents()
         c.calendar = Calendar(identifier: .gregorian)
         c.timeZone = TimeZone(identifier: "Europe/Istanbul")
@@ -1587,11 +1589,20 @@ struct PrayerTimesOverviewView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             guard !isScreenshotQA else { return }
+            now = Date()
             if locationManager.usesManualLocation ||
                 locationManager.authorizationStatus == .authorizedWhenInUse ||
                 locationManager.authorizationStatus == .authorizedAlways {
                 locationManager.requestAccessAndStart()
             }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard !isScreenshotQA, phase == .active else { return }
+            now = Date()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            guard !isScreenshotQA else { return }
+            now = Date()
         }
     }
 
