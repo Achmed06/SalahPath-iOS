@@ -1064,7 +1064,7 @@ struct HomeView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 7)
         .background(
-            Color(red: 0.97, green: 0.95, blue: 0.86),
+            SalahTheme.cream,
             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
         )
         .frame(minHeight: 48)
@@ -1087,7 +1087,7 @@ struct HomeView: View {
         case .dhuhr:
             return [("4", sunnah), ("4", fard), ("2", sunnah)]
         case .asr:
-            return [("4", sunnah), ("4", fard), ("2", sunnah)]
+            return [("4", sunnah), ("4", fard)]
         case .maghrib:
             return [("3", fard), ("2", sunnah)]
         case .isha:
