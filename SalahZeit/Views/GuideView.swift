@@ -7581,6 +7581,7 @@ struct QuranView: View {
     @State private var search = ""
     @State private var previewAudioURLs: [URL] = []
     @State private var isResolvingPreviewAudio = false
+    @State private var previewAudioRequestGeneration = 0
     @State private var lastRead: QuranBookmark?
     private let usesInjectedLastRead: Bool
 
@@ -7981,7 +7982,17 @@ struct QuranView: View {
             }
             languageTab = settings.language == .german ? 2 : 1
         }
-        .onDisappear { previewAudio.stop() }
+        .onChange(of: settings.quranReciter) { _, _ in
+            previewAudioRequestGeneration &+= 1
+            isResolvingPreviewAudio = false
+            previewAudioURLs.removeAll()
+            previewAudio.stop()
+        }
+        .onDisappear {
+            previewAudioRequestGeneration &+= 1
+            isResolvingPreviewAudio = false
+            previewAudio.stop()
+        }
         .tint(SalahTheme.teal)
     }
 
@@ -8010,6 +8021,7 @@ struct QuranView: View {
     }
 
     @MainActor
+    @MainActor
     private func togglePreviewAudio() async {
         if previewAudio.isPlaying {
             previewAudio.pause()
@@ -8025,17 +8037,28 @@ struct QuranView: View {
             return
         }
 
+        previewAudioRequestGeneration &+= 1
+        let generation = previewAudioRequestGeneration
+        let reciter = settings.quranReciter
         isResolvingPreviewAudio = true
-        defer { isResolvingPreviewAudio = false }
+
         do {
-            let urls = try await QuranAudioResolver.urls(surah: 1, reciter: settings.quranReciter)
+            let urls = try await QuranAudioResolver.urls(surah: 1, reciter: reciter)
+            guard generation == previewAudioRequestGeneration,
+                  reciter == settings.quranReciter else { return }
+
             previewAudioURLs = urls
             previewAudio.playQueue(urls)
         } catch {
+            guard generation == previewAudioRequestGeneration else { return }
             previewAudio.lastError = settings.t(
                 "Audio konnte nicht geladen werden. Erneut versuchen.",
                 "Ses yüklenemedi. Tekrar dene."
             )
+        }
+
+        if generation == previewAudioRequestGeneration {
+            isResolvingPreviewAudio = false
         }
     }
 
