@@ -7010,6 +7010,105 @@ private struct AyahData: Decodable, Identifiable {
 }
 
 @MainActor
+private actor QuranTextCache {
+    static let shared = QuranTextCache()
+
+    private let fileManager = FileManager.default
+    private let maxBytes: Int64 = 48 * 1024 * 1024
+
+    private var directoryURL: URL {
+        let base = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? fileManager.temporaryDirectory
+        return base.appendingPathComponent("SalahPathQuranTextCache", isDirectory: true)
+    }
+
+    func data(for key: String) -> Data? {
+        do {
+            try ensureDirectory()
+            let url = fileURL(for: key)
+            guard fileManager.fileExists(atPath: url.path) else { return nil }
+            let data = try Data(contentsOf: url)
+            guard !data.isEmpty else {
+                try? fileManager.removeItem(at: url)
+                return nil
+            }
+            touch(url)
+            return data
+        } catch {
+            return nil
+        }
+    }
+
+    func store(_ data: Data, for key: String) {
+        guard !data.isEmpty else { return }
+
+        do {
+            try ensureDirectory()
+            let url = fileURL(for: key)
+            try data.write(to: url, options: [.atomic])
+            touch(url)
+            trimIfNeeded()
+        } catch {
+            // Quran networking must remain usable even if local caching fails.
+        }
+    }
+
+    private func ensureDirectory() throws {
+        if !fileManager.fileExists(atPath: directoryURL.path) {
+            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        }
+
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var url = directoryURL
+        try? url.setResourceValues(values)
+    }
+
+    private func fileURL(for key: String) -> URL {
+        let safe = key.map { character -> Character in
+            if character.isLetter || character.isNumber || character == "." || character == "-" || character == "_" {
+                return character
+            }
+            return "_"
+        }
+        return directoryURL.appendingPathComponent(String(safe), isDirectory: false)
+    }
+
+    private func touch(_ url: URL) {
+        try? fileManager.setAttributes([.modificationDate: Date()], ofItemAtPath: url.path)
+    }
+
+    private func trimIfNeeded() {
+        guard let files = try? fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey, .contentModificationDateKey],
+            options: [.skipsHiddenFiles]
+        ) else { return }
+
+        var entries: [(url: URL, bytes: Int64, date: Date)] = []
+        var total: Int64 = 0
+
+        for url in files {
+            guard let values = try? url.resourceValues(
+                forKeys: [.isRegularFileKey, .fileSizeKey, .contentModificationDateKey]
+            ),
+            values.isRegularFile == true else { continue }
+
+            let bytes = Int64(values.fileSize ?? 0)
+            total += bytes
+            entries.append((url, bytes, values.contentModificationDate ?? .distantPast))
+        }
+
+        guard total > maxBytes else { return }
+
+        for entry in entries.sorted(by: { $0.date < $1.date }) {
+            try? fileManager.removeItem(at: entry.url)
+            total -= entry.bytes
+            if total <= maxBytes { break }
+        }
+    }
+}
+
 private final class QuranStore: ObservableObject {
     @Published var chapters:[SurahMeta] = []
     @Published var isLoading = false
@@ -7020,6 +7119,14 @@ private final class QuranStore: ObservableObject {
         error = nil
         isLoading = true
         defer { isLoading = false }
+
+        let cacheKey = "chapters-v1.json"
+
+        if let cached = await QuranTextCache.shared.data(for: cacheKey),
+           let decoded = try? JSONDecoder().decode(SurahListResponse.self, from: cached) {
+            chapters = decoded.data
+            return
+        }
 
         do {
             guard let url = URL(string: "https://api.alquran.cloud/v1/surah") else {
@@ -7032,7 +7139,10 @@ private final class QuranStore: ObservableObject {
                   (200...299).contains(http.statusCode) else {
                 throw URLError(.badServerResponse)
             }
-            chapters = try JSONDecoder().decode(SurahListResponse.self, from: data).data
+
+            let decoded = try JSONDecoder().decode(SurahListResponse.self, from: data)
+            chapters = decoded.data
+            await QuranTextCache.shared.store(data, for: cacheKey)
             error = nil
         } catch {
             self.error = error.localizedDescription
@@ -7056,11 +7166,28 @@ private final class QuranStore: ObservableObject {
     }
 
     private func fetch(number:Int, edition:String) async throws -> SurahData {
-        let url=URL(string:"https://api.alquran.cloud/v1/surah/\(number)/\(edition)")!
-        var request = URLRequest(url: url); request.timeoutInterval = 20
-        let (data,response)=try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else { throw URLError(.badServerResponse) }
-        return try JSONDecoder().decode(SurahResponse.self,from:data).data
+        let cacheKey = "surah-\(number)-\(edition).json"
+
+        if let cached = await QuranTextCache.shared.data(for: cacheKey),
+           let decoded = try? JSONDecoder().decode(SurahResponse.self, from: cached) {
+            return decoded.data
+        }
+
+        guard let url = URL(string: "https://api.alquran.cloud/v1/surah/\(number)/\(edition)") else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 20
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse,
+              (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+
+        let decoded = try JSONDecoder().decode(SurahResponse.self, from: data)
+        await QuranTextCache.shared.store(data, for: cacheKey)
+        return decoded.data
     }
 }
 
@@ -7765,6 +7892,13 @@ private final class QuranPageStore: ObservableObject {
     }
 
     private func fetch(page: Int, edition: String) async throws -> QuranPageData {
+        let cacheKey = "page-\(page)-\(edition).json"
+
+        if let cached = await QuranTextCache.shared.data(for: cacheKey),
+           let decoded = try? JSONDecoder().decode(QuranPageResponse.self, from: cached) {
+            return decoded.data
+        }
+
         guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
             throw URLError(.badURL)
         }
@@ -7778,7 +7912,9 @@ private final class QuranPageStore: ObservableObject {
             throw URLError(.badServerResponse)
         }
 
-        return try JSONDecoder().decode(QuranPageResponse.self, from: data).data
+        let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
+        await QuranTextCache.shared.store(data, for: cacheKey)
+        return decoded.data
     }
 }
 
@@ -7876,8 +8012,8 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen. Die Mushaf-Navigation umfasst 604 Seiten.",
-                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir. Mushaf gezinmesi 604 sayfadır."
+                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen und nach dem ersten erfolgreichen Laden lokal gespeichert. Bereits geladene Seiten funktionieren danach auch ohne Internet. Die Mushaf-Navigation umfasst 604 Seiten.",
+                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir ve ilk başarılı yüklemeden sonra cihazda saklanır. Daha önce açılan sayfalar daha sonra internetsiz de çalışır. Mushaf gezinmesi 604 sayfadır."
                         ))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
