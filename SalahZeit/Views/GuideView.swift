@@ -7823,6 +7823,7 @@ actor QuranTextCache {
     }
 }
 
+@MainActor
 private final class QuranStore: ObservableObject {
     @Published var chapters:[SurahMeta] = []
     @Published var isLoading = false
