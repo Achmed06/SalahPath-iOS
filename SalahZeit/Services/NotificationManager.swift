@@ -165,7 +165,14 @@ final class NotificationManager {
 
     private func prayerTimeSound(for kind: PrayerKind, settings: SettingsStore) -> UNNotificationSound {
         guard settings.adhanSoundEnabled else { return .default }
-        return adhanSound(fajr: kind == .fajr)
+        let isFajr: Bool
+        switch kind {
+        case .fajr:
+            isFajr = true
+        default:
+            isFajr = false
+        }
+        return adhanSound(fajr: isFajr)
     }
 
     private func adhanSound(fajr: Bool) -> UNNotificationSound {
