@@ -241,22 +241,30 @@ final class SettingsStore: ObservableObject {
         self.use24Hour = defaults.object(forKey: Keys.use24Hour) as? Bool ?? true
         self.notificationsEnabled = defaults.object(forKey: Keys.notifications) as? Bool ?? false
         self.notifyAtPrayerTime = defaults.object(forKey: Keys.notifyAtPrayerTime) as? Bool ?? true
-        self.notificationLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 10
+        let storedLeadMinutes = defaults.object(forKey: Keys.leadMinutes) as? Int ?? 10
+        let allowedLeadMinutes = [0, 5, 10, 15, 30]
+        self.notificationLeadMinutes = allowedLeadMinutes.contains(storedLeadMinutes) ? storedLeadMinutes : 10
         self.fajrNotificationEnabled = defaults.object(forKey: Keys.fajrNotification) as? Bool ?? true
         self.dhuhrNotificationEnabled = defaults.object(forKey: Keys.dhuhrNotification) as? Bool ?? true
         self.asrNotificationEnabled = defaults.object(forKey: Keys.asrNotification) as? Bool ?? true
         self.maghribNotificationEnabled = defaults.object(forKey: Keys.maghribNotification) as? Bool ?? true
         self.ishaNotificationEnabled = defaults.object(forKey: Keys.ishaNotification) as? Bool ?? true
-        self.fajrOffset = defaults.object(forKey: Keys.fajrOffset) as? Int ?? 0
-        self.dhuhrOffset = defaults.object(forKey: Keys.dhuhrOffset) as? Int ?? 0
-        self.asrOffset = defaults.object(forKey: Keys.asrOffset) as? Int ?? 0
-        self.maghribOffset = defaults.object(forKey: Keys.maghribOffset) as? Int ?? 0
-        self.ishaOffset = defaults.object(forKey: Keys.ishaOffset) as? Int ?? 0
+        func sanitizedOffset(_ key: String) -> Int {
+            min(max(defaults.object(forKey: key) as? Int ?? 0, -15), 15)
+        }
+        self.fajrOffset = sanitizedOffset(Keys.fajrOffset)
+        self.dhuhrOffset = sanitizedOffset(Keys.dhuhrOffset)
+        self.asrOffset = sanitizedOffset(Keys.asrOffset)
+        self.maghribOffset = sanitizedOffset(Keys.maghribOffset)
+        self.ishaOffset = sanitizedOffset(Keys.ishaOffset)
         self.language = AppLanguage(rawValue: defaults.string(forKey: Keys.language) ?? "") ?? .german
         self.prayerAudience = PrayerAudience(rawValue: defaults.string(forKey: Keys.audience) ?? "") ?? .male
         self.appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
         self.quranReciter = QuranReciter(rawValue: defaults.string(forKey: Keys.quranReciter) ?? "") ?? .alafasy
-        self.quranFontSize = defaults.object(forKey: Keys.quranFontSize) as? Double ?? 28
+        let storedQuranFontSize = defaults.object(forKey: Keys.quranFontSize) as? Double ?? 28
+        self.quranFontSize = storedQuranFontSize.isFinite
+            ? min(max(storedQuranFontSize, 20), 40)
+            : 28
         self.quranShowTranslation = defaults.object(forKey: Keys.quranShowTranslation) as? Bool ?? true
         self.quranShowTransliteration = defaults.object(forKey: Keys.quranShowTransliteration) as? Bool ?? false
         self.onboardingCompleted = defaults.object(forKey: Keys.onboardingCompleted) as? Bool ?? false
