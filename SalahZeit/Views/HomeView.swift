@@ -537,7 +537,7 @@ struct HomeView: View {
 
                         Text(countdownString(from: now, to: prayer.date))
                             .font(.system(size: 25, weight: .bold, design: .rounded).monospacedDigit())
-                            .foregroundStyle(Color(red: 0.03, green: 0.17, blue: 0.28))
+                            .foregroundStyle(SalahTheme.deepTeal)
                             .lineLimit(1)
                             .minimumScaleFactor(0.72)
                     }
@@ -593,7 +593,7 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 5)
-                .background(Color.white.opacity(0.94), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                .background(SalahTheme.cream.opacity(0.94), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
                 .overlay {
                     RoundedRectangle(cornerRadius: 7, style: .continuous)
                         .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 0.7)
@@ -813,7 +813,7 @@ struct HomeView: View {
                         .font(.system(size: 11.5, weight: .bold))
                         .foregroundStyle(SalahTheme.teal)
                         .frame(width: 28, height: 28)
-                        .background(Color.white.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
+                        .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
                 }
                 .buttonStyle(.plain)
             }
