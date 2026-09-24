@@ -186,6 +186,14 @@ jobs:
           capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
           capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
 
+          # Render the same critical Salah steps for the female learning mode.
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+          capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
+          capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
+          capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
+          capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+
       - name: Upload UI previews
         uses: actions/upload-artifact@v7
         with:
