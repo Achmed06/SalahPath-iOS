@@ -754,17 +754,17 @@ struct MoreView: View {
 
             Circle()
                 .fill(SalahTheme.cream.opacity(0.88))
-                .frame(width: size * 0.66, height: size * 0.66)
+                .frame(width: size * 0.74, height: size * 0.74)
 
             if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
                 ReferenceDashboardGlyph(kind: glyphKind)
-                    .frame(width: size * 0.42, height: size * 0.42)
+                    .frame(width: size * 0.52, height: size * 0.52)
             } else {
                 Image(systemName: symbol)
                     .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: size * 0.34, weight: .semibold))
+                    .font(.system(size: size * 0.40, weight: .semibold))
                     .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: size * 0.66, height: size * 0.66)
+                    .frame(width: size * 0.74, height: size * 0.74)
             }
 
             Circle()
@@ -800,7 +800,7 @@ struct MoreView: View {
 
     private func discoverTile(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 5) {
-            salahFeatureIcon(icon, size: 38)
+            salahFeatureIcon(icon, size: 44)
 
             Text(title)
                 .font(.system(size: 11.5, weight: .bold))
@@ -814,7 +814,7 @@ struct MoreView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
-        .frame(maxWidth: .infinity, minHeight: 94)
+        .frame(maxWidth: .infinity, minHeight: 102)
         .padding(7)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1) }
