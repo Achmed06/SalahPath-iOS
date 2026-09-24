@@ -98,7 +98,7 @@ PAGE COVERAGE
 
 83-84
 - Adhan/dua audio list.
-- Build 77 adds real optional 28-second Adhan notification sounds at exact prayer time from the Internet Archive public-domain Doha collection: a dedicated Fajr recording plus a standard recording for the other four prayers.
+- Build 78 includes real optional 28-second Adhan notification sounds at exact prayer time from the Internet Archive public-domain Doha collection: a dedicated Fajr recording plus a standard recording for the other four prayers.
 - Advance reminders remain on the normal iOS sound; a Settings preview schedules the same real notification sound for testing.
 - The broader legacy Adhan/Sela/dua audio catalogue remains intentionally unimplemented until each additional recording has verified redistribution rights.
 
@@ -197,6 +197,9 @@ CRASH-HARDENING FOLLOW-UP
 - Hardened location, MapKit mosque search, Qibla heading/direction and prayer calculation inputs against invalid/non-finite coordinates and sensor values.
 - Hardened Quran chapter, surah, page and audio-ayah payloads against invalid IDs, duplicate/missing ordering and stale async responses.
 - Quran chapter metadata now requires the complete 114-surah directory before cache/API data is accepted.
+- Build 78 bundles the validated Uthmani Quran corpus (114 surahs, 6,236 ayahs, Mushaf pages 1–604) and uses it first for the surah directory, Arabic surah reading and page reading; translations/audio remain optional network/cache supplements.
+- Prayer tracker mutations publish a dedicated change notification so Home, tracker overview and pause view refresh immediately; persisted values are sanitized to the five required daily prayers.
+- Prayer learning artwork was re-audited: standing male/female hero art replaced, legacy pose backgrounds/sprite remnants removed, mask holes repaired, and problematic dashboard/settings icons replaced with clean vector assets.
 - Quran audio indexing now validates numberInSurah ordering before exposing index-addressable URLs.
 - Quran cache size accounting and countdown conversions use overflow-safe arithmetic.
 - Quran network JSON payloads, text-cache reads/writes and individual cached audio files are size-bounded; invalid text/audio cache entries self-heal.
@@ -208,7 +211,7 @@ CRASH-HARDENING FOLLOW-UP
 APP STORE / PRIVACY RELEASE HARDENING
 - Native source now includes PrivacyInfo.xcprivacy in the app target resources.
 - Privacy manifest declares no tracking, conservatively declares the Quran provider source-IP metadata as a non-linked/non-tracking Device ID used for App Functionality, and documents UserDefaults / file-timestamp required-reason API use.
-- Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 77.
+- Bundle identifier is com.achmed06.salahpath, release version is 3.62 and build is 78.
 - ITSAppUsesNonExemptEncryption is explicitly false.
 - Privacy and support links are exposed inside Settings.
 - The built app bundle is checked for Info.plist metadata, bundled privacy manifest and valid IPA ZIP structure.
