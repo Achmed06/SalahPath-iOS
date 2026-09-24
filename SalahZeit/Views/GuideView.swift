@@ -5045,6 +5045,8 @@ final class RemoteAudioPlayer: ObservableObject {
     @Published private(set) var currentTime: Double = 0
     @Published private(set) var duration: Double = 0
     @Published var playbackRate: Float = 1.0
+    @Published private(set) var displayTitle = "SalahPath Audio"
+    @Published private(set) var displaySubtitle = "SalahPath"
 
     private var player: AVPlayer?
     private var queueURLs: [URL] = []
@@ -5081,6 +5083,7 @@ final class RemoteAudioPlayer: ObservableObject {
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
         prayerContext = (trimmed?.isEmpty == false) ? trimmed : nil
+        refreshDisplayMetadata()
         updateNowPlaying()
     }
 
@@ -5132,6 +5135,7 @@ final class RemoteAudioPlayer: ObservableObject {
             : artist
         let trimmedContext = context?.trimmingCharacters(in: .whitespacesAndNewlines)
         mediaContext = (trimmedContext?.isEmpty == false) ? trimmedContext : nil
+        refreshDisplayMetadata()
 
         queueSessionID &+= 1
         queueContinuationDelegate = continuation
@@ -5187,6 +5191,7 @@ final class RemoteAudioPlayer: ObservableObject {
             let trimmed = context.trimmingCharacters(in: .whitespacesAndNewlines)
             mediaContext = trimmed.isEmpty ? nil : trimmed
         }
+        refreshDisplayMetadata()
         updateRemoteCommandAvailability()
         updateNowPlaying()
         next()
@@ -5423,6 +5428,17 @@ final class RemoteAudioPlayer: ObservableObject {
         player.seek(to: CMTime(seconds: bounded, preferredTimescale: 600))
         currentTime = bounded
         updateNowPlaying()
+    }
+
+    private func refreshDisplayMetadata() {
+        displayTitle = mediaTitle
+        if let prayerContext, !prayerContext.isEmpty {
+            displaySubtitle = prayerContext
+        } else if let mediaContext, !mediaContext.isEmpty {
+            displaySubtitle = mediaContext
+        } else {
+            displaySubtitle = mediaArtist
+        }
     }
 
     private func requestContinuationIfAvailable() {
