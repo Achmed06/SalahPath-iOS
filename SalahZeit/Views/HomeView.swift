@@ -56,9 +56,14 @@ enum PrayerTrackerStore {
         UserDefaults.standard.bool(forKey: pauseKey(for: date))
     }
 
-    static func togglePause(_ date: Date) {
-        UserDefaults.standard.set(!isPaused(date), forKey: pauseKey(for: date))
+    static func setPaused(_ paused: Bool, on date: Date) {
+        guard isPaused(date) != paused else { return }
+        UserDefaults.standard.set(paused, forKey: pauseKey(for: date))
         NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)
+    }
+
+    static func togglePause(_ date: Date) {
+        setPaused(!isPaused(date), on: date)
     }
 
     static func completedCount(on date: Date) -> Int {
@@ -273,9 +278,7 @@ struct PrayerTrackerOverviewView: View {
                 Toggle(isOn: Binding(
                     get: { PrayerTrackerStore.isPaused(selectedDay) },
                     set: { newValue in
-                        if PrayerTrackerStore.isPaused(selectedDay) != newValue {
-                            PrayerTrackerStore.togglePause(selectedDay)
-                        }
+                        PrayerTrackerStore.setPaused(newValue, on: selectedDay)
                         refresh &+= 1
                     }
                 )) {
@@ -381,7 +384,10 @@ struct TrackerPauseView: View {
             Section {
                 Toggle(isOn: Binding(
                     get: { PrayerTrackerStore.isPaused(today) },
-                    set: { _ in PrayerTrackerStore.togglePause(today); refresh &+= 1 }
+                    set: { newValue in
+                        PrayerTrackerStore.setPaused(newValue, on: today)
+                        refresh &+= 1
+                    }
                 )) {
                     Label(settings.t("Tracker heute pausieren", "Bugün takibi duraklat"), systemImage: "pause.circle")
                 }
