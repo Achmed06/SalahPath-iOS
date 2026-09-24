@@ -97,17 +97,130 @@ struct PrayerTrackerOverviewView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var refresh = 0
     @State private var now = Date()
+    @State private var selectedDate = Date()
+
+    private var calendar: Calendar { LocalDay.calendar() }
+
+    private var today: Date {
+        calendar.startOfDay(for: now)
+    }
+
+    private var selectedDay: Date {
+        calendar.startOfDay(for: selectedDate)
+    }
+
+    private var isTodaySelected: Bool {
+        calendar.isDate(selectedDay, inSameDayAs: today)
+    }
+
+    private var recentDays: [Date] {
+        (-6...0).compactMap { LocalDay.addingDays($0, to: today) }
+    }
 
     var body: some View {
         let _ = refresh
-        let today = now
-        let completed = PrayerTrackerStore.completedCount(on: today)
-        let streak = PrayerTrackerStore.streak(upTo: today)
+        let completed = PrayerTrackerStore.completedCount(on: selectedDay)
+        let streak = PrayerTrackerStore.streak(upTo: selectedDay)
 
         List {
             Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Button {
+                            moveSelection(by: -1)
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .frame(width: 30, height: 30)
+                        }
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel(settings.t("Vorheriger Tag", "Önceki gün"))
+
+                        Spacer()
+
+                        VStack(spacing: 2) {
+                            Text(dayTitle(selectedDay))
+                                .font(.headline)
+                                .foregroundStyle(SalahTheme.ink)
+                            Text(hijriDateString(selectedDay, language: settings.language))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .multilineTextAlignment(.center)
+
+                        Spacer()
+
+                        Button {
+                            moveSelection(by: 1)
+                        } label: {
+                            Image(systemName: "chevron.right")
+                                .frame(width: 30, height: 30)
+                        }
+                        .buttonStyle(.borderless)
+                        .disabled(isTodaySelected)
+                        .opacity(isTodaySelected ? 0.30 : 1)
+                        .accessibilityLabel(settings.t("Nächster Tag", "Sonraki gün"))
+                    }
+
+                    HStack(spacing: 6) {
+                        ForEach(recentDays, id: \.self) { date in
+                            Button {
+                                selectedDate = date
+                            } label: {
+                                VStack(spacing: 4) {
+                                    Text(shortTrackerWeekday(date))
+                                        .font(.caption2.bold())
+
+                                    ZStack {
+                                        Circle()
+                                            .stroke(
+                                                calendar.isDate(date, inSameDayAs: selectedDay)
+                                                    ? SalahTheme.gold
+                                                    : SalahTheme.teal.opacity(0.28),
+                                                lineWidth: calendar.isDate(date, inSameDayAs: selectedDay) ? 2.5 : 1
+                                            )
+                                            .frame(width: 32, height: 32)
+
+                                        let count = PrayerTrackerStore.completedCount(on: date)
+                                        let paused = PrayerTrackerStore.isPaused(date)
+
+                                        if count == PrayerTrackerStore.requiredKinds.count {
+                                            Circle()
+                                                .fill(SalahTheme.teal)
+                                                .frame(width: 28, height: 28)
+                                            Image(systemName: "checkmark")
+                                                .font(.caption2.bold())
+                                                .foregroundStyle(.white)
+                                        } else if paused {
+                                            Image(systemName: "pause.fill")
+                                                .font(.caption2.bold())
+                                                .foregroundStyle(SalahTheme.mutedInk)
+                                        } else {
+                                            Text("\(count)")
+                                                .font(.caption2.bold().monospacedDigit())
+                                                .foregroundStyle(SalahTheme.deepTeal)
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(SalahTheme.ink)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(trackerDayAccessibility(date))
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+
+            Section {
                 HStack {
-                    Label(settings.t("Heute", "Bugün"), systemImage: "checkmark.circle.fill")
+                    Label(
+                        isTodaySelected
+                            ? settings.t("Heute", "Bugün")
+                            : settings.t("Ausgewählter Tag", "Seçili gün"),
+                        systemImage: "checkmark.circle.fill"
+                    )
                     Spacer()
                     Text("\(completed)/\(PrayerTrackerStore.requiredKinds.count)")
                         .font(.headline.monospacedDigit())
@@ -123,11 +236,15 @@ struct PrayerTrackerOverviewView: View {
                 }
             }
 
-            Section(settings.t("Heutige Gebete", "Bugünkü namazlar")) {
+            Section(
+                isTodaySelected
+                    ? settings.t("Heutige Gebete", "Bugünkü namazlar")
+                    : settings.t("Gebete an diesem Tag", "Bu gündeki namazlar")
+            ) {
                 ForEach(PrayerTrackerStore.requiredKinds, id: \.id) { kind in
-                    let done = PrayerTrackerStore.isCompleted(kind, on: today)
+                    let done = PrayerTrackerStore.isCompleted(kind, on: selectedDay)
                     Button {
-                        _ = PrayerTrackerStore.toggle(kind, on: today)
+                        _ = PrayerTrackerStore.toggle(kind, on: selectedDay)
                         refresh &+= 1
                     } label: {
                         HStack {
@@ -140,25 +257,36 @@ struct PrayerTrackerOverviewView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(
+                        settings.t(
+                            "\(kind.localizedName(settings.language)), \(done ? "erledigt" : "offen")",
+                            "\(kind.localizedName(settings.language)), \(done ? "tamamlandı" : "açık")"
+                        )
+                    )
                 }
             }
 
             Section(settings.t("Tracker", "Takip")) {
                 Toggle(isOn: Binding(
-                    get: { PrayerTrackerStore.isPaused(today) },
+                    get: { PrayerTrackerStore.isPaused(selectedDay) },
                     set: { newValue in
-                        if PrayerTrackerStore.isPaused(today) != newValue {
-                            PrayerTrackerStore.togglePause(today)
+                        if PrayerTrackerStore.isPaused(selectedDay) != newValue {
+                            PrayerTrackerStore.togglePause(selectedDay)
                         }
                         refresh &+= 1
                     }
                 )) {
-                    Label(settings.t("Tracker heute pausieren", "Bugün takibi duraklat"), systemImage: "pause.circle")
+                    Label(
+                        isTodaySelected
+                            ? settings.t("Tracker heute pausieren", "Bugün takibi duraklat")
+                            : settings.t("Diesen Tag pausieren", "Bu günü duraklat"),
+                        systemImage: "pause.circle"
+                    )
                 }
 
                 Text(settings.t(
-                    "Die Pause verändert nur Statistik und Streak. Sie ändert keine religiöse Pflicht.",
-                    "Duraklatma yalnızca istatistik ve seriyi etkiler; dinî yükümlülüğü değiştirmez."
+                    "Die Pause verändert nur Statistik und Streak. Sie ändert keine religiöse Pflicht. Markierungen bleiben lokal auf diesem Gerät gespeichert.",
+                    "Duraklatma yalnızca istatistik ve seriyi etkiler; dinî yükümlülüğü değiştirmez. İşaretlemeler yalnızca bu cihazda yerel olarak saklanır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -169,19 +297,70 @@ struct PrayerTrackerOverviewView: View {
         .tint(SalahTheme.teal)
         .onAppear {
             now = Date()
+            clampSelectionToToday()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 now = Date()
+                clampSelectionToToday()
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
+            clampSelectionToToday()
         }
         .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
             refresh &+= 1
             now = Date()
+            clampSelectionToToday()
         }
+    }
+
+    private func moveSelection(by days: Int) {
+        guard let candidate = LocalDay.addingDays(days, to: selectedDay) else { return }
+        if candidate > today {
+            selectedDate = today
+        } else {
+            selectedDate = candidate
+        }
+    }
+
+    private func clampSelectionToToday() {
+        if selectedDay > today {
+            selectedDate = today
+        }
+    }
+
+    private func dayTitle(_ date: Date) -> String {
+        if calendar.isDate(date, inSameDayAs: today) {
+            return settings.t("Heute", "Bugün")
+        }
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateFormat = "EEE, d. MMM"
+        return formatter.string(from: date)
+    }
+
+    private func shortTrackerWeekday(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateFormat = "EE"
+        return formatter.string(from: date)
+    }
+
+    private func trackerDayAccessibility(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateStyle = .medium
+        let count = PrayerTrackerStore.completedCount(on: date)
+        let paused = PrayerTrackerStore.isPaused(date)
+        let state = paused
+            ? settings.t("pausiert", "duraklatıldı")
+            : settings.t("\(count) von 5 Gebeten markiert", "5 namazdan \(count) tanesi işaretli")
+        return "\(formatter.string(from: date)), \(state)"
     }
 }
 
