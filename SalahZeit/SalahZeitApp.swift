@@ -285,28 +285,40 @@ private struct OnboardingFlowView: View {
                             Button {
                                 withAnimation(.easeInOut(duration: 0.18)) { step -= 1 }
                             } label: {
-                                Text(settings.t("Zurück", "Geri"))
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                                        .fill(SalahTheme.cream)
+                                    Text(settings.t("Zurück", "Geri"))
+                                        .font(.headline)
+                                        .foregroundStyle(SalahTheme.deepTeal)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 48)
+                                .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .foregroundStyle(SalahTheme.deepTeal)
-                            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 13))
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Rectangle())
                         }
 
                         if step < 2 {
                             Button {
                                 withAnimation(.easeInOut(duration: 0.18)) { step += 1 }
                             } label: {
-                                Text(settings.t("Weiter", "İleri"))
-                                    .font(.headline.bold())
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                                        .fill(SalahTheme.navigationTeal)
+                                    Text(settings.t("Weiter", "İleri"))
+                                        .font(.headline.bold())
+                                        .foregroundStyle(.white)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 48)
+                                .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .foregroundStyle(.white)
-                            .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 13))
+                            .frame(maxWidth: .infinity)
+                            .contentShape(Rectangle())
                         }
                     }
                     .frame(maxWidth: 520)
@@ -516,14 +528,20 @@ private struct OnboardingFlowView: View {
                 Button {
                     settings.completeOnboarding()
                 } label: {
-                    Text(settings.t("SalahPath öffnen", "SalahPath'i aç"))
-                        .font(.headline.bold())
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 13, style: .continuous)
+                            .fill(SalahTheme.navigationTeal)
+                        Text(settings.t("SalahPath öffnen", "SalahPath'i aç"))
+                            .font(.headline.bold())
+                            .foregroundStyle(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(.white)
-                .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 13))
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
             }
         }
     }
