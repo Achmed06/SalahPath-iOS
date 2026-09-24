@@ -460,22 +460,59 @@ private struct DailyDuaEntry {
     let trMeaning: String
     let repetition: String?
     let source: String
+    let audioSurah: Int
+    let audioAyah: Int
 }
 
 private enum DailyDuaStore {
     static let items: [DailyDuaEntry] = [
-        .init(deTitle: "Rabbana atina", trTitle: "Rabbenâ âtinâ", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.", repetition: nil, source: "Quran 2:201"),
-        .init(deTitle: "Rabbi zidni ilma", trTitle: "Rabbî zidnî ilmâ", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", deMeaning: "Mein Herr, mehre mein Wissen.", trMeaning: "Rabbim, ilmimi artır.", repetition: nil, source: "Quran 20:114 · excerpt"),
-        .init(deTitle: "Hasbunallahu", trTitle: "Hasbünallahu", arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ", transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl", deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.", trMeaning: "Allah bize yeter, O ne güzel vekildir.", repetition: nil, source: "Quran 3:173 · excerpt"),
         .init(
-            deTitle: "Sayyidul Istighfar",
-            trTitle: "Seyyidü'l-istiğfar",
-            arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
-            transliteration: "Allāhumma anta rabbī lā ilāha illā anta, khalaqtanī wa anā ʿabduka, wa anā ʿalā ʿahdika wa waʿdika ma-staṭaʿtu, aʿūdhu bika min sharri mā ṣanaʿtu, abūʾu laka biniʿmatika ʿalayya, wa abūʾu laka bidhanbī, faghfir lī, fa-innahu lā yaghfiru-dh-dhunūba illā anta.",
-            deMeaning: "O Allah, Du bist mein Herr. Du hast mich erschaffen und ich bin Dein Diener. Soweit ich kann, halte ich an meinem Bund mit Dir fest. Ich suche Schutz bei Dir vor dem Schlechten meiner Taten, erkenne Deine Gaben und meine Fehler an und bitte Dich um Vergebung; nur Du vergibst die Sünden.",
-            trMeaning: "Allah'ım, Sen benim Rabbimsin. Beni Sen yarattın, ben Senin kulunum. Gücüm yettiğince ahdine bağlı kalırım. Yaptıklarımın şerrinden Sana sığınır, nimetlerini ve günahımı itiraf ederim. Beni bağışla; günahları ancak Sen bağışlarsın.",
-            repetition: "Morgens / Sabah · Abends / Akşam",
-            source: "Diyanet · Buhârî 6306"
+            deTitle: "Rabbana atina",
+            trTitle: "Rabbenâ âtinâ",
+            arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+            transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār",
+            deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
+            trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.",
+            repetition: nil,
+            source: "Quran 2:201",
+            audioSurah: 2,
+            audioAyah: 201
+        ),
+        .init(
+            deTitle: "Rabbi zidni ilma",
+            trTitle: "Rabbî zidnî ilmâ",
+            arabic: "رَبِّ زِدْنِي عِلْمًا",
+            transliteration: "Rabbi zidnī ʿilmā",
+            deMeaning: "Mein Herr, mehre mein Wissen.",
+            trMeaning: "Rabbim, ilmimi artır.",
+            repetition: nil,
+            source: "Quran 20:114 · excerpt",
+            audioSurah: 20,
+            audioAyah: 114
+        ),
+        .init(
+            deTitle: "Hasbunallahu",
+            trTitle: "Hasbünallahu",
+            arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+            transliteration: "Ḥasbunallāhu wa niʿma-l-wakīl",
+            deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.",
+            trMeaning: "Allah bize yeter, O ne güzel vekildir.",
+            repetition: nil,
+            source: "Quran 3:173 · excerpt",
+            audioSurah: 3,
+            audioAyah: 173
+        ),
+        .init(
+            deTitle: "Freude an Familie und Nachkommen",
+            trTitle: "Aile ve nesil için dua",
+            arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+            transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.",
+            deMeaning: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.",
+            trMeaning: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle.",
+            repetition: nil,
+            source: "Quran 25:74",
+            audioSurah: 25,
+            audioAyah: 74
         )
     ]
 
@@ -488,20 +525,63 @@ private enum DailyDuaStore {
 
 private struct DailyDuaDetailView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
+    @State private var isResolvingAudio = false
+    @State private var audioRequestRevision = 0
+    @State private var resolvedURL: URL?
+
     let dua: DailyDuaEntry
 
     var body: some View {
         ScrollView {
             VStack(spacing: 14) {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(settings.language == .german ? dua.deTitle : dua.trTitle)
-                        .font(.title2.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .center, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(settings.language == .german ? dua.deTitle : dua.trTitle)
+                                .font(.title2.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
 
-                    if let repetition = dua.repetition {
-                        Label(repetition, systemImage: "repeat")
-                            .font(.caption.bold())
-                            .foregroundStyle(SalahTheme.teal)
+                            if let repetition = dua.repetition {
+                                Label(repetition, systemImage: "repeat")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+                        }
+
+                        Spacer()
+
+                        Button {
+                            Task { await toggleAudio() }
+                        } label: {
+                            ZStack {
+                                Circle()
+                                    .fill(SalahTheme.teal)
+                                    .frame(width: 48, height: 48)
+
+                                if isResolvingAudio {
+                                    ProgressView()
+                                        .tint(.white)
+                                } else {
+                                    Image(systemName: isThisDuaPlaying ? "pause.fill" : "play.fill")
+                                        .font(.system(size: 17, weight: .bold))
+                                        .foregroundStyle(.white)
+                                }
+                            }
+                            .contentShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isResolvingAudio)
+                        .accessibilityLabel(settings.t(
+                            isThisDuaPlaying ? "Dua pausieren" : "Dua anhören",
+                            isThisDuaPlaying ? "Duayı duraklat" : "Duayı dinle"
+                        ))
+                    }
+
+                    if let error = audio.lastError {
+                        Label(error, systemImage: "exclamationmark.triangle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -552,6 +632,57 @@ private struct DailyDuaDetailView: View {
         .background(SalahTheme.page)
         .navigationTitle(settings.t("Dua des Tages", "Günün Duası"))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var isThisDuaPlaying: Bool {
+        guard let resolvedURL else { return false }
+        return audio.activeURL == resolvedURL && audio.isPlaying
+    }
+
+    @MainActor
+    private func toggleAudio() async {
+        if let resolvedURL, audio.activeURL == resolvedURL {
+            audio.isPlaying ? audio.pause() : audio.resume()
+            return
+        }
+
+        audioRequestRevision &+= 1
+        let revision = audioRequestRevision
+        let reciter = settings.quranReciter
+        isResolvingAudio = true
+        audio.lastError = nil
+
+        defer {
+            if revision == audioRequestRevision {
+                isResolvingAudio = false
+            }
+        }
+
+        do {
+            let urls = try await QuranAudioResolver.urls(surah: dua.audioSurah, reciter: reciter)
+            guard revision == audioRequestRevision,
+                  reciter == settings.quranReciter else { return }
+
+            let index = dua.audioAyah - 1
+            guard urls.indices.contains(index) else {
+                throw URLError(.resourceUnavailable)
+            }
+
+            let url = urls[index]
+            resolvedURL = url
+            audio.play(
+                url,
+                title: settings.language == .german ? dua.deTitle : dua.trTitle,
+                artist: reciter.title,
+                context: dua.source
+            )
+        } catch {
+            guard revision == audioRequestRevision else { return }
+            audio.lastError = settings.t(
+                "Audio konnte nicht geladen werden. Prüfe die Verbindung und versuche es erneut.",
+                "Ses yüklenemedi. Bağlantıyı kontrol edip tekrar dene."
+            )
+        }
     }
 }
 
