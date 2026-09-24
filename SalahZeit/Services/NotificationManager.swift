@@ -4,7 +4,7 @@ import UserNotifications
 import AVFoundation
 
 @MainActor
-final class NotificationManager {
+final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
     private let center = UNUserNotificationCenter.current()
     private let engine = PrayerEngine()
@@ -15,7 +15,10 @@ final class NotificationManager {
     private var schedulingRevision = 0
     private var adhanPreviewPlayer: AVAudioPlayer?
 
-    private init() {}
+    private override init() {
+        super.init()
+        center.delegate = self
+    }
 
     func requestAuthorization() async -> Bool {
         do {
@@ -246,6 +249,13 @@ final class NotificationManager {
         guard revision != schedulingRevision else { return true }
         center.removePendingNotificationRequests(withIdentifiers: [request.identifier])
         return false
+    }
+
+    nonisolated func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+        [.banner, .list, .sound]
     }
 
     private func format(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
