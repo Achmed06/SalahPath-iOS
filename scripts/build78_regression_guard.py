@@ -121,7 +121,26 @@ for name in required_captures:
     if name not in capture:
         fail(f"visual QA coverage missing: {name}")
 
-# 4) Cleaned navigation/discovery icons must stay vector-backed.
+# 4) Wudu copy + German prayer labels must not regress.
+root_tab = read("SalahZeit/Views/RootTabView.swift")
+for token in (
+    'Die feuchte Hand muss Kopf oder Haar erreichen',
+    'settings.t("Gebetssuren", "Namaz Sûreleri")',
+    'settings.t("Gebetsduas", "Namaz Duaları")',
+    'settings.t("Gebetstexte", "Namaz Metinleri")',
+):
+    if token not in guide and token not in root_tab:
+        fail(f"localized prayer/Wudu regression: missing {token}")
+
+for forbidden in (
+    'settings.t("Namaz-Suren",',
+    'settings.t("Namaz-Duas",',
+    'settings.t("Namaz-Texte",',
+):
+    if forbidden in guide or forbidden in root_tab:
+        fail(f"German UI language regression: found {forbidden}")
+
+# 5) Cleaned navigation/discovery icons must stay vector-backed.
 vector_icons = [
     "sp_icon_achievements",
     "sp_icon_appearance",
