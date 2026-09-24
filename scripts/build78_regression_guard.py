@@ -182,6 +182,9 @@ for token in (
     '"figure.mind.and.body"',
     '"sparkles.rectangle.stack.fill"',
     '"person.crop.circle.fill"',
+    'GlobalAudioMiniPlayer(audio: audio)',
+    'private struct GlobalAudioMiniPlayer: View',
+    'audio.isPlaying ? audio.pause() : audio.resume()',
 ):
     if token not in root_tabs:
         fail(f"native tab icon regression: missing {token}")
@@ -210,6 +213,8 @@ for token in (
     'MPRemoteCommandCenter.shared()',
     'func setPrayerContext(_ text: String?)',
     'MPMediaItemPropertyArtwork',
+    '@Published private(set) var displayTitle = "SalahPath Audio"',
+    '@Published private(set) var displaySubtitle = "SalahPath"',
     'requestContinuationIfAvailable()',
     'queueContinuationDelegate != nil && !continuationRequestInFlight',
     'Array(urls.dropFirst(startIndex))',
