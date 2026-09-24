@@ -75,6 +75,14 @@ jobs:
               f.write(f"SIM_NAME={name}\n")
           PY
 
+      - name: Restore simulator build cache
+        uses: actions/cache@v4
+        with:
+          path: DerivedData
+          key: salahpath-ui-${{ runner.os }}-${{ hashFiles('SalahZeit.xcodeproj/project.pbxproj', 'SalahZeit/**/*.swift') }}
+          restore-keys: |
+            salahpath-ui-${{ runner.os }}-
+
       - name: Build for simulator
         shell: bash
         run: |
@@ -89,6 +97,11 @@ jobs:
 
       - name: Boot and capture reference screens
         shell: bash
+        env:
+          UI_EVENT_NAME: ${{ github.event_name }}
+          UI_HEAD_REF: ${{ github.head_ref }}
+          UI_PR_TITLE: ${{ github.event.pull_request.title }}
+          UI_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           run_timeout() {
             local seconds="$1"
@@ -125,6 +138,31 @@ jobs:
 
           mkdir -p ui-preview
 
+          # Pull requests use focused visual QA. Pushes to main keep the full
+          # release reference capture. This avoids re-rendering 30+ screens
+          # for a one-screen fix while preserving full release coverage.
+          if [ "$UI_EVENT_NAME" = "workflow_dispatch" ]; then
+            CAPTURE_MODE="full"
+          else
+            CAPTURE_MODE="core"
+            if [ "$UI_EVENT_NAME" = "pull_request" ]; then
+              UI_HINT="$UI_HEAD_REF $UI_PR_TITLE"
+            else
+              UI_HINT="$UI_COMMIT_MESSAGE"
+            fi
+            case "$UI_HINT" in
+              *"[full-ui]"*|*"[release-ui]"*) CAPTURE_MODE="full" ;;
+              *tracker*|*Tracker*) CAPTURE_MODE="tracker" ;;
+              *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
+              *quran*|*Quran*) CAPTURE_MODE="quran" ;;
+              *qibla*|*Qibla*) CAPTURE_MODE="qibla" ;;
+              *namaz*|*Namaz*|*prayer*|*Prayer*) CAPTURE_MODE="prayer" ;;
+              *icon*|*Icon*|*discover*|*Discover*) CAPTURE_MODE="icons" ;;
+              *) CAPTURE_MODE="core" ;;
+            esac
+          fi
+          echo "UI capture mode: $CAPTURE_MODE"
+
           capture() {
             SCREEN="$1"
             NAME="$2"
@@ -149,52 +187,93 @@ jobs:
             run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-B78-TR-Home.png
-          capture quran SalahPath-v3.62-B78-TR-Quran.png
-          capture dhikr SalahPath-v3.62-B78-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-B78-TR-Namaz.png
-          capture times SalahPath-v3.62-B78-TR-PrayerTimes.png
-          capture quran-page SalahPath-v3.62-B78-TR-QuranPage1.png
-          capture prayer-tracker SalahPath-v3.62-B78-TR-PrayerTracker.png
-          capture namaz-howto SalahPath-v3.62-B78-TR-PrayerHowTo.png
-          capture wudu SalahPath-v3.62-B78-TR-Wudu.png
-          capture ghusl SalahPath-v3.62-B78-TR-Ghusl.png
-          capture qibla SalahPath-v3.62-B78-TR-Qibla.png
-          capture settings SalahPath-v3.62-B78-TR-Settings.png
-          capture more SalahPath-v3.62-B78-TR-More.png
+          if [ "$CAPTURE_MODE" = "tracker" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
+          elif [ "$CAPTURE_MODE" = "wudu" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture wudu SalahPath-v3.62-B78-DE-Wudu.png
+            capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+            capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
+            capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
+            capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
+          elif [ "$CAPTURE_MODE" = "quran" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture quran SalahPath-v3.62-B78-DE-Quran.png
+            capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+          elif [ "$CAPTURE_MODE" = "qibla" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+          elif [ "$CAPTURE_MODE" = "prayer" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+            capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
+            capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
+            capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
+            capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+          elif [ "$CAPTURE_MODE" = "icons" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture home SalahPath-v3.62-B78-DE-Home.png
+            capture more SalahPath-v3.62-B78-DE-More.png
+            capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+          elif [ "$CAPTURE_MODE" = "core" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture home SalahPath-v3.62-B78-DE-Home.png
+            capture quran SalahPath-v3.62-B78-DE-Quran.png
+            capture namaz SalahPath-v3.62-B78-DE-Namaz.png
+            capture more SalahPath-v3.62-B78-DE-More.png
+          else
+            capture home  SalahPath-v3.62-B78-TR-Home.png
+            capture quran SalahPath-v3.62-B78-TR-Quran.png
+            capture dhikr SalahPath-v3.62-B78-TR-Dhikr.png
+            capture namaz SalahPath-v3.62-B78-TR-Namaz.png
+            capture times SalahPath-v3.62-B78-TR-PrayerTimes.png
+            capture quran-page SalahPath-v3.62-B78-TR-QuranPage1.png
+            capture prayer-tracker SalahPath-v3.62-B78-TR-PrayerTracker.png
+            capture namaz-howto SalahPath-v3.62-B78-TR-PrayerHowTo.png
+            capture wudu SalahPath-v3.62-B78-TR-Wudu.png
+            capture ghusl SalahPath-v3.62-B78-TR-Ghusl.png
+            capture qibla SalahPath-v3.62-B78-TR-Qibla.png
+            capture settings SalahPath-v3.62-B78-TR-Settings.png
+            capture more SalahPath-v3.62-B78-TR-More.png
 
-          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
 
-          capture home  SalahPath-v3.62-B78-DE-Home.png
-          capture quran SalahPath-v3.62-B78-DE-Quran.png
-          capture dhikr SalahPath-v3.62-B78-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-B78-DE-Namaz.png
-          capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
-          capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
-          capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
-          capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
-          capture wudu SalahPath-v3.62-B78-DE-Wudu.png
-          capture ghusl SalahPath-v3.62-B78-DE-Ghusl.png
-          capture qibla SalahPath-v3.62-B78-DE-Qibla.png
-          capture settings SalahPath-v3.62-B78-DE-Settings.png
-          capture more SalahPath-v3.62-B78-DE-More.png
-          capture onboarding SalahPath-v3.62-B78-DE-Onboarding.png
-          capture daily-dua SalahPath-v3.62-B78-DE-DailyDua.png
-          capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
-          capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
-          capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
-          capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
-          capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
-          capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
-          capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
+            capture home  SalahPath-v3.62-B78-DE-Home.png
+            capture quran SalahPath-v3.62-B78-DE-Quran.png
+            capture dhikr SalahPath-v3.62-B78-DE-Dhikr.png
+            capture namaz SalahPath-v3.62-B78-DE-Namaz.png
+            capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
+            capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+            capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
+            capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+            capture wudu SalahPath-v3.62-B78-DE-Wudu.png
+            capture ghusl SalahPath-v3.62-B78-DE-Ghusl.png
+            capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+            capture settings SalahPath-v3.62-B78-DE-Settings.png
+            capture more SalahPath-v3.62-B78-DE-More.png
+            capture onboarding SalahPath-v3.62-B78-DE-Onboarding.png
+            capture daily-dua SalahPath-v3.62-B78-DE-DailyDua.png
+            capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
+            capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
+            capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+            capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
+            capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
+            capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
 
-          # Render the same critical Salah steps for the female learning mode.
-          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
-          capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
-          capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
-          capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
-          capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
-          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
+            capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
+            capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+          fi
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v7

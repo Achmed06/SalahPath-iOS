@@ -80,7 +80,10 @@ home = read("SalahZeit/Views/HomeView.swift")
 tracker_tokens = [
     "static let prayerTrackerDidChange",
     "static let requiredKinds: [PrayerKind] = [.fajr, .dhuhr, .asr, .maghrib, .isha]",
-    "UserDefaults.standard.set(Array(current).sorted(), forKey: key(for: date))",
+    "UserDefaults.standard.set(Array(current).sorted(), forKey: key(for: day))",
+    "guard day <= today else { return false }",
+    "static func setPaused(_ paused: Bool, on date: Date)",
+    "guard day <= today else { return }",
     "NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)",
     "static func completedCount(on date: Date) -> Int",
     "static func streak(upTo date: Date) -> Int",
