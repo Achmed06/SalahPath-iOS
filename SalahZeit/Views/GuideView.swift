@@ -8073,6 +8073,10 @@ private final class QuranStore: ObservableObject {
         let transliterated: SurahData?
     }
 
+    func loadArabicSurah(_ number: Int) async throws -> SurahData {
+        try await fetch(number: number, edition: "quran-uthmani")
+    }
+
     func loadSurahReference(_ number:Int) async throws -> SurahReferenceBundle {
         async let arabic = fetch(number:number, edition:"quran-uthmani")
         async let turkish: SurahData? = try? fetch(number:number, edition:"tr.diyanet")
@@ -8986,7 +8990,14 @@ private final class QuranPageStore: ObservableObject {
         let translationEdition = language == .german ? "de.bubenheim" : "tr.diyanet"
 
         do {
-            async let arabicPage = fetch(page: page, edition: "quran-uthmani")
+            let arabicResult = try await fetch(page: page, edition: "quran-uthmani")
+            guard revision == loadRevision else { return }
+
+            // Arabic is bundled locally. Publish it immediately so a slow or offline
+            // translation request can never leave the Mushaf page visually empty.
+            arabic = arabicResult
+            error = nil
+
             async let translatedPage: QuranPageData? = includeTranslation
                 ? (try? fetch(page: page, edition: translationEdition))
                 : nil
@@ -8994,17 +9005,14 @@ private final class QuranPageStore: ObservableObject {
                 ? (try? fetch(page: page, edition: "en.transliteration"))
                 : nil
 
-            let arabicResult = try await arabicPage
             let translatedResult = await translatedPage
             let transliteratedResult = await transliteratedPage
 
             guard revision == loadRevision else { return }
-            arabic = arabicResult
             translation = translatedResult
             transliteration = transliteratedResult
             translationUnavailable = includeTranslation && translatedResult == nil
             transliterationUnavailable = includeTransliteration && transliteratedResult == nil
-            error = nil
         } catch {
             guard revision == loadRevision else { return }
             arabic = nil
@@ -10516,10 +10524,17 @@ private struct QuranSurahView: View {
         contentWarning = nil
 
         do {
+            let arabicResult = try await store.loadArabicSurah(surah.number)
+            guard revision == contentLoadRevision else { return }
+
+            // The Arabic surah is local and must render immediately. Network-backed
+            // translations/transliteration are enhancements, never blockers.
+            arabic = arabicResult
+            error = nil
+
             let result = try await store.loadSurahReference(surah.number)
             guard revision == contentLoadRevision else { return }
 
-            arabic = result.arabic
             turkishTranslation = result.turkish
             germanTranslation = result.german
             transliteration = result.transliterated
