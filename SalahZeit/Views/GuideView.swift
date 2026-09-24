@@ -8295,7 +8295,7 @@ struct QuranJuzQAView: View {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
                 ContentUnavailableView(
-                    settings.t("Cüz konnten nicht geladen werden", "Cüzler yüklenemedi"),
+                    settings.t("Juz konnten nicht geladen werden", "Cüzler yüklenemedi"),
                     systemImage: "wifi.exclamationmark",
                     description: Text(error)
                 )
@@ -8701,7 +8701,7 @@ struct QuranView: View {
                                 NavigationLink {
                                     QuranJuzLandingView(chapters: store.chapters)
                                 } label: {
-                                    quranAction(icon: "text.book.closed", title: settings.t("Cüz", "Cüz"))
+                                    quranAction(icon: "text.book.closed", title: settings.t("Juz", "Cüz"))
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -10063,12 +10063,12 @@ private struct QuranJuzLandingView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("30 Cüz des Quran", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
+                    Label(settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "Tippe auf einen Cüz. SalahPath öffnet direkt die Ayah, an der dieser Cüz beginnt. Von dort kannst du normal weiterlesen, hören und Lesezeichen setzen.",
+                        "Tippe auf einen Juz. SalahPath öffnet direkt die Ayah, an der dieser Juz beginnt. Von dort kannst du normal weiterlesen, hören und Lesezeichen setzen.",
                         "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı ayeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
                     ))
                     .font(.footnote)
@@ -10078,7 +10078,7 @@ private struct QuranJuzLandingView: View {
                 .padding(.vertical, 4)
             }
 
-            Section(settings.t("Cüz auswählen", "Cüz seç")) {
+            Section(settings.t("Juz auswählen", "Cüz seç")) {
                 ForEach(QuranJuzStart.all) { juz in
                     if let chapter = chapters.first(where: { $0.number == juz.surah }) {
                         NavigationLink {
@@ -10092,7 +10092,7 @@ private struct QuranJuzLandingView: View {
                                     .background(SalahTheme.navigationTeal, in: Circle())
 
                                 VStack(alignment: .leading, spacing: 3) {
-                                    Text(settings.t("Cüz \(juz.number)", "\(juz.number). Cüz"))
+                                    Text(settings.t("Juz \(juz.number)", "\(juz.number). Cüz"))
                                         .font(.headline)
                                         .foregroundStyle(SalahTheme.ink)
 
@@ -10110,7 +10110,7 @@ private struct QuranJuzLandingView: View {
                             .padding(.vertical, 3)
                         }
                         .accessibilityLabel(settings.t(
-                            "Cüz \(juz.number), beginnt bei \(chapter.englishName), Vers \(juz.ayah)",
+                            "Juz \(juz.number), beginnt bei \(chapter.englishName), Vers \(juz.ayah)",
                             "\(juz.number). Cüz, \(chapter.englishName) suresi \(juz.ayah). ayette başlar"
                         ))
                     }
@@ -10119,7 +10119,7 @@ private struct QuranJuzLandingView: View {
 
             Section {
                 Text(settings.t(
-                    "Die Cüz-Einteilung ist eine Leseeinteilung des Quran in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
+                    "Die Juz-Einteilung ist eine Leseeinteilung des Quran in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
                     "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sure ve ayet numaralarını değiştirmez."
                 ))
                 .font(.footnote)
@@ -10128,7 +10128,7 @@ private struct QuranJuzLandingView: View {
         }
         .scrollContentBackground(.hidden)
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Cüz / Juz", "Cüz"))
+        .navigationTitle(settings.t("Juz", "Cüz"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
