@@ -178,6 +178,13 @@ jobs:
           capture qibla SalahPath-v3.62-B78-DE-Qibla.png
           capture settings SalahPath-v3.62-B78-DE-Settings.png
           capture more SalahPath-v3.62-B78-DE-More.png
+          capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
+          capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
+          capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
+          capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+          capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
+          capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
+          capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v7
