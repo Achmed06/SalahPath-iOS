@@ -1,4 +1,4 @@
-name: Debug prayer alpha rows
+name: Debug prayer alpha rows # color-boundary
 
 on:
   push:
