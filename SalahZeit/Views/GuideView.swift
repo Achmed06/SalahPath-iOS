@@ -5831,7 +5831,7 @@ private struct ShortSurahAudio: Identifiable {
 
 struct ShortSurahLearningView: View {
     @EnvironmentObject private var settings: SettingsStore
-    @StateObject private var audio = RemoteAudioPlayer()
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
     @State private var loadingSurah: Int?
     @State private var audioRequestGeneration = 0
     @AppStorage("surahRepeatCount") private var repeatCount = 1
@@ -5919,7 +5919,6 @@ struct ShortSurahLearningView: View {
         .onDisappear {
             audioRequestGeneration &+= 1
             loadingSurah = nil
-            audio.stop()
         }
     }
 
@@ -5946,7 +5945,10 @@ struct ShortSurahLearningView: View {
             }
 
             audio.playQueue(
-                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 }
+                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 },
+                title: item.latinName,
+                artist: reciter.title,
+                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
@@ -8816,7 +8818,7 @@ private enum QuranBookmarkStore {
 struct QuranView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var store = QuranStore()
-    @StateObject private var previewAudio = RemoteAudioPlayer()
+    @ObservedObject private var previewAudio = RemoteAudioPlayer.shared
     @State private var languageTab = 0
     @State private var search = ""
     @State private var previewAudioURLs: [URL] = []
@@ -9230,7 +9232,6 @@ struct QuranView: View {
         .onDisappear {
             previewAudioRequestGeneration &+= 1
             isResolvingPreviewAudio = false
-            previewAudio.stop()
         }
         .tint(SalahTheme.teal)
     }
@@ -9281,10 +9282,15 @@ struct QuranView: View {
         }
 
         if !previewAudioURLs.isEmpty {
-            if previewAudio.queueCount == previewAudioURLs.count, previewAudio.activeURL != nil {
+            if let active = previewAudio.activeURL, previewAudioURLs.contains(active) {
                 previewAudio.resume()
             } else {
-                previewAudio.playQueue(previewAudioURLs)
+                previewAudio.playQueue(
+                    previewAudioURLs,
+                    title: "Al-Fatiha",
+                    artist: settings.quranReciter.title,
+                    context: settings.t("Quran-Vorschau", "Kur'an önizleme")
+                )
             }
             return
         }
@@ -9300,7 +9306,12 @@ struct QuranView: View {
                   reciter == settings.quranReciter else { return }
 
             previewAudioURLs = urls
-            previewAudio.playQueue(urls)
+            previewAudio.playQueue(
+                urls,
+                title: "Al-Fatiha",
+                artist: reciter.title,
+                context: settings.t("Quran-Vorschau", "Kur'an önizleme")
+            )
         } catch {
             guard generation == previewAudioRequestGeneration else { return }
             previewAudio.lastError = settings.t(
@@ -9667,7 +9678,7 @@ private final class QuranPageStore: ObservableObject {
 struct QuranPageReaderView: View {
     @EnvironmentObject private var settings: SettingsStore
     @StateObject private var store = QuranPageStore()
-    @StateObject private var audio = RemoteAudioPlayer()
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
     @State private var bookmarkedTokens = QuranBookmarkStore.tokens()
     @State private var audioURLsBySurah: [String: [URL]] = [:]
     @State private var resolvingAyahNumber: Int?
@@ -10005,7 +10016,6 @@ struct QuranPageReaderView: View {
         .onDisappear {
             audioRequestGeneration &+= 1
             resolvingAyahNumber = nil
-            audio.stop()
         }
     }
 
@@ -10641,7 +10651,7 @@ private struct QuranSurahView: View {
     let initialAyah: Int?
 
     @StateObject private var store = QuranStore()
-    @StateObject private var audio = RemoteAudioPlayer()
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
     @State private var arabic: SurahData?
     @State private var turkishTranslation: SurahData?
     @State private var germanTranslation: SurahData?
@@ -10687,7 +10697,6 @@ private struct QuranSurahView: View {
                 contentLoadRevision &+= 1
                 audioLoadRevision &+= 1
                 isResolvingAudio = false
-                audio.stop()
             }
         }
     }
@@ -11046,10 +11055,15 @@ private struct QuranSurahView: View {
 
         if audio.isPlaying {
             audio.pause()
-        } else if audio.queueCount == resolvedAudioURLs.count, audio.activeURL != nil {
+        } else if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
             audio.resume()
         } else {
-            audio.playQueue(resolvedAudioURLs)
+            audio.playQueue(
+                resolvedAudioURLs,
+                title: surah.englishName,
+                artist: settings.quranReciter.title,
+                context: settings.t("Quran · Sura \(surah.number)", "Kur'an · \(surah.number). sûre")
+            )
         }
     }
 
