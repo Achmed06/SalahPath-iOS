@@ -2022,12 +2022,64 @@ struct PrayerTimesOverviewView: View {
 
 private struct ReferencePosterQiblaArt: View {
     var body: some View {
-        Image("ref_dash_qibla")
-            .resizable()
-            .scaledToFit()
-            .padding(20)
+        GeometryReader { proxy in
+            let size = min(proxy.size.width, proxy.size.height)
+            let center = CGPoint(x: proxy.size.width * 0.50, y: proxy.size.height * 0.50)
+
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [SalahTheme.softTeal, SalahTheme.cream],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: size * 0.82, height: size * 0.82)
+
+                Circle()
+                    .stroke(SalahTheme.gold.opacity(0.78), lineWidth: max(2, size * 0.018))
+                    .frame(width: size * 0.66, height: size * 0.66)
+
+                ForEach(0..<8, id: \.self) { index in
+                    Capsule()
+                        .fill(index == 0 ? SalahTheme.gold : SalahTheme.deepTeal.opacity(0.50))
+                        .frame(width: size * 0.018, height: index % 2 == 0 ? size * 0.105 : size * 0.072)
+                        .offset(y: -size * 0.285)
+                        .rotationEffect(.degrees(Double(index) * 45))
+                }
+
+                Path { p in
+                    p.move(to: CGPoint(x: center.x, y: center.y - size * 0.24))
+                    p.addLine(to: CGPoint(x: center.x - size * 0.07, y: center.y + size * 0.05))
+                    p.addLine(to: CGPoint(x: center.x, y: center.y + size * 0.015))
+                    p.addLine(to: CGPoint(x: center.x + size * 0.07, y: center.y + size * 0.05))
+                    p.closeSubpath()
+                }
+                .fill(SalahTheme.teal)
+                .rotationEffect(.degrees(34))
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: size * 0.035, style: .continuous)
+                        .fill(SalahTheme.deepTeal)
+                        .frame(width: size * 0.25, height: size * 0.20)
+
+                    Rectangle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: size * 0.25, height: size * 0.035)
+                        .offset(y: -size * 0.035)
+
+                    RoundedRectangle(cornerRadius: size * 0.008)
+                        .fill(SalahTheme.gold.opacity(0.88))
+                        .frame(width: size * 0.045, height: size * 0.070)
+                        .offset(y: size * 0.042)
+                }
+                .offset(y: size * 0.09)
+            }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .accessibilityHidden(true)
+        }
+        .padding(12)
+        .accessibilityHidden(true)
     }
 }
 
