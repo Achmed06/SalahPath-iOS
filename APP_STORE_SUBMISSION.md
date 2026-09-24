@@ -66,7 +66,7 @@ The project declares `ITSAppUsesNonExemptEncryption = NO`. Current network encry
 
 ## Content rights and attribution
 
-The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`. Bundled audio provenance is recorded in `AUDIO_LICENSES.md`.
+The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`. The Arabic Uthmani Quran corpus is also bundled locally for offline page reading; its exact validated source hash is recorded in `qa/quran-text-hash.txt` and the app keeps visible AlQuran.cloud / Islamic Network attribution. Bundled audio provenance is recorded in `AUDIO_LICENSES.md`.
 
 The current build uses AlQuran.cloud / Islamic Network for Quran text/translations/recitations and visibly attributes the service, Diyanet, Bubenheim & Elyas, and the selected reciter. AlQuran.cloud's terms reviewed on 21 September 2026 support the current free/non-paywalled use while retaining the underlying rights with translators and reciters/rightsholders. If monetisation or a paywall is introduced, repeat the rights review before release.
 
