@@ -5028,6 +5028,11 @@ actor QuranAudioCache {
 }
 
 @MainActor
+protocol RemoteAudioPlayerQueueContinuation: AnyObject {
+    func remoteAudioPlayerNeedsContinuation(_ player: RemoteAudioPlayer, sessionID: Int)
+}
+
+@MainActor
 final class RemoteAudioPlayer: ObservableObject {
     static let shared = RemoteAudioPlayer()
 
@@ -5050,6 +5055,8 @@ final class RemoteAudioPlayer: ObservableObject {
     private var endObserver: NSObjectProtocol?
     private var failedObserver: NSObjectProtocol?
     private var remoteCommandTargets: [Any] = []
+    private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
+    private(set) var queueSessionID = 0
 
     private var mediaTitle = "SalahPath Audio"
     private var mediaArtist = "SalahPath"
@@ -5099,7 +5106,8 @@ final class RemoteAudioPlayer: ObservableObject {
         _ urls: [URL],
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
-        context: String? = nil
+        context: String? = nil,
+        continuation: RemoteAudioPlayerQueueContinuation? = nil
     ) {
         let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
         guard !cleaned.isEmpty else {
@@ -5117,6 +5125,8 @@ final class RemoteAudioPlayer: ObservableObject {
         let trimmedContext = context?.trimmingCharacters(in: .whitespacesAndNewlines)
         mediaContext = (trimmedContext?.isEmpty == false) ? trimmedContext : nil
 
+        queueSessionID &+= 1
+        queueContinuationDelegate = continuation
         queueURLs = cleaned
         queueCount = cleaned.count
         queueIndex = 0
@@ -5136,6 +5146,55 @@ final class RemoteAudioPlayer: ObservableObject {
         queueIndex -= 1
         updateRemoteCommandAvailability()
         loadCurrentAndPlay()
+    }
+
+    func appendContinuation(
+        _ urls: [URL],
+        expectedSessionID: Int,
+        title: String? = nil,
+        context: String? = nil
+    ) {
+        guard expectedSessionID == queueSessionID,
+              !queueURLs.isEmpty,
+              queueIndex == queueURLs.count - 1 else { return }
+
+        let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        guard !cleaned.isEmpty else {
+            finishContinuation(expectedSessionID: expectedSessionID)
+            return
+        }
+
+        queueURLs.append(contentsOf: cleaned)
+        queueCount = queueURLs.count
+        if let title, !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            mediaTitle = title
+        }
+        if let context {
+            let trimmed = context.trimmingCharacters(in: .whitespacesAndNewlines)
+            mediaContext = trimmed.isEmpty ? nil : trimmed
+        }
+        updateRemoteCommandAvailability()
+        updateNowPlaying()
+        next()
+    }
+
+    func queueContinuationDidReachFinalSurah(expectedSessionID: Int) {
+        guard expectedSessionID == queueSessionID else { return }
+        queueContinuationDelegate = nil
+    }
+
+    func finishContinuation(expectedSessionID: Int, error: String? = nil) {
+        guard expectedSessionID == queueSessionID else { return }
+        queueContinuationDelegate = nil
+        isLoading = false
+        isPlaying = false
+        if let error, !error.isEmpty {
+            lastError = error
+        }
+        player?.seek(to: .zero)
+        currentTime = 0
+        updateRemoteCommandAvailability()
+        updateNowPlaying()
     }
 
     func pause() {
@@ -5170,6 +5229,8 @@ final class RemoteAudioPlayer: ObservableObject {
 
     func stop() {
         playbackRevision &+= 1
+        queueSessionID &+= 1
+        queueContinuationDelegate = nil
         removeObservers()
         player?.pause()
         player = nil
@@ -5302,6 +5363,15 @@ final class RemoteAudioPlayer: ObservableObject {
                 guard let self else { return }
                 if self.hasNext {
                     self.next()
+                } else if let continuation = self.queueContinuationDelegate {
+                    self.currentTime = 0
+                    self.isPlaying = false
+                    self.isLoading = true
+                    self.updateNowPlaying()
+                    continuation.remoteAudioPlayerNeedsContinuation(
+                        self,
+                        sessionID: self.queueSessionID
+                    )
                 } else {
                     self.player?.seek(to: .zero)
                     self.currentTime = 0
@@ -5596,6 +5666,82 @@ enum QuranAudioResolver {
         }
 
         return urls
+    }
+}
+
+@MainActor
+final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuation {
+    static let shared = QuranContinuousPlaybackCoordinator()
+
+    private var nextSurah: Int?
+    private var reciter: QuranReciter?
+    private var expectedSessionID: Int?
+
+    private init() {}
+
+    func play(
+        urls: [URL],
+        currentSurah: Int,
+        reciter: QuranReciter,
+        title: String,
+        context: String
+    ) {
+        guard (1...114).contains(currentSurah), !urls.isEmpty else { return }
+
+        self.reciter = reciter
+        nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
+
+        let player = RemoteAudioPlayer.shared
+        player.playQueue(
+            urls,
+            title: title,
+            artist: reciter.title,
+            context: context,
+            continuation: nextSurah == nil ? nil : self
+        )
+        expectedSessionID = player.queueSessionID
+    }
+
+    func remoteAudioPlayerNeedsContinuation(_ player: RemoteAudioPlayer, sessionID: Int) {
+        guard expectedSessionID == sessionID,
+              let surah = nextSurah,
+              let reciter else {
+            player.finishContinuation(expectedSessionID: sessionID)
+            return
+        }
+
+        Task { @MainActor [weak self, weak player] in
+            guard let self, let player else { return }
+
+            do {
+                let urls = try await QuranAudioResolver.urls(surah: surah, reciter: reciter)
+                guard self.expectedSessionID == sessionID,
+                      player.queueSessionID == sessionID else { return }
+
+                self.nextSurah = surah < 114 ? surah + 1 : nil
+                player.appendContinuation(
+                    urls,
+                    expectedSessionID: sessionID,
+                    title: "Quran · Sura \(surah)",
+                    context: "Quran · automatisch weiter"
+                )
+
+                if self.nextSurah == nil {
+                    // The final surah is now queued. Stop asking for more after it ends.
+                    player.queueContinuationDidReachFinalSurah(expectedSessionID: sessionID)
+                }
+            } catch {
+                guard self.expectedSessionID == sessionID,
+                      player.queueSessionID == sessionID else { return }
+                self.nextSurah = nil
+                self.reciter = nil
+                self.expectedSessionID = nil
+                player.finishContinuation(
+                    expectedSessionID: sessionID,
+                    error: "Nächste Sura konnte nicht geladen werden / Sonraki sûre yüklenemedi."
+                )
+            }
+        }
     }
 }
 
