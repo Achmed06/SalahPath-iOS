@@ -5508,7 +5508,7 @@ private struct AudioAyahData: Decodable {
     let audio: String?
 }
 
-private enum QuranAudioResolver {
+enum QuranAudioResolver {
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
         guard (1...114).contains(surah) else {
             throw URLError(.badURL)
