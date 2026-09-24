@@ -1047,7 +1047,7 @@ struct PrayerHowToView: View {
             .init(
                 number: "17",
                 pose: .finalSitting,
-                imageKey: "salam_left",
+                imageKey: "salam_right",
                 deTitle: "Salām – zuerst rechts",
                 trTitle: "Selâm – önce sağa",
                 deAction: "Der Oberkörper bleibt nach vorn. Drehe nur Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām einmal.",
@@ -1059,7 +1059,7 @@ struct PrayerHowToView: View {
             .init(
                 number: "18",
                 pose: .finalSitting,
-                imageKey: "salam_right",
+                imageKey: "salam_left",
                 deTitle: "Salām – danach links",
                 trTitle: "Selâm – sonra sola",
                 deAction: "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut. Damit ist das Gebet beendet.",
@@ -1439,7 +1439,7 @@ private struct PrayerSalamVisual: View {
             salamDirection(
                 number: "1",
                 direction: settings.t("RECHTS", "SAĞA"),
-                imageName: "\(prefix)_salam_left",
+                imageName: "\(prefix)_salam_right",
                 arrow: "arrow.right",
                 instruction: settings.t(
                     "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
@@ -1450,7 +1450,7 @@ private struct PrayerSalamVisual: View {
             salamDirection(
                 number: "2",
                 direction: settings.t("LINKS", "SOLA"),
-                imageName: "\(prefix)_salam_right",
+                imageName: "\(prefix)_salam_left",
                 arrow: "arrow.left",
                 instruction: settings.t(
                     "Danach über die Mitte zur EIGENEN linken Schulter drehen und denselben Salām erneut sprechen.",
