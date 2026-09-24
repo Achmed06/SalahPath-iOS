@@ -1,7 +1,7 @@
 # SalahPath content-rights audit
 
 Audit date: 21 September 2026  
-Target build: SalahPath 3.62 (77)
+Target build: SalahPath 3.62 (78)
 
 ## Current Quran integration
 
@@ -35,7 +35,7 @@ Because reciters and translation rightsholders retain their rights, this audit i
 
 ## Bundled Adhan notification audio
 
-Build 77 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
+Build 78 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
 
 This audio is not sourced from AlQuran.cloud and is not subject to the Quran recitation terms above.
 
