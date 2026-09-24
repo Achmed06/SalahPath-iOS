@@ -9514,8 +9514,8 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen und nach dem ersten erfolgreichen Laden lokal gespeichert. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader. Die Mushaf-Navigation umfasst 604 Seiten.",
-                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir ve ilk başarılı yüklemeden sonra cihazda saklanır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır. Mushaf gezinmesi 604 sayfadır."
+                            "Der vollständige arabische Uthmani-Text ist im SalahPath-App-Bundle enthalten und steht für alle 604 Mushaf-Seiten offline bereit. Übersetzung und Transliteration werden bei Bedarf über AlQuran.cloud geladen und lokal gecacht. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader.",
+                            "Tam Uthmani Arapça metin SalahPath uygulamasına gömülüdür ve 604 Mushaf sayfasının tamamı çevrimdışı okunabilir. Meal ve Latin harfli okunuş gerektiğinde AlQuran.cloud üzerinden yüklenir ve yerel olarak önbelleğe alınır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır."
                         ))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -10499,8 +10499,8 @@ private struct QuranSurahView: View {
 
     private var sourceFooter: some View {
         Text(settings.t(
-            "Quran: Uthmani-Text über AlQuran.cloud. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
-            "Kur'an: AlQuran.cloud Uthmani metni. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
+            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
+            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
         ))
         .font(.caption2)
         .foregroundStyle(SalahTheme.mutedInk)
