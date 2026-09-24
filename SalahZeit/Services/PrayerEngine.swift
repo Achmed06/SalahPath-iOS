@@ -73,6 +73,43 @@ struct PrayerEngine {
         return day.prayers.first(where: { $0.kind == .fajr })
     }
 
+    func upcomingPrayers(
+        now: Date,
+        location: CLLocation,
+        settings: SettingsStore,
+        count: Int = 2,
+        calendar: Calendar = .current
+    ) -> [PrayerOccurrence] {
+        let safeCount = min(max(count, 1), 10)
+        var candidates: [PrayerOccurrence] = []
+
+        if let today = calculateDay(
+            for: now,
+            location: location,
+            settings: settings,
+            calendar: calendar
+        ) {
+            candidates.append(contentsOf: today.prayers)
+        }
+
+        if let tomorrowDate = calendar.date(byAdding: .day, value: 1, to: now),
+           let tomorrow = calculateDay(
+               for: tomorrowDate,
+               location: location,
+               settings: settings,
+               calendar: calendar
+           ) {
+            candidates.append(contentsOf: tomorrow.prayers)
+        }
+
+        return Array(
+            candidates
+                .filter { $0.kind != .sunrise && $0.date > now }
+                .sorted { $0.date < $1.date }
+                .prefix(safeCount)
+        )
+    }
+
     func prayerWindow(
         for occurrence: PrayerOccurrence,
         day: PrayerDay,
