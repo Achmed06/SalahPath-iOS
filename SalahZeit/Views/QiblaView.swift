@@ -1,6 +1,7 @@
 import SwiftUI
 import Adhan
 import UIKit
+import CoreLocation
 
 struct QiblaView: View {
     @EnvironmentObject private var locationManager: LocationManager
@@ -8,7 +9,7 @@ struct QiblaView: View {
 
     var body: some View {
         Group {
-            if let location = locationManager.location {
+            if let location = effectiveLocation {
                 let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                 let qibla = Qibla(coordinates: coordinates).direction
                 let qiblaDegrees = qibla.isFinite ? Int(qibla.rounded()) : nil
@@ -169,7 +170,12 @@ struct QiblaView: View {
                         }
 
                         VStack(spacing: 0) {
-                            infoRow(icon: "location.fill", title: locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
+                            infoRow(
+                                icon: "location.fill",
+                                title: isScreenshotQA
+                                    ? settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
+                                    : (locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
+                            )
                             infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
                             infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
                         }
@@ -308,7 +314,19 @@ struct QiblaView: View {
         UIApplication.shared.open(url)
     }
 
+    private var isScreenshotQA: Bool {
+        ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
+    }
+
+    private var effectiveLocation: CLLocation? {
+        if isScreenshotQA {
+            return CLLocation(latitude: 50.9375, longitude: 6.9603)
+        }
+        return locationManager.location
+    }
+
     private var headingAccuracy: Double? {
+        guard !isScreenshotQA else { return nil }
         guard let heading = locationManager.heading,
               heading.headingAccuracy.isFinite,
               heading.headingAccuracy >= 0 else { return nil }
@@ -321,6 +339,7 @@ struct QiblaView: View {
     }
 
     private var currentHeading: Double? {
+        if isScreenshotQA { return 0 }
         guard let heading = locationManager.heading,
               heading.headingAccuracy.isFinite,
               heading.headingAccuracy >= 0,
