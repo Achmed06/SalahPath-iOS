@@ -1,5 +1,5 @@
-# Release UI verification trigger: v3.62 build 77 / v422 / release verify
-name: Capture SalahPath v3.62 Build 77 UI
+# Release UI verification trigger: v3.62 build 78 / v422 / release verify
+name: Capture SalahPath v3.62 Build 78 UI
 
 on:
   workflow_dispatch:
@@ -149,39 +149,39 @@ jobs:
             run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
           }
 
-          capture home  SalahPath-v3.62-B77-TR-Home.png
-          capture quran SalahPath-v3.62-B77-TR-Quran.png
-          capture dhikr SalahPath-v3.62-B77-TR-Dhikr.png
-          capture namaz SalahPath-v3.62-B77-TR-Namaz.png
-          capture times SalahPath-v3.62-B77-TR-PrayerTimes.png
-          capture quran-page SalahPath-v3.62-B77-TR-QuranPage1.png
-          capture prayer-tracker SalahPath-v3.62-B77-TR-PrayerTracker.png
-          capture namaz-howto SalahPath-v3.62-B77-TR-PrayerHowTo.png
-          capture wudu SalahPath-v3.62-B77-TR-Wudu.png
-          capture ghusl SalahPath-v3.62-B77-TR-Ghusl.png
-          capture qibla SalahPath-v3.62-B77-TR-Qibla.png
-          capture settings SalahPath-v3.62-B77-TR-Settings.png
-          capture more SalahPath-v3.62-B77-TR-More.png
+          capture home  SalahPath-v3.62-B78-TR-Home.png
+          capture quran SalahPath-v3.62-B78-TR-Quran.png
+          capture dhikr SalahPath-v3.62-B78-TR-Dhikr.png
+          capture namaz SalahPath-v3.62-B78-TR-Namaz.png
+          capture times SalahPath-v3.62-B78-TR-PrayerTimes.png
+          capture quran-page SalahPath-v3.62-B78-TR-QuranPage1.png
+          capture prayer-tracker SalahPath-v3.62-B78-TR-PrayerTracker.png
+          capture namaz-howto SalahPath-v3.62-B78-TR-PrayerHowTo.png
+          capture wudu SalahPath-v3.62-B78-TR-Wudu.png
+          capture ghusl SalahPath-v3.62-B78-TR-Ghusl.png
+          capture qibla SalahPath-v3.62-B78-TR-Qibla.png
+          capture settings SalahPath-v3.62-B78-TR-Settings.png
+          capture more SalahPath-v3.62-B78-TR-More.png
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
 
-          capture home  SalahPath-v3.62-B77-DE-Home.png
-          capture quran SalahPath-v3.62-B77-DE-Quran.png
-          capture dhikr SalahPath-v3.62-B77-DE-Dhikr.png
-          capture namaz SalahPath-v3.62-B77-DE-Namaz.png
-          capture times SalahPath-v3.62-B77-DE-PrayerTimes.png
-          capture quran-page SalahPath-v3.62-B77-DE-QuranPage1.png
-          capture prayer-tracker SalahPath-v3.62-B77-DE-PrayerTracker.png
-          capture namaz-howto SalahPath-v3.62-B77-DE-PrayerHowTo.png
-          capture wudu SalahPath-v3.62-B77-DE-Wudu.png
-          capture ghusl SalahPath-v3.62-B77-DE-Ghusl.png
-          capture qibla SalahPath-v3.62-B77-DE-Qibla.png
-          capture settings SalahPath-v3.62-B77-DE-Settings.png
-          capture more SalahPath-v3.62-B77-DE-More.png
+          capture home  SalahPath-v3.62-B78-DE-Home.png
+          capture quran SalahPath-v3.62-B78-DE-Quran.png
+          capture dhikr SalahPath-v3.62-B78-DE-Dhikr.png
+          capture namaz SalahPath-v3.62-B78-DE-Namaz.png
+          capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
+          capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+          capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
+          capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+          capture wudu SalahPath-v3.62-B78-DE-Wudu.png
+          capture ghusl SalahPath-v3.62-B78-DE-Ghusl.png
+          capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+          capture settings SalahPath-v3.62-B78-DE-Settings.png
+          capture more SalahPath-v3.62-B78-DE-More.png
 
       - name: Upload UI previews
         uses: actions/upload-artifact@v7
         with:
-          name: SalahPath-v3.62-build77-ui-preview
+          name: SalahPath-v3.62-build78-ui-preview
           path: ui-preview/*.png
           if-no-files-found: error
