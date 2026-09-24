@@ -140,7 +140,24 @@ for forbidden in (
     if forbidden in guide or forbidden in root_tab:
         fail(f"German UI language regression: found {forbidden}")
 
-# 5) Cleaned navigation/discovery icons must stay vector-backed.
+# 5) Prayer/Wudu illustration system must stay unified and direction-safe.
+for token in (
+    'Canvas { graphics, size in',
+    'case "sujud", "second_sujud": drawSujud(&context, size: size)',
+    'case "finger": drawSitting(&context, size: size, turn: 0, showFinger: true)',
+    'if pose == "salam_right" {\n            turn = -0.22',
+    '} else if pose == "salam_left" {\n            turn = 0.22',
+    'switch stepNumber {',
+    'case 7: armVisual(mirrored: false)',
+    'case 8: armVisual(mirrored: true)',
+    'case 12: footVisual(mirrored: false)',
+    'case 13: footVisual(mirrored: true)',
+    'Text("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ")',
+):
+    if token not in guide:
+        fail(f"unified illustration regression: missing {token}")
+
+# 6) Cleaned navigation/discovery icons must stay vector-backed.
 vector_icons = [
     "sp_icon_achievements",
     "sp_icon_appearance",
