@@ -1878,17 +1878,19 @@ private struct WuduInstructionVisual: View {
 
     private var intentionVisual: some View {
         ZStack {
-            Image(systemName: "person.fill")
-                .font(.system(size: 112, weight: .regular))
-                .foregroundStyle(SalahTheme.deepTeal.opacity(0.82))
+            neutralFace
+                .scaleEffect(0.86)
+                .offset(y: 3)
+
             Image(systemName: "heart.fill")
-                .font(.system(size: 31, weight: .bold))
+                .font(.system(size: 27, weight: .bold))
                 .foregroundStyle(SalahTheme.gold)
-                .offset(y: 4)
+                .offset(x: 53, y: 43)
+
             Image(systemName: "drop.fill")
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(SalahTheme.teal)
-                .offset(x: 72, y: -58)
+                .offset(x: 82, y: -63)
         }
     }
 
@@ -2021,38 +2023,63 @@ private struct WuduInstructionVisual: View {
 
     private var neutralFace: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(Color.white.opacity(0.98))
+                .frame(width: 154, height: 104)
+                .offset(y: 82)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .stroke(SalahTheme.deepTeal.opacity(0.28), lineWidth: 2)
+                        .frame(width: 154, height: 104)
+                        .offset(y: 82)
+                }
+
             Circle()
                 .fill(Color(red: 0.86, green: 0.68, blue: 0.52))
                 .frame(width: 132, height: 132)
                 .overlay {
                     Circle()
-                        .stroke(SalahTheme.deepTeal, lineWidth: 5)
+                        .stroke(SalahTheme.deepTeal.opacity(0.72), lineWidth: 4)
                 }
 
             Capsule()
                 .fill(SalahTheme.deepTeal)
-                .frame(width: 72, height: 9)
-                .offset(y: -52)
+                .frame(width: 82, height: 22)
+                .offset(y: -54)
 
             HStack(spacing: 34) {
                 Capsule()
                     .fill(SalahTheme.deepTeal)
-                    .frame(width: 18, height: 5)
+                    .frame(width: 18, height: 4)
                 Capsule()
                     .fill(SalahTheme.deepTeal)
-                    .frame(width: 18, height: 5)
+                    .frame(width: 18, height: 4)
             }
             .offset(y: -16)
 
             Capsule()
-                .fill(SalahTheme.deepTeal.opacity(0.78))
-                .frame(width: 5, height: 19)
-                .offset(y: 4)
+                .fill(SalahTheme.deepTeal.opacity(0.70))
+                .frame(width: 4, height: 17)
+                .offset(y: 3)
 
             Capsule()
                 .fill(SalahTheme.deepTeal)
-                .frame(width: 31, height: 5)
-                .offset(y: 30)
+                .frame(width: 64, height: 23)
+                .offset(y: 42)
+
+            Capsule()
+                .fill(Color(red: 0.86, green: 0.68, blue: 0.52))
+                .frame(width: 35, height: 12)
+                .offset(y: 31)
+
+            HStack(spacing: 118) {
+                Circle()
+                    .fill(Color(red: 0.86, green: 0.68, blue: 0.52))
+                    .frame(width: 18, height: 26)
+                Circle()
+                    .fill(Color(red: 0.86, green: 0.68, blue: 0.52))
+                    .frame(width: 18, height: 26)
+            }
         }
     }
 
