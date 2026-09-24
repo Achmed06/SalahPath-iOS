@@ -9276,22 +9276,20 @@ struct QuranView: View {
 
     @MainActor
     private func togglePreviewAudio() async {
-        if previewAudio.isPlaying {
-            previewAudio.pause()
+        if !previewAudioURLs.isEmpty,
+           let active = previewAudio.activeURL,
+           previewAudioURLs.contains(active) {
+            previewAudio.isPlaying ? previewAudio.pause() : previewAudio.resume()
             return
         }
 
         if !previewAudioURLs.isEmpty {
-            if let active = previewAudio.activeURL, previewAudioURLs.contains(active) {
-                previewAudio.resume()
-            } else {
-                previewAudio.playQueue(
-                    previewAudioURLs,
-                    title: "Al-Fatiha",
-                    artist: settings.quranReciter.title,
-                    context: settings.t("Quran-Vorschau", "Kur'an önizleme")
-                )
-            }
+            previewAudio.playQueue(
+                previewAudioURLs,
+                title: "Al-Fatiha",
+                artist: settings.quranReciter.title,
+                context: settings.t("Quran-Vorschau", "Kur'an önizleme")
+            )
             return
         }
 
@@ -11098,10 +11096,8 @@ private struct QuranSurahView: View {
             return
         }
 
-        if audio.isPlaying {
-            audio.pause()
-        } else if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
-            audio.resume()
+        if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
+            audio.isPlaying ? audio.pause() : audio.resume()
         } else {
             audio.playQueue(
                 resolvedAudioURLs,
