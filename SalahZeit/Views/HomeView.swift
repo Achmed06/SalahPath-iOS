@@ -2016,81 +2016,12 @@ struct PrayerTimesOverviewView: View {
 
 private struct ReferencePosterQiblaArt: View {
     var body: some View {
-        GeometryReader { proxy in
-            let w = proxy.size.width
-            let h = proxy.size.height
-
-            ZStack {
-                // Long diagonal compass needle from the supplied poster.
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.08, y: h * 0.18))
-                    p.addLine(to: CGPoint(x: w * 0.66, y: h * 0.48))
-                    p.addLine(to: CGPoint(x: w * 0.22, y: h * 0.41))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.teal)
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.08, y: h * 0.18))
-                    p.addLine(to: CGPoint(x: w * 0.50, y: h * 0.36))
-                    p.addLine(to: CGPoint(x: w * 0.22, y: h * 0.41))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.gold)
-
-                Circle()
-                    .fill(Color(red: 0.94, green: 0.72, blue: 0.21))
-                    .frame(width: max(5, w * 0.055), height: max(5, w * 0.055))
-                    .position(x: w * 0.28, y: h * 0.33)
-
-                // Kaaba: front, side face, top face and the gold kiswah band.
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.46, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.91))
-                    p.addLine(to: CGPoint(x: w * 0.46, y: h * 0.82))
-                    p.closeSubpath()
-                }
-                .fill(Color.black.opacity(0.92))
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.81))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.91))
-                    p.closeSubpath()
-                }
-                .fill(Color.black.opacity(0.76))
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.46, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.60, y: h * 0.41))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.closeSubpath()
-                }
-                .fill(Color.black.opacity(0.64))
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.47, y: h * 0.60))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.68))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.73))
-                    p.addLine(to: CGPoint(x: w * 0.47, y: h * 0.65))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.gold)
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.79, y: h * 0.68))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.60))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.65))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.73))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.gold.opacity(0.78))
-            }
-            .frame(width: w, height: h)
-        }
+        Image("ref_dash_qibla")
+            .resizable()
+            .scaledToFit()
+            .padding(20)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .accessibilityHidden(true)
     }
 }
 
