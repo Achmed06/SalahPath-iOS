@@ -1,0 +1,103 @@
+name: Clean prayer edge artifacts
+
+on:
+  push:
+    branches:
+      - fix/quran-tracker-visual-pass
+    paths:
+      - .github/workflows/clean-prayer-edge-artifacts.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/quran-tracker-visual-pass
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - run: |
+          cat > /tmp/clean_prayer_edges.py <<'PY'
+          #!/usr/bin/env python3
+          from pathlib import Path
+          from collections import deque
+          from PIL import Image
+          
+          TARGETS = [
+              Path("SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png"),
+              Path("SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png"),
+              Path("SalahZeit/Assets.xcassets/female_intention.imageset/female_intention.png"),
+              Path("SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png"),
+          ]
+          
+          def components(alpha, threshold=8):
+              w,h = alpha.size
+              px = alpha.load()
+              seen=set()
+              out=[]
+              for y in range(h):
+                  for x in range(w):
+                      if (x,y) in seen or px[x,y] <= threshold:
+                          continue
+                      q=deque([(x,y)]); seen.add((x,y)); pts=[]; touches=set()
+                      while q:
+                          cx,cy=q.popleft(); pts.append((cx,cy))
+                          if cx == 0: touches.add("left")
+                          if cx == w-1: touches.add("right")
+                          if cy == 0: touches.add("top")
+                          if cy == h-1: touches.add("bottom")
+                          for nx in (cx-1,cx,cx+1):
+                              for ny in (cy-1,cy,cy+1):
+                                  if nx==cx and ny==cy: continue
+                                  if 0<=nx<w and 0<=ny<h and (nx,ny) not in seen and px[nx,ny] > threshold:
+                                      seen.add((nx,ny)); q.append((nx,ny))
+                      out.append((pts,touches))
+              return out
+          
+          for path in TARGETS:
+              im=Image.open(path).convert("RGBA")
+              alpha=im.getchannel("A")
+              comps=components(alpha)
+              if not comps:
+                  raise RuntimeError(f"No foreground in {path}")
+              comps.sort(key=lambda item: len(item[0]), reverse=True)
+              main=set(comps[0][0])
+              removed=0
+              ap=alpha.load()
+              for pts,touches in comps[1:]:
+                  # Old source sheets leave pale disconnected slivers at image borders.
+                  # Remove only disconnected border-touching components.
+                  if touches.intersection({"left","right","top"}):
+                      for x,y in pts:
+                          ap[x,y]=0
+                          removed += 1
+              im.putalpha(alpha)
+              im.save(path, optimize=True)
+              print(path, "components", len(comps), "removed_pixels", removed)
+          
+          PY
+          python /tmp/clean_prayer_edges.py
+      - name: Commit cleaned images
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png \
+                  SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png \
+                  SalahZeit/Assets.xcassets/female_intention.imageset/female_intention.png \
+                  SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png
+          if git diff --cached --quiet; then
+            echo "No edge artifacts changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove prayer pose edge artifacts"
+          git fetch origin fix/quran-tracker-visual-pass
+          git rebase origin/fix/quran-tracker-visual-pass
+          git push origin HEAD:fix/quran-tracker-visual-pass
