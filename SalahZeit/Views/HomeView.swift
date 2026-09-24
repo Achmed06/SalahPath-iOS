@@ -2290,15 +2290,23 @@ private struct DashboardTile: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            if let suppliedIconName {
-                Image(suppliedIconName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 36, height: 36)
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [SalahTheme.softTeal, SalahTheme.cream],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .frame(width: 42, height: 42)
-            } else {
-                ReferenceDashboardGlyph(kind: icon)
-                    .frame(width: 34, height: 34)
+
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
+                    .frame(width: 42, height: 42)
+
+                ReferenceDashboardGlyph(kind: glyphKind)
+                    .frame(width: 27, height: 27)
             }
 
             Text(title)
@@ -2330,18 +2338,11 @@ private struct DashboardTile: View {
         }
     }
 
-    private var suppliedIconName: String? {
+    private var glyphKind: String {
         switch icon {
-        case "quran": return "sp_icon_quran"
-        case "quran_audio": return "sp_icon_quran_audio"
-        case "fav": return "sp_icon_bookmarks"
-        case "times": return "sp_icon_prayer_times"
-        case "prayer": return "sp_icon_prayer"
-        case "wudu": return "sp_icon_wudu"
-        case "calendar": return "sp_icon_calendar"
-        case "info": return "sp_icon_info"
-        case "settings": return "sp_icon_settings"
-        default: return nil
+        case "quran_audio": return "quran_audio"
+        case "fav": return "bookmarks"
+        default: return icon
         }
     }
 }
@@ -2393,6 +2394,32 @@ struct ReferenceDashboardGlyph: View {
                             .frame(width: max(1.2, w * 0.035), height: h * 0.60)
                             .offset(y: h * 0.08)
                     }
+                }
+            )
+
+        case "quran_audio":
+            return AnyView(
+                ZStack {
+                    ReferenceDashboardGlyph(kind: "quran")
+                        .scaleEffect(0.78)
+                        .offset(x: -3, y: 1)
+                    Image(systemName: "speaker.wave.2.fill")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(SalahTheme.gold)
+                        .offset(x: 10, y: -9)
+                }
+            )
+
+        case "bookmarks":
+            return AnyView(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                        .fill(SalahTheme.teal)
+                        .frame(width: 23, height: 28)
+                    Image(systemName: "bookmark.fill")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(SalahTheme.cream)
+                        .offset(y: -1)
                 }
             )
 
