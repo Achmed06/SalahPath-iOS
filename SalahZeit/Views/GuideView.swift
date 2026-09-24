@@ -1002,7 +1002,7 @@ struct PrayerHowToView: View {
             .pickerStyle(.segmented)
 
             HStack(spacing: 14) {
-                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
+                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_standing" : "female_standing")
                     .frame(width: 104, height: 132)
                     .background(SalahTheme.cream)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -1195,7 +1195,16 @@ private struct PrayerTutorialStepCard: View {
 
     private var imageName: String? {
         guard let key = step.imageKey else { return nil }
-        return "\(audience == .male ? "male" : "female")_\(key)"
+        let resolvedKey: String
+        switch key {
+        case "intention":
+            resolvedKey = "standing"
+        case "sitting":
+            resolvedKey = "final_sitting"
+        default:
+            resolvedKey = key
+        }
+        return "\(audience == .male ? "male" : "female")_\(resolvedKey)"
     }
 
     var body: some View {
@@ -1697,6 +1706,10 @@ private struct WuduInstructionVisual: View {
         assetName == "wudu_leftarm" || assetName == "wudu_rightarm"
     }
 
+    private var bottomArtifactTrim: CGFloat {
+        trimsGeneratedBottomArtifact ? 24 : 0
+    }
+
     var body: some View {
         Image(assetName)
             .resizable()
@@ -1706,13 +1719,14 @@ private struct WuduInstructionVisual: View {
             .mask {
                 VStack(spacing: 0) {
                     Rectangle().fill(.white)
-                    if trimsGeneratedBottomArtifact {
+                    if bottomArtifactTrim > 0 {
                         Rectangle()
                             .fill(.clear)
-                            .frame(height: 10)
+                            .frame(height: bottomArtifactTrim)
                     }
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .accessibilityHidden(true)
     }
 
