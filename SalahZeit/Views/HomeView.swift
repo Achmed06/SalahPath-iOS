@@ -32,7 +32,12 @@ enum PrayerTrackerStore {
 
     @discardableResult
     static func toggle(_ kind: PrayerKind, on date: Date) -> Bool {
-        var current = completedKinds(for: date)
+        let calendar = LocalDay.calendar()
+        let day = calendar.startOfDay(for: date)
+        let today = calendar.startOfDay(for: Date())
+        guard day <= today else { return false }
+
+        var current = completedKinds(for: day)
         let inserted: Bool
         if current.contains(kind.rawValue) {
             current.remove(kind.rawValue)
@@ -41,7 +46,7 @@ enum PrayerTrackerStore {
             current.insert(kind.rawValue)
             inserted = true
         }
-        UserDefaults.standard.set(Array(current).sorted(), forKey: key(for: date))
+        UserDefaults.standard.set(Array(current).sorted(), forKey: key(for: day))
         NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)
         return inserted
     }
@@ -56,9 +61,19 @@ enum PrayerTrackerStore {
         UserDefaults.standard.bool(forKey: pauseKey(for: date))
     }
 
-    static func togglePause(_ date: Date) {
-        UserDefaults.standard.set(!isPaused(date), forKey: pauseKey(for: date))
+    static func setPaused(_ paused: Bool, on date: Date) {
+        let calendar = LocalDay.calendar()
+        let day = calendar.startOfDay(for: date)
+        let today = calendar.startOfDay(for: Date())
+        guard day <= today else { return }
+        guard isPaused(day) != paused else { return }
+
+        UserDefaults.standard.set(paused, forKey: pauseKey(for: day))
         NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)
+    }
+
+    static func togglePause(_ date: Date) {
+        setPaused(!isPaused(date), on: date)
     }
 
     static func completedCount(on date: Date) -> Int {
@@ -115,7 +130,8 @@ struct PrayerTrackerOverviewView: View {
 
     private var displayedWeekDays: [Date] {
         let weekday = calendar.component(.weekday, from: selectedDay)
-        let firstWeekday = calendar.firstWeekday
+        // German and Turkish tracker views are Monday-first regardless of the device region.
+        let firstWeekday = 2
         let delta = (weekday - firstWeekday + 7) % 7
         guard let weekStart = LocalDay.addingDays(-delta, to: selectedDay) else {
             return [selectedDay]
@@ -169,7 +185,9 @@ struct PrayerTrackerOverviewView: View {
 
                     HStack(spacing: 6) {
                         ForEach(displayedWeekDays, id: \.self) { date in
+                            let isFuture = date > today
                             Button {
+                                guard !isFuture else { return }
                                 selectedDate = date
                             } label: {
                                 VStack(spacing: 4) {
@@ -212,6 +230,8 @@ struct PrayerTrackerOverviewView: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
+                            .disabled(isFuture)
+                            .opacity(isFuture ? 0.38 : 1)
                             .accessibilityLabel(trackerDayAccessibility(date))
                         }
                     }
@@ -265,11 +285,8 @@ struct PrayerTrackerOverviewView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel(
                         settings.t(
-                            "\(kind.localizedName(settings.language)), \(done ? "erledigt" : "offen")",
-                            settings.t(
                             "\(kind.localizedName(settings.language)), \(done ? "markiert" : "offen")",
                             "\(kind.localizedName(settings.language)), \(done ? "tamamlandı" : "açık")"
-                        )
                         )
                     )
                 }
@@ -279,9 +296,7 @@ struct PrayerTrackerOverviewView: View {
                 Toggle(isOn: Binding(
                     get: { PrayerTrackerStore.isPaused(selectedDay) },
                     set: { newValue in
-                        if PrayerTrackerStore.isPaused(selectedDay) != newValue {
-                            PrayerTrackerStore.togglePause(selectedDay)
-                        }
+                        PrayerTrackerStore.setPaused(newValue, on: selectedDay)
                         refresh &+= 1
                     }
                 )) {
@@ -366,9 +381,14 @@ struct PrayerTrackerOverviewView: View {
         formatter.dateStyle = .medium
         let count = PrayerTrackerStore.completedCount(on: date)
         let paused = PrayerTrackerStore.isPaused(date)
-        let state = paused
-            ? settings.t("pausiert", "duraklatıldı")
-            : settings.t("\(count) von 5 Gebeten markiert", "5 namazdan \(count) tanesi işaretli")
+        let state: String
+        if date > today {
+            state = settings.t("zukünftiger Tag", "gelecek gün")
+        } else if paused {
+            state = settings.t("pausiert", "duraklatıldı")
+        } else {
+            state = settings.t("\(count) von 5 Gebeten markiert", "5 namazdan \(count) tanesi işaretli")
+        }
         return "\(formatter.string(from: date)), \(state)"
     }
 }
@@ -387,7 +407,10 @@ struct TrackerPauseView: View {
             Section {
                 Toggle(isOn: Binding(
                     get: { PrayerTrackerStore.isPaused(today) },
-                    set: { _ in PrayerTrackerStore.togglePause(today); refresh &+= 1 }
+                    set: { newValue in
+                        PrayerTrackerStore.setPaused(newValue, on: today)
+                        refresh &+= 1
+                    }
                 )) {
                     Label(settings.t("Tracker heute pausieren", "Bugün takibi duraklat"), systemImage: "pause.circle")
                 }
