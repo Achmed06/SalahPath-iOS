@@ -133,6 +133,11 @@ struct SalahPathApp: App {
     @ViewBuilder
     private var qaRoot: some View {
         switch ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] {
+        case "home":
+            NavigationStack {
+                HomeView()
+                    .toolbar { referenceQAToolbar }
+            }
         case "quran":
             NavigationStack {
                 QuranView()
@@ -169,8 +174,28 @@ struct SalahPathApp: App {
             }
         case "quran-reader":
             NavigationStack { QuranReaderQAView() }
+        case "quran-page":
+            NavigationStack { QuranPageReaderView(page: 1) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
+        case "namaz-sitting":
+            NavigationStack { PrayerHowToView(initialStepIndex: 9) }
+        case "namaz-finger":
+            NavigationStack { PrayerHowToView(initialStepIndex: 15) }
+        case "namaz-salam":
+            NavigationStack { PrayerHowToView(initialStepIndex: 16) }
+        case "wudu":
+            NavigationStack { WuduGuideView() }
+        case "wudu-arm":
+            NavigationStack { WuduGuideView(initialStepIndex: 6) }
+        case "wudu-head":
+            NavigationStack { WuduGuideView(initialStepIndex: 8) }
+        case "wudu-ears":
+            NavigationStack { WuduGuideView(initialStepIndex: 9) }
+        case "wudu-foot":
+            NavigationStack { WuduGuideView(initialStepIndex: 11) }
+        case "ghusl":
+            NavigationStack { GhuslGuideView() }
         case "tasbih":
             NavigationStack { TasbihCounterView() }
         case "dhikr-morning":
@@ -207,6 +232,8 @@ struct SalahPathApp: App {
             NavigationStack { RakatOverviewView() }
         case "hanafi-plan":
             NavigationStack { HanafiPrayerPlanView() }
+        case "prayer-tracker":
+            NavigationStack { PrayerTrackerOverviewView() }
         case "tracker-pause":
             NavigationStack { TrackerPauseView() }
         default:

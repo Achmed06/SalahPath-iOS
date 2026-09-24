@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="cream" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#faf6eb"/>
+      <stop offset="1" stop-color="#eee5cf"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="56" fill="url(#cream)"/>
+  <circle cx="128" cy="128" r="77" fill="#ffffff" opacity=".72" stroke="#1f5f58" stroke-width="9"/>
+  <circle cx="128" cy="128" r="57" fill="none" stroke="#1f5f58" stroke-opacity=".24" stroke-width="2"/>
+  <g fill="#1f5f58">
+    <circle cx="128" cy="47" r="4"/><circle cx="209" cy="128" r="4"/>
+    <circle cx="128" cy="209" r="4"/><circle cx="47" cy="128" r="4"/>
+  </g>
+  <path d="M128 61l18 50-18 17-18-17z" fill="#b8913f"/>
+  <path d="M128 195l-14-48 14-19 14 19z" fill="#1f5f58"/>
+  <g transform="translate(94 103)">
+    <path d="M0 14l34-12 34 12-34 13z" fill="#282828"/>
+    <path d="M0 14l34 13v41L0 56z" fill="#121212"/>
+    <path d="M68 14L34 27v41l34-12z" fill="#202020"/>
+    <path d="M2 31l32 12 32-12v9L34 52 2 40z" fill="#d6ad45"/>
+    <rect x="17" y="40" width="8" height="18" rx="1.5" fill="#b8913f"/>
+  </g>
+</svg>

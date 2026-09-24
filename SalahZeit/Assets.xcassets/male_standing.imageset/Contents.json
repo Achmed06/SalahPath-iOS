@@ -2,8 +2,7 @@
   "images": [
     {
       "filename": "male_standing.png",
-      "idiom": "universal",
-      "scale": "1x"
+      "idiom": "universal"
     }
   ],
   "info": {

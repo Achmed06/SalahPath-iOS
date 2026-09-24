@@ -1,13 +1,15 @@
 {
   "images": [
     {
-      "filename": "sp_icon_growth.png",
-      "idiom": "universal",
-      "scale": "1x"
+      "filename": "sp_icon_growth.svg",
+      "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
   }
 }

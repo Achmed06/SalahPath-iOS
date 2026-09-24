@@ -56,13 +56,13 @@ struct GuideView: View {
 
                 HStack(alignment: .bottom, spacing: 10) {
                     ReferencePrayerPerson(
-                        imageName: "male_intention",
+                        imageName: "male_standing",
                         rugWidth: 120,
                         rugRotation: -1.5
                     )
 
                     ReferencePrayerPerson(
-                        imageName: "female_intention",
+                        imageName: "female_standing",
                         rugWidth: 120,
                         rugRotation: 1.5
                     )
@@ -1002,7 +1002,7 @@ struct PrayerHowToView: View {
             .pickerStyle(.segmented)
 
             HStack(spacing: 14) {
-                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
+                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_standing" : "female_standing")
                     .frame(width: 104, height: 132)
                     .background(SalahTheme.cream)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -1179,6 +1179,13 @@ struct PrayerHowToView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                guard currentStepIndex > 0 else { return }
+                Task { @MainActor in
+                    await Task.yield()
+                    proxy.scrollTo("prayer-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
             .onChange(of: settings.prayerAudience) { _, _ in
                 currentStepIndex = 0
                 proxy.scrollTo("prayer-step-top", anchor: .top)
@@ -1195,7 +1202,14 @@ private struct PrayerTutorialStepCard: View {
 
     private var imageName: String? {
         guard let key = step.imageKey else { return nil }
-        return "\(audience == .male ? "male" : "female")_\(key)"
+        let resolvedKey: String
+        switch key {
+        case "sitting":
+            resolvedKey = "final_sitting"
+        default:
+            resolvedKey = key
+        }
+        return "\(audience == .male ? "male" : "female")_\(resolvedKey)"
     }
 
     var body: some View {
@@ -1697,6 +1711,10 @@ private struct WuduInstructionVisual: View {
         assetName == "wudu_leftarm" || assetName == "wudu_rightarm"
     }
 
+    private var bottomArtifactTrim: CGFloat {
+        trimsGeneratedBottomArtifact ? 24 : 0
+    }
+
     var body: some View {
         Image(assetName)
             .resizable()
@@ -1706,13 +1724,14 @@ private struct WuduInstructionVisual: View {
             .mask {
                 VStack(spacing: 0) {
                     Rectangle().fill(.white)
-                    if trimsGeneratedBottomArtifact {
+                    if bottomArtifactTrim > 0 {
                         Rectangle()
                             .fill(.clear)
-                            .frame(height: 10)
+                            .frame(height: bottomArtifactTrim)
                     }
                 }
             }
+            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .accessibilityHidden(true)
     }
 
@@ -2168,6 +2187,13 @@ struct WuduGuideView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                guard currentStepIndex > 0 else { return }
+                Task { @MainActor in
+                    await Task.yield()
+                    proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
         }
     }
 
@@ -7921,6 +7947,8 @@ actor QuranTextCache {
 
 @MainActor
 private final class QuranStore: ObservableObject {
+    private static var bundledUthmani: QuranFullData?
+
     @Published var chapters:[SurahMeta] = []
     @Published var isLoading = false
     @Published var error:String?
@@ -7930,6 +7958,12 @@ private final class QuranStore: ObservableObject {
         error = nil
         isLoading = true
         defer { isLoading = false }
+
+        if let bundled = try? bundledChapters(),
+           !bundled.isEmpty {
+            chapters = bundled
+            return
+        }
 
         let cacheKey = "chapters-v1.json"
 
@@ -7973,6 +8007,64 @@ private final class QuranStore: ObservableObject {
         }
     }
 
+    private func bundledCorpus() throws -> QuranFullData {
+        if let cached = Self.bundledUthmani {
+            return cached
+        }
+
+        guard let url = Bundle.main.url(forResource: "quran-uthmani", withExtension: "json") else {
+            throw URLError(.fileDoesNotExist)
+        }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        guard data.count <= 4 * 1024 * 1024 else {
+            throw URLError(.dataLengthExceedsMaximum)
+        }
+
+        let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+        guard decoded.data.surahs.count == 114 else {
+            throw URLError(.cannotParseResponse)
+        }
+        Self.bundledUthmani = decoded.data
+        return decoded.data
+    }
+
+    private func bundledChapters() throws -> [SurahMeta] {
+        let full = try bundledCorpus()
+        let chapters = full.surahs.map { surah in
+            SurahMeta(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName,
+                englishNameTranslation: surah.englishNameTranslation ?? surah.englishName,
+                numberOfAyahs: surah.ayahs.count,
+                revelationType: surah.revelationType ?? ""
+            )
+        }
+        return sanitizedChapters(chapters)
+    }
+
+    private func bundledSurah(_ number: Int) throws -> SurahData {
+        let full = try bundledCorpus()
+        guard let surah = full.surahs.first(where: { $0.number == number }) else {
+            throw URLError(.cannotParseResponse)
+        }
+
+        let ayahs = surah.ayahs.map {
+            AyahData(
+                number: $0.number,
+                numberInSurah: $0.numberInSurah,
+                text: $0.text,
+                audio: nil
+            )
+        }
+        return SurahData(
+            number: surah.number,
+            name: surah.name,
+            englishName: surah.englishName,
+            ayahs: ayahs
+        )
+    }
+
     private func sanitizedChapters(_ values: [SurahMeta]) -> [SurahMeta] {
         var seen = Set<Int>()
         var sanitized: [SurahMeta] = []
@@ -8007,6 +8099,10 @@ private final class QuranStore: ObservableObject {
         let transliterated: SurahData?
     }
 
+    func loadArabicSurah(_ number: Int) async throws -> SurahData {
+        try await fetch(number: number, edition: "quran-uthmani")
+    }
+
     func loadSurahReference(_ number:Int) async throws -> SurahReferenceBundle {
         async let arabic = fetch(number:number, edition:"quran-uthmani")
         async let turkish: SurahData? = try? fetch(number:number, edition:"tr.diyanet")
@@ -8027,6 +8123,12 @@ private final class QuranStore: ObservableObject {
     private func fetch(number:Int, edition:String) async throws -> SurahData {
         guard (1...114).contains(number) else {
             throw URLError(.badURL)
+        }
+
+        if edition == "quran-uthmani",
+           let bundled = try? bundledSurah(number),
+           let sanitized = sanitizedSurah(bundled, expectedNumber: number) {
+            return sanitized
         }
 
         let cacheKey = "surah-\(number)-\(edition).json"
@@ -8561,7 +8663,7 @@ struct QuranView: View {
                             .padding(.horizontal, 15)
                             .padding(.top, 17)
                             .padding(.bottom, 8)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .frame(maxWidth: .infinity)
 
                             Divider()
                                 .opacity(0.25)
@@ -8608,7 +8710,6 @@ struct QuranView: View {
                             .padding(.bottom, 6)
                         }
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(0.64, contentMode: .fit)
                         .background(
                             SalahTheme.cream,
                             in: RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -8617,9 +8718,6 @@ struct QuranView: View {
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .stroke(SalahTheme.gold.opacity(0.40), lineWidth: 0.7)
                         }
-
-                        Color.clear
-                            .frame(height: 100)
 
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
@@ -8835,6 +8933,30 @@ private struct QuranPageData: Decodable {
     let ayahs: [QuranPageAyah]
 }
 
+private struct QuranFullResponse: Decodable {
+    let data: QuranFullData
+}
+
+private struct QuranFullData: Decodable {
+    let surahs: [QuranFullSurah]
+}
+
+private struct QuranFullSurah: Decodable {
+    let number: Int
+    let name: String
+    let englishName: String
+    let englishNameTranslation: String?
+    let revelationType: String?
+    let ayahs: [QuranFullAyah]
+}
+
+private struct QuranFullAyah: Decodable {
+    let number: Int
+    let text: String
+    let numberInSurah: Int
+    let page: Int
+}
+
 private struct QuranPageSurah: Decodable {
     let number: Int
     let name: String
@@ -8860,6 +8982,7 @@ private final class QuranPageStore: ObservableObject {
     @Published var isLoading = false
     @Published var error: String?
     private var loadRevision = 0
+    private static var bundledUthmani: QuranFullData?
 
     func load(
         page: Int,
@@ -8893,7 +9016,14 @@ private final class QuranPageStore: ObservableObject {
         let translationEdition = language == .german ? "de.bubenheim" : "tr.diyanet"
 
         do {
-            async let arabicPage = fetch(page: page, edition: "quran-uthmani")
+            let arabicResult = try await fetch(page: page, edition: "quran-uthmani")
+            guard revision == loadRevision else { return }
+
+            // Arabic is bundled locally. Publish it immediately so a slow or offline
+            // translation request can never leave the Mushaf page visually empty.
+            arabic = arabicResult
+            error = nil
+
             async let translatedPage: QuranPageData? = includeTranslation
                 ? (try? fetch(page: page, edition: translationEdition))
                 : nil
@@ -8901,17 +9031,14 @@ private final class QuranPageStore: ObservableObject {
                 ? (try? fetch(page: page, edition: "en.transliteration"))
                 : nil
 
-            let arabicResult = try await arabicPage
             let translatedResult = await translatedPage
             let transliteratedResult = await transliteratedPage
 
             guard revision == loadRevision else { return }
-            arabic = arabicResult
             translation = translatedResult
             transliteration = transliteratedResult
             translationUnavailable = includeTranslation && translatedResult == nil
             transliterationUnavailable = includeTransliteration && transliteratedResult == nil
-            error = nil
         } catch {
             guard revision == loadRevision else { return }
             arabic = nil
@@ -8928,6 +9055,12 @@ private final class QuranPageStore: ObservableObject {
             throw URLError(.badURL)
         }
 
+        if edition == "quran-uthmani",
+           let bundled = try? bundledPage(page: page),
+           let sanitized = sanitizedPage(bundled, expectedPage: page) {
+            return sanitized
+        }
+
         let cacheKey = "page-\(page)-\(edition).json"
 
         if let cached = await QuranTextCache.shared.data(for: cacheKey) {
@@ -8938,29 +9071,148 @@ private final class QuranPageStore: ObservableObject {
             await QuranTextCache.shared.remove(for: cacheKey)
         }
 
-        guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
-            throw URLError(.badURL)
+        do {
+            guard let url = URL(string: "https://api.alquran.cloud/v1/page/\(page)/\(edition)") else {
+                throw URLError(.badURL)
+            }
+
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 20
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+
+            let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
+            guard let sanitized = sanitizedPage(decoded.data, expectedPage: page) else {
+                throw URLError(.cannotParseResponse)
+            }
+
+            await QuranTextCache.shared.store(data, for: cacheKey)
+            return sanitized
+        } catch {
+            let fallback = try await fetchPageFromFullQuran(page: page, edition: edition)
+            guard let sanitized = sanitizedPage(fallback, expectedPage: page) else {
+                throw error
+            }
+            return sanitized
+        }
+    }
+
+    private func bundledPage(page: Int) throws -> QuranPageData {
+        let full: QuranFullData
+        if let cached = Self.bundledUthmani {
+            full = cached
+        } else {
+            guard let url = Bundle.main.url(forResource: "quran-uthmani", withExtension: "json") else {
+                throw URLError(.fileDoesNotExist)
+            }
+            let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+            guard data.count <= 4 * 1024 * 1024 else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+            let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+            guard decoded.data.surahs.count == 114 else {
+                throw URLError(.cannotParseResponse)
+            }
+            Self.bundledUthmani = decoded.data
+            full = decoded.data
         }
 
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 20
-
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse,
-              (200...299).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
+        var pageAyahs: [QuranPageAyah] = []
+        for surah in full.surahs {
+            guard (1...114).contains(surah.number),
+                  !surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                continue
+            }
+            let pageSurah = QuranPageSurah(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName
+            )
+            for ayah in surah.ayahs where ayah.page == page {
+                pageAyahs.append(
+                    QuranPageAyah(
+                        number: ayah.number,
+                        text: ayah.text,
+                        numberInSurah: ayah.numberInSurah,
+                        surah: pageSurah
+                    )
+                )
+            }
         }
-        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
-            throw URLError(.dataLengthExceedsMaximum)
-        }
 
-        let decoded = try JSONDecoder().decode(QuranPageResponse.self, from: data)
-        guard let sanitized = sanitizedPage(decoded.data, expectedPage: page) else {
+        pageAyahs.sort { $0.number < $1.number }
+        guard !pageAyahs.isEmpty else {
             throw URLError(.cannotParseResponse)
         }
+        return QuranPageData(number: page, ayahs: pageAyahs)
+    }
 
-        await QuranTextCache.shared.store(data, for: cacheKey)
-        return sanitized
+    private func fetchPageFromFullQuran(page: Int, edition: String) async throws -> QuranPageData {
+        let fullCacheKey = "quran-full-\(edition).json"
+        let data: Data
+
+        if let cached = await QuranTextCache.shared.data(for: fullCacheKey) {
+            data = cached
+        } else {
+            guard let url = URL(string: "https://api.alquran.cloud/v1/quran/\(edition)") else {
+                throw URLError(.badURL)
+            }
+            var request = URLRequest(url: url)
+            request.timeoutInterval = 30
+            let (downloaded, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            // Full Quran text is larger than one page response, but still bounded.
+            guard downloaded.count <= 24 * 1024 * 1024 else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+            data = downloaded
+            await QuranTextCache.shared.store(downloaded, for: fullCacheKey)
+        }
+
+        let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+        var pageAyahs: [QuranPageAyah] = []
+
+        for surah in decoded.data.surahs {
+            guard (1...114).contains(surah.number),
+                  !surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                continue
+            }
+
+            let pageSurah = QuranPageSurah(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName
+            )
+
+            for ayah in surah.ayahs where ayah.page == page {
+                pageAyahs.append(
+                    QuranPageAyah(
+                        number: ayah.number,
+                        text: ayah.text,
+                        numberInSurah: ayah.numberInSurah,
+                        surah: pageSurah
+                    )
+                )
+            }
+        }
+
+        pageAyahs.sort { $0.number < $1.number }
+        guard !pageAyahs.isEmpty else {
+            throw URLError(.cannotParseResponse)
+        }
+        return QuranPageData(number: page, ayahs: pageAyahs)
     }
 
     private func sanitizedPage(_ value: QuranPageData, expectedPage: Int) -> QuranPageData? {
@@ -9296,8 +9548,8 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Arabischer Uthmani-Text und Übersetzung werden seitenweise über AlQuran.cloud geladen und nach dem ersten erfolgreichen Laden lokal gespeichert. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader. Die Mushaf-Navigation umfasst 604 Seiten.",
-                            "Uthmani Arapça metin ve meal AlQuran.cloud üzerinden sayfa sayfa yüklenir ve ilk başarılı yüklemeden sonra cihazda saklanır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır. Mushaf gezinmesi 604 sayfadır."
+                            "Der vollständige arabische Uthmani-Text ist im SalahPath-App-Bundle enthalten und steht für alle 604 Mushaf-Seiten offline bereit. Übersetzung und Transliteration werden bei Bedarf über AlQuran.cloud geladen und lokal gecacht. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader.",
+                            "Tam Uthmani Arapça metin SalahPath uygulamasına gömülüdür ve 604 Mushaf sayfasının tamamı çevrimdışı okunabilir. Meal ve Latin harfli okunuş gerektiğinde AlQuran.cloud üzerinden yüklenir ve yerel olarak önbelleğe alınır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır."
                         ))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -9306,6 +9558,13 @@ struct QuranPageReaderView: View {
                         .padding(.bottom, 16)
                     }
                 }
+                .background(SalahTheme.page)
+            } else {
+                ProgressView(settings.t(
+                    "Quran-Seite \(page) wird geladen…",
+                    "Kur'an \(page). sayfa yükleniyor…"
+                ))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(SalahTheme.page)
             }
         }
@@ -10274,8 +10533,8 @@ private struct QuranSurahView: View {
 
     private var sourceFooter: some View {
         Text(settings.t(
-            "Quran: Uthmani-Text über AlQuran.cloud. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
-            "Kur'an: AlQuran.cloud Uthmani metni. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
+            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
+            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
         ))
         .font(.caption2)
         .foregroundStyle(SalahTheme.mutedInk)
@@ -10291,10 +10550,17 @@ private struct QuranSurahView: View {
         contentWarning = nil
 
         do {
+            let arabicResult = try await store.loadArabicSurah(surah.number)
+            guard revision == contentLoadRevision else { return }
+
+            // The Arabic surah is local and must render immediately. Network-backed
+            // translations/transliteration are enhancements, never blockers.
+            arabic = arabicResult
+            error = nil
+
             let result = try await store.loadSurahReference(surah.number)
             guard revision == contentLoadRevision else { return }
 
-            arabic = result.arabic
             turkishTranslation = result.turkish
             germanTranslation = result.german
             transliteration = result.transliterated

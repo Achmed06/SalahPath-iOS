@@ -1,11 +1,11 @@
 # SalahPath content-rights audit
 
 Audit date: 21 September 2026  
-Target build: SalahPath 3.62 (77)
+Target build: SalahPath 3.62 (78)
 
 ## Current Quran integration
 
-The current build requests Quran text, translations and recitation audio from AlQuran.cloud / Islamic Network. It uses the edition identifiers `quran-uthmani`, `de.bubenheim`, `tr.diyanet`, and the selectable recitation editions exposed by the service. The app visibly attributes AlQuran.cloud / Islamic Network, Diyanet, Bubenheim & Elyas, and the selected reciter in the Quran reader.
+The current build bundles the validated `quran-uthmani` Arabic corpus locally for reliable offline page reading, and requests translations and recitation audio from AlQuran.cloud / Islamic Network. It uses the edition identifiers `quran-uthmani`, `de.bubenheim`, `tr.diyanet`, and the selectable recitation editions exposed by the service. The app visibly attributes AlQuran.cloud / Islamic Network, Diyanet, Bubenheim & Elyas, and the selected reciter in the Quran reader.
 
 No StoreKit, advertising SDK, analytics SDK, subscription framework or in-app purchase implementation is present in the audited build.
 
@@ -29,13 +29,13 @@ https://community.islamic.network/d/257-commercial-use-of-quran-audio-text-via-y
 
 ## Release decision for the audited build
 
-For the current build, the documented provider terms support the way SalahPath uses the Quran service: reading, streaming and local audio caching are not paywalled, source/translator attribution is present, and the app does not redistribute the files as a separate media product.
+For the current build, the documented provider terms support the way SalahPath uses the Quran service: the Arabic Uthmani text is stored and displayed locally with source attribution, while translations and recitation audio remain non-paywalled service content. The bundled corpus is pinned by SHA-256 and Git blob hash in `qa/quran-text-hash.txt`, and release checks verify that it is shipped unchanged.
 
 Because reciters and translation rightsholders retain their rights, this audit is not a transfer of copyright. If SalahPath later introduces paid Quran access, subscriptions that gate Quran content, advertising tied to Quran access, resale, redistribution outside the app, or a different Quran/audio provider, the rights review must be repeated before release.
 
 ## Bundled Adhan notification audio
 
-Build 77 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
+Build 78 bundles `SalahZeit/Resources/adhan-fajr.caf` and `SalahZeit/Resources/adhan-standard.caf` as optional prayer-time notification sounds. They are 28-second derivatives of the Fajr and Dhuhr recordings in the Internet Archive item “Adhan Recordings from Doha, Qatar”. The source item marks the recordings with Public Domain Mark 1.0. The exact source files, transformations, source SHA-256 hashes and bundled derivative hashes are recorded in `AUDIO_LICENSES.md` and `qa/adhan-audio-hashes.txt`. Release preflight pins the bundled derivatives.
 
 This audio is not sourced from AlQuran.cloud and is not subject to the Quran recitation terms above.
 
