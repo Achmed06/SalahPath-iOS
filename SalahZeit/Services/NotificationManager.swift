@@ -18,6 +18,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     private override init() {
         super.init()
         center.delegate = self
+        installNotificationSoundsIfNeeded()
     }
 
     func requestAuthorization() async -> Bool {
@@ -206,10 +207,56 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     private func adhanSound(fajr: Bool) -> UNNotificationSound {
         let resourceName = fajr ? "adhan-fajr" : "adhan-standard"
         let fileName = fajr ? fajrAdhanSoundFileName : standardAdhanSoundFileName
-        guard Bundle.main.url(forResource: resourceName, withExtension: "caf") != nil else {
+        let bundled = Bundle.main.url(forResource: resourceName, withExtension: "caf")
+        let installed = notificationSoundURL(fileName: fileName)
+        let existsInLibrary = installed.map { FileManager.default.fileExists(atPath: $0.path) } ?? false
+        guard bundled != nil || existsInLibrary else {
             return .default
         }
         return UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
+    }
+
+    private func notificationSoundURL(fileName: String) -> URL? {
+        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("Sounds", isDirectory: true)
+            .appendingPathComponent(fileName, isDirectory: false)
+    }
+
+    private func installNotificationSoundsIfNeeded() {
+        guard let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return
+        }
+
+        let soundsDirectory = library.appendingPathComponent("Sounds", isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(
+                at: soundsDirectory,
+                withIntermediateDirectories: true
+            )
+        } catch {
+            return
+        }
+
+        for resourceName in ["adhan-standard", "adhan-fajr"] {
+            guard let source = Bundle.main.url(forResource: resourceName, withExtension: "caf") else {
+                continue
+            }
+            let destination = soundsDirectory.appendingPathComponent("\(resourceName).caf")
+            do {
+                if FileManager.default.fileExists(atPath: destination.path) {
+                    let sourceSize = (try? source.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -1
+                    let destinationSize = (try? destination.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -2
+                    if sourceSize == destinationSize, sourceSize > 0 {
+                        continue
+                    }
+                    try FileManager.default.removeItem(at: destination)
+                }
+                try FileManager.default.copyItem(at: source, to: destination)
+            } catch {
+                continue
+            }
+        }
     }
 
     private func ensureAuthorization() async -> Bool {
