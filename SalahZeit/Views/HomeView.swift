@@ -2036,21 +2036,22 @@ private struct ReferencePosterQiblaArt: View {
                     .frame(width: compassSize * 0.72, height: compassSize * 0.72)
                     .position(center)
 
-                ForEach(0..<12, id: \.self) { index in
-                    Capsule()
-                        .fill(index % 3 == 0 ? SalahTheme.teal.opacity(0.70) : SalahTheme.teal.opacity(0.24))
-                        .frame(width: index % 3 == 0 ? 2.2 : 1.2, height: index % 3 == 0 ? 10 : 6)
-                        .position(x: center.x, y: center.y - compassSize * 0.44)
-                        .rotationEffect(.degrees(Double(index) * 30), anchor: .init(
-                            x: center.x / max(w, 1),
-                            y: center.y / max(h, 1)
-                        ))
-                }
+                ZStack {
+                    ForEach(0..<12, id: \.self) { index in
+                        Capsule()
+                            .fill(index % 3 == 0 ? SalahTheme.teal.opacity(0.70) : SalahTheme.teal.opacity(0.24))
+                            .frame(width: index % 3 == 0 ? 2.2 : 1.2, height: index % 3 == 0 ? 10 : 6)
+                            .offset(y: -compassSize * 0.44)
+                            .rotationEffect(.degrees(Double(index) * 30))
+                    }
 
-                Text("N")
-                    .font(.system(size: max(7, compassSize * 0.08), weight: .black))
-                    .foregroundStyle(SalahTheme.teal)
-                    .position(x: center.x, y: center.y - compassSize * 0.31)
+                    Text("N")
+                        .font(.system(size: max(7, compassSize * 0.08), weight: .black))
+                        .foregroundStyle(SalahTheme.teal)
+                        .offset(y: -compassSize * 0.31)
+                }
+                .frame(width: compassSize, height: compassSize)
+                .position(center)
 
                 Path { p in
                     let from = CGPoint(x: center.x + compassSize * 0.03, y: center.y - compassSize * 0.02)
