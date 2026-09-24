@@ -1,0 +1,21 @@
+name: Debug prayer alpha rows
+
+on:
+  push:
+    branches:
+      - fix/quran-tracker-visual-pass
+    paths:
+      - .github/workflows/debug-prayer-alpha.yml
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/quran-tracker-visual-pass
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pillow==11.3.0
+      - run: python scripts/debug_prayer_alpha.py
