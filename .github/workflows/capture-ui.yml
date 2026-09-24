@@ -109,7 +109,8 @@ jobs:
 
           xcrun simctl shutdown "$SIM_UDID" || true
           run_timeout 30 xcrun simctl boot "$SIM_UDID"
-          run_timeout 180 xcrun simctl bootstatus "$SIM_UDID" -b
+          run_timeout 240 xcrun simctl bootstatus "$SIM_UDID" -b
+          sleep 5
 
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
@@ -128,9 +129,19 @@ jobs:
             SCREEN="$1"
             NAME="$2"
             run_timeout 20 xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
-            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
-            SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
-              run_timeout 30 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+            if ! SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+                run_timeout 90 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath; then
+              echo "First simulator launch failed for $SCREEN; rebooting simulator and retrying."
+              xcrun simctl shutdown "$SIM_UDID" || true
+              run_timeout 45 xcrun simctl boot "$SIM_UDID" || true
+              run_timeout 240 xcrun simctl bootstatus "$SIM_UDID" -b
+              sleep 5
+              xcrun simctl install "$SIM_UDID" "$APP_PATH"
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+                run_timeout 90 xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+            fi
             if [ "$SCREEN" = "quran-page" ]; then
               sleep 9
             else
