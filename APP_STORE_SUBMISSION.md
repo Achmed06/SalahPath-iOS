@@ -1,6 +1,6 @@
 # SalahPath App Store submission checklist
 
-Prepared for SalahPath v3.62 / build 77 / bundle identifier `com.achmed06.salahpath`.
+Prepared for SalahPath v3.62 / build 78 / bundle identifier `com.achmed06.salahpath`.
 
 ## Store identity
 
@@ -10,7 +10,7 @@ Prepared for SalahPath v3.62 / build 77 / bundle identifier `com.achmed06.salahp
 - Primary category: `Lifestyle`
 - Bundle identifier: `com.achmed06.salahpath`
 - Version: `3.62`
-- Build: `77`
+- Build: `78`
 - Minimum iOS version: `17.0`
 
 ## Required URLs
@@ -26,9 +26,9 @@ SalahPath does not require an account or login.
 
 Location permission is used while the app is in use to calculate prayer times, determine Qibla direction, resolve a nearby locality label, and search for nearby mosques through Apple MapKit. Device-location updates are not intentionally retained as a location history or sent to a SalahPath-operated server. If the user chooses a city or postal code manually, the resolved latitude, longitude, and locality are stored locally so that manual selection persists until the user clears it.
 
-Prayer reminders are local notifications. Build 77 adds optional 28-second custom Adhan sounds exactly at prayer time: a dedicated Fajr recording and a standard Doha recording for Dhuhr, Asr, Maghrib and Isha. Advance reminders keep the normal iOS notification sound. Both are derivatives of the Internet Archive item “Adhan Recordings from Doha, Qatar”, whose source page marks the recordings with Public Domain Mark 1.0; provenance and hashes are recorded in `AUDIO_LICENSES.md`. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
+Prayer reminders are local notifications. Build 78 adds optional 28-second custom Adhan sounds exactly at prayer time: a dedicated Fajr recording and a standard Doha recording for Dhuhr, Asr, Maghrib and Isha. Advance reminders keep the normal iOS notification sound. Both are derivatives of the Internet Archive item “Adhan Recordings from Doha, Qatar”, whose source page marks the recordings with Public Domain Mark 1.0; provenance and hashes are recorded in `AUDIO_LICENSES.md`. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
 
-Quran text, translations, and recitation audio are loaded from AlQuran.cloud / Islamic Network. The app attributes the Quran sources in the reader. A dated rights audit is stored in `CONTENT_RIGHTS_AUDIT.md`.
+The validated Arabic Uthmani Quran corpus is bundled locally from AlQuran.cloud / Islamic Network for offline reading. Translations and recitation audio are requested from the same service and cached where supported. The app attributes the Quran sources in the reader. A dated rights audit is stored in `CONTENT_RIGHTS_AUDIT.md`.
 
 There are no ads, advertising SDKs, analytics SDKs, StoreKit purchases, subscriptions, or cross-app tracking features in the audited build.
 
@@ -68,7 +68,7 @@ The project declares `ITSAppUsesNonExemptEncryption = NO`. Current network encry
 
 The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`. The Arabic Uthmani Quran corpus is also bundled locally for offline page reading; its exact validated source hash is recorded in `qa/quran-text-hash.txt` and the app keeps visible AlQuran.cloud / Islamic Network attribution. Bundled audio provenance is recorded in `AUDIO_LICENSES.md`.
 
-The current build uses AlQuran.cloud / Islamic Network for Quran text/translations/recitations and visibly attributes the service, Diyanet, Bubenheim & Elyas, and the selected reciter. AlQuran.cloud's terms reviewed on 21 September 2026 support the current free/non-paywalled use while retaining the underlying rights with translators and reciters/rightsholders. If monetisation or a paywall is introduced, repeat the rights review before release.
+The current build ships the validated AlQuran.cloud / Islamic Network Uthmani corpus locally and uses the service for translations/recitations; it visibly attributes the service, Diyanet, Bubenheim & Elyas, and the selected reciter. AlQuran.cloud's terms reviewed on 21 September 2026 support the current free/non-paywalled use while retaining the underlying rights with translators and reciters/rightsholders. If monetisation or a paywall is introduced, repeat the rights review before release.
 
 ## Religious-content review
 
