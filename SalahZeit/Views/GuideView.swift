@@ -8878,6 +8878,7 @@ private final class QuranPageStore: ObservableObject {
     @Published var isLoading = false
     @Published var error: String?
     private var loadRevision = 0
+    private static var bundledUthmani: QuranFullData?
 
     func load(
         page: Int,
@@ -8946,6 +8947,12 @@ private final class QuranPageStore: ObservableObject {
             throw URLError(.badURL)
         }
 
+        if edition == "quran-uthmani",
+           let bundled = try? bundledPage(page: page),
+           let sanitized = sanitizedPage(bundled, expectedPage: page) {
+            return sanitized
+        }
+
         let cacheKey = "page-\(page)-\(edition).json"
 
         if let cached = await QuranTextCache.shared.data(for: cacheKey) {
@@ -8987,6 +8994,57 @@ private final class QuranPageStore: ObservableObject {
             }
             return sanitized
         }
+    }
+
+    private func bundledPage(page: Int) throws -> QuranPageData {
+        let full: QuranFullData
+        if let cached = Self.bundledUthmani {
+            full = cached
+        } else {
+            guard let url = Bundle.main.url(forResource: "quran-uthmani", withExtension: "json") else {
+                throw URLError(.fileDoesNotExist)
+            }
+            let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+            guard data.count <= 4 * 1024 * 1024 else {
+                throw URLError(.dataLengthExceedsMaximum)
+            }
+            let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+            guard decoded.data.surahs.count == 114 else {
+                throw URLError(.cannotParseResponse)
+            }
+            Self.bundledUthmani = decoded.data
+            full = decoded.data
+        }
+
+        var pageAyahs: [QuranPageAyah] = []
+        for surah in full.surahs {
+            guard (1...114).contains(surah.number),
+                  !surah.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                  !surah.englishName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                continue
+            }
+            let pageSurah = QuranPageSurah(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName
+            )
+            for ayah in surah.ayahs where ayah.page == page {
+                pageAyahs.append(
+                    QuranPageAyah(
+                        number: ayah.number,
+                        text: ayah.text,
+                        numberInSurah: ayah.numberInSurah,
+                        surah: pageSurah
+                    )
+                )
+            }
+        }
+
+        pageAyahs.sort { $0.number < $1.number }
+        guard !pageAyahs.isEmpty else {
+            throw URLError(.cannotParseResponse)
+        }
+        return QuranPageData(number: page, ayahs: pageAyahs)
     }
 
     private func fetchPageFromFullQuran(page: Int, edition: String) async throws -> QuranPageData {
