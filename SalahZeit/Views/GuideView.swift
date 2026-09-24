@@ -1717,14 +1717,16 @@ private struct WuduInstructionVisual: View {
         if key == "wudu_intention" {
             return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"
         }
-        // Right/left arm use one canonical illustration. The opposite side is
-        // mirrored in Swift so the two Wudu steps can never drift visually.
+        // Right/left arm and foot pairs use one canonical illustration.
+        // The opposite side is mirrored in Swift so paired Wudu steps can
+        // never drift in character, pose, lighting or framing.
         if key == "wudu_rightarm" { return "wudu_leftarm" }
+        if key == "wudu_rightfoot" { return "wudu_leftfoot" }
         return key
     }
 
     private var mirrorsCanonicalAsset: Bool {
-        key == "wudu_rightarm"
+        key == "wudu_rightarm" || key == "wudu_rightfoot"
     }
 
     var body: some View {
