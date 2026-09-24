@@ -209,6 +209,10 @@ for token in (
     'func setPrayerContext(_ text: String?)',
     'Array(urls.dropFirst(startIndex))',
     'Array(resolvedAudioURLs.dropFirst(index))',
+    'final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuation',
+    'func appendContinuation(',
+    'queueContinuationDidReachFinalSurah',
+    'QuranContinuousPlaybackCoordinator.shared.play(',
 ):
     if token not in guide:
         fail(f"background/continuous audio regression: missing {token}")
@@ -230,6 +234,9 @@ for token in (
     'func playAdhanPreviewDirect(fajr: Bool) -> Bool',
     'AVAudioPlayer(contentsOf: url)',
     'scheduleAdhanPreview(settings: SettingsStore, fajr: Bool)',
+    'UNUserNotificationCenterDelegate',
+    'willPresent notification: UNNotification',
+    '[.banner, .list, .sound]',
 ):
     if token not in notification_manager:
         fail(f"Adhan preview regression: missing {token}")
