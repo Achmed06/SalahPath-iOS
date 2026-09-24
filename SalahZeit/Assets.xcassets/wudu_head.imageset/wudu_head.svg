@@ -30,6 +30,4 @@
     <path d="M348 169c0-9 10-20 10-20s10 11 10 20a10 10 0 1 1-20 0z"/>
   </g>
   <path d="M256 58c-38 0-73 14-98 38" fill="none" stroke="#b8913f" stroke-width="5" stroke-linecap="round" stroke-dasharray="8 10"/>
-  <path d="M157 96l17-3-7 16z" fill="#b8913f"/>
-  <text x="256" y="388" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#1f5f58">Feuchte Hände direkt über den Kopf streichen</text>
-</svg>
+  <path d="M157 96l17-3-7 16z" fill="#b8913f"/></svg>
