@@ -260,7 +260,10 @@ struct PrayerTrackerOverviewView: View {
                     .accessibilityLabel(
                         settings.t(
                             "\(kind.localizedName(settings.language)), \(done ? "erledigt" : "offen")",
+                            settings.t(
+                            "\(kind.localizedName(settings.language)), \(done ? "markiert" : "offen")",
                             "\(kind.localizedName(settings.language)), \(done ? "tamamlandı" : "açık")"
+                        )
                         )
                     )
                 }
@@ -753,7 +756,7 @@ struct HomeView: View {
                     .font(.system(size: 21, weight: .bold, design: .serif))
                     .foregroundStyle(.white)
                     .lineLimit(1)
-                Text("İbadetle Daha Güzel Bir Hayat")
+                Text(settings.t("Ein schöneres Leben mit Gebet", "İbadetle Daha Güzel Bir Hayat"))
                     .font(.system(size: 8.8, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.78))
                     .lineLimit(1)
@@ -762,7 +765,7 @@ struct HomeView: View {
             Spacer(minLength: 5)
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text("„Şüphesiz namaz, müminlere vakitleri belli bir farzdır.“")
+                Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“", "„Şüphesiz namaz, müminlere vakitleri belli bir farzdır.“"))
                     .font(.system(size: 7.7, weight: .medium, design: .serif))
                     .italic()
                     .foregroundStyle(.white.opacity(0.90))
@@ -818,7 +821,7 @@ struct HomeView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .top) {
-                    Text("Sıradaki Namaz / Nächstes Gebet")
+                    Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))
                         .font(.system(size: 11.6, weight: .bold))
                         .foregroundStyle(SalahTheme.ink)
 
@@ -910,7 +913,7 @@ struct HomeView: View {
                         .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 0.7)
                 }
 
-                Text("„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)")
+                Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“ (An-Nisāʾ 4:103)", "„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)"))
                     .font(.custom("Georgia-Italic", size: 6.9))
                     .italic()
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -954,7 +957,7 @@ struct HomeView: View {
 
         return VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .center) {
-                Text(settings.t("Bugün Namaz Vakitleri", "Heutige Gebetszeiten"))
+                Text(settings.t("Heutige Gebetszeiten", "Bugün Namaz Vakitleri"))
                     .font(.system(size: 11.5, weight: .bold))
                     .foregroundStyle(SalahTheme.ink)
 
@@ -1196,7 +1199,7 @@ struct HomeView: View {
                             .foregroundStyle(.white)
                     }
 
-                    Text("Namaz Takibi / Gebets-Tracking")
+                    Text(settings.t("Gebets-Tracking", "Namaz Takibi"))
                         .font(.system(size: 10.3, weight: .bold))
                         .foregroundStyle(SalahTheme.ink)
                 }
@@ -1227,7 +1230,9 @@ struct HomeView: View {
     }
 
     private func trackingDay(index: Int, date: Date) -> some View {
-        let qaLabels = ["Pzt", "Sal", "Çar", "Prş", "Cum", "Cts", "Paz"]
+        let qaLabels = settings.language == .german
+            ? ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+            : ["Pzt", "Sal", "Çar", "Prş", "Cum", "Cts", "Paz"]
         let done: Bool
         let paused: Bool
 
@@ -1346,7 +1351,7 @@ struct HomeView: View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 4)
         return LazyVGrid(columns: columns, spacing: 7) {
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Kur'an", "Kur'an"), subtitle: settings.t("Oku & Dinle", "Oku & Dinle"), icon: "quran")
+                DashboardTile(title: settings.t("Quran", "Kur'an"), subtitle: settings.t("Lesen & hören", "Oku & Dinle"), icon: "quran")
             }
             NavigationLink { QuranView() } label: {
                 DashboardTile(title: settings.t("Quran-Audio", "Kur'an Sesi"), subtitle: settings.t("Anhören", "Dinle"), icon: "quran_audio")
@@ -1390,7 +1395,7 @@ struct HomeView: View {
             ReferenceLeafMark(color: SalahTheme.teal)
                 .frame(width: 18, height: 23)
             VStack(alignment: .leading, spacing: 1) {
-                Text("“Küçük adımlar, büyük değişimler getirir.”")
+                Text(settings.t("„Kleine Schritte führen zu großen Veränderungen.“", "“Küçük adımlar, büyük değişimler getirir.”"))
                     .font(.system(size: 10.5, weight: .semibold, design: .serif))
                     .italic()
                     .foregroundStyle(SalahTheme.ink)
