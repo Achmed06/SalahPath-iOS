@@ -56,13 +56,13 @@ struct GuideView: View {
 
                 HStack(alignment: .bottom, spacing: 10) {
                     ReferencePrayerPerson(
-                        imageName: "male_intention",
+                        imageName: "male_standing",
                         rugWidth: 120,
                         rugRotation: -1.5
                     )
 
                     ReferencePrayerPerson(
-                        imageName: "female_intention",
+                        imageName: "female_standing",
                         rugWidth: 120,
                         rugRotation: 1.5
                     )
