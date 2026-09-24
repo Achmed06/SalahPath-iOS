@@ -1,0 +1,122 @@
+name: Repair enclosed prayer artwork holes
+
+on:
+  push:
+    branches:
+      - fix/quran-tracker-visual-pass
+    paths:
+      - .github/workflows/repair-prayer-holes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/quran-tracker-visual-pass
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check pillow==11.3.0
+
+      - name: Fill only enclosed transparent holes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from collections import deque
+          from PIL import Image
+
+          paths = sorted(Path("SalahZeit/Assets.xcassets").glob("male_*.imageset/*.png"))
+          paths = [p for p in paths if "standing.imageset" not in str(p)]
+
+          for path in paths:
+              im = Image.open(path).convert("RGBA")
+              w,h = im.size
+              px = im.load()
+              seen = bytearray(w*h)
+
+              # Mark transparent background connected to the canvas border.
+              q = deque()
+              for x in range(w):
+                  q.append((x,0)); q.append((x,h-1))
+              for y in range(h):
+                  q.append((0,y)); q.append((w-1,y))
+
+              while q:
+                  x,y=q.popleft()
+                  idx=y*w+x
+                  if seen[idx] or px[x,y][3] > 20:
+                      continue
+                  seen[idx]=1
+                  if x>0:q.append((x-1,y))
+                  if x+1<w:q.append((x+1,y))
+                  if y>0:q.append((x,y-1))
+                  if y+1<h:q.append((x,y+1))
+
+              # Any remaining transparent component is enclosed by foreground.
+              visited = bytearray(w*h)
+              holes=[]
+              for y in range(h):
+                  for x in range(w):
+                      idx=y*w+x
+                      if seen[idx] or visited[idx] or px[x,y][3] > 20:
+                          continue
+                      comp=[]
+                      qq=[(x,y)]
+                      visited[idx]=1
+                      while qq:
+                          cx,cy=qq.pop()
+                          comp.append((cx,cy))
+                          for nx,ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
+                              if 0<=nx<w and 0<=ny<h:
+                                  ni=ny*w+nx
+                                  if not seen[ni] and not visited[ni] and px[nx,ny][3] <= 20:
+                                      visited[ni]=1
+                                      qq.append((nx,ny))
+                      if 80 <= len(comp) <= 24000:
+                          holes.append(comp)
+
+              changed=False
+              for comp in holes:
+                  # Derive a neutral light fill from opaque pixels immediately around the hole.
+                  samples=[]
+                  comp_set=set(comp)
+                  for x,y in comp:
+                      for nx,ny in ((x-1,y),(x+1,y),(x,y-1),(x,y+1)):
+                          if 0<=nx<w and 0<=ny<h and (nx,ny) not in comp_set:
+                              r,g,b,a=px[nx,ny]
+                              if a>180 and min(r,g,b)>150:
+                                  samples.append((r,g,b))
+                  if samples:
+                      r=sum(v[0] for v in samples)//len(samples)
+                      g=sum(v[1] for v in samples)//len(samples)
+                      b=sum(v[2] for v in samples)//len(samples)
+                      fill=(max(r,230),max(g,230),max(b,226),255)
+                  else:
+                      fill=(246,245,241,255)
+                  for x,y in comp:
+                      px[x,y]=fill
+                  changed=True
+
+              if changed:
+                  im.save(path,optimize=True)
+                  print("repaired",path)
+          PY
+
+      - name: Commit repaired binaries and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/repair-prayer-holes.yml
+          git add SalahZeit/Assets.xcassets/male_*.imageset/*.png
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Repair enclosed prayer artwork mask holes"
+          git fetch origin fix/quran-tracker-visual-pass
+          git rebase origin/fix/quran-tracker-visual-pass
+          git push origin HEAD:fix/quran-tracker-visual-pass
