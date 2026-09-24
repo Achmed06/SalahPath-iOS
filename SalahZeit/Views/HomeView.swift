@@ -429,13 +429,6 @@ struct TrackerPauseView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
-            updateNowPlayingPrayerContext()
-        }
-        .onReceive(locationManager.$location) { _ in
-            updateNowPlayingPrayerContext()
-        }
-        .onChange(of: settings.language) { _, _ in
-            updateNowPlayingPrayerContext()
         }
         .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
             refresh &+= 1
@@ -816,6 +809,16 @@ struct HomeView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
+            updateNowPlayingPrayerContext()
+        }
+        .onReceive(locationManager.$location) { _ in
+            updateNowPlayingPrayerContext()
+        }
+        .onChange(of: settings.language) { _, _ in
+            updateNowPlayingPrayerContext()
+        }
+        .onChange(of: settings.use24Hour) { _, _ in
+            updateNowPlayingPrayerContext()
         }
         .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
             trackerRefresh &+= 1
