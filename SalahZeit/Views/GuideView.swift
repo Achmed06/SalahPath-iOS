@@ -1717,33 +1717,23 @@ private struct WuduInstructionVisual: View {
         if key == "wudu_intention" {
             return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"
         }
+        // Right/left arm use one canonical illustration. The opposite side is
+        // mirrored in Swift so the two Wudu steps can never drift visually.
+        if key == "wudu_rightarm" { return "wudu_leftarm" }
         return key
     }
 
-    private var trimsGeneratedBottomArtifact: Bool {
-        assetName == "wudu_leftarm" || assetName == "wudu_rightarm"
-    }
-
-    private var bottomArtifactTrim: CGFloat {
-        trimsGeneratedBottomArtifact ? 24 : 0
+    private var mirrorsCanonicalAsset: Bool {
+        key == "wudu_rightarm"
     }
 
     var body: some View {
         Image(assetName)
             .resizable()
             .scaledToFit()
+            .scaleEffect(x: mirrorsCanonicalAsset ? -1 : 1, y: 1)
             .frame(maxWidth: .infinity)
             .frame(height: 188)
-            .mask {
-                VStack(spacing: 0) {
-                    Rectangle().fill(.white)
-                    if bottomArtifactTrim > 0 {
-                        Rectangle()
-                            .fill(.clear)
-                            .frame(height: bottomArtifactTrim)
-                    }
-                }
-            }
             .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
             .accessibilityHidden(true)
     }
