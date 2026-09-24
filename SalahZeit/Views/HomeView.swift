@@ -959,7 +959,7 @@ struct HomeView: View {
     }
 
     private func todayPrayersCard(_ day: PrayerDay, location: CLLocation) -> some View {
-        let upcoming = Array(day.prayers.prefix(4))
+        let displayedTimes = day.prayers
 
         return VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .center) {
@@ -979,7 +979,7 @@ struct HomeView: View {
                 .buttonStyle(.plain)
             }
 
-            ForEach(upcoming, id: \.id) { prayer in
+            ForEach(displayedTimes, id: \.id) { prayer in
                 let active = isNext(prayer, location: location)
                 HStack(alignment: .center, spacing: 8) {
                     Image(systemName: prayer.kind.systemImage)
