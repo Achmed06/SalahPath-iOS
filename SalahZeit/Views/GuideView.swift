@@ -146,7 +146,7 @@ struct GuideView: View {
             NavigationLink { PrayerTextsHubView() } label: {
                 referenceRow(
                     icon: "books.vertical.fill",
-                    title: settings.t("Namaz-Suren, Duas & Ayat", "Namaz Sûreleri, Duaları & Ayetler"),
+                    title: settings.t("Suren, Duas & Ayat fürs Gebet", "Namaz Sûreleri, Duaları & Ayetler"),
                     subtitle: settings.t("Inklusive Yasin und Qunūt", "Yasin ve Kunut dahil")
                 )
             }
@@ -5290,14 +5290,14 @@ struct PrayerTextsHubView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF teilt den Lernstoff in Namaz-Suren, Namaz-Duas, besondere Ayat und Yasin. SalahPath bildet diese Unterpunkte jetzt direkt ab und öffnet den vollständigen Quran-Text dort, wo er benötigt wird.",
+                    "Die PDF teilt den Lernstoff in Gebetssuren, Gebetsduas, besondere Ayat und Yasin. SalahPath bildet diese Unterpunkte jetzt direkt ab und öffnet den vollständigen Quran-Text dort, wo er benötigt wird.",
                     "PDF öğrenme bölümünü Namaz Sûreleri, Namaz Duaları, özel ayetler ve Yasin olarak ayırıyor. SalahPath artık bu alt başlıkları doğrudan gösteriyor ve gereken yerde tam Kur'an metnini açıyor."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             }
 
-            Section(settings.t("Namaz-Suren", "Namaz Sûreleri")) {
+            Section(settings.t("Gebetssuren", "Namaz Sûreleri")) {
                 NavigationLink { ShortSurahLearningView() } label: {
                     Label(settings.t(
                         "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
@@ -5306,7 +5306,7 @@ struct PrayerTextsHubView: View {
                 }
             }
 
-            Section(settings.t("Namaz-Duas", "Namaz Duaları")) {
+            Section(settings.t("Gebetsduas", "Namaz Duaları")) {
                 NavigationLink { PrayerDuaAudioView() } label: {
                     Label(settings.t(
                         "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
@@ -5347,7 +5347,7 @@ struct PrayerTextsHubView: View {
                 .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle(settings.t("Namaz-Texte", "Namaz Metinleri"))
+        .navigationTitle(settings.t("Gebetstexte", "Namaz Metinleri"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -5433,12 +5433,12 @@ struct ShortSurahLearningView: View {
 
     private let surahs: [ShortSurahAudio] = [
         .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
-        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
-        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
-        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
+        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
+        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
+        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
         .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sura für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
         .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sura.", trDetail: "Bilinen kısa sûre."),
-        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Namaz-Sura aus der PDF-Lernliste.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
+        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
         .init(surahNumber: 111, arabicName: "المسد", latinName: "Al-Masad / Tebbet", deDetail: "In der türkischen Lerntradition oft „Tebbet“ genannt.", trDetail: "Türkçe namaz sûreleri eğitiminde genellikle „Tebbet“ diye anılır."),
         .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sura.", trDetail: "Kısa ve çok bilinen sûre."),
         .init(surahNumber: 113, arabicName: "الفلق", latinName: "Al-Falaq", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre."),

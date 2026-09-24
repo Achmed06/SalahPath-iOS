@@ -511,7 +511,7 @@ struct MoreView: View {
                     NavigationLink { PrayerTextsHubView() } label: {
                         discoverTile(
                             icon: "books.vertical.fill",
-                            title: settings.t("Namaz-Texte", "Namaz Metinleri"),
+                            title: settings.t("Gebetstexte", "Namaz Metinleri"),
                             subtitle: settings.t("Suren · Duas · Ayat", "Sûre · dua · ayet")
                         )
                     }
