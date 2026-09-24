@@ -237,4 +237,6 @@ for path in root.rglob("*.png"):
 print("Asset JSON + PNG structural integrity: OK")
 PY
 
+python3 scripts/build78_regression_guard.py
+
 printf 'Reference build checks passed for SalahPath v3.62 build 78\n'
