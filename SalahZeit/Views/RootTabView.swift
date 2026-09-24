@@ -737,86 +737,62 @@ struct MoreView: View {
 
     @ViewBuilder
     private func salahFeatureIcon(_ symbol: String, size: CGFloat) -> some View {
-        if let asset = discoverAssetName(for: symbol) {
-            Image(asset)
-                .resizable()
-                .scaledToFit()
-                .frame(
-                    width: (asset == "sp_icon_quran" || asset == "sp_icon_prayer") ? size * 0.82 : size,
-                    height: (asset == "sp_icon_quran" || asset == "sp_icon_prayer") ? size * 0.82 : size
+        ZStack {
+            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [SalahTheme.softTeal, SalahTheme.cream],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
                 )
                 .frame(width: size, height: size)
-                .accessibilityHidden(true)
-        } else if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
-            ReferenceDashboardGlyph(kind: glyphKind)
-                .frame(width: size * 0.82, height: size * 0.82)
+
+            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
                 .frame(width: size, height: size)
-                .accessibilityHidden(true)
-        } else {
-            ZStack {
-                RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [SalahTheme.softTeal, SalahTheme.cream],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: size, height: size)
 
-                RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
-                    .frame(width: size, height: size)
+            Circle()
+                .fill(SalahTheme.cream.opacity(0.88))
+                .frame(width: size * 0.66, height: size * 0.66)
 
-                Circle()
-                    .fill(SalahTheme.cream.opacity(0.86))
-                    .frame(width: size * 0.66, height: size * 0.66)
-
+            if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
+                ReferenceDashboardGlyph(kind: glyphKind)
+                    .frame(width: size * 0.42, height: size * 0.42)
+            } else {
                 Image(systemName: symbol)
                     .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: size * 0.38, weight: .semibold))
+                    .font(.system(size: size * 0.34, weight: .semibold))
                     .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: size * 0.72, height: size * 0.72)
-
-                Circle()
-                    .fill(SalahTheme.gold)
-                    .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
-                    .overlay {
-                        Circle().stroke(SalahTheme.cream.opacity(0.90), lineWidth: 1)
-                    }
-                    .offset(x: size * 0.31, y: -size * 0.31)
+                    .frame(width: size * 0.66, height: size * 0.66)
             }
-            .accessibilityHidden(true)
-        }
-    }
 
-    private func discoverAssetName(for symbol: String) -> String? {
-        switch symbol {
-        // Keep only the supplied assets that are clean at larger sizes.
-        // The remaining Discover entries use the cut-safe vector/SF fallback below.
-        case "text.book.closed.fill":
-            return "sp_icon_quran"
-        case "figure.mind.and.body":
-            return "sp_icon_prayer"
-        case "drop.fill":
-            return "sp_icon_wudu"
-        case "play.square.stack.fill":
-            return "sp_icon_quran_audio"
-        case "calendar":
-            return "sp_icon_calendar"
-        case "pause.circle.fill":
-            return "sp_icon_progress"
-        default:
-            return nil
+            Circle()
+                .fill(SalahTheme.gold)
+                .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
+                .overlay {
+                    Circle().stroke(SalahTheme.cream.opacity(0.90), lineWidth: 1)
+                }
+                .offset(x: size * 0.31, y: -size * 0.31)
         }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
     }
 
     private func discoverDashboardGlyphKind(for symbol: String) -> String? {
         switch symbol {
+        case "figure.mind.and.body":
+            return "prayer"
+        case "drop.fill":
+            return "wudu"
+        case "text.book.closed.fill", "books.vertical.fill", "book.pages.fill":
+            return "quran"
         case "hands.sparkles.fill", "circle.grid.cross.fill":
             return "dhikr"
-        case "location.north.circle.fill":
+        case "location.north.circle.fill", "map.fill":
             return "qibla"
+        case "calendar":
+            return "calendar"
         default:
             return nil
         }
