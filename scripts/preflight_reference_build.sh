@@ -72,6 +72,49 @@ grep -q 'UNNotificationSound(named:' "SalahZeit/Services/NotificationManager.swi
 [[ "$(git hash-object SalahZeit/Resources/adhan-fajr.caf)" == "546fee5cde9e0e4e9041ed02c44bc0dc5290eb19" ]] || fail "adhan-fajr.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/adhan-standard.caf)" == "5af226c758c556e318f0fe667b415a02807a8c2c" ]] || fail "adhan-standard.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/quran-uthmani.json)" == "a1312281de070617f8062f9718a3bf0e69e44f16" ]] || fail "quran-uthmani.json does not match the validated corpus"
+
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+path = Path("SalahZeit/Resources/quran-uthmani.json")
+payload = json.loads(path.read_text(encoding="utf-8"))
+if payload.get("code") != 200:
+    raise SystemExit("PRECHECK ERROR: bundled Quran response code is not 200")
+
+surahs = payload.get("data", {}).get("surahs", [])
+if len(surahs) != 114:
+    raise SystemExit(f"PRECHECK ERROR: bundled Quran has {len(surahs)} surahs instead of 114")
+
+ayahs = [ayah for surah in surahs for ayah in surah.get("ayahs", [])]
+if len(ayahs) != 6236:
+    raise SystemExit(f"PRECHECK ERROR: bundled Quran has {len(ayahs)} ayahs instead of 6236")
+
+page_counts = {page: 0 for page in range(1, 605)}
+for surah in surahs:
+    number = int(surah.get("number", 0))
+    if not 1 <= number <= 114:
+        raise SystemExit(f"PRECHECK ERROR: invalid surah number {number}")
+    if not str(surah.get("name", "")).strip():
+        raise SystemExit(f"PRECHECK ERROR: surah {number} has no Arabic name")
+    if not str(surah.get("englishName", "")).strip():
+        raise SystemExit(f"PRECHECK ERROR: surah {number} has no English name")
+
+    for ayah in surah.get("ayahs", []):
+        text = str(ayah.get("text", "")).strip()
+        page = ayah.get("page")
+        if not text:
+            raise SystemExit(f"PRECHECK ERROR: empty ayah text in surah {number}")
+        if not isinstance(page, int) or page not in page_counts:
+            raise SystemExit(f"PRECHECK ERROR: invalid Quran page {page}")
+        page_counts[page] += 1
+
+empty_pages = [page for page, count in page_counts.items() if count == 0]
+if empty_pages:
+    raise SystemExit(f"PRECHECK ERROR: bundled Quran has empty pages: {empty_pages}")
+
+print("Bundled Quran integrity: 114 surahs, 6236 ayahs, all 604 pages populated")
+PY
 grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
