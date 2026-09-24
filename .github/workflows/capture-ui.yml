@@ -178,6 +178,8 @@ jobs:
           capture qibla SalahPath-v3.62-B78-DE-Qibla.png
           capture settings SalahPath-v3.62-B78-DE-Settings.png
           capture more SalahPath-v3.62-B78-DE-More.png
+          capture onboarding SalahPath-v3.62-B78-DE-Onboarding.png
+          capture daily-dua SalahPath-v3.62-B78-DE-DailyDua.png
           capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
           capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
           capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
