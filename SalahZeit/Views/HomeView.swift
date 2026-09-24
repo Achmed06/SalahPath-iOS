@@ -745,6 +745,11 @@ struct HomeView: View {
     @State private var manualLocationText = ""
     @State private var manualLocationError: String?
     @State private var isResolvingManualLocation = false
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
+    @State private var dailyDuaAudioLoading = false
+    @State private var dailyDuaAudioRequestRevision = 0
+    @State private var dailyDuaAudioURL: URL?
+    @State private var dailyDuaAudioIdentity: String?
     private let engine = PrayerEngine()
 
     private var isScreenshotQA: Bool {
@@ -1275,82 +1280,173 @@ struct HomeView: View {
 
     private var dailyDuaCard: some View {
         let dua = DailyDuaStore.item(for: now)
+        let identity = dailyDuaAudioIdentity(for: dua)
+        let isPlayingDua = dailyDuaAudioIdentity == identity
+            && dailyDuaAudioURL == audio.activeURL
+            && audio.isPlaying
 
-        return NavigationLink {
-            DailyDuaDetailView(dua: dua)
-        } label: {
-            VStack(spacing: 4) {
-                HStack(spacing: 6) {
-                    ZStack {
-                        Circle()
-                            .fill(SalahTheme.gold.opacity(0.20))
-                            .frame(width: 27, height: 27)
-                        ReferenceLeafMark(color: SalahTheme.teal)
-                            .frame(width: 14, height: 18)
+        return ZStack(alignment: .topTrailing) {
+            NavigationLink {
+                DailyDuaDetailView(dua: dua)
+            } label: {
+                VStack(spacing: 4) {
+                    HStack(spacing: 6) {
+                        ZStack {
+                            Circle()
+                                .fill(SalahTheme.gold.opacity(0.20))
+                                .frame(width: 27, height: 27)
+                            ReferenceLeafMark(color: SalahTheme.teal)
+                                .frame(width: 14, height: 18)
+                        }
+
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(settings.t("Dua des Tages", "Günün Duası"))
+                                .font(.system(size: 11.3, weight: .bold))
+                                .foregroundStyle(SalahTheme.ink)
+
+                            Text(settings.language == .german ? dua.deTitle : dua.trTitle)
+                                .font(.system(size: 8.2, weight: .semibold))
+                                .foregroundStyle(SalahTheme.mutedInk)
+                                .lineLimit(1)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(SalahTheme.teal)
+                            .frame(width: 28, height: 28)
+                            .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
+                            .padding(.trailing, 34)
                     }
 
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(settings.t("Dua des Tages", "Günün Duası"))
-                            .font(.system(size: 11.3, weight: .bold))
-                            .foregroundStyle(SalahTheme.ink)
+                    Text(dua.arabic)
+                        .font(.system(size: 17.2, weight: .regular))
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.88)
 
-                        Text(settings.language == .german ? dua.deTitle : dua.trTitle)
-                            .font(.system(size: 8.2, weight: .semibold))
+                    Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
+                        .font(.system(size: 9.2, weight: .semibold))
+                        .foregroundStyle(SalahTheme.ink)
+                        .frame(maxWidth: .infinity)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+
+                    HStack(spacing: 5) {
+                        if let repetition = dua.repetition {
+                            Text(repetition)
+                                .font(.system(size: 7.6, weight: .bold))
+                                .foregroundStyle(SalahTheme.teal)
+                        }
+
+                        Spacer(minLength: 4)
+
+                        Text(dua.source)
+                            .font(.system(size: 7.2, weight: .semibold))
                             .foregroundStyle(SalahTheme.mutedInk)
                             .lineLimit(1)
                     }
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(SalahTheme.teal)
-                        .frame(width: 28, height: 28)
-                        .background(SalahTheme.softTeal.opacity(0.88), in: RoundedRectangle(cornerRadius: 8))
                 }
-
-                Text(dua.arabic)
-                    .font(.system(size: 17.2, weight: .regular))
-                    .frame(maxWidth: .infinity)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.88)
-
-                Text(settings.language == .german ? dua.deMeaning : dua.trMeaning)
-                    .font(.system(size: 9.2, weight: .semibold))
-                    .foregroundStyle(SalahTheme.ink)
-                    .frame(maxWidth: .infinity)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-
-                HStack(spacing: 5) {
-                    if let repetition = dua.repetition {
-                        Text(repetition)
-                            .font(.system(size: 7.6, weight: .bold))
-                            .foregroundStyle(SalahTheme.teal)
-                    }
-
-                    Spacer(minLength: 4)
-
-                    Text(dua.source)
-                        .font(.system(size: 7.2, weight: .semibold))
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .lineLimit(1)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 7)
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.8)
                 }
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 7)
-            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.8)
+            .buttonStyle(.plain)
+            .accessibilityLabel(settings.t(
+                "Dua des Tages öffnen: \(dua.deTitle)",
+                "Günün duasını aç: \(dua.trTitle)"
+            ))
+
+            Button {
+                Task { await toggleDailyDuaAudio(dua) }
+            } label: {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(SalahTheme.teal)
+                        .frame(width: 30, height: 28)
+
+                    if dailyDuaAudioLoading {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .tint(.white)
+                    } else {
+                        Image(systemName: isPlayingDua ? "pause.fill" : "speaker.wave.2.fill")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .disabled(dailyDuaAudioLoading)
+            .padding(.top, 7)
+            .padding(.trailing, 7)
+            .accessibilityLabel(settings.t(
+                isPlayingDua ? "Dua pausieren" : "Dua anhören",
+                isPlayingDua ? "Duayı duraklat" : "Duayı dinle"
+            ))
+        }
+    }
+
+    private func dailyDuaAudioIdentity(for dua: DailyDuaEntry) -> String {
+        "\(dua.audioSurah):\(dua.audioAyah):\(settings.quranReciter.edition)"
+    }
+
+    @MainActor
+    private func toggleDailyDuaAudio(_ dua: DailyDuaEntry) async {
+        let identity = dailyDuaAudioIdentity(for: dua)
+
+        if dailyDuaAudioIdentity == identity,
+           let dailyDuaAudioURL,
+           audio.activeURL == dailyDuaAudioURL {
+            audio.isPlaying ? audio.pause() : audio.resume()
+            return
+        }
+
+        dailyDuaAudioRequestRevision &+= 1
+        let revision = dailyDuaAudioRequestRevision
+        let reciter = settings.quranReciter
+        dailyDuaAudioLoading = true
+        audio.lastError = nil
+
+        defer {
+            if revision == dailyDuaAudioRequestRevision {
+                dailyDuaAudioLoading = false
             }
         }
-        .buttonStyle(.plain)
-        .accessibilityLabel(settings.t(
-            "Dua des Tages öffnen: \(dua.deTitle)",
-            "Günün duasını aç: \(dua.trTitle)"
-        ))
+
+        do {
+            let urls = try await QuranAudioResolver.urls(surah: dua.audioSurah, reciter: reciter)
+            guard revision == dailyDuaAudioRequestRevision,
+                  reciter == settings.quranReciter else { return }
+
+            let index = dua.audioAyah - 1
+            guard urls.indices.contains(index) else {
+                throw URLError(.resourceUnavailable)
+            }
+
+            let url = urls[index]
+            dailyDuaAudioIdentity = identity
+            dailyDuaAudioURL = url
+            audio.play(
+                url,
+                title: settings.language == .german ? dua.deTitle : dua.trTitle,
+                artist: reciter.title,
+                context: dua.source
+            )
+        } catch {
+            guard revision == dailyDuaAudioRequestRevision else { return }
+            audio.lastError = settings.t(
+                "Dua-Audio konnte nicht geladen werden.",
+                "Dua sesi yüklenemedi."
+            )
+        }
     }
 
     private var streakCard: some View {
