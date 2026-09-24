@@ -209,6 +209,9 @@ for token in (
     'MPNowPlayingInfoCenter.default().nowPlayingInfo',
     'MPRemoteCommandCenter.shared()',
     'func setPrayerContext(_ text: String?)',
+    'MPMediaItemPropertyArtwork',
+    'requestContinuationIfAvailable()',
+    'queueContinuationDelegate != nil && !continuationRequestInFlight',
     'Array(urls.dropFirst(startIndex))',
     'Array(resolvedAudioURLs.dropFirst(index))',
     'final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuation',
@@ -222,12 +225,22 @@ for token in (
 if 'INFOPLIST_KEY_UIBackgroundModes = audio;' not in project:
     fail("background audio mode was removed")
 
+prayer_engine = read("SalahZeit/Services/PrayerEngine.swift")
+for token in (
+    'func upcomingPrayers(',
+    '.filter { $0.kind != .sunrise && $0.date > now }',
+):
+    if token not in prayer_engine:
+        fail(f"lock-screen prayer-time regression: missing {token}")
+
 for token in (
     '@ObservedObject private var audio = RemoteAudioPlayer.shared',
     'let audioSurah: Int',
     'let audioAyah: Int',
     'QuranAudioResolver.urls(surah: dua.audioSurah',
     'updateNowPlayingPrayerContext()',
+    'engine.upcomingPrayers(',
+    'settings.t("Gebetszeiten", "Namaz vakitleri")',
     'toggleDailyDuaAudio(dua)',
     'speaker.wave.2.fill',
 ):
