@@ -1202,14 +1202,7 @@ private struct PrayerTutorialStepCard: View {
 
     private var imageName: String? {
         guard let key = step.imageKey else { return nil }
-        let resolvedKey: String
-        switch key {
-        case "sitting":
-            resolvedKey = "final_sitting"
-        default:
-            resolvedKey = key
-        }
-        return "\(audience == .male ? "male" : "female")_\(resolvedKey)"
+        return "\(audience == .male ? "male" : "female")_\(key)"
     }
 
     var body: some View {
