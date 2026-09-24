@@ -34,6 +34,7 @@ INFO_PLIST="$APP_PATH/Info.plist"
 PRIVACY_MANIFEST="$APP_PATH/PrivacyInfo.xcprivacy"
 ADHAN_STANDARD_SOUND="$APP_PATH/adhan-standard.caf"
 ADHAN_FAJR_SOUND="$APP_PATH/adhan-fajr.caf"
+QURAN_CORPUS="$APP_PATH/quran-uthmani.json"
 
 if [ ! -f "$APP_BINARY" ]; then
   echo "SalahPath-Binary wurde nicht gefunden: $APP_BINARY" >&2
@@ -47,6 +48,17 @@ fi
 
 if [ ! -f "$PRIVACY_MANIFEST" ]; then
   echo "PrivacyInfo.xcprivacy fehlt im gebauten App-Bundle." >&2
+  exit 1
+fi
+
+if [ ! -s "$QURAN_CORPUS" ]; then
+  echo "Der gebündelte Quran-Text quran-uthmani.json fehlt im App-Bundle." >&2
+  exit 1
+fi
+
+QURAN_SHA256="$(/usr/bin/shasum -a 256 "$QURAN_CORPUS" | awk '{print $1}')"
+if [ "$QURAN_SHA256" != "0df03e1d6da4fc8138208fec1688f2b416f0dd4ebbd514179f3e5e0fbaf4195f" ]; then
+  echo "Unerwarteter Inhalt für quran-uthmani.json." >&2
   exit 1
 fi
 
