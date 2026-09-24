@@ -1,0 +1,96 @@
+name: Targeted Build 78 visual check
+
+on:
+  push:
+    branches:
+      - polish/final-icon-batch
+    paths:
+      - .github/workflows/capture-polish-targeted.yml
+  workflow_dispatch:
+
+concurrency:
+  group: targeted-polish-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screenshot:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Preflight
+        shell: bash
+        run: |
+          chmod +x scripts/preflight_reference_build.sh
+          scripts/preflight_reference_build.sh
+
+      - name: Select simulator
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          data=json.loads(subprocess.check_output(["xcrun","simctl","list","devices","available","-j"]))
+          devices=[]
+          for runtime, items in data["devices"].items():
+              if "iOS" not in runtime:
+                  continue
+              for d in items:
+                  if d.get("isAvailable") and d["name"].startswith("iPhone") and "SE" not in d["name"]:
+                      devices.append((runtime,d["name"],d["udid"]))
+          if not devices:
+              raise SystemExit("No iPhone simulator")
+          wanted=["iPhone 16 Pro","iPhone 16","iPhone 15 Pro","iPhone 15"]
+          chosen=next((c for n in wanted for c in devices if c[1]==n),devices[0])
+          with open(os.environ["GITHUB_ENV"],"a") as f:
+              f.write(f"SIM_UDID={chosen[2]}\n")
+          print("Using",chosen)
+          PY
+
+      - name: Build
+        shell: bash
+        run: |
+          xcodebuild \
+            -project SalahZeit.xcodeproj \
+            -scheme SalahZeit \
+            -configuration Debug \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Capture changed screens
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcrun simctl shutdown "$SIM_UDID" || true
+          xcrun simctl boot "$SIM_UDID"
+          xcrun simctl bootstatus "$SIM_UDID" -b
+
+          APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
+          test -n "$APP_PATH"
+          xcrun simctl install "$SIM_UDID" "$APP_PATH"
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+          xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          mkdir -p targeted-preview
+
+          capture() {
+            local screen="$1"
+            local name="$2"
+            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+            SIMCTL_CHILD_SALAH_QA_SCREEN="$screen" \
+              xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
+            sleep 7
+            xcrun simctl io "$SIM_UDID" screenshot "targeted-preview/$name"
+          }
+
+          capture namaz-howto PrayerHowTo.png
+          capture more More.png
+          capture prayer-tracker PrayerTracker.png
+
+      - name: Upload targeted previews
+        uses: actions/upload-artifact@v7
+        with:
+          name: SalahPath-build78-targeted-polish-preview
+          path: targeted-preview/*.png
+          if-no-files-found: error
