@@ -7921,6 +7921,8 @@ actor QuranTextCache {
 
 @MainActor
 private final class QuranStore: ObservableObject {
+    private static var bundledUthmani: QuranFullData?
+
     @Published var chapters:[SurahMeta] = []
     @Published var isLoading = false
     @Published var error:String?
@@ -7930,6 +7932,12 @@ private final class QuranStore: ObservableObject {
         error = nil
         isLoading = true
         defer { isLoading = false }
+
+        if let bundled = try? bundledChapters(),
+           !bundled.isEmpty {
+            chapters = bundled
+            return
+        }
 
         let cacheKey = "chapters-v1.json"
 
@@ -7971,6 +7979,64 @@ private final class QuranStore: ObservableObject {
         } catch {
             self.error = error.localizedDescription
         }
+    }
+
+    private func bundledCorpus() throws -> QuranFullData {
+        if let cached = Self.bundledUthmani {
+            return cached
+        }
+
+        guard let url = Bundle.main.url(forResource: "quran-uthmani", withExtension: "json") else {
+            throw URLError(.fileDoesNotExist)
+        }
+        let data = try Data(contentsOf: url, options: [.mappedIfSafe])
+        guard data.count <= 4 * 1024 * 1024 else {
+            throw URLError(.dataLengthExceedsMaximum)
+        }
+
+        let decoded = try JSONDecoder().decode(QuranFullResponse.self, from: data)
+        guard decoded.data.surahs.count == 114 else {
+            throw URLError(.cannotParseResponse)
+        }
+        Self.bundledUthmani = decoded.data
+        return decoded.data
+    }
+
+    private func bundledChapters() throws -> [SurahMeta] {
+        let full = try bundledCorpus()
+        let chapters = full.surahs.map { surah in
+            SurahMeta(
+                number: surah.number,
+                name: surah.name,
+                englishName: surah.englishName,
+                englishNameTranslation: surah.englishNameTranslation ?? surah.englishName,
+                numberOfAyahs: surah.ayahs.count,
+                revelationType: surah.revelationType ?? ""
+            )
+        }
+        return sanitizedChapters(chapters)
+    }
+
+    private func bundledSurah(_ number: Int) throws -> SurahData {
+        let full = try bundledCorpus()
+        guard let surah = full.surahs.first(where: { $0.number == number }) else {
+            throw URLError(.cannotParseResponse)
+        }
+
+        let ayahs = surah.ayahs.map {
+            AyahData(
+                number: $0.number,
+                numberInSurah: $0.numberInSurah,
+                text: $0.text,
+                audio: nil
+            )
+        }
+        return SurahData(
+            number: surah.number,
+            name: surah.name,
+            englishName: surah.englishName,
+            ayahs: ayahs
+        )
     }
 
     private func sanitizedChapters(_ values: [SurahMeta]) -> [SurahMeta] {
@@ -8027,6 +8093,12 @@ private final class QuranStore: ObservableObject {
     private func fetch(number:Int, edition:String) async throws -> SurahData {
         guard (1...114).contains(number) else {
             throw URLError(.badURL)
+        }
+
+        if edition == "quran-uthmani",
+           let bundled = try? bundledSurah(number),
+           let sanitized = sanitizedSurah(bundled, expectedNumber: number) {
+            return sanitized
         }
 
         let cacheKey = "surah-\(number)-\(edition).json"
@@ -8843,6 +8915,8 @@ private struct QuranFullSurah: Decodable {
     let number: Int
     let name: String
     let englishName: String
+    let englishNameTranslation: String?
+    let revelationType: String?
     let ayahs: [QuranFullAyah]
 }
 
