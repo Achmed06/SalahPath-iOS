@@ -161,42 +161,31 @@ for token in (
     if token not in guide:
         fail(f"unified illustration regression: missing {token}")
 
-# 6) Cleaned navigation/discovery icons must stay vector-backed.
-vector_icons = [
-    "sp_icon_achievements",
-    "sp_icon_appearance",
-    "sp_icon_bookmarks",
-    "sp_icon_calendar",
-    "sp_icon_community",
-    "sp_icon_growth",
-    "sp_icon_home",
-    "sp_icon_info",
-    "sp_icon_juz",
-    "sp_icon_language",
-    "sp_icon_logout",
-    "sp_icon_muslim_days",
-    "sp_icon_prayer",
-    "sp_icon_prayer_times",
-    "sp_icon_profile",
-    "sp_icon_progress",
-    "sp_icon_quran",
-    "sp_icon_quran_audio",
-    "sp_icon_settings",
-    "sp_icon_tasks",
-    "sp_icon_wudu",
-]
-assets = ROOT / "SalahZeit/Assets.xcassets"
-for name in vector_icons:
-    imageset = assets / f"{name}.imageset"
-    contents_path = imageset / "Contents.json"
-    svg_path = imageset / f"{name}.svg"
-    if not contents_path.is_file() or not svg_path.is_file():
-        fail(f"clean vector icon missing: {name}")
-    contents = json.loads(contents_path.read_text(encoding="utf-8"))
-    filenames = [entry.get("filename") for entry in contents.get("images", [])]
-    if f"{name}.svg" not in filenames:
-        fail(f"asset catalog no longer selects {name}.svg")
-    if contents.get("properties", {}).get("preserves-vector-representation") is not True:
-        fail(f"vector preservation disabled for {name}")
+# 6) Navigation/discovery icons stay in the same native SalahPath system.
+home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
+root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
+for token in (
+    'ReferenceDashboardGlyph(kind: glyphKind)',
+    'case "quran_audio":',
+    'case "bookmarks":',
+    'LinearGradient(',
+):
+    if token not in home:
+        fail(f"native dashboard icon regression: missing {token}")
+
+for token in (
+    'Image(systemName: item.0)',
+    '"house.fill"',
+    '"book.closed.fill"',
+    '"figure.mind.and.body"',
+    '"sparkles.rectangle.stack.fill"',
+    '"person.crop.circle.fill"',
+):
+    if token not in root_tabs:
+        fail(f"native tab icon regression: missing {token}")
+
+for legacy_prefix in ("sp_icon_", "ref_dash_"):
+    if legacy_prefix in home or legacy_prefix in root_tabs:
+        fail(f"legacy icon asset reference returned: {legacy_prefix}")
 
 print("Build 78 regression guard: OK")
