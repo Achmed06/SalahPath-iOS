@@ -115,7 +115,9 @@ struct PrayerTrackerOverviewView: View {
 
     private var displayedWeekDays: [Date] {
         let weekday = calendar.component(.weekday, from: selectedDay)
-        let firstWeekday = calendar.firstWeekday
+        // SalahPath currently supports German and Turkish; both use a
+        // Monday-first week in this tracker UI, independent of device locale.
+        let firstWeekday = 2
         let delta = (weekday - firstWeekday + 7) % 7
         guard let weekStart = LocalDay.addingDays(-delta, to: selectedDay) else {
             return [selectedDay]
