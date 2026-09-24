@@ -10031,16 +10031,16 @@ struct QuranPageReaderView: View {
 
     @MainActor
     private func toggleAudio(for ayah: QuranPageAyah) async {
-        if let existing = resolvedAudioURL(for: ayah) {
-            QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
-            audio.toggle(existing)
+        let reciter = settings.quranReciter
+        let key = audioKey(surah: ayah.surah.number, reciter: reciter)
+
+        if let urls = audioURLsBySurah[key] {
+            playFromAyah(ayah, urls: urls, reciter: reciter)
             return
         }
 
         audioRequestGeneration &+= 1
         let generation = audioRequestGeneration
-        let reciter = settings.quranReciter
-        let key = audioKey(surah: ayah.surah.number, reciter: reciter)
         resolvingAyahNumber = ayah.number
         audio.lastError = nil
 
@@ -10050,12 +10050,7 @@ struct QuranPageReaderView: View {
                   reciter == settings.quranReciter else { return }
 
             audioURLsBySurah[key] = urls
-            guard let url = urls[safe: ayah.numberInSurah - 1] else {
-                throw URLError(.resourceUnavailable)
-            }
-
-            QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
-            audio.toggle(url)
+            playFromAyah(ayah, urls: urls, reciter: reciter)
         } catch {
             guard generation == audioRequestGeneration else { return }
             audio.lastError = settings.t(
@@ -10067,6 +10062,33 @@ struct QuranPageReaderView: View {
         if generation == audioRequestGeneration {
             resolvingAyahNumber = nil
         }
+    }
+
+    @MainActor
+    private func playFromAyah(_ ayah: QuranPageAyah, urls: [URL], reciter: QuranReciter) {
+        let startIndex = ayah.numberInSurah - 1
+        guard urls.indices.contains(startIndex) else {
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            return
+        }
+
+        let selectedURL = urls[startIndex]
+        QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
+
+        if audio.activeURL == selectedURL {
+            audio.isPlaying ? audio.pause() : audio.resume()
+            return
+        }
+
+        audio.playQueue(
+            Array(urls.dropFirst(startIndex)),
+            title: ayah.surah.englishName,
+            artist: reciter.title,
+            context: settings.t(
+                "Quran \(ayah.surah.number):\(ayah.numberInSurah) · automatisch weiter",
+                "Kur'an \(ayah.surah.number):\(ayah.numberInSurah) · otomatik devam"
+            )
+        )
     }
 
     private func movePage(by offset: Int) {
@@ -10853,7 +10875,7 @@ private struct QuranSurahView: View {
                 if let audioURL {
                     Button {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
-                        audio.toggle(audioURL)
+                        playFromAyah(index: index, ayahNumber: ar.numberInSurah)
                     } label: {
                         Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     }
@@ -11046,6 +11068,29 @@ private struct QuranSurahView: View {
     }
 
     private var audioReady: Bool { !resolvedAudioURLs.isEmpty }
+
+    private func playFromAyah(index: Int, ayahNumber: Int) {
+        guard resolvedAudioURLs.indices.contains(index) else {
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            return
+        }
+
+        let selectedURL = resolvedAudioURLs[index]
+        if audio.activeURL == selectedURL {
+            audio.isPlaying ? audio.pause() : audio.resume()
+            return
+        }
+
+        audio.playQueue(
+            Array(resolvedAudioURLs.dropFirst(index)),
+            title: surah.englishName,
+            artist: settings.quranReciter.title,
+            context: settings.t(
+                "Quran \(surah.number):\(ayahNumber) · automatisch weiter",
+                "Kur'an \(surah.number):\(ayahNumber) · otomatik devam"
+            )
+        )
+    }
 
     private func toggleFullSurah() {
         guard audioReady else {
