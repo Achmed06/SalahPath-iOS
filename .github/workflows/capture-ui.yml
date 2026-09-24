@@ -171,6 +171,8 @@ jobs:
           capture namaz SalahPath-v3.62-B78-DE-Namaz.png
           capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
           capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+          capture quran-page-mid SalahPath-v3.62-B78-DE-QuranPage302.png
+          capture quran-page-last SalahPath-v3.62-B78-DE-QuranPage604.png
           capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
           capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
           capture wudu SalahPath-v3.62-B78-DE-Wudu.png
