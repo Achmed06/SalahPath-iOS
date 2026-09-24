@@ -523,6 +523,12 @@ private enum DailyDuaStore {
 }
 
 
+struct DailyDuaQAView: View {
+    var body: some View {
+        DailyDuaDetailView(dua: DailyDuaStore.items[0])
+    }
+}
+
 private struct DailyDuaDetailView: View {
     @EnvironmentObject private var settings: SettingsStore
     @ObservedObject private var audio = RemoteAudioPlayer.shared
