@@ -2,28 +2,21 @@
 from pathlib import Path
 from PIL import Image
 
-PATHS = [
-    Path("SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png"),
-    Path("SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png"),
-    Path("SalahZeit/Assets.xcassets/female_intention.imageset/female_intention.png"),
-    Path("SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png"),
+CASES = [
+    ("male_intention", Path("SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png"), [280,300,320,340,360,380,400], range(330,366,2)),
+    ("male_takbir", Path("SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png"), [280,300,320,340,360,380,400], range(340,382,2)),
+    ("female_intention", Path("SalahZeit/Assets.xcassets/female_intention.imageset/female_intention.png"), [280,300,320,340,360,380,400], range(330,366,2)),
+    ("female_takbir", Path("SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png"), [280,300,320,340,360,380,400], range(340,386,2)),
 ]
 
-for path in PATHS:
+for name,path,rows,xs in CASES:
     im=Image.open(path).convert("RGBA")
-    a=im.getchannel("A")
-    px=a.load()
-    w,h=im.size
-    print("\nFILE", path, w, h)
-    for y in range(180, 501, 20):
-        ints=[]
-        x=0
-        while x<w:
-            while x<w and px[x,y] < 8:
-                x+=1
-            if x>=w: break
-            s=x
-            while x<w and px[x,y] >= 8:
-                x+=1
-            ints.append((s,x-1))
-        print("ROW",y,ints)
+    px=im.load()
+    print("\nFILE",name)
+    for y in rows:
+        vals=[]
+        for x in xs:
+            r,g,b,a=px[x,y]
+            if a:
+                vals.append((x,(r,g,b,a)))
+        print("ROW",y,vals)
