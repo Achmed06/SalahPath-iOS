@@ -12,39 +12,27 @@ def clean(path: Path) -> None:
     px = im.load()
     w, h = im.size
 
-    # The legacy source contains a small clipped gold decorative disk touching
-    # the upper-left edge. Remove only gold-toned pixels in that tiny corner,
-    # preserving the instructional artwork itself.
-    for y in range(min(28, h)):
-        for x in range(min(42, w)):
-            r, g, b, a = px[x, y]
-            is_gold = (
-                a > 0 and
-                r >= 145 and
-                85 <= g <= 190 and
-                b <= 120 and
-                r > g + 20 and
-                g > b + 15
-            )
-            if is_gold:
-                px[x, y] = (r, g, b, 0)
+    # The clipped ornament occupies only the extreme upper-left corner.
+    # Clear that tiny source corner directly; this avoids relying on color
+    # thresholds and leaves the instructional figure untouched.
+    clear_w = min(27, w)
+    clear_h = min(15, h)
+    for y in range(clear_h):
+        for x in range(clear_w):
+            r, g, b, _ = px[x, y]
+            px[x, y] = (r, g, b, 0)
 
-    # Feather semi-gold antialiasing immediately around removed pixels.
-    for y in range(min(30, h)):
-        for x in range(min(44, w)):
+    # Feather the two inner edges so the cleanup blends into the card.
+    for y in range(clear_h, min(clear_h + 3, h)):
+        factor = (y - clear_h + 1) / 4.0
+        for x in range(clear_w):
             r, g, b, a = px[x, y]
-            if a == 0:
-                continue
-            near_transparent = False
-            for yy in range(max(0, y - 1), min(h, y + 2)):
-                for xx in range(max(0, x - 1), min(w, x + 2)):
-                    if px[xx, yy][3] == 0:
-                        near_transparent = True
-                        break
-                if near_transparent:
-                    break
-            if near_transparent and r >= 130 and g >= 80 and b <= 140 and r > b + 25:
-                px[x, y] = (r, g, b, min(a, 80))
+            px[x, y] = (r, g, b, int(a * factor))
+    for x in range(clear_w, min(clear_w + 3, w)):
+        factor = (x - clear_w + 1) / 4.0
+        for y in range(clear_h):
+            r, g, b, a = px[x, y]
+            px[x, y] = (r, g, b, int(a * factor))
 
     im.save(path, optimize=True)
     print(path)
