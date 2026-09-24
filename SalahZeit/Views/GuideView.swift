@@ -294,14 +294,50 @@ private struct PrayerPoseArtwork: View {
         }
     }
 
+    private var garmentColor: Color {
+        female ? Color(red: 0.56, green: 0.36, blue: 0.45) : SalahTheme.deepTeal
+    }
+
     var body: some View {
-        Image(assetName)
-            .resizable()
-            .scaledToFit()
-            .scaleEffect(artworkScale)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .clipped()
-            .accessibilityHidden(true)
+        ZStack {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            Canvas { graphics, size in
+                var context = graphics
+
+                let arch = CGRect(
+                    x: size.width * 0.13,
+                    y: size.height * 0.06,
+                    width: size.width * 0.74,
+                    height: size.height * 0.74
+                )
+                context.fill(
+                    Path(roundedRect: arch, cornerRadius: min(size.width, size.height) * 0.32),
+                    with: .color(SalahTheme.softTeal.opacity(0.28))
+                )
+
+                var rug = Path()
+                rug.move(to: point(0.25, 0.82, in: size))
+                rug.addLine(to: point(0.75, 0.82, in: size))
+                rug.addLine(to: point(0.82, 0.95, in: size))
+                rug.addLine(to: point(0.18, 0.95, in: size))
+                rug.closeSubpath()
+                context.fill(rug, with: .color(SalahTheme.teal.opacity(0.90)))
+                context.stroke(rug, with: .color(SalahTheme.gold.opacity(0.86)), lineWidth: 2)
+
+                drawPose(context: &context, size: size)
+            }
+            .padding(4)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .accessibilityHidden(true)
     }
 
     private func point(_ x: CGFloat, _ y: CGFloat, in size: CGSize) -> CGPoint {
@@ -330,12 +366,21 @@ private struct PrayerPoseArtwork: View {
 
         if female {
             let hood = CGRect(x: center.x - radius * 1.22, y: center.y - radius * 1.22, width: radius * 2.44, height: radius * 2.62)
-            context.stroke(Path(ellipseIn: hood), with: .color(SalahTheme.teal), lineWidth: 7)
+            context.stroke(Path(ellipseIn: hood), with: .color(garmentColor), lineWidth: 8)
         } else {
-            var cap = Path()
-            cap.move(to: CGPoint(x: center.x - radius * 0.72, y: center.y - radius * 0.76))
-            cap.addLine(to: CGPoint(x: center.x + radius * 0.72, y: center.y - radius * 0.76))
-            context.stroke(cap, with: .color(SalahTheme.gold), style: StrokeStyle(lineWidth: 6, lineCap: .round))
+            var hair = Path()
+            hair.addArc(
+                center: CGPoint(x: center.x, y: center.y - radius * 0.10),
+                radius: radius * 0.82,
+                startAngle: .degrees(198),
+                endAngle: .degrees(342),
+                clockwise: false
+            )
+            context.stroke(
+                hair,
+                with: .color(SalahTheme.deepTeal),
+                style: StrokeStyle(lineWidth: max(radius * 0.19, 3), lineCap: .round)
+            )
         }
 
         drawFace(&context, center: center, radius: radius)
@@ -344,9 +389,9 @@ private struct PrayerPoseArtwork: View {
     private func drawFace(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
         let turn: CGFloat
         if pose == "salam_right" {
-            turn = 0.22
-        } else if pose == "salam_left" {
             turn = -0.22
+        } else if pose == "salam_left" {
+            turn = 0.22
         } else {
             turn = 0
         }
@@ -394,7 +439,7 @@ private struct PrayerPoseArtwork: View {
     }
 
     private func torso(_ context: inout GraphicsContext, shoulder: CGPoint, hip: CGPoint, width: CGFloat) {
-        line(&context, shoulder, hip, width: width, color: SalahTheme.teal)
+        line(&context, shoulder, hip, width: width, color: garmentColor)
         if female {
             var skirt = Path()
             skirt.move(to: CGPoint(x: hip.x - 18, y: hip.y - 2))
@@ -402,17 +447,18 @@ private struct PrayerPoseArtwork: View {
             skirt.addLine(to: CGPoint(x: hip.x + 34, y: hip.y + 70))
             skirt.addLine(to: CGPoint(x: hip.x + 18, y: hip.y - 2))
             skirt.closeSubpath()
-            context.fill(skirt, with: .color(SalahTheme.teal.opacity(0.94)))
+            context.fill(skirt, with: .color(garmentColor.opacity(0.94)))
         }
     }
 
     private func drawPose(context: inout GraphicsContext, size: CGSize) {
         switch pose {
         case "bowing": drawBowing(&context, size: size)
-        case "sujud": drawSujud(&context, size: size)
-        case "sitting", "final_sitting": drawSitting(&context, size: size, turn: 0)
-        case "salam_right": drawSitting(&context, size: size, turn: 1)
-        case "salam_left": drawSitting(&context, size: size, turn: -1)
+        case "sujud", "second_sujud": drawSujud(&context, size: size)
+        case "sitting", "final_sitting": drawSitting(&context, size: size, turn: 0, showFinger: false)
+        case "finger": drawSitting(&context, size: size, turn: 0, showFinger: true)
+        case "salam_right": drawSitting(&context, size: size, turn: 1, showFinger: false)
+        case "salam_left": drawSitting(&context, size: size, turn: -1, showFinger: false)
         case "takbir": drawStanding(&context, size: size, mode: .takbir)
         case "standing": drawStanding(&context, size: size, mode: .bound)
         case "upright": drawStanding(&context, size: size, mode: .relaxed)
@@ -445,7 +491,7 @@ private struct PrayerPoseArtwork: View {
                 control: point(c, 0.915, in: size)
             )
             robe.closeSubpath()
-            context.fill(robe, with: .color(SalahTheme.teal.opacity(0.96)))
+            context.fill(robe, with: .color(garmentColor.opacity(0.96)))
         }
 
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.072)
@@ -518,7 +564,7 @@ private struct PrayerPoseArtwork: View {
         line(&context, point(0.67, 0.84, in: size), point(0.82, 0.84, in: size), width: 5, color: SalahTheme.gold)
     }
 
-    private func drawSitting(_ context: inout GraphicsContext, size: CGSize, turn: Int) {
+    private func drawSitting(_ context: inout GraphicsContext, size: CGSize, turn: Int, showFinger: Bool) {
         let hip = point(0.48, 0.62, in: size)
         let shoulder = point(0.48, 0.40, in: size)
         // Keep the whole body and head centered. For Salam only the facial
@@ -531,6 +577,25 @@ private struct PrayerPoseArtwork: View {
         line(&context, point(0.57, 0.42, in: size), point(0.57, 0.61, in: size), width: 10)
         line(&context, point(0.39, 0.60, in: size), point(0.53, 0.68, in: size), width: 9, color: SalahTheme.gold)
         line(&context, point(0.57, 0.60, in: size), point(0.67, 0.68, in: size), width: 9, color: SalahTheme.gold)
+
+        if showFinger {
+            // Hanafi tashahhud detail: the worshipper's right index finger.
+            // Front-facing artwork means the worshipper's right is on the viewer's left.
+            line(
+                &context,
+                point(0.39, 0.59, in: size),
+                point(0.36, 0.51, in: size),
+                width: 5,
+                color: SalahTheme.gold
+            )
+            let tip = CGRect(
+                x: size.width * 0.36 - 4,
+                y: size.height * 0.51 - 4,
+                width: 8,
+                height: 8
+            )
+            context.fill(Path(ellipseIn: tip), with: .color(SalahTheme.gold))
+        }
 
         if female {
             polyline(&context, [hip, point(0.60, 0.70, in: size), point(0.74, 0.80, in: size)], width: 15)
