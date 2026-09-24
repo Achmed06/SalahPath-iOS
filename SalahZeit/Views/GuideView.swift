@@ -1002,10 +1002,14 @@ struct PrayerHowToView: View {
             .pickerStyle(.segmented)
 
             HStack(spacing: 14) {
-                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_standing" : "female_standing")
-                    .frame(width: 104, height: 132)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                ZStack(alignment: .bottom) {
+                    PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_standing" : "female_standing")
+                        .scaleEffect(1.20, anchor: .bottom)
+                }
+                .frame(width: 118, height: 148)
+                .background(SalahTheme.cream)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .clipped()
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(settings.t("Ganz von vorne lernen", "En baştan öğren"))
@@ -1200,6 +1204,15 @@ private struct PrayerTutorialStepCard: View {
     let step: PrayerTutorialStep
     let audience: PrayerAudience
 
+    private var standingStylePose: Bool {
+        switch step.pose {
+        case .intention, .takbir, .standing, .upright:
+            return true
+        default:
+            return false
+        }
+    }
+
     private var imageName: String? {
         guard let key = step.imageKey else { return nil }
         let resolvedKey: String
@@ -1236,11 +1249,15 @@ private struct PrayerTutorialStepCard: View {
                 if step.pose == .salam {
                     PrayerSalamVisual()
                 } else if let imageName {
-                    PrayerPoseArtwork(assetName: imageName)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 205)
-                        .padding(.vertical, 6)
-                        .background(SalahTheme.cream)
+                    ZStack(alignment: .bottom) {
+                        PrayerPoseArtwork(assetName: imageName)
+                            .scaleEffect(standingStylePose ? 1.14 : 1.0, anchor: .bottom)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: standingStylePose ? 220 : 205)
+                    .clipped()
+                    .padding(.vertical, 6)
+                    .background(SalahTheme.cream)
                 }
 
                 if step.number == "16" {
