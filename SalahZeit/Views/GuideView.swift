@@ -1795,14 +1795,49 @@ private struct WuduInstructionVisual: View {
     }
 
     var body: some View {
-        Image(assetName)
-            .resizable()
-            .scaledToFit()
-            .scaleEffect(x: mirrorsCanonicalAsset ? -1 : 1, y: 1)
-            .frame(maxWidth: .infinity)
-            .frame(height: 188)
-            .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-            .accessibilityHidden(true)
+        ZStack {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            Circle()
+                .fill(SalahTheme.softTeal.opacity(0.44))
+                .frame(width: 176, height: 176)
+                .offset(x: 72, y: -38)
+
+            Group {
+                switch stepNumber {
+                case 1: intentionVisual
+                case 2: basmalaVisual
+                case 3: handsVisual
+                case 4: mouthVisual
+                case 5: noseVisual
+                case 6: faceVisual(highlightY: 4, dropsY: -8, largeHighlight: true)
+                case 7: armVisual(mirrored: false)
+                case 8: armVisual(mirrored: true)
+                case 9: headVisual
+                case 10: earsVisual
+                case 11: neckVisual
+                case 12: footVisual(mirrored: false)
+                case 13: footVisual(mirrored: true)
+                default: genericVisual
+                }
+            }
+            .scaleEffect(0.95)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 188)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+        }
+        .accessibilityHidden(true)
     }
 
     private var intentionVisual: some View {
@@ -1823,16 +1858,30 @@ private struct WuduInstructionVisual: View {
 
     private var basmalaVisual: some View {
         ZStack {
-            Circle()
-                .fill(Color.white.opacity(0.72))
-                .frame(width: 122, height: 122)
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(Color.white.opacity(0.76))
+                .frame(width: 250, height: 118)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.64), lineWidth: 1.5)
+                }
+
+            Text("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ")
+                .font(.system(size: 27, weight: .semibold))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.75)
+                .padding(.horizontal, 20)
+
             Image(systemName: "drop.fill")
-                .font(.system(size: 68, weight: .bold))
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(SalahTheme.teal)
+                .offset(x: 116, y: -48)
+
             Image(systemName: "sparkles")
-                .font(.system(size: 29, weight: .bold))
+                .font(.system(size: 18, weight: .bold))
                 .foregroundStyle(SalahTheme.gold)
-                .offset(x: 58, y: -47)
+                .offset(x: -118, y: -48)
         }
     }
 
@@ -1850,6 +1899,62 @@ private struct WuduInstructionVisual: View {
                 drop(size: 19); drop(size: 25); drop(size: 19)
             }
             .offset(y: -41)
+        }
+    }
+
+    private var mouthVisual: some View {
+        ZStack {
+            neutralFace
+                .offset(x: 18)
+
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: 50, weight: .regular))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .rotationEffect(.degrees(-68))
+                .offset(x: -58, y: 26)
+
+            HStack(spacing: 5) {
+                drop(size: 12)
+                drop(size: 16)
+                drop(size: 12)
+            }
+            .offset(x: -24, y: 54)
+
+            Capsule()
+                .fill(SalahTheme.gold.opacity(0.72))
+                .frame(width: 42, height: 10)
+                .offset(x: 13, y: 31)
+        }
+    }
+
+    private var noseVisual: some View {
+        ZStack {
+            neutralFace
+                .offset(x: 12)
+
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: 46, weight: .regular))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .rotationEffect(.degrees(-72))
+                .offset(x: -55, y: 4)
+
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: 34, weight: .regular))
+                .foregroundStyle(SalahTheme.teal.opacity(0.92))
+                .rotationEffect(.degrees(72))
+                .scaleEffect(x: -1, y: 1)
+                .offset(x: 70, y: 42)
+
+            HStack(spacing: 4) {
+                drop(size: 10)
+                drop(size: 14)
+            }
+            .offset(x: -20, y: 36)
+
+            Ellipse()
+                .fill(SalahTheme.gold.opacity(0.58))
+                .frame(width: 34, height: 18)
+                .offset(x: 8, y: 2)
         }
     }
 
@@ -1937,18 +2042,23 @@ private struct WuduInstructionVisual: View {
     private var headVisual: some View {
         ZStack {
             neutralFace
+                .offset(y: 8)
 
-            Capsule()
-                .fill(SalahTheme.gold.opacity(0.70))
-                .frame(width: 92, height: 20)
-                .offset(y: -53)
-
-            HStack(spacing: 8) {
-                drop(size: 14)
-                drop(size: 18)
-                drop(size: 14)
+            HStack(spacing: 46) {
+                Image(systemName: "hand.raised.fill")
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
             }
-            .offset(x: 76, y: -50)
+            .font(.system(size: 42, weight: .regular))
+            .foregroundStyle(SalahTheme.deepTeal)
+            .offset(y: -58)
+
+            HStack(spacing: 9) {
+                drop(size: 12)
+                drop(size: 16)
+                drop(size: 12)
+            }
+            .offset(x: 74, y: -48)
         }
     }
 
