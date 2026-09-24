@@ -56,13 +56,13 @@ struct GuideView: View {
 
                 HStack(alignment: .bottom, spacing: 10) {
                     ReferencePrayerPerson(
-                        imageName: "male_standing",
+                        imageName: "male_intention",
                         rugWidth: 120,
                         rugRotation: -1.5
                     )
 
                     ReferencePrayerPerson(
-                        imageName: "female_standing",
+                        imageName: "female_intention",
                         rugWidth: 120,
                         rugRotation: 1.5
                     )
@@ -1015,7 +1015,7 @@ struct PrayerHowToView: View {
             .pickerStyle(.segmented)
 
             HStack(spacing: 14) {
-                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_standing" : "female_standing")
+                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
                     .frame(width: 104, height: 132)
                     .background(SalahTheme.cream)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
