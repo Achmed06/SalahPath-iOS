@@ -2017,82 +2017,94 @@ private struct ReferencePosterQiblaArt: View {
         GeometryReader { proxy in
             let w = proxy.size.width
             let h = proxy.size.height
+            let compassSize = min(w, h) * 0.56
+            let center = CGPoint(x: w * 0.34, y: h * 0.56)
 
             ZStack {
-                // Long diagonal compass needle from the supplied poster.
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.08, y: h * 0.18))
-                    p.addLine(to: CGPoint(x: w * 0.66, y: h * 0.48))
-                    p.addLine(to: CGPoint(x: w * 0.22, y: h * 0.41))
-                    p.closeSubpath()
+                Circle()
+                    .fill(SalahTheme.softTeal.opacity(0.72))
+                    .frame(width: compassSize, height: compassSize)
+                    .position(center)
+
+                Circle()
+                    .stroke(SalahTheme.teal.opacity(0.30), lineWidth: 1.4)
+                    .frame(width: compassSize, height: compassSize)
+                    .position(center)
+
+                Circle()
+                    .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+                    .frame(width: compassSize * 0.72, height: compassSize * 0.72)
+                    .position(center)
+
+                ForEach(0..<12, id: \.self) { index in
+                    Capsule()
+                        .fill(index % 3 == 0 ? SalahTheme.teal.opacity(0.70) : SalahTheme.teal.opacity(0.24))
+                        .frame(width: index % 3 == 0 ? 2.2 : 1.2, height: index % 3 == 0 ? 10 : 6)
+                        .position(x: center.x, y: center.y - compassSize * 0.44)
+                        .rotationEffect(.degrees(Double(index) * 30), anchor: .init(
+                            x: center.x / max(w, 1),
+                            y: center.y / max(h, 1)
+                        ))
                 }
-                .fill(SalahTheme.teal)
+
+                Text("N")
+                    .font(.system(size: max(7, compassSize * 0.08), weight: .black))
+                    .foregroundStyle(SalahTheme.teal)
+                    .position(x: center.x, y: center.y - compassSize * 0.31)
 
                 Path { p in
-                    p.move(to: CGPoint(x: w * 0.08, y: h * 0.18))
-                    p.addLine(to: CGPoint(x: w * 0.50, y: h * 0.36))
-                    p.addLine(to: CGPoint(x: w * 0.22, y: h * 0.41))
+                    let from = CGPoint(x: center.x + compassSize * 0.03, y: center.y - compassSize * 0.02)
+                    let to = CGPoint(x: w * 0.72, y: h * 0.47)
+                    p.move(to: from)
+                    p.addLine(to: to)
+                }
+                .stroke(SalahTheme.gold, style: StrokeStyle(lineWidth: max(3, w * 0.018), lineCap: .round))
+
+                Path { p in
+                    let tip = CGPoint(x: w * 0.73, y: h * 0.47)
+                    p.move(to: tip)
+                    p.addLine(to: CGPoint(x: w * 0.66, y: h * 0.41))
+                    p.addLine(to: CGPoint(x: w * 0.67, y: h * 0.53))
                     p.closeSubpath()
                 }
                 .fill(SalahTheme.gold)
 
                 Circle()
-                    .fill(Color(red: 0.94, green: 0.72, blue: 0.21))
-                    .frame(width: max(5, w * 0.055), height: max(5, w * 0.055))
-                    .position(x: w * 0.28, y: h * 0.33)
+                    .fill(SalahTheme.deepTeal)
+                    .frame(width: max(9, compassSize * 0.11), height: max(9, compassSize * 0.11))
+                    .position(center)
 
-                // Kaaba: front, side face, top face and the gold kiswah band.
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.46, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.91))
-                    p.addLine(to: CGPoint(x: w * 0.46, y: h * 0.82))
-                    p.closeSubpath()
-                }
-                .fill(Color.black.opacity(0.92))
+                VStack(spacing: 0) {
+                    Rectangle()
+                        .fill(Color.black.opacity(0.90))
+                        .frame(width: w * 0.24, height: h * 0.18)
+                        .overlay(alignment: .top) {
+                            Rectangle()
+                                .fill(SalahTheme.gold)
+                                .frame(height: max(3, h * 0.025))
+                                .padding(.top, h * 0.045)
+                        }
+                        .overlay(alignment: .bottomTrailing) {
+                            RoundedRectangle(cornerRadius: 1.5)
+                                .fill(SalahTheme.gold.opacity(0.86))
+                                .frame(width: w * 0.035, height: h * 0.065)
+                                .padding(.trailing, w * 0.035)
+                                .padding(.bottom, h * 0.025)
+                        }
 
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.81))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.91))
-                    p.closeSubpath()
+                    Ellipse()
+                        .fill(SalahTheme.deepTeal.opacity(0.10))
+                        .frame(width: w * 0.29, height: h * 0.035)
+                        .offset(y: -h * 0.005)
                 }
-                .fill(Color.black.opacity(0.76))
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.46, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.60, y: h * 0.41))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.49))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.58))
-                    p.closeSubpath()
-                }
-                .fill(Color.black.opacity(0.64))
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.47, y: h * 0.60))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.68))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.73))
-                    p.addLine(to: CGPoint(x: w * 0.47, y: h * 0.65))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.gold)
-
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.79, y: h * 0.68))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.60))
-                    p.addLine(to: CGPoint(x: w * 0.91, y: h * 0.65))
-                    p.addLine(to: CGPoint(x: w * 0.79, y: h * 0.73))
-                    p.closeSubpath()
-                }
-                .fill(SalahTheme.gold.opacity(0.78))
+                .position(x: w * 0.78, y: h * 0.66)
             }
             .frame(width: w, height: h)
         }
     }
 }
 
-private struct ReferencePosterMapArt: View {
+struct ReferencePosterMapArt: View {
     var body: some View {
         GeometryReader { proxy in
             let w = proxy.size.width
