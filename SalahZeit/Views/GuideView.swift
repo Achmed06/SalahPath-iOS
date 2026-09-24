@@ -5056,7 +5056,15 @@ final class RemoteAudioPlayer: ObservableObject {
     private var failedObserver: NSObjectProtocol?
     private var remoteCommandTargets: [Any] = []
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
+    private var continuationRequestInFlight = false
     private(set) var queueSessionID = 0
+
+    private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
+        guard let image = UIImage(named: "salahpath_logo"), image.size.width > 0, image.size.height > 0 else {
+            return nil
+        }
+        return MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+    }()
 
     private var mediaTitle = "SalahPath Audio"
     private var mediaArtist = "SalahPath"
@@ -5127,6 +5135,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
         queueSessionID &+= 1
         queueContinuationDelegate = continuation
+        continuationRequestInFlight = false
         queueURLs = cleaned
         queueCount = cleaned.count
         queueIndex = 0
@@ -5135,10 +5144,14 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     func next() {
-        guard hasNext else { return }
-        queueIndex += 1
-        updateRemoteCommandAvailability()
-        loadCurrentAndPlay()
+        if hasNext {
+            queueIndex += 1
+            updateRemoteCommandAvailability()
+            loadCurrentAndPlay()
+            return
+        }
+
+        requestContinuationIfAvailable()
     }
 
     func previous() {
@@ -5164,6 +5177,7 @@ final class RemoteAudioPlayer: ObservableObject {
             return
         }
 
+        continuationRequestInFlight = false
         queueURLs.append(contentsOf: cleaned)
         queueCount = queueURLs.count
         if let title, !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -5180,11 +5194,14 @@ final class RemoteAudioPlayer: ObservableObject {
 
     func queueContinuationDidReachFinalSurah(expectedSessionID: Int) {
         guard expectedSessionID == queueSessionID else { return }
+        continuationRequestInFlight = false
         queueContinuationDelegate = nil
+        updateRemoteCommandAvailability()
     }
 
     func finishContinuation(expectedSessionID: Int, error: String? = nil) {
         guard expectedSessionID == queueSessionID else { return }
+        continuationRequestInFlight = false
         queueContinuationDelegate = nil
         isLoading = false
         isPlaying = false
@@ -5231,6 +5248,7 @@ final class RemoteAudioPlayer: ObservableObject {
         playbackRevision &+= 1
         queueSessionID &+= 1
         queueContinuationDelegate = nil
+        continuationRequestInFlight = false
         removeObservers()
         player?.pause()
         player = nil
@@ -5363,15 +5381,8 @@ final class RemoteAudioPlayer: ObservableObject {
                 guard let self else { return }
                 if self.hasNext {
                     self.next()
-                } else if let continuation = self.queueContinuationDelegate {
-                    self.currentTime = 0
-                    self.isPlaying = false
-                    self.isLoading = true
-                    self.updateNowPlaying()
-                    continuation.remoteAudioPlayerNeedsContinuation(
-                        self,
-                        sessionID: self.queueSessionID
-                    )
+                } else if self.queueContinuationDelegate != nil {
+                    self.requestContinuationIfAvailable()
                 } else {
                     self.player?.seek(to: .zero)
                     self.currentTime = 0
@@ -5414,6 +5425,26 @@ final class RemoteAudioPlayer: ObservableObject {
         updateNowPlaying()
     }
 
+    private func requestContinuationIfAvailable() {
+        guard !continuationRequestInFlight,
+              let continuation = queueContinuationDelegate else {
+            return
+        }
+
+        continuationRequestInFlight = true
+        player?.pause()
+        currentTime = 0
+        isPlaying = false
+        isLoading = true
+        updateRemoteCommandAvailability()
+        updateNowPlaying()
+
+        continuation.remoteAudioPlayerNeedsContinuation(
+            self,
+            sessionID: queueSessionID
+        )
+    }
+
     private func updateNowPlaying() {
         guard activeURL != nil else { return }
 
@@ -5433,14 +5464,19 @@ final class RemoteAudioPlayer: ObservableObject {
             info[MPMediaItemPropertyPlaybackDuration] = duration
         }
 
-        let context = [mediaContext, prayerContext]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " • ")
-        if !context.isEmpty {
-            info[MPMediaItemPropertyAlbumTitle] = context
+        if let prayerContext, !prayerContext.isEmpty {
+            info[MPMediaItemPropertyAlbumTitle] = prayerContext
+            if let mediaContext, !mediaContext.isEmpty {
+                info[MPMediaItemPropertyComposer] = mediaContext
+            }
+        } else if let mediaContext, !mediaContext.isEmpty {
+            info[MPMediaItemPropertyAlbumTitle] = mediaContext
         } else {
             info[MPMediaItemPropertyAlbumTitle] = "SalahPath"
+        }
+
+        if let nowPlayingArtwork {
+            info[MPMediaItemPropertyArtwork] = nowPlayingArtwork
         }
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
@@ -5504,7 +5540,8 @@ final class RemoteAudioPlayer: ObservableObject {
 
     private func updateRemoteCommandAvailability() {
         let commands = MPRemoteCommandCenter.shared()
-        commands.nextTrackCommand.isEnabled = hasNext
+        commands.nextTrackCommand.isEnabled =
+            hasNext || (queueContinuationDelegate != nil && !continuationRequestInFlight)
         commands.previousTrackCommand.isEnabled = hasPrevious
     }
 
