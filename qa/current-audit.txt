@@ -228,3 +228,5 @@ SWIFT / CONCURRENCY RELEASE HARDENING
 NEXT RELEASE GATE
 - Every new commit must pass the GitHub Actions preflight, warning-as-error Release compilation, IPA integrity checks and artifact upload before this audit is considered release-ready.
 - Final App Store submission still requires signed TestFlight/device validation. The provider-log-retention decision is finalized conservatively in APP_STORE_SUBMISSION.md: Identifiers → Device ID, App Functionality, not linked, not tracking; no Quran-service GPS location disclosure.
+
+Build 78 final QA trigger: quran-tracker-visual-pass
