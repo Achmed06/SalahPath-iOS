@@ -1,6 +1,6 @@
 # SalahPath audio provenance
 
-Release target: SalahPath 3.62 (77)
+Release target: SalahPath 3.62 (78)
 
 ## Doha Adhan notification clips
 
