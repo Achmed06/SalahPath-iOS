@@ -133,6 +133,10 @@ struct SalahPathApp: App {
     @ViewBuilder
     private var qaRoot: some View {
         switch ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] {
+        case "onboarding":
+            OnboardingFlowView()
+        case "daily-dua":
+            NavigationStack { DailyDuaQAView() }
         case "home":
             NavigationStack {
                 HomeView()
