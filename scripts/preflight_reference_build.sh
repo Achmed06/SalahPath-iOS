@@ -171,17 +171,24 @@ if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.
   exit 1
 fi
 
-# Required reference assets (Salam / Wudu / prayer-art parity)
+# Only true brand/hero artwork remains in the asset catalog.
+# Prayer, Wudu, dashboard and navigation visuals are rendered from one
+# native SalahPath visual system in SwiftUI to prevent mixed styles.
 for asset in \
-  "SalahZeit/Assets.xcassets/male_salam_right.imageset" \
-  "SalahZeit/Assets.xcassets/male_salam_left.imageset" \
-  "SalahZeit/Assets.xcassets/female_salam_right.imageset" \
-  "SalahZeit/Assets.xcassets/female_salam_left.imageset" \
-  "SalahZeit/Assets.xcassets/wudu_head.imageset" \
-  "SalahZeit/Assets.xcassets/wudu_face.imageset" \
-  "SalahZeit/Assets.xcassets/male_standing.imageset"; do
+  "SalahZeit/Assets.xcassets/salahpath_logo.imageset" \
+  "SalahZeit/Assets.xcassets/home_mosque.imageset"; do
   require_dir "$asset"
 done
+
+if find SalahZeit/Assets.xcassets -maxdepth 1 -type d \( \
+    -name 'male_*.imageset' -o \
+    -name 'female_*.imageset' -o \
+    -name 'wudu_*.imageset' -o \
+    -name 'ref_dash_*.imageset' -o \
+    -name 'sp_icon_*.imageset' \
+  \) | grep -q .; then
+  fail "legacy mixed-style prayer/Wudu/icon imagesets were reintroduced"
+fi
 
 # Validate all asset-catalog JSON and PNG structure.
 python3 - <<'PY'
