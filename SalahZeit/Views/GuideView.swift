@@ -283,11 +283,24 @@ private struct PrayerPoseArtwork: View {
             .replacingOccurrences(of: "female_", with: "")
     }
 
+    private var artworkScale: CGFloat {
+        switch pose {
+        case "final_sitting", "sitting", "finger", "salam_left", "salam_right":
+            return 1.10
+        case "standing", "upright", "intention", "takbir":
+            return 1.08
+        default:
+            return 1.04
+        }
+    }
+
     var body: some View {
         Image(assetName)
             .resizable()
             .scaledToFit()
+            .scaleEffect(artworkScale)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
             .accessibilityHidden(true)
     }
 
