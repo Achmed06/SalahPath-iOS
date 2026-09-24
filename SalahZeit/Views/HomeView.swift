@@ -169,7 +169,9 @@ struct PrayerTrackerOverviewView: View {
 
                     HStack(spacing: 6) {
                         ForEach(displayedWeekDays, id: \.self) { date in
+                            let isFuture = date > today
                             Button {
+                                guard !isFuture else { return }
                                 selectedDate = date
                             } label: {
                                 VStack(spacing: 4) {
@@ -212,6 +214,8 @@ struct PrayerTrackerOverviewView: View {
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
+                            .disabled(isFuture)
+                            .opacity(isFuture ? 0.38 : 1)
                             .accessibilityLabel(trackerDayAccessibility(date))
                         }
                     }
@@ -265,11 +269,8 @@ struct PrayerTrackerOverviewView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel(
                         settings.t(
-                            "\(kind.localizedName(settings.language)), \(done ? "erledigt" : "offen")",
-                            settings.t(
                             "\(kind.localizedName(settings.language)), \(done ? "markiert" : "offen")",
                             "\(kind.localizedName(settings.language)), \(done ? "tamamlandı" : "açık")"
-                        )
                         )
                     )
                 }
@@ -366,9 +367,14 @@ struct PrayerTrackerOverviewView: View {
         formatter.dateStyle = .medium
         let count = PrayerTrackerStore.completedCount(on: date)
         let paused = PrayerTrackerStore.isPaused(date)
-        let state = paused
-            ? settings.t("pausiert", "duraklatıldı")
-            : settings.t("\(count) von 5 Gebeten markiert", "5 namazdan \(count) tanesi işaretli")
+        let state: String
+        if date > today {
+            state = settings.t("zukünftiger Tag", "gelecek gün")
+        } else if paused {
+            state = settings.t("pausiert", "duraklatıldı")
+        } else {
+            state = settings.t("\(count) von 5 Gebeten markiert", "5 namazdan \(count) tanesi işaretli")
+        }
         return "\(formatter.string(from: date)), \(state)"
     }
 }
