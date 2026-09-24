@@ -153,6 +153,10 @@ for token in (
     'case 12: footVisual(mirrored: false)',
     'case 13: footVisual(mirrored: true)',
     'Text("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ")',
+    'imageKey: "salam_right",\\n                deTitle: "Salām – zuerst rechts"',
+    'imageKey: "salam_left",\\n                deTitle: "Salām – danach links"',
+    'imageName: "\\\\(prefix)_salam_right",\\n                arrow: "arrow.right"',
+    'imageName: "\\\\(prefix)_salam_left",\\n                arrow: "arrow.left"',
 ):
     if token not in guide:
         fail(f"unified illustration regression: missing {token}")
