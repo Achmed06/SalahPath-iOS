@@ -232,12 +232,10 @@ struct SettingsView: View {
 
                     HStack(spacing: 8) {
                         Button {
-                            Task {
-                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
-                                notificationStatusText = scheduled
-                                    ? settings.t("Standard-Gebetsruf startet gleich.", "Standart ezan birazdan çalacak.")
-                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
-                            }
+                            let played = NotificationManager.shared.playAdhanPreviewDirect(fajr: false)
+                            notificationStatusText = played
+                                ? settings.t("Standard-Gebetsruf wird direkt abgespielt.", "Standart ezan doğrudan çalıyor.")
+                                : settings.t("Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Ezan ses dosyası oynatılamadı.")
                         } label: {
                             Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")
                                 .font(.system(size: 10.5, weight: .bold))
@@ -247,12 +245,10 @@ struct SettingsView: View {
                         .buttonStyle(.bordered)
 
                         Button {
-                            Task {
-                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: true)
-                                notificationStatusText = scheduled
-                                    ? settings.t("Fajr-Gebetsruf startet gleich.", "Sabah ezanı birazdan çalacak.")
-                                    : settings.t("Test konnte nicht geplant werden. Prüfe die iOS-Benachrichtigungsberechtigung.", "Test planlanamadı. iOS bildirim iznini kontrol et.")
-                            }
+                            let played = NotificationManager.shared.playAdhanPreviewDirect(fajr: true)
+                            notificationStatusText = played
+                                ? settings.t("Fajr-Gebetsruf wird direkt abgespielt.", "Sabah ezanı doğrudan çalıyor.")
+                                : settings.t("Fajr-Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Sabah ezanı ses dosyası oynatılamadı.")
                         } label: {
                             Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")
                                 .font(.system(size: 10.5, weight: .bold))
@@ -265,6 +261,34 @@ struct SettingsView: View {
                     .padding(.horizontal, 12)
                     .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime || !settings.adhanSoundEnabled)
                     .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime && settings.adhanSoundEnabled ? 1 : 0.45)
+
+                    Button {
+                        Task {
+                            let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
+                            notificationStatusText = scheduled
+                                ? settings.t(
+                                    "iOS-Testmitteilung wurde geplant. Sperre den Bildschirm oder verlasse SalahPath kurz, um die Systemzustellung zu prüfen.",
+                                    "iOS test bildirimi planlandı. Sistem teslimini kontrol etmek için ekranı kilitle veya SalahPath'ten kısa süre çık."
+                                )
+                                : settings.t(
+                                    "iOS-Testmitteilung konnte nicht geplant werden. Prüfe die Benachrichtigungsberechtigung.",
+                                    "iOS test bildirimi planlanamadı. Bildirim iznini kontrol et."
+                                )
+                        }
+                    } label: {
+                        Label(
+                            settings.t("iOS-Mitteilung testen", "iOS bildirimini test et"),
+                            systemImage: "bell.badge.fill"
+                        )
+                        .font(.system(size: 10.5, weight: .bold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 9)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(SalahTheme.teal)
+                    .padding(.horizontal, 12)
+                    .disabled(!settings.notificationsEnabled)
+                    .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
                     Text(settings.t(
                         "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
