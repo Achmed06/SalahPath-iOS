@@ -408,11 +408,11 @@ private struct ReferenceBottomBar: View {
 
     private var items: [(String, String)] {
         [
-            ("sp_icon_home", settings.t("Start", "Ana Sayfa")),
-            ("sp_icon_quran", settings.t("Koran", "Kur'an")),
-            ("sp_icon_prayer", settings.t("Gebet", "Namaz")),
-            ("sp_icon_calendar", settings.t("Entdecken", "Keşfet")),
-            ("sp_icon_settings", settings.t("Profil", "Profil"))
+            ("house.fill", settings.t("Start", "Ana Sayfa")),
+            ("book.closed.fill", settings.t("Koran", "Kur'an")),
+            ("figure.mind.and.body", settings.t("Gebet", "Namaz")),
+            ("sparkles.rectangle.stack.fill", settings.t("Entdecken", "Keşfet")),
+            ("person.crop.circle.fill", settings.t("Profil", "Profil"))
         ]
     }
 
@@ -431,15 +431,15 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            Image(item.0)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(
-                                    width: (item.0 == "sp_icon_quran" || item.0 == "sp_icon_prayer") ? 17 : 20,
-                                    height: (item.0 == "sp_icon_quran" || item.0 == "sp_icon_prayer") ? 17 : 20
+                            Image(systemName: item.0)
+                                .symbolRenderingMode(.hierarchical)
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundStyle(selection == index ? SalahTheme.deepTeal : SalahTheme.mutedInk)
+                                .frame(width: 24, height: 24)
+                                .background(
+                                    Circle()
+                                        .fill(selection == index ? SalahTheme.softTeal.opacity(0.72) : Color.clear)
                                 )
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
                         }
                         .frame(height: 22)
 
