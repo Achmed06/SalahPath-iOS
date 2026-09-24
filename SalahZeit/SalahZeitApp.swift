@@ -178,8 +178,22 @@ struct SalahPathApp: App {
             NavigationStack { QuranPageReaderView(page: 1) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
+        case "namaz-sitting":
+            NavigationStack { PrayerHowToView(initialStepIndex: 9) }
+        case "namaz-finger":
+            NavigationStack { PrayerHowToView(initialStepIndex: 15) }
+        case "namaz-salam":
+            NavigationStack { PrayerHowToView(initialStepIndex: 16) }
         case "wudu":
             NavigationStack { WuduGuideView() }
+        case "wudu-arm":
+            NavigationStack { WuduGuideView(initialStepIndex: 6) }
+        case "wudu-head":
+            NavigationStack { WuduGuideView(initialStepIndex: 8) }
+        case "wudu-ears":
+            NavigationStack { WuduGuideView(initialStepIndex: 9) }
+        case "wudu-foot":
+            NavigationStack { WuduGuideView(initialStepIndex: 11) }
         case "ghusl":
             NavigationStack { GhuslGuideView() }
         case "tasbih":
