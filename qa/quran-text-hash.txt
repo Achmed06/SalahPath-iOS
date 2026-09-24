@@ -1,0 +1,2 @@
+0df03e1d6da4fc8138208fec1688f2b416f0dd4ebbd514179f3e5e0fbaf4195f  SalahZeit/Resources/quran-uthmani.json
+a1312281de070617f8062f9718a3bf0e69e44f16
