@@ -126,12 +126,11 @@ jobs:
           mkdir -p ui-preview
 
           seed_tracker_qa() {
-            QA_TODAY="$(xcrun simctl spawn "$SIM_UDID" date +%Y-%m-%d | tr -d '\r')"
-            read -r QA_YESTERDAY QA_TWO_DAYS_AGO < <(python3 - "$QA_TODAY" <<'PY'
-          from datetime import date, datetime, timedelta
-          import sys
-          current = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
-          print((current - timedelta(days=1)).isoformat(), (current - timedelta(days=2)).isoformat())
+            read -r QA_TODAY QA_YESTERDAY QA_TWO_DAYS_AGO < <(python3 <<'PY'
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          current = datetime.now(ZoneInfo("Europe/Berlin")).date()
+          print(current.isoformat(), (current - timedelta(days=1)).isoformat(), (current - timedelta(days=2)).isoformat())
           PY
             )
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath "prayerTracker-$QA_TODAY" -array Fajr Dhuhr Asr
