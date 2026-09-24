@@ -2389,95 +2389,98 @@ private struct ReferencePosterMapArt: View {
         GeometryReader { proxy in
             let w = proxy.size.width
             let h = proxy.size.height
+            let pin = CGPoint(x: w * 0.30, y: h * 0.68)
+            let kaaba = CGPoint(x: w * 0.73, y: h * 0.28)
 
             ZStack {
-                Color(red: 0.72, green: 0.88, blue: 0.87)
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.84, green: 0.93, blue: 0.90),
+                        Color(red: 0.72, green: 0.87, blue: 0.84)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
 
-                // Soft simplified world-map land masses matching the poster tile.
-                Path { p in
-                    p.move(to: CGPoint(x: w * 0.03, y: h * 0.18))
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.25, y: h * 0.31),
-                        control1: CGPoint(x: w * 0.09, y: h * 0.10),
-                        control2: CGPoint(x: w * 0.22, y: h * 0.13)
-                    )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.19, y: h * 0.50),
-                        control1: CGPoint(x: w * 0.27, y: h * 0.39),
-                        control2: CGPoint(x: w * 0.23, y: h * 0.46)
-                    )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.08, y: h * 0.42),
-                        control1: CGPoint(x: w * 0.15, y: h * 0.53),
-                        control2: CGPoint(x: w * 0.09, y: h * 0.50)
-                    )
-                    p.closeSubpath()
-                }
-                .fill(Color.white.opacity(0.58))
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(SalahTheme.cream.opacity(0.55))
+                    .frame(width: w * 0.30, height: h * 0.27)
+                    .rotationEffect(.degrees(-8))
+                    .offset(x: -w * 0.27, y: -h * 0.24)
+
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(SalahTheme.cream.opacity(0.48))
+                    .frame(width: w * 0.26, height: h * 0.23)
+                    .rotationEffect(.degrees(7))
+                    .offset(x: w * 0.29, y: h * 0.23)
 
                 Path { p in
-                    p.move(to: CGPoint(x: w * 0.30, y: h * 0.14))
+                    p.move(to: CGPoint(x: -w * 0.05, y: h * 0.77))
                     p.addCurve(
-                        to: CGPoint(x: w * 0.60, y: h * 0.20),
-                        control1: CGPoint(x: w * 0.38, y: h * 0.06),
-                        control2: CGPoint(x: w * 0.52, y: h * 0.08)
+                        to: CGPoint(x: w * 1.05, y: h * 0.38),
+                        control1: CGPoint(x: w * 0.28, y: h * 0.55),
+                        control2: CGPoint(x: w * 0.65, y: h * 0.58)
                     )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.66, y: h * 0.39),
-                        control1: CGPoint(x: w * 0.68, y: h * 0.24),
-                        control2: CGPoint(x: w * 0.69, y: h * 0.32)
-                    )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.49, y: h * 0.45),
-                        control1: CGPoint(x: w * 0.59, y: h * 0.44),
-                        control2: CGPoint(x: w * 0.54, y: h * 0.42)
-                    )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.36, y: h * 0.34),
-                        control1: CGPoint(x: w * 0.43, y: h * 0.49),
-                        control2: CGPoint(x: w * 0.35, y: h * 0.44)
-                    )
-                    p.closeSubpath()
                 }
-                .fill(Color.white.opacity(0.64))
+                .stroke(Color.white.opacity(0.90), style: StrokeStyle(lineWidth: 11, lineCap: .round))
 
                 Path { p in
-                    p.move(to: CGPoint(x: w * 0.43, y: h * 0.42))
+                    p.move(to: CGPoint(x: w * 0.20, y: -h * 0.05))
                     p.addCurve(
-                        to: CGPoint(x: w * 0.52, y: h * 0.79),
-                        control1: CGPoint(x: w * 0.55, y: h * 0.49),
-                        control2: CGPoint(x: w * 0.58, y: h * 0.65)
+                        to: CGPoint(x: w * 0.61, y: h * 1.05),
+                        control1: CGPoint(x: w * 0.23, y: h * 0.40),
+                        control2: CGPoint(x: w * 0.53, y: h * 0.62)
                     )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.37, y: h * 0.59),
-                        control1: CGPoint(x: w * 0.44, y: h * 0.75),
-                        control2: CGPoint(x: w * 0.37, y: h * 0.68)
-                    )
-                    p.closeSubpath()
                 }
-                .fill(Color.white.opacity(0.57))
+                .stroke(Color.white.opacity(0.76), style: StrokeStyle(lineWidth: 8, lineCap: .round))
 
                 Path { p in
-                    p.move(to: CGPoint(x: w * 0.69, y: h * 0.24))
+                    p.move(to: CGPoint(x: w * 0.60, y: -h * 0.08))
                     p.addCurve(
-                        to: CGPoint(x: w * 0.96, y: h * 0.31),
-                        control1: CGPoint(x: w * 0.80, y: h * 0.16),
-                        control2: CGPoint(x: w * 0.91, y: h * 0.20)
+                        to: CGPoint(x: w * 1.04, y: h * 0.83),
+                        control1: CGPoint(x: w * 0.66, y: h * 0.29),
+                        control2: CGPoint(x: w * 0.84, y: h * 0.56)
                     )
-                    p.addCurve(
-                        to: CGPoint(x: w * 0.78, y: h * 0.49),
-                        control1: CGPoint(x: w * 0.95, y: h * 0.42),
-                        control2: CGPoint(x: w * 0.87, y: h * 0.48)
-                    )
-                    p.closeSubpath()
                 }
-                .fill(Color.white.opacity(0.55))
+                .stroke(SalahTheme.cream.opacity(0.82), style: StrokeStyle(lineWidth: 6, lineCap: .round))
 
-                Image(systemName: "mappin.circle.fill")
-                    .font(.system(size: min(w, h) * 0.25, weight: .bold))
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(SalahTheme.teal, Color.white)
-                    .offset(x: w * 0.08, y: h * 0.08)
+                Path { p in
+                    p.move(to: pin)
+                    p.addQuadCurve(
+                        to: kaaba,
+                        control: CGPoint(x: w * 0.53, y: h * 0.40)
+                    )
+                }
+                .stroke(
+                    SalahTheme.gold,
+                    style: StrokeStyle(lineWidth: 3, lineCap: .round, dash: [6, 5])
+                )
+
+                ZStack {
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: min(w, h) * 0.27, height: min(w, h) * 0.27)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 4, y: 2)
+                    Image(systemName: "location.fill")
+                        .font(.system(size: min(w, h) * 0.12, weight: .bold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+                .position(pin)
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .fill(Color.black.opacity(0.90))
+                        .frame(width: min(w, h) * 0.20, height: min(w, h) * 0.17)
+                    Rectangle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: min(w, h) * 0.20, height: 3)
+                        .offset(y: -min(w, h) * 0.035)
+                    Image(systemName: "location.north.fill")
+                        .font(.system(size: min(w, h) * 0.075, weight: .bold))
+                        .foregroundStyle(SalahTheme.gold)
+                        .offset(y: -min(w, h) * 0.18)
+                }
+                .position(kaaba)
             }
             .frame(width: w, height: h)
         }
