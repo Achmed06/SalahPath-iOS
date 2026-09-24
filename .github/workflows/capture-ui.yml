@@ -97,6 +97,10 @@ jobs:
 
       - name: Boot and capture reference screens
         shell: bash
+        env:
+          UI_EVENT_NAME: ${{ github.event_name }}
+          UI_HEAD_REF: ${{ github.head_ref }}
+          UI_PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
           run_timeout() {
             local seconds="$1"
@@ -137,8 +141,8 @@ jobs:
           # release reference capture. This avoids re-rendering 30+ screens
           # for a one-screen fix while preserving full release coverage.
           CAPTURE_MODE="full"
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            PR_HINT="${{ github.head_ref }} ${{ github.event.pull_request.title }}"
+          if [ "$UI_EVENT_NAME" = "pull_request" ]; then
+            PR_HINT="$UI_HEAD_REF $UI_PR_TITLE"
             case "$PR_HINT" in
               *tracker*|*Tracker*) CAPTURE_MODE="tracker" ;;
               *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
