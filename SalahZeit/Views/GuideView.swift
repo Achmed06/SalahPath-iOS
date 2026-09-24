@@ -1179,6 +1179,13 @@ struct PrayerHowToView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                guard currentStepIndex > 0 else { return }
+                Task { @MainActor in
+                    await Task.yield()
+                    proxy.scrollTo("prayer-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
             .onChange(of: settings.prayerAudience) { _, _ in
                 currentStepIndex = 0
                 proxy.scrollTo("prayer-step-top", anchor: .top)
@@ -2180,6 +2187,13 @@ struct WuduGuideView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                guard currentStepIndex > 0 else { return }
+                Task { @MainActor in
+                    await Task.yield()
+                    proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
         }
     }
 
