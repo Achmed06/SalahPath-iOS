@@ -283,17 +283,6 @@ private struct PrayerPoseArtwork: View {
             .replacingOccurrences(of: "female_", with: "")
     }
 
-    private var artworkScale: CGFloat {
-        switch pose {
-        case "final_sitting", "sitting", "finger", "salam_left", "salam_right":
-            return 1.10
-        case "standing", "upright", "intention", "takbir":
-            return 1.08
-        default:
-            return 1.04
-        }
-    }
-
     private var garmentColor: Color {
         female ? Color(red: 0.56, green: 0.36, blue: 0.45) : SalahTheme.deepTeal
     }
@@ -1777,22 +1766,6 @@ private struct WuduTutorialStep: Identifiable {
 private struct WuduInstructionVisual: View {
     let key: String
     let stepNumber: Int
-
-    private var assetName: String {
-        if key == "wudu_intention" {
-            return stepNumber == 1 ? "wudu_intention" : "wudu_basmala"
-        }
-        // Right/left arm and foot pairs use one canonical illustration.
-        // The opposite side is mirrored in Swift so paired Wudu steps can
-        // never drift in character, pose, lighting or framing.
-        if key == "wudu_rightarm" { return "wudu_leftarm" }
-        if key == "wudu_rightfoot" { return "wudu_leftfoot" }
-        return key
-    }
-
-    private var mirrorsCanonicalAsset: Bool {
-        key == "wudu_rightarm" || key == "wudu_rightfoot"
-    }
 
     var body: some View {
         ZStack {
