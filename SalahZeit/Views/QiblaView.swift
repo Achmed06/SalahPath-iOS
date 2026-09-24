@@ -1,18 +1,34 @@
 import SwiftUI
 import Adhan
 import UIKit
+import CoreLocation
 
 struct QiblaView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var settings: SettingsStore
 
+    private var isScreenshotQA: Bool {
+        ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
+    }
+
+    private var effectiveLocation: CLLocation? {
+        if let location = locationManager.location {
+            return location
+        }
+        guard isScreenshotQA,
+              ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] == "qibla" else {
+            return nil
+        }
+        return CLLocation(latitude: 52.5200, longitude: 13.4050)
+    }
+
     var body: some View {
         Group {
-            if let location = locationManager.location {
+            if let location = effectiveLocation {
                 let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                 let qibla = Qibla(coordinates: coordinates).direction
                 let qiblaDegrees = qibla.isFinite ? Int(qibla.rounded()) : nil
-                let heading = currentHeading
+                let heading = isScreenshotQA ? 0 : currentHeading
                 let headingDegrees = heading.map { Int($0.rounded()) }
                 let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
 
@@ -169,7 +185,10 @@ struct QiblaView: View {
                         }
 
                         VStack(spacing: 0) {
-                            infoRow(icon: "location.fill", title: locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
+                            infoRow(
+                                icon: "location.fill",
+                                title: locationManager.locality ?? (isScreenshotQA ? "Berlin · QA" : settings.t("Aktueller Standort", "Mevcut konum"))
+                            )
                             infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
                             infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
                         }
