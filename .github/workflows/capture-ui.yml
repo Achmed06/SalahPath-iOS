@@ -101,6 +101,7 @@ jobs:
           UI_EVENT_NAME: ${{ github.event_name }}
           UI_HEAD_REF: ${{ github.head_ref }}
           UI_PR_TITLE: ${{ github.event.pull_request.title }}
+          UI_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           run_timeout() {
             local seconds="$1"
@@ -140,10 +141,17 @@ jobs:
           # Pull requests use focused visual QA. Pushes to main keep the full
           # release reference capture. This avoids re-rendering 30+ screens
           # for a one-screen fix while preserving full release coverage.
-          CAPTURE_MODE="full"
-          if [ "$UI_EVENT_NAME" = "pull_request" ]; then
-            PR_HINT="$UI_HEAD_REF $UI_PR_TITLE"
-            case "$PR_HINT" in
+          if [ "$UI_EVENT_NAME" = "workflow_dispatch" ]; then
+            CAPTURE_MODE="full"
+          else
+            CAPTURE_MODE="core"
+            if [ "$UI_EVENT_NAME" = "pull_request" ]; then
+              UI_HINT="$UI_HEAD_REF $UI_PR_TITLE"
+            else
+              UI_HINT="$UI_COMMIT_MESSAGE"
+            fi
+            case "$UI_HINT" in
+              *"[full-ui]"*|*"[release-ui]"*) CAPTURE_MODE="full" ;;
               *tracker*|*Tracker*) CAPTURE_MODE="tracker" ;;
               *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
               *quran*|*Quran*) CAPTURE_MODE="quran" ;;
