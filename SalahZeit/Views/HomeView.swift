@@ -113,8 +113,14 @@ struct PrayerTrackerOverviewView: View {
         calendar.isDate(selectedDay, inSameDayAs: today)
     }
 
-    private var recentDays: [Date] {
-        (-6...0).compactMap { LocalDay.addingDays($0, to: today) }
+    private var displayedWeekDays: [Date] {
+        let weekday = calendar.component(.weekday, from: selectedDay)
+        let firstWeekday = calendar.firstWeekday
+        let delta = (weekday - firstWeekday + 7) % 7
+        guard let weekStart = LocalDay.addingDays(-delta, to: selectedDay) else {
+            return [selectedDay]
+        }
+        return (0..<7).compactMap { LocalDay.addingDays($0, to: weekStart) }
     }
 
     var body: some View {
@@ -162,7 +168,7 @@ struct PrayerTrackerOverviewView: View {
                     }
 
                     HStack(spacing: 6) {
-                        ForEach(recentDays, id: \.self) { date in
+                        ForEach(displayedWeekDays, id: \.self) { date in
                             Button {
                                 selectedDate = date
                             } label: {
