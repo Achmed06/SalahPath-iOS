@@ -1,13 +1,15 @@
 {
   "images": [
     {
-      "filename": "salahpath_logo.png",
-      "idiom": "universal",
-      "scale": "1x"
+      "filename": "salahpath_logo.svg",
+      "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
+  },
+  "properties": {
+    "preserves-vector-representation": true
   }
 }
