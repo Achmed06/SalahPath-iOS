@@ -46,6 +46,8 @@ require_file "AUDIO_LICENSES.md"
 require_file "SalahZeit/Resources/adhan-standard.caf"
 require_file "SalahZeit/Resources/adhan-fajr.caf"
 require_file "qa/adhan-audio-hashes.txt"
+require_file "SalahZeit/Resources/quran-uthmani.json"
+require_file "qa/quran-text-hash.txt"
 
 # Patch/merge integrity.
 if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
@@ -64,10 +66,12 @@ grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj
 grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'adhan-standard.caf in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'adhan-fajr.caf in Resources' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'quran-uthmani.json in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'adhanSoundEnabled' "SalahZeit/Models/AppSettings.swift"
 grep -q 'UNNotificationSound(named:' "SalahZeit/Services/NotificationManager.swift"
 [[ "$(git hash-object SalahZeit/Resources/adhan-fajr.caf)" == "546fee5cde9e0e4e9041ed02c44bc0dc5290eb19" ]] || fail "adhan-fajr.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/adhan-standard.caf)" == "5af226c758c556e318f0fe667b415a02807a8c2c" ]] || fail "adhan-standard.caf does not match the audited Doha derivative"
+[[ "$(git hash-object SalahZeit/Resources/quran-uthmani.json)" == "a1312281de070617f8062f9718a3bf0e69e44f16" ]] || fail "quran-uthmani.json does not match the validated corpus"
 grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
