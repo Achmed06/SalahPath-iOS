@@ -867,8 +867,18 @@ struct HomeView: View {
     }
 
     private func updateNowPlayingPrayerContext() {
-        guard let location = effectiveLocation,
-              let next = engine.nextPrayer(now: now, location: location, settings: settings) else {
+        guard let location = effectiveLocation else {
+            RemoteAudioPlayer.shared.setPrayerContext(nil)
+            return
+        }
+
+        let upcoming = engine.upcomingPrayers(
+            now: now,
+            location: location,
+            settings: settings,
+            count: 2
+        )
+        guard !upcoming.isEmpty else {
             RemoteAudioPlayer.shared.setPrayerContext(nil)
             return
         }
@@ -878,10 +888,13 @@ struct HomeView: View {
         formatter.timeZone = .autoupdatingCurrent
         formatter.dateFormat = settings.use24Hour ? "HH:mm" : "h:mm a"
 
-        let label = settings.t("Nächstes Gebet", "Sıradaki Namaz")
-        let name = next.kind.localizedName(settings.language)
-        let time = formatter.string(from: next.date)
-        RemoteAudioPlayer.shared.setPrayerContext("\(label): \(name) \(time)")
+        let times = upcoming.map {
+            "\($0.kind.localizedName(settings.language)) \(formatter.string(from: $0.date))"
+        }
+        let label = settings.t("Gebetszeiten", "Namaz vakitleri")
+        RemoteAudioPlayer.shared.setPrayerContext(
+            "\(label): \(times.joined(separator: " · "))"
+        )
     }
 
     private func stopClock() {
