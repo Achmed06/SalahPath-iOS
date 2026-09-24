@@ -1,0 +1,58 @@
+name: Render branded SalahPath app icons
+
+on:
+  push:
+    branches:
+      - fix/build78-app-icon-brand
+    paths:
+      - SalahZeit/Assets.xcassets/AppIcon.appiconset/AppIcon-master.svg
+      - .github/workflows/render-app-icon.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/build78-app-icon-brand
+
+      - name: Install renderer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librsvg2-bin
+          python3 -m pip install --disable-pip-version-check pillow==11.3.0
+
+      - name: Render all required app icon sizes
+        shell: bash
+        run: |
+          set -euo pipefail
+          DIR="SalahZeit/Assets.xcassets/AppIcon.appiconset"
+          rsvg-convert -w 1024 -h 1024 "$DIR/AppIcon-master.svg" -o "$DIR/AppIcon-1024.png"
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          d=Path("SalahZeit/Assets.xcassets/AppIcon.appiconset")
+          src=Image.open(d/"AppIcon-1024.png").convert("RGB")
+          for size in (40,58,60,80,87,120,180):
+              src.resize((size,size), Image.Resampling.LANCZOS).save(d/f"AppIcon-{size}.png", optimize=True)
+          PY
+
+      - name: Commit rendered app icons
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add SalahZeit/Assets.xcassets/AppIcon.appiconset
+          if git diff --cached --quiet; then
+            echo "No app icon changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Render branded SalahPath app icon set"
+          git fetch origin fix/build78-app-icon-brand
+          git rebase origin/fix/build78-app-icon-brand
+          git push origin HEAD:fix/build78-app-icon-brand
