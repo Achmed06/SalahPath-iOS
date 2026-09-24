@@ -429,6 +429,13 @@ struct TrackerPauseView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             now = Date()
+            updateNowPlayingPrayerContext()
+        }
+        .onReceive(locationManager.$location) { _ in
+            updateNowPlayingPrayerContext()
+        }
+        .onChange(of: settings.language) { _, _ in
+            updateNowPlayingPrayerContext()
         }
         .onReceive(NotificationCenter.default.publisher(for: .prayerTrackerDidChange)) { _ in
             refresh &+= 1
@@ -794,6 +801,7 @@ struct HomeView: View {
                 }
                 startClock()
             }
+            updateNowPlayingPrayerContext()
         }
         .onDisappear {
             stopClock()
@@ -837,8 +845,29 @@ struct HomeView: View {
                 }
                 guard !Task.isCancelled else { break }
                 now = Date()
+                if Calendar.autoupdatingCurrent.component(.second, from: now) == 0 {
+                    updateNowPlayingPrayerContext()
+                }
             }
         }
+    }
+
+    private func updateNowPlayingPrayerContext() {
+        guard let location = effectiveLocation,
+              let next = engine.nextPrayer(now: now, location: location, settings: settings) else {
+            RemoteAudioPlayer.shared.setPrayerContext(nil)
+            return
+        }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = .autoupdatingCurrent
+        formatter.dateFormat = settings.use24Hour ? "HH:mm" : "h:mm a"
+
+        let label = settings.t("Nächstes Gebet", "Sıradaki Namaz")
+        let name = next.kind.localizedName(settings.language)
+        let time = formatter.string(from: next.date)
+        RemoteAudioPlayer.shared.setPrayerContext("\(label): \(name) \(time)")
     }
 
     private func stopClock() {
