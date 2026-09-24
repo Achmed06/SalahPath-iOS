@@ -125,9 +125,26 @@ jobs:
 
           mkdir -p ui-preview
 
+          seed_tracker_qa() {
+            QA_TODAY="$(xcrun simctl spawn "$SIM_UDID" date +%Y-%m-%d | tr -d '\r')"
+            read -r QA_YESTERDAY QA_TWO_DAYS_AGO < <(python3 - "$QA_TODAY" <<'PY'
+          from datetime import date, datetime, timedelta
+          import sys
+          current = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+          print((current - timedelta(days=1)).isoformat(), (current - timedelta(days=2)).isoformat())
+          PY
+            )
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath "prayerTracker-$QA_TODAY" -array Fajr Dhuhr Asr
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath "prayerTracker-$QA_YESTERDAY" -array Fajr Dhuhr Asr Maghrib Isha
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath "prayerTracker-$QA_TWO_DAYS_AGO" -array Fajr Dhuhr Asr Maghrib Isha
+          }
+
           capture() {
             SCREEN="$1"
             NAME="$2"
+            if [ "$SCREEN" = "prayer-tracker" ]; then
+              seed_tracker_qa
+            fi
             if ! SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath; then
