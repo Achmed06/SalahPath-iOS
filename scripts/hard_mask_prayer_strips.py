@@ -3,10 +3,10 @@ from pathlib import Path
 from PIL import Image
 
 RULES = {
-    Path("SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png"):   (346, 250, 455, 220, 18),
-    Path("SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png"):         (340, 270, 455, 228, 20),
+    Path("SalahZeit/Assets.xcassets/male_intention.imageset/male_intention.png"): (346, 250, 455, 220, 18),
+    Path("SalahZeit/Assets.xcassets/male_takbir.imageset/male_takbir.png"): (340, 270, 455, 228, 20),
     Path("SalahZeit/Assets.xcassets/female_intention.imageset/female_intention.png"): (360, 250, 455, 225, 20),
-    Path("SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png"):     (342, 295, 455, 225, 26),
+    Path("SalahZeit/Assets.xcassets/female_takbir.imageset/female_takbir.png"): (342, 295, 455, 225, 26),
 }
 
 for path, (x0, y0, y1, light, chroma) in RULES.items():
