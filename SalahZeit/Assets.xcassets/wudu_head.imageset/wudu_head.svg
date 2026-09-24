@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef7f5"/>
+      <stop offset="1" stop-color="#f8f3e7"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#efb07d"/>
+      <stop offset="1" stop-color="#d99060"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="420" rx="42" fill="url(#bg)"/>
+  <circle cx="256" cy="212" r="150" fill="#ffffff" opacity=".46"/>
+  <path d="M194 142c4-66 119-86 135-5l-4 50H196z" fill="#302a27"/>
+  <ellipse cx="260" cy="203" rx="79" ry="93" fill="url(#skin)"/>
+  <path d="M190 184c10 17 19 28 33 36l-7 76c-36-17-55-54-52-91 1-10 9-18 26-21z" fill="#1f5f58"/>
+  <path d="M330 183c-10 17-19 28-33 36l7 77c36-18 55-55 52-92-1-10-9-18-26-21z" fill="#1f5f58"/>
+  <path d="M213 274c18 25 76 31 96-1 1 44-19 73-49 73-30 0-49-28-47-72z" fill="#302a27"/>
+  <path d="M219 220c13 12 25 18 39 18 15 0 28-6 42-18" fill="none" stroke="#6f432d" stroke-width="6" stroke-linecap="round"/>
+  <path d="M218 184c12-8 25-10 38-4M268 180c13-6 27-3 38 5" fill="none" stroke="#302a27" stroke-width="9" stroke-linecap="round"/>
+  <path d="M228 205c8 6 16 6 23 0M276 205c8 6 16 6 23 0" fill="none" stroke="#302a27" stroke-width="4" stroke-linecap="round"/>
+  <path d="M122 113c25-11 61-2 93 16l23 18-23 34-28-17c-28-17-49-18-72-13z" fill="url(#skin)"/>
+  <path d="M390 113c-25-11-61-2-93 16l-23 18 23 34 28-17c28-17 49-18 72-13z" fill="url(#skin)"/>
+  <path d="M194 132c25 10 44 20 64 39 19-18 40-30 66-39" fill="none" stroke="#c37e55" stroke-width="4" stroke-linecap="round"/>
+  <path d="M170 90c28 5 54 15 78 31" fill="none" stroke="#1f5f58" stroke-width="8" stroke-linecap="round"/>
+  <path d="M342 90c-28 5-54 15-78 31" fill="none" stroke="#1f5f58" stroke-width="8" stroke-linecap="round"/>
+  <path d="M239 112l11 10-15 3zM273 112l-11 10 15 3z" fill="#1f5f58"/>
+  <g fill="#49a8c4">
+    <path d="M144 169c0-9 10-20 10-20s10 11 10 20a10 10 0 1 1-20 0z"/>
+    <path d="M348 169c0-9 10-20 10-20s10 11 10 20a10 10 0 1 1-20 0z"/>
+  </g>
+  <path d="M256 58c-38 0-73 14-98 38" fill="none" stroke="#b8913f" stroke-width="5" stroke-linecap="round" stroke-dasharray="8 10"/>
+  <path d="M157 96l17-3-7 16z" fill="#b8913f"/>
+  <text x="256" y="388" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#1f5f58">Feuchte Hände direkt über den Kopf streichen</text>
+</svg>
