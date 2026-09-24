@@ -4,6 +4,7 @@ import UIKit
 
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @ObservedObject private var audio = RemoteAudioPlayer.shared
     @State private var selection = 0
 
     init() {
@@ -65,8 +66,16 @@ struct RootTabView: View {
         }
         .toolbar(.hidden, for: .tabBar)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            ReferenceBottomBar(selection: $selection)
-                .environmentObject(settings)
+            VStack(spacing: 0) {
+                if audio.activeURL != nil {
+                    GlobalAudioMiniPlayer(audio: audio)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+
+                ReferenceBottomBar(selection: $selection)
+                    .environmentObject(settings)
+            }
+            .animation(.easeInOut(duration: 0.18), value: audio.activeURL != nil)
         }
         .preferredColorScheme(preferredColorScheme)
         .tint(SalahTheme.teal)
@@ -77,6 +86,113 @@ struct RootTabView: View {
         case .system: return nil
         case .light: return .light
         case .dark: return .dark
+        }
+    }
+}
+
+private struct GlobalAudioMiniPlayer: View {
+    @ObservedObject var audio: RemoteAudioPlayer
+
+    private var progress: Double {
+        guard audio.duration.isFinite, audio.duration > 0 else { return 0 }
+        return min(max(audio.currentTime / audio.duration, 0), 1)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ProgressView(value: progress)
+                .progressViewStyle(.linear)
+                .tint(SalahTheme.gold)
+
+            HStack(spacing: 10) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(SalahTheme.softTeal)
+                        .frame(width: 42, height: 42)
+
+                    Image("salahpath_logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 32)
+                }
+                .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(audio.displayTitle)
+                        .font(.system(size: 12.5, weight: .bold))
+                        .foregroundStyle(SalahTheme.ink)
+                        .lineLimit(1)
+
+                    Text(audio.displaySubtitle)
+                        .font(.system(size: 9.5, weight: .medium))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
+                }
+
+                Spacer(minLength: 4)
+
+                Button {
+                    audio.previous()
+                } label: {
+                    Image(systemName: "backward.fill")
+                        .font(.system(size: 13, weight: .semibold))
+                        .frame(width: 30, height: 30)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(SalahTheme.deepTeal)
+                .disabled(!audio.hasPrevious)
+                .opacity(audio.hasPrevious ? 1 : 0.35)
+
+                Button {
+                    audio.isPlaying ? audio.pause() : audio.resume()
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(SalahTheme.navigationTeal)
+                            .frame(width: 36, height: 36)
+
+                        if audio.isLoading {
+                            ProgressView()
+                                .controlSize(.small)
+                                .tint(.white)
+                        } else {
+                            Image(systemName: audio.isPlaying ? "pause.fill" : "play.fill")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(audio.isPlaying ? "Audio pausieren" : "Audio fortsetzen")
+
+                Button {
+                    audio.next()
+                } label: {
+                    Image(systemName: "forward.fill")
+                        .font(.system(size: 13, weight: .semibold))
+                        .frame(width: 30, height: 30)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(SalahTheme.deepTeal)
+
+                Button {
+                    audio.stop()
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .frame(width: 24, height: 30)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .accessibilityLabel("Audio stoppen")
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background(.ultraThinMaterial)
+        }
+        .overlay(alignment: .top) {
+            Divider().opacity(0.35)
         }
     }
 }
