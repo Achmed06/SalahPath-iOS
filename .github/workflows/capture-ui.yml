@@ -125,6 +125,47 @@ jobs:
 
           mkdir -p ui-preview
 
+          cat > /tmp/salahpath-screenshot-check.swift <<'SWIFT'
+          import AppKit
+          import Foundation
+
+          guard CommandLine.arguments.count == 2 else { exit(64) }
+          let path = CommandLine.arguments[1]
+          guard let image = NSImage(contentsOfFile: path),
+                let tiff = image.tiffRepresentation,
+                let bitmap = NSBitmapImageRep(data: tiff) else {
+              fputs("Could not decode screenshot: \(path)\n", stderr)
+              exit(65)
+          }
+
+          let stepX = max(1, bitmap.pixelsWide / 120)
+          let stepY = max(1, bitmap.pixelsHigh / 240)
+          var total = 0
+          var nearWhite = 0
+
+          for y in stride(from: 0, to: bitmap.pixelsHigh, by: stepY) {
+              for x in stride(from: 0, to: bitmap.pixelsWide, by: stepX) {
+                  guard let color = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) else { continue }
+                  total += 1
+                  if color.redComponent > 0.96,
+                     color.greenComponent > 0.96,
+                     color.blueComponent > 0.96,
+                     color.alphaComponent > 0.90 {
+                      nearWhite += 1
+                  }
+              }
+          }
+
+          guard total > 0 else { exit(66) }
+          let ratio = Double(nearWhite) / Double(total)
+          print(String(format: "Screenshot near-white ratio %.4f: %@", ratio, path))
+          if ratio > 0.90 {
+              fputs("Screenshot appears blank: \(path)\n", stderr)
+              exit(2)
+          }
+          SWIFT
+          swiftc /tmp/salahpath-screenshot-check.swift -o /tmp/salahpath-screenshot-check
+
           capture() {
             SCREEN="$1"
             NAME="$2"
@@ -146,7 +187,18 @@ jobs:
             else
               sleep 8
             fi
-            run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
+            SCREENSHOT="ui-preview/$NAME"
+            run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
+
+            if ! /tmp/salahpath-screenshot-check "$SCREENSHOT"; then
+              echo "Blank/invalid screenshot for $SCREEN; relaunching once and recapturing."
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+                run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
+              sleep 15
+              run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
+              /tmp/salahpath-screenshot-check "$SCREENSHOT"
+            fi
           }
 
           capture home  SalahPath-v3.62-B78-TR-Home.png
