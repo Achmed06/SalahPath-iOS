@@ -176,6 +176,10 @@ struct SalahPathApp: App {
             NavigationStack { QuranReaderQAView() }
         case "quran-page":
             NavigationStack { QuranPageReaderView(page: 1) }
+        case "quran-page-mid":
+            NavigationStack { QuranPageReaderView(page: 302) }
+        case "quran-page-last":
+            NavigationStack { QuranPageReaderView(page: 604) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
         case "namaz-sitting":
