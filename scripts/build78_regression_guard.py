@@ -188,4 +188,57 @@ for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
         fail(f"legacy icon asset reference returned: {legacy_prefix}")
 
+# 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
+project = read("SalahZeit.xcodeproj/project.pbxproj")
+notification_manager = read("SalahZeit/Services/NotificationManager.swift")
+settings_view = read("SalahZeit/Views/SettingsView.swift")
+
+for token in (
+    '.frame(height: 48)',
+    '.contentShape(Rectangle())',
+    'Text(settings.t("Weiter", "İleri"))',
+):
+    if token not in app:
+        fail(f"onboarding hit-target regression: missing {token}")
+
+for token in (
+    'import MediaPlayer',
+    'static let shared = RemoteAudioPlayer()',
+    'MPNowPlayingInfoCenter.default().nowPlayingInfo',
+    'MPRemoteCommandCenter.shared()',
+    'func setPrayerContext(_ text: String?)',
+    'Array(urls.dropFirst(startIndex))',
+    'Array(resolvedAudioURLs.dropFirst(index))',
+):
+    if token not in guide:
+        fail(f"background/continuous audio regression: missing {token}")
+
+if 'INFOPLIST_KEY_UIBackgroundModes = audio;' not in project:
+    fail("background audio mode was removed")
+
+for token in (
+    '@ObservedObject private var audio = RemoteAudioPlayer.shared',
+    'let audioSurah: Int',
+    'let audioAyah: Int',
+    'QuranAudioResolver.urls(surah: dua.audioSurah',
+    'updateNowPlayingPrayerContext()',
+):
+    if token not in home:
+        fail(f"daily dua / prayer Now Playing regression: missing {token}")
+
+for token in (
+    'func playAdhanPreviewDirect(fajr: Bool) -> Bool',
+    'AVAudioPlayer(contentsOf: url)',
+    'scheduleAdhanPreview(settings: SettingsStore, fajr: Bool)',
+):
+    if token not in notification_manager:
+        fail(f"Adhan preview regression: missing {token}")
+
+for token in (
+    'Standard-Gebetsruf wird direkt abgespielt.',
+    'iOS-Mitteilung testen',
+):
+    if token not in settings_view:
+        fail(f"notification test UI regression: missing {token}")
+
 print("Build 78 regression guard: OK")
