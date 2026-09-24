@@ -284,7 +284,19 @@ private struct PrayerPoseArtwork: View {
     }
 
     private var garmentColor: Color {
-        female ? Color(red: 0.56, green: 0.36, blue: 0.45) : SalahTheme.deepTeal
+        female
+            ? Color(red: 0.60, green: 0.42, blue: 0.50)
+            : Color.white.opacity(0.98)
+    }
+
+    private var garmentOutline: Color {
+        female
+            ? Color(red: 0.34, green: 0.24, blue: 0.29)
+            : SalahTheme.deepTeal.opacity(0.66)
+    }
+
+    private var skinTone: Color {
+        Color(red: 0.86, green: 0.68, blue: 0.52)
     }
 
     var body: some View {
@@ -348,9 +360,39 @@ private struct PrayerPoseArtwork: View {
         context.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round))
     }
 
+    private func garmentLine(
+        _ context: inout GraphicsContext,
+        _ a: CGPoint,
+        _ b: CGPoint,
+        width: CGFloat
+    ) {
+        line(&context, a, b, width: width + 4, color: garmentOutline)
+        line(&context, a, b, width: width, color: garmentColor)
+    }
+
+    private func garmentPolyline(
+        _ context: inout GraphicsContext,
+        _ points: [CGPoint],
+        width: CGFloat
+    ) {
+        polyline(&context, points, width: width + 4, color: garmentOutline)
+        polyline(&context, points, width: width, color: garmentColor)
+    }
+
+    private func handDot(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
+        let rect = CGRect(
+            x: center.x - radius,
+            y: center.y - radius,
+            width: radius * 2,
+            height: radius * 2
+        )
+        context.fill(Path(ellipseIn: rect), with: .color(skinTone))
+        context.stroke(Path(ellipseIn: rect), with: .color(SalahTheme.deepTeal.opacity(0.45)), lineWidth: 1.2)
+    }
+
     private func head(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
         let rect = CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
-        context.fill(Path(ellipseIn: rect), with: .color(Color(red: 0.86, green: 0.68, blue: 0.52)))
+        context.fill(Path(ellipseIn: rect), with: .color(skinTone))
         context.stroke(Path(ellipseIn: rect), with: .color(SalahTheme.deepTeal), lineWidth: 5)
 
         if female {
@@ -428,7 +470,7 @@ private struct PrayerPoseArtwork: View {
     }
 
     private func torso(_ context: inout GraphicsContext, shoulder: CGPoint, hip: CGPoint, width: CGFloat) {
-        line(&context, shoulder, hip, width: width, color: garmentColor)
+        garmentLine(&context, shoulder, hip, width: width)
         if female {
             var skirt = Path()
             skirt.move(to: CGPoint(x: hip.x - 18, y: hip.y - 2))
@@ -436,7 +478,8 @@ private struct PrayerPoseArtwork: View {
             skirt.addLine(to: CGPoint(x: hip.x + 34, y: hip.y + 70))
             skirt.addLine(to: CGPoint(x: hip.x + 18, y: hip.y - 2))
             skirt.closeSubpath()
-            context.fill(skirt, with: .color(garmentColor.opacity(0.94)))
+            context.fill(skirt, with: .color(garmentColor.opacity(0.97)))
+            context.stroke(skirt, with: .color(garmentOutline), lineWidth: 3)
         }
     }
 
@@ -480,7 +523,8 @@ private struct PrayerPoseArtwork: View {
                 control: point(c, 0.915, in: size)
             )
             robe.closeSubpath()
-            context.fill(robe, with: .color(garmentColor.opacity(0.96)))
+            context.fill(robe, with: .color(garmentColor.opacity(0.98)))
+            context.stroke(robe, with: .color(garmentOutline), lineWidth: 3)
         }
 
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.072)
@@ -504,25 +548,36 @@ private struct PrayerPoseArtwork: View {
                 width: footWidth,
                 height: footHeight
             )
-            context.fill(Path(roundedRect: leftRect, cornerRadius: footHeight / 2), with: .color(SalahTheme.deepTeal))
-            context.fill(Path(roundedRect: rightRect, cornerRadius: footHeight / 2), with: .color(SalahTheme.deepTeal))
+            context.fill(Path(roundedRect: leftRect, cornerRadius: footHeight / 2), with: .color(skinTone))
+            context.fill(Path(roundedRect: rightRect, cornerRadius: footHeight / 2), with: .color(skinTone))
         }
 
         switch mode {
         case .takbir:
             let handY: CGFloat = female ? 0.29 : 0.22
-            polyline(&context, [leftShoulder, point(c - 0.18, 0.28, in: size), point(c - 0.17, handY, in: size)], width: 11)
-            polyline(&context, [rightShoulder, point(c + 0.18, 0.28, in: size), point(c + 0.17, handY, in: size)], width: 11)
+            let leftHand = point(c - 0.17, handY, in: size)
+            let rightHand = point(c + 0.17, handY, in: size)
+            garmentPolyline(&context, [leftShoulder, point(c - 0.18, 0.28, in: size), leftHand], width: 11)
+            garmentPolyline(&context, [rightShoulder, point(c + 0.18, 0.28, in: size), rightHand], width: 11)
+            handDot(&context, center: leftHand, radius: 8)
+            handDot(&context, center: rightHand, radius: 8)
         case .bound:
             let handY: CGFloat = female ? 0.47 : 0.56
-            polyline(&context, [leftShoulder, point(c - 0.08, 0.48, in: size), point(c + 0.02, handY, in: size)], width: 10)
-            polyline(&context, [rightShoulder, point(c + 0.08, 0.48, in: size), point(c - 0.02, handY, in: size)], width: 10)
-            let handRect = CGRect(x: size.width * c - 18, y: size.height * handY - 8, width: 36, height: 16)
-            context.fill(Path(roundedRect: handRect, cornerRadius: 8), with: .color(SalahTheme.gold))
+            let leftHand = point(c + 0.02, handY, in: size)
+            let rightHand = point(c - 0.02, handY, in: size)
+            garmentPolyline(&context, [leftShoulder, point(c - 0.08, 0.48, in: size), leftHand], width: 10)
+            garmentPolyline(&context, [rightShoulder, point(c + 0.08, 0.48, in: size), rightHand], width: 10)
+            let handRect = CGRect(x: size.width * c - 18, y: size.height * handY - 7, width: 36, height: 14)
+            context.fill(Path(roundedRect: handRect, cornerRadius: 7), with: .color(skinTone))
+            context.stroke(Path(roundedRect: handRect, cornerRadius: 7), with: .color(SalahTheme.deepTeal.opacity(0.35)), lineWidth: 1)
         case .intention, .relaxed:
             let handY: CGFloat = 0.64
-            line(&context, leftShoulder, point(c - 0.10, handY, in: size), width: 10)
-            line(&context, rightShoulder, point(c + 0.10, handY, in: size), width: 10)
+            let leftHand = point(c - 0.10, handY, in: size)
+            let rightHand = point(c + 0.10, handY, in: size)
+            garmentLine(&context, leftShoulder, leftHand, width: 10)
+            garmentLine(&context, rightShoulder, rightHand, width: 10)
+            handDot(&context, center: leftHand, radius: 6)
+            handDot(&context, center: rightHand, radius: 6)
         }
     }
 
@@ -533,10 +588,14 @@ private struct PrayerPoseArtwork: View {
 
         torso(&context, shoulder: shoulder, hip: hip, width: female ? 36 : 31)
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.067)
-        line(&context, point(0.38, 0.60, in: size), point(0.37, 0.90, in: size), width: 13)
-        line(&context, point(0.46, 0.60, in: size), point(0.48, 0.90, in: size), width: 13)
-        polyline(&context, [shoulder, point(0.58, 0.61, in: size), point(0.48, 0.69, in: size)], width: 10)
-        polyline(&context, [point(shoulder.x / size.width + 0.02, shoulder.y / size.height + 0.01, in: size), point(0.66, 0.62, in: size), point(0.49, 0.70, in: size)], width: 10)
+        garmentLine(&context, point(0.38, 0.60, in: size), point(0.37, 0.90, in: size), width: 13)
+        garmentLine(&context, point(0.46, 0.60, in: size), point(0.48, 0.90, in: size), width: 13)
+        let leftHand = point(0.48, 0.69, in: size)
+        let rightHand = point(0.49, 0.70, in: size)
+        garmentPolyline(&context, [shoulder, point(0.58, 0.61, in: size), leftHand], width: 10)
+        garmentPolyline(&context, [point(shoulder.x / size.width + 0.02, shoulder.y / size.height + 0.01, in: size), point(0.66, 0.62, in: size), rightHand], width: 10)
+        handDot(&context, center: leftHand, radius: 6)
+        handDot(&context, center: rightHand, radius: 6)
     }
 
     private func drawSujud(_ context: inout GraphicsContext, size: CGSize) {
@@ -545,11 +604,15 @@ private struct PrayerPoseArtwork: View {
         let shoulder = point(female ? 0.61 : 0.62, female ? 0.69 : 0.65, in: size)
         let headCenter = point(female ? 0.72 : 0.76, 0.75, in: size)
 
-        polyline(&context, [knee, hip, shoulder], width: female ? 34 : 30, color: SalahTheme.teal)
+        garmentPolyline(&context, [knee, hip, shoulder], width: female ? 34 : 30)
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.062)
-        polyline(&context, [knee, point(0.30, 0.82, in: size), point(0.24, 0.82, in: size)], width: 13)
-        polyline(&context, [shoulder, point(female ? 0.66 : 0.58, 0.79, in: size), point(female ? 0.69 : 0.63, 0.83, in: size)], width: 10)
-        polyline(&context, [shoulder, point(female ? 0.70 : 0.72, 0.78, in: size), point(female ? 0.73 : 0.78, 0.83, in: size)], width: 10)
+        garmentPolyline(&context, [knee, point(0.30, 0.82, in: size), point(0.24, 0.82, in: size)], width: 13)
+        let leftHand = point(female ? 0.69 : 0.63, 0.83, in: size)
+        let rightHand = point(female ? 0.73 : 0.78, 0.83, in: size)
+        garmentPolyline(&context, [shoulder, point(female ? 0.66 : 0.58, 0.79, in: size), leftHand], width: 10)
+        garmentPolyline(&context, [shoulder, point(female ? 0.70 : 0.72, 0.78, in: size), rightHand], width: 10)
+        handDot(&context, center: leftHand, radius: 6)
+        handDot(&context, center: rightHand, radius: 6)
         line(&context, point(0.67, 0.84, in: size), point(0.82, 0.84, in: size), width: 5, color: SalahTheme.gold)
     }
 
@@ -562,10 +625,10 @@ private struct PrayerPoseArtwork: View {
 
         torso(&context, shoulder: shoulder, hip: hip, width: female ? 37 : 31)
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.068)
-        line(&context, point(0.39, 0.42, in: size), point(0.39, 0.61, in: size), width: 10)
-        line(&context, point(0.57, 0.42, in: size), point(0.57, 0.61, in: size), width: 10)
-        line(&context, point(0.39, 0.60, in: size), point(0.53, 0.68, in: size), width: 9, color: SalahTheme.gold)
-        line(&context, point(0.57, 0.60, in: size), point(0.67, 0.68, in: size), width: 9, color: SalahTheme.gold)
+        garmentLine(&context, point(0.39, 0.42, in: size), point(0.39, 0.61, in: size), width: 10)
+        garmentLine(&context, point(0.57, 0.42, in: size), point(0.57, 0.61, in: size), width: 10)
+        line(&context, point(0.39, 0.60, in: size), point(0.53, 0.68, in: size), width: 9, color: skinTone)
+        line(&context, point(0.57, 0.60, in: size), point(0.67, 0.68, in: size), width: 9, color: skinTone)
 
         if showFinger {
             // Hanafi tashahhud detail: the worshipper's right index finger.
@@ -575,7 +638,7 @@ private struct PrayerPoseArtwork: View {
                 point(0.39, 0.59, in: size),
                 point(0.36, 0.51, in: size),
                 width: 5,
-                color: SalahTheme.gold
+                color: skinTone
             )
             let tip = CGRect(
                 x: size.width * 0.36 - 4,
@@ -587,11 +650,11 @@ private struct PrayerPoseArtwork: View {
         }
 
         if female {
-            polyline(&context, [hip, point(0.60, 0.70, in: size), point(0.74, 0.80, in: size)], width: 15)
-            polyline(&context, [point(0.46, 0.65, in: size), point(0.57, 0.77, in: size), point(0.71, 0.84, in: size)], width: 15)
+            garmentPolyline(&context, [hip, point(0.60, 0.70, in: size), point(0.74, 0.80, in: size)], width: 15)
+            garmentPolyline(&context, [point(0.46, 0.65, in: size), point(0.57, 0.77, in: size), point(0.71, 0.84, in: size)], width: 15)
         } else {
-            polyline(&context, [hip, point(0.40, 0.76, in: size), point(0.29, 0.84, in: size)], width: 14)
-            polyline(&context, [point(0.51, 0.65, in: size), point(0.62, 0.78, in: size), point(0.72, 0.84, in: size)], width: 14)
+            garmentPolyline(&context, [hip, point(0.40, 0.76, in: size), point(0.29, 0.84, in: size)], width: 14)
+            garmentPolyline(&context, [point(0.51, 0.65, in: size), point(0.62, 0.78, in: size), point(0.72, 0.84, in: size)], width: 14)
         }
 
         // No body-direction arrow here: the worshipper remains facing Qibla.
