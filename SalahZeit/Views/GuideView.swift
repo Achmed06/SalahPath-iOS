@@ -9430,11 +9430,12 @@ struct QuranView: View {
         }
 
         if !previewAudioURLs.isEmpty {
-            previewAudio.playQueue(
-                previewAudioURLs,
+            QuranContinuousPlaybackCoordinator.shared.play(
+                urls: previewAudioURLs,
+                currentSurah: 1,
+                reciter: settings.quranReciter,
                 title: "Al-Fatiha",
-                artist: settings.quranReciter.title,
-                context: settings.t("Quran-Vorschau", "Kur'an önizleme")
+                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
             )
             return
         }
@@ -9450,11 +9451,12 @@ struct QuranView: View {
                   reciter == settings.quranReciter else { return }
 
             previewAudioURLs = urls
-            previewAudio.playQueue(
-                urls,
+            QuranContinuousPlaybackCoordinator.shared.play(
+                urls: urls,
+                currentSurah: 1,
+                reciter: reciter,
                 title: "Al-Fatiha",
-                artist: reciter.title,
-                context: settings.t("Quran-Vorschau", "Kur'an önizleme")
+                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
             )
         } catch {
             guard generation == previewAudioRequestGeneration else { return }
@@ -10224,10 +10226,11 @@ struct QuranPageReaderView: View {
             return
         }
 
-        audio.playQueue(
-            Array(urls.dropFirst(startIndex)),
+        QuranContinuousPlaybackCoordinator.shared.play(
+            urls: Array(urls.dropFirst(startIndex)),
+            currentSurah: ayah.surah.number,
+            reciter: reciter,
             title: ayah.surah.englishName,
-            artist: reciter.title,
             context: settings.t(
                 "Quran \(ayah.surah.number):\(ayah.numberInSurah) · automatisch weiter",
                 "Kur'an \(ayah.surah.number):\(ayah.numberInSurah) · otomatik devam"
@@ -10241,7 +10244,6 @@ struct QuranPageReaderView: View {
 
         audioRequestGeneration &+= 1
         resolvingAyahNumber = nil
-        audio.stop()
         page = next
     }
 
@@ -11225,10 +11227,11 @@ private struct QuranSurahView: View {
             return
         }
 
-        audio.playQueue(
-            Array(resolvedAudioURLs.dropFirst(index)),
+        QuranContinuousPlaybackCoordinator.shared.play(
+            urls: Array(resolvedAudioURLs.dropFirst(index)),
+            currentSurah: surah.number,
+            reciter: settings.quranReciter,
             title: surah.englishName,
-            artist: settings.quranReciter.title,
             context: settings.t(
                 "Quran \(surah.number):\(ayahNumber) · automatisch weiter",
                 "Kur'an \(surah.number):\(ayahNumber) · otomatik devam"
@@ -11245,11 +11248,12 @@ private struct QuranSurahView: View {
         if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
             audio.isPlaying ? audio.pause() : audio.resume()
         } else {
-            audio.playQueue(
-                resolvedAudioURLs,
+            QuranContinuousPlaybackCoordinator.shared.play(
+                urls: resolvedAudioURLs,
+                currentSurah: surah.number,
+                reciter: settings.quranReciter,
                 title: surah.englishName,
-                artist: settings.quranReciter.title,
-                context: settings.t("Quran · Sura \(surah.number)", "Kur'an · \(surah.number). sûre")
+                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
             )
         }
     }
