@@ -1197,8 +1197,6 @@ private struct PrayerTutorialStepCard: View {
         guard let key = step.imageKey else { return nil }
         let resolvedKey: String
         switch key {
-        case "intention":
-            resolvedKey = "standing"
         case "sitting":
             resolvedKey = "final_sitting"
         default:
