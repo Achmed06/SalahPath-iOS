@@ -116,6 +116,8 @@ required_captures = [
     "B78-DE-WuduArm.png",
     "B78-DE-WuduFoot.png",
     "B78-DE-Qibla.png",
+    "B78-DE-Onboarding.png",
+    "B78-DE-DailyDua.png",
 ]
 for name in required_captures:
     if name not in capture:
@@ -226,6 +228,8 @@ for token in (
     'let audioAyah: Int',
     'QuranAudioResolver.urls(surah: dua.audioSurah',
     'updateNowPlayingPrayerContext()',
+    'toggleDailyDuaAudio(dua)',
+    'speaker.wave.2.fill',
 ):
     if token not in home:
         fail(f"daily dua / prayer Now Playing regression: missing {token}")
@@ -237,6 +241,8 @@ for token in (
     'UNUserNotificationCenterDelegate',
     'willPresent notification: UNNotification',
     '[.banner, .list, .sound]',
+    'installNotificationSoundsIfNeeded()',
+    '.appendingPathComponent("Sounds", isDirectory: true)',
 ):
     if token not in notification_manager:
         fail(f"Adhan preview regression: missing {token}")
