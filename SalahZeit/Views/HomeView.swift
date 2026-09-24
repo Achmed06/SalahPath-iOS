@@ -966,7 +966,7 @@ struct HomeView: View {
                 NavigationLink {
                     PrayerTimesOverviewView()
                 } label: {
-                    Text(settings.t("Detaylar", "Details"))
+                    Text(settings.t("Details", "Detaylar"))
                         .font(.system(size: 9.2, weight: .semibold))
                         .foregroundStyle(SalahTheme.teal)
                 }
@@ -984,7 +984,9 @@ struct HomeView: View {
                     Text(prayer.kind.localizedName(settings.language))
                         .font(.system(size: 11, weight: active ? .bold : .semibold))
                         .foregroundStyle(SalahTheme.ink)
-                        .frame(width: 58, alignment: .leading)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.76)
+                        .frame(width: 78, alignment: .leading)
 
                     Spacer()
 
