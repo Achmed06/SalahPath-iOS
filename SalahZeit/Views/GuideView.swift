@@ -2,6 +2,7 @@ import SwiftUI
 import EventKit
 import EventKitUI
 import AVFoundation
+import MediaPlayer
 import UIKit
 
 // MARK: - Learning hub
@@ -5028,6 +5029,8 @@ actor QuranAudioCache {
 
 @MainActor
 final class RemoteAudioPlayer: ObservableObject {
+    static let shared = RemoteAudioPlayer()
+
     @Published var activeURL: URL?
     @Published var isPlaying = false
     @Published var isLoading = false
@@ -5046,11 +5049,32 @@ final class RemoteAudioPlayer: ObservableObject {
     private var periodicTimeObserver: Any?
     private var endObserver: NSObjectProtocol?
     private var failedObserver: NSObjectProtocol?
+    private var remoteCommandTargets: [Any] = []
+
+    private var mediaTitle = "SalahPath Audio"
+    private var mediaArtist = "SalahPath"
+    private var mediaContext: String?
+    private var prayerContext: String?
+
+    private init() {
+        configureRemoteCommands()
+    }
 
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
 
-    func toggle(_ url: URL) {
+    func setPrayerContext(_ text: String?) {
+        let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        prayerContext = (trimmed?.isEmpty == false) ? trimmed : nil
+        updateNowPlaying()
+    }
+
+    func toggle(
+        _ url: URL,
+        title: String = "SalahPath Audio",
+        artist: String = "SalahPath",
+        context: String? = nil
+    ) {
         if activeURL == url, player != nil {
             if isPlaying {
                 pause()
@@ -5059,39 +5083,65 @@ final class RemoteAudioPlayer: ObservableObject {
             }
             return
         }
-        playQueue([url])
+        playQueue([url], title: title, artist: artist, context: context)
     }
 
-    func play(_ url: URL) { playQueue([url]) }
+    func play(
+        _ url: URL,
+        title: String = "SalahPath Audio",
+        artist: String = "SalahPath",
+        context: String? = nil
+    ) {
+        playQueue([url], title: title, artist: artist, context: context)
+    }
 
-    func playQueue(_ urls: [URL]) {
+    func playQueue(
+        _ urls: [URL],
+        title: String = "SalahPath Audio",
+        artist: String = "SalahPath",
+        context: String? = nil
+    ) {
         let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
         guard !cleaned.isEmpty else {
             stop()
             lastError = "Audio nicht verfügbar / Ses mevcut değil."
             return
         }
+
+        mediaTitle = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? "SalahPath Audio"
+            : title
+        mediaArtist = artist.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? "SalahPath"
+            : artist
+        let trimmedContext = context?.trimmingCharacters(in: .whitespacesAndNewlines)
+        mediaContext = (trimmedContext?.isEmpty == false) ? trimmedContext : nil
+
         queueURLs = cleaned
         queueCount = cleaned.count
         queueIndex = 0
+        updateRemoteCommandAvailability()
         loadCurrentAndPlay()
     }
 
     func next() {
         guard hasNext else { return }
         queueIndex += 1
+        updateRemoteCommandAvailability()
         loadCurrentAndPlay()
     }
 
     func previous() {
         guard hasPrevious else { return }
         queueIndex -= 1
+        updateRemoteCommandAvailability()
         loadCurrentAndPlay()
     }
 
     func pause() {
         player?.pause()
         isPlaying = false
+        updateNowPlaying()
     }
 
     func resume() {
@@ -5102,6 +5152,8 @@ final class RemoteAudioPlayer: ObservableObject {
         }
         lastError = nil
         player.playImmediately(atRate: playbackRate)
+        isPlaying = true
+        updateNowPlaying()
     }
 
     func setPlaybackRate(_ rate: Float) {
@@ -5113,6 +5165,7 @@ final class RemoteAudioPlayer: ObservableObject {
         if isPlaying {
             player?.rate = selected
         }
+        updateNowPlaying()
     }
 
     func stop() {
@@ -5128,6 +5181,9 @@ final class RemoteAudioPlayer: ObservableObject {
         isLoading = false
         currentTime = 0
         duration = 0
+        updateRemoteCommandAvailability()
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().playbackState = .stopped
     }
 
     private func loadCurrentAndPlay() {
@@ -5140,7 +5196,11 @@ final class RemoteAudioPlayer: ObservableObject {
         player = nil
 
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setCategory(
+                .playback,
+                mode: .spokenAudio,
+                options: [.allowAirPlay, .allowBluetoothA2DP]
+            )
             try AVAudioSession.sharedInstance().setActive(true, options: [])
         } catch {
             lastError = "Audio konnte nicht gestartet werden. Erneut versuchen. / Ses başlatılamadı. Tekrar dene."
@@ -5158,6 +5218,7 @@ final class RemoteAudioPlayer: ObservableObject {
         let sourceURL = queueURLs[queueIndex]
         let expectedIndex = queueIndex
         activeURL = sourceURL
+        updateNowPlaying()
 
         Task { [weak self] in
             let playbackURL = await QuranAudioCache.shared.playbackURL(for: sourceURL)
@@ -5176,7 +5237,7 @@ final class RemoteAudioPlayer: ObservableObject {
         player = newPlayer
 
         periodicTimeObserver = newPlayer.addPeriodicTimeObserver(
-            forInterval: CMTime(seconds: 0.25, preferredTimescale: 600),
+            forInterval: CMTime(seconds: 0.5, preferredTimescale: 600),
             queue: .main
         ) { [weak self, weak newPlayer] time in
             Task { @MainActor in
@@ -5188,6 +5249,7 @@ final class RemoteAudioPlayer: ObservableObject {
                    itemDuration > 0 {
                     self.duration = itemDuration
                 }
+                self.updateNowPlaying()
             }
         }
 
@@ -5198,10 +5260,16 @@ final class RemoteAudioPlayer: ObservableObject {
                 case .readyToPlay:
                     self.isLoading = false
                     self.lastError = nil
+                    let itemDuration = item.duration.seconds
+                    if itemDuration.isFinite, itemDuration > 0 {
+                        self.duration = itemDuration
+                    }
+                    self.updateNowPlaying()
                 case .failed:
                     self.isLoading = false
                     self.isPlaying = false
                     self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                    self.updateNowPlaying()
                     if url.isFileURL {
                         Task { await QuranAudioCache.shared.invalidate(url) }
                     }
@@ -5221,6 +5289,7 @@ final class RemoteAudioPlayer: ObservableObject {
                 if player.timeControlStatus == .playing {
                     self.isLoading = false
                 }
+                self.updateNowPlaying()
             }
         }
 
@@ -5238,6 +5307,7 @@ final class RemoteAudioPlayer: ObservableObject {
                     self.currentTime = 0
                     self.isPlaying = false
                     self.isLoading = false
+                    self.updateNowPlaying()
                 }
             }
         }
@@ -5254,6 +5324,7 @@ final class RemoteAudioPlayer: ObservableObject {
                 self.isLoading = false
                 self.isPlaying = false
                 self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                self.updateNowPlaying()
                 if url.isFileURL {
                     Task { await QuranAudioCache.shared.invalidate(url) }
                 }
@@ -5261,6 +5332,110 @@ final class RemoteAudioPlayer: ObservableObject {
         }
 
         newPlayer.playImmediately(atRate: playbackRate)
+        isPlaying = true
+        updateNowPlaying()
+    }
+
+    private func seek(to seconds: Double) {
+        guard let player, seconds.isFinite else { return }
+        let bounded = min(max(seconds, 0), duration > 0 ? duration : seconds)
+        player.seek(to: CMTime(seconds: bounded, preferredTimescale: 600))
+        currentTime = bounded
+        updateNowPlaying()
+    }
+
+    private func updateNowPlaying() {
+        guard activeURL != nil else { return }
+
+        var info: [String: Any] = [
+            MPMediaItemPropertyTitle: queueCount > 1
+                ? "\(mediaTitle) · \(queueIndex + 1)/\(queueCount)"
+                : mediaTitle,
+            MPMediaItemPropertyArtist: mediaArtist,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: currentTime,
+            MPNowPlayingInfoPropertyPlaybackRate: isPlaying ? playbackRate : 0,
+            MPNowPlayingInfoPropertyDefaultPlaybackRate: playbackRate,
+            MPNowPlayingInfoPropertyPlaybackQueueIndex: queueIndex,
+            MPNowPlayingInfoPropertyPlaybackQueueCount: queueCount
+        ]
+
+        if duration.isFinite, duration > 0 {
+            info[MPMediaItemPropertyPlaybackDuration] = duration
+        }
+
+        let context = [mediaContext, prayerContext]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " • ")
+        if !context.isEmpty {
+            info[MPMediaItemPropertyAlbumTitle] = context
+        } else {
+            info[MPMediaItemPropertyAlbumTitle] = "SalahPath"
+        }
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        MPNowPlayingInfoCenter.default().playbackState = isPlaying ? .playing : .paused
+    }
+
+    private func configureRemoteCommands() {
+        let commands = MPRemoteCommandCenter.shared()
+
+        commands.playCommand.isEnabled = true
+        commands.pauseCommand.isEnabled = true
+        commands.togglePlayPauseCommand.isEnabled = true
+        commands.changePlaybackPositionCommand.isEnabled = true
+
+        remoteCommandTargets.append(
+            commands.playCommand.addTarget { [weak self] _ in
+                Task { @MainActor [weak self] in self?.resume() }
+                return .success
+            }
+        )
+        remoteCommandTargets.append(
+            commands.pauseCommand.addTarget { [weak self] _ in
+                Task { @MainActor [weak self] in self?.pause() }
+                return .success
+            }
+        )
+        remoteCommandTargets.append(
+            commands.togglePlayPauseCommand.addTarget { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    self.isPlaying ? self.pause() : self.resume()
+                }
+                return .success
+            }
+        )
+        remoteCommandTargets.append(
+            commands.nextTrackCommand.addTarget { [weak self] _ in
+                Task { @MainActor [weak self] in self?.next() }
+                return .success
+            }
+        )
+        remoteCommandTargets.append(
+            commands.previousTrackCommand.addTarget { [weak self] _ in
+                Task { @MainActor [weak self] in self?.previous() }
+                return .success
+            }
+        )
+        remoteCommandTargets.append(
+            commands.changePlaybackPositionCommand.addTarget { [weak self] event in
+                guard let event = event as? MPChangePlaybackPositionCommandEvent else {
+                    return .commandFailed
+                }
+                let position = event.positionTime
+                Task { @MainActor [weak self] in self?.seek(to: position) }
+                return .success
+            }
+        )
+
+        updateRemoteCommandAvailability()
+    }
+
+    private func updateRemoteCommandAvailability() {
+        let commands = MPRemoteCommandCenter.shared()
+        commands.nextTrackCommand.isEnabled = hasNext
+        commands.previousTrackCommand.isEnabled = hasPrevious
     }
 
     private func removeObservers() {
