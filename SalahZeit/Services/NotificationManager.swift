@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import UserNotifications
+import AVFoundation
 
 @MainActor
 final class NotificationManager {
@@ -12,6 +13,7 @@ final class NotificationManager {
     private let standardAdhanSoundFileName = "adhan-standard.caf"
     private let fajrAdhanSoundFileName = "adhan-fajr.caf"
     private var schedulingRevision = 0
+    private var adhanPreviewPlayer: AVAudioPlayer?
 
     private init() {}
 
@@ -129,6 +131,29 @@ final class NotificationManager {
         }
 
         return revision == schedulingRevision && allRequestsScheduled
+    }
+
+    @discardableResult
+    func playAdhanPreviewDirect(fajr: Bool) -> Bool {
+        let resourceName = fajr ? "adhan-fajr" : "adhan-standard"
+        guard let url = Bundle.main.url(forResource: resourceName, withExtension: "caf") else {
+            return false
+        }
+
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true, options: [])
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.volume = 1
+            player.prepareToPlay()
+            adhanPreviewPlayer?.stop()
+            adhanPreviewPlayer = player
+            return player.play()
+        } catch {
+            adhanPreviewPlayer = nil
+            return false
+        }
     }
 
     @discardableResult
