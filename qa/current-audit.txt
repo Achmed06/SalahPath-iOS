@@ -200,6 +200,7 @@ CRASH-HARDENING FOLLOW-UP
 - Build 78 bundles the validated Uthmani Quran corpus (114 surahs, 6,236 ayahs, Mushaf pages 1–604) and uses it first for the surah directory, Arabic surah reading and page reading; translations/audio remain optional network/cache supplements.
 - Prayer tracker mutations publish a dedicated change notification so Home, tracker overview and pause view refresh immediately; persisted values are sanitized to the five required daily prayers.
 - Prayer learning artwork was re-audited: standing male/female hero art replaced, legacy pose backgrounds/sprite remnants removed, mask holes repaired, and problematic dashboard/settings icons replaced with clean vector assets.
+- The remaining legacy raster/3D feature icons for Quran, Quran audio, Wudu, bookmarks, calendar, community, home, Juz, Muslim days, progress and tasks are now replaced by slot-specific vector artwork so Home/Entdecken use one consistent visual language.
 - Quran audio indexing now validates numberInSurah ordering before exposing index-addressable URLs.
 - Quran cache size accounting and countdown conversions use overflow-safe arithmetic.
 - Quran network JSON payloads, text-cache reads/writes and individual cached audio files are size-bounded; invalid text/audio cache entries self-heal.
