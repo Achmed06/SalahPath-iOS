@@ -322,23 +322,26 @@ private struct PrayerPoseArtwork: View {
     let assetName: String
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            Image(assetName)
-                .resizable()
-                .scaledToFit()
-                .padding(4)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .accessibilityHidden(true)
+        Image(assetName)
+            .renderingMode(.original)
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(4)
+            .background(
+                LinearGradient(
+                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 0.7)
+            }
+            .accessibilityHidden(true)
     }
 }
 
@@ -816,12 +819,10 @@ struct PrayerHowToView: View {
             HStack(spacing: 14) {
                 ZStack(alignment: .bottom) {
                     PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
-                        .scaleEffect(1.20, anchor: .bottom)
                 }
                 .frame(width: 118, height: 148)
                 .background(SalahTheme.cream)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .clipped()
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(settings.t("Ganz von vorne lernen", "En baştan öğren"))
@@ -1064,13 +1065,11 @@ private struct PrayerTutorialStepCard: View {
                 if step.pose == .salam {
                     PrayerSalamVisual()
                 } else if let imageName {
-                    ZStack(alignment: .bottom) {
+                    ZStack(alignment: .center) {
                         PrayerPoseArtwork(assetName: imageName)
-                            .scaleEffect(standingStylePose ? 1.14 : 1.0, anchor: .bottom)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: standingStylePose ? 220 : 205)
-                    .clipped()
+                    .frame(height: standingStylePose ? 236 : 220)
                     .padding(.vertical, 6)
                     .background(SalahTheme.cream)
                 }
@@ -1534,30 +1533,29 @@ private struct WuduInstructionVisual: View {
     let stepNumber: Int
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            Image(key)
-                .resizable()
-                .scaledToFit()
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 188)
-        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
-        }
-        .accessibilityHidden(true)
+        Image(key)
+            .renderingMode(.original)
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .frame(height: 188)
+            .background(
+                LinearGradient(
+                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 26, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+            }
+            .accessibilityHidden(true)
     }
 }
 
