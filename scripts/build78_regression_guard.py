@@ -221,7 +221,7 @@ for token in (
     'private func guideFeatureKind(for symbol: String) -> String?',
     'return "wudu"',
     'return "quran_audio"',
-    'return "list"',
+    'return "prayer_schedule"',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
@@ -236,7 +236,7 @@ for token in (
     'icon: "checkmark"',
     'icon: "quran"',
     'case "quran_audio":',
-    'case "bookmarks":',
+    'case "fav": return "favorites"',
     'LinearGradient(',
 ):
     if token not in home:
@@ -247,13 +247,13 @@ for token in (
     'return "prayer"',
     'return "wudu"',
     'return "quran"',
-    'return "qibla"',
-    'SalahFeatureIcon(kind: item.0)',
-    '("home", settings.t("Start", "Ana Sayfa"))',
-    '("quran", settings.t("Koran", "Kur\'an"))',
-    '("prayer", settings.t("Gebet", "Namaz"))',
-    '("discover", settings.t("Entdecken", "Keşfet"))',
-    '("profile", settings.t("Profil", "Profil"))',
+    'return "qibla_calibration"',
+    'Item(activeIcon: "home_active", inactiveIcon: "home_inactive"',
+    'Item(activeIcon: "quran_active", inactiveIcon: "quran_inactive"',
+    'Item(activeIcon: "prayer_active", inactiveIcon: "prayer_inactive"',
+    'Item(activeIcon: "discover", inactiveIcon: "discover"',
+    'Item(activeIcon: "profile", inactiveIcon: "profile"',
+    'SalahFeatureIcon(kind: selection == index ? item.activeIcon : item.inactiveIcon)',
     'SalahFeatureIcon(kind: "discover")',
     'GlobalAudioMiniPlayer(audio: audio)',
     'private struct GlobalAudioMiniPlayer: View',
@@ -263,13 +263,18 @@ for token in (
         fail(f"standalone tab/discover icon regression: missing {token}")
 
 for token in (
+    'func salahFeatureIndex(for kind: String) -> Int?',
     'struct SalahFeatureIcon: View',
     'Image("SalahFeatureSheet")',
-    'case "home": return 0',
+    'case "home", "start": return 0',
     'case "prayer": return 1',
     'case "wudu": return 2',
     'case "quran": return 3',
     'case "profile": return 9',
+    'case "home_active": return 52',
+    'case "quran_inactive": return 59',
+    'let column = index % 10',
+    'let row = index / 10',
 ):
     if token not in root_tabs:
         fail(f"approved icon sheet routing regression: missing {token}")
@@ -308,6 +313,9 @@ for token in (
     'func appendContinuation(',
     'queueContinuationDidReachFinalSurah',
     'QuranContinuousPlaybackCoordinator.shared.play(',
+    'func cachedURL(for remoteURL: URL) -> URL?',
+    'self.startPlayback(cachedURL ?? sourceURL)',
+    'https://everyayah.com/data/',
 ):
     if token not in guide:
         fail(f"background/continuous audio regression: missing {token}")
