@@ -1,3 +1,3 @@
 User-approved one-time Prayer/Wudu text-removal pass.
 Do not reuse this marker for unrelated asset changes.
-run=2026-09-25T23:28
+run=2026-09-25T23:34
