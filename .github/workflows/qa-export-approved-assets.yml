@@ -1,0 +1,26 @@
+name: QA export approved assets
+
+on:
+  push:
+    branches:
+      - release/b78-final-audio-visual-20260925
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect approved visual sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qa-export
+          find SalahZeit/Assets.xcassets -type f \
+            \( -path '*/male_*.imageset/*' -o -path '*/female_*.imageset/*' -o -path '*/wudu_*.imageset/*' -o -path '*/feature_*.imageset/*' \) \
+            -exec cp --parents '{}' qa-export/ \;
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SalahPath-approved-visual-sources
+          path: qa-export
+          if-no-files-found: error
