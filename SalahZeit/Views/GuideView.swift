@@ -260,7 +260,7 @@ struct GuideView: View {
         case "drop.fill":
             return "wudu"
         case "list.number":
-            return "list"
+            return "prayer_schedule"
         case "books.vertical.fill", "text.book.closed.fill", "book.pages.fill":
             return "quran"
         case "play.square.stack.fill":
@@ -268,13 +268,13 @@ struct GuideView: View {
         case "hands.sparkles.fill":
             return "dhikr"
         case "map.fill":
-            return "qibla"
+            return "map"
         case "calendar.badge.plus":
             return "calendar"
         case "person.3.sequence.fill":
             return "community"
         case "moon.stars.fill":
-            return "moon"
+            return "islamic_calendar"
         default:
             return nil
         }
