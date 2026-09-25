@@ -227,9 +227,7 @@ struct GuideView: View {
         VStack(spacing: 7) {
             Group {
                 if let kind = guideFeatureKind(for: icon) {
-                    Image("feature_\(kind)")
-                        .resizable()
-                        .scaledToFit()
+                    SalahFeatureIcon(kind: kind)
                 } else {
                     Image(systemName: icon)
                         .font(.system(size: 25, weight: .semibold))
@@ -286,9 +284,7 @@ struct GuideView: View {
         HStack(spacing: 10) {
             Group {
                 if let kind = guideFeatureKind(for: icon) {
-                    Image("feature_\(kind)")
-                        .resizable()
-                        .scaledToFit()
+                    SalahFeatureIcon(kind: kind)
                         .padding(4)
                 } else {
                     Image(systemName: icon)

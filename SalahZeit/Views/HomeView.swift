@@ -1346,9 +1346,7 @@ struct HomeView: View {
                 Circle()
                     .fill(SalahTheme.softTeal)
                     .frame(width: 30, height: 30)
-                Image("feature_\(icon)")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: icon)
                     .frame(width: 18, height: 18)
                     .accessibilityHidden(true)
             }
@@ -2761,9 +2759,7 @@ private struct DashboardTile: View {
                     .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
                     .frame(width: 42, height: 42)
 
-                Image("feature_\(glyphKind)")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: glyphKind)
                     .frame(width: 27, height: 27)
                     .accessibilityHidden(true)
             }

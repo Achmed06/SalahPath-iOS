@@ -1,4 +1,55 @@
 import SwiftUI
+
+struct SalahFeatureIcon: View {
+    let kind: String
+
+    private var index: Int {
+        switch kind {
+        case "home": return 0
+        case "prayer": return 1
+        case "wudu": return 2
+        case "quran": return 3
+        case "discover": return 4
+        case "checkmark": return 5
+        case "calendar": return 6
+        case "qibla": return 7
+        case "settings": return 8
+        case "profile": return 9
+        case "times": return 10
+        case "quran_audio": return 11
+        case "bookmarks": return 12
+        case "dhikr": return 13
+        case "info": return 14
+        case "community": return 15
+        case "moon": return 16
+        case "sparkles": return 17
+        case "language": return 18
+        case "more": return 19
+        case "list": return 20
+        default: return 4
+        }
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            let column = index % 7
+            let row = index / 7
+
+            Image("SalahFeatureSheet")
+                .resizable()
+                .interpolation(.high)
+                .frame(width: proxy.size.width * 7, height: proxy.size.height * 3)
+                .offset(
+                    x: -CGFloat(column) * proxy.size.width,
+                    y: -CGFloat(row) * proxy.size.height
+                )
+        }
+        .clipped()
+        .aspectRatio(1, contentMode: .fit)
+        .accessibilityHidden(true)
+    }
+}
+
 import MapKit
 import UIKit
 
@@ -548,9 +599,7 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            Image("feature_\(item.0)")
-                                .resizable()
-                                .scaledToFit()
+                            SalahFeatureIcon(kind: item.0)
                                 .frame(width: 22, height: 22)
                                 .saturation(selection == index ? 1 : 0.45)
                                 .opacity(selection == index ? 1 : 0.72)
@@ -788,9 +837,7 @@ struct MoreView: View {
         HStack(spacing: 7) {
             Group {
                 if let glyphKind = discoverDashboardGlyphKind(for: icon) {
-                    Image("feature_\(glyphKind)")
-                        .resizable()
-                        .scaledToFit()
+                    SalahFeatureIcon(kind: glyphKind)
                         .padding(4)
                 } else {
                     Image(systemName: icon)
@@ -822,17 +869,11 @@ struct MoreView: View {
             )
 
             HStack(spacing: 7) {
-                Image("feature_info")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: "info")
                     .frame(width: 24, height: 24)
-                Image("feature_moon")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: "moon")
                     .frame(width: 21, height: 21)
-                Image("feature_sparkles")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: "sparkles")
                     .frame(width: 18, height: 18)
             }
             .opacity(0.42)
@@ -848,9 +889,7 @@ struct MoreView: View {
                     RoundedRectangle(cornerRadius: 13, style: .continuous)
                         .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
                         .frame(width: 50, height: 50)
-                    Image("feature_discover")
-                        .resizable()
-                        .scaledToFit()
+                    SalahFeatureIcon(kind: "discover")
                         .frame(width: 31, height: 31)
                 }
                 .accessibilityHidden(true)
@@ -897,9 +936,7 @@ struct MoreView: View {
                 .frame(width: size * 0.74, height: size * 0.74)
 
             if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
-                Image("feature_\(glyphKind)")
-                    .resizable()
-                    .scaledToFit()
+                SalahFeatureIcon(kind: glyphKind)
                     .frame(width: size * 0.52, height: size * 0.52)
             } else {
                 Image(systemName: symbol)
