@@ -1911,7 +1911,7 @@ struct HomeView: View {
     private var locationState: some View {
         ScrollView {
             VStack(spacing: 0) {
-                brandHeader
+                brandHeader()
                     .padding(.horizontal, 7)
                     .padding(.top, 3)
                     .padding(.bottom, 5)
