@@ -169,6 +169,33 @@ for token in (
     if token not in home_source:
         fail(f"prayer UI timezone regression: missing {token}")
 
+# 3c) Shared Quran/Dua audio must keep a robust iOS audio-session fallback.
+guide_audio = read("SalahZeit/Views/GuideView.swift")
+root_tabs = read("SalahZeit/Views/RootTabView.swift")
+home_audio = read("SalahZeit/Views/HomeView.swift")
+
+for token in (
+    'private func activateAudioSession() -> Bool',
+    'try session.setCategory(.playback, mode: .spokenAudio, options: [])',
+    'try session.setCategory(.playback, mode: .default, options: [])',
+    'func setInterfaceLanguage(_ language: AppLanguage)',
+    'func localizedMessage(_ de: String, _ tr: String) -> String',
+):
+    if token not in guide_audio:
+        fail(f"shared audio startup regression: missing {token}")
+
+if '.allowBluetoothA2DP' in guide_audio:
+    fail("shared playback session should not require an explicit A2DP category option")
+
+if 'Audio konnte nicht gestartet werden. Erneut versuchen. / Ses başlatılamadı. Tekrar dene.' in guide_audio:
+    fail("shared audio error regressed to mixed German/Turkish copy")
+
+if 'audio.setInterfaceLanguage(settings.language)' not in root_tabs:
+    fail("shared audio language is not synchronized from app settings")
+
+if 'audio.setInterfaceLanguage(settings.language)' not in home_audio:
+    fail("Daily Dua playback does not set the current interface language")
+
 # 4) Wudu copy + German prayer labels must not regress.
 root_tab = read("SalahZeit/Views/RootTabView.swift")
 for token in (
