@@ -107,22 +107,22 @@ for route in ('case "quran-page":', 'case "quran-page-mid":', 'case "quran-page-
 
 capture = read(".github/workflows/capture-ui.yml")
 required_captures = [
-    "B78-DE-QuranPage1.png",
-    "B78-DE-QuranPage302.png",
-    "B78-DE-QuranPage604.png",
-    "B78-DE-PrayerTracker.png",
-    "B78-DE-PrayerHowTo.png",
-    "B78-DE-FemalePrayerHowTo.png",
-    "B78-DE-PrayerFinger.png",
-    "B78-DE-FemalePrayerFinger.png",
-    "B78-DE-PrayerSalam.png",
-    "B78-DE-FemalePrayerSalam.png",
-    "B78-DE-WuduHead.png",
-    "B78-DE-WuduArm.png",
-    "B78-DE-WuduFoot.png",
-    "B78-DE-Qibla.png",
-    "B78-DE-Onboarding.png",
-    "B78-DE-DailyDua.png",
+    "B79-DE-QuranPage1.png",
+    "B79-DE-QuranPage302.png",
+    "B79-DE-QuranPage604.png",
+    "B79-DE-PrayerTracker.png",
+    "B79-DE-PrayerHowTo.png",
+    "B79-DE-FemalePrayerHowTo.png",
+    "B79-DE-PrayerFinger.png",
+    "B79-DE-FemalePrayerFinger.png",
+    "B79-DE-PrayerSalam.png",
+    "B79-DE-FemalePrayerSalam.png",
+    "B79-DE-WuduHead.png",
+    "B79-DE-WuduArm.png",
+    "B79-DE-WuduFoot.png",
+    "B79-DE-Qibla.png",
+    "B79-DE-Onboarding.png",
+    "B79-DE-DailyDua.png",
 ]
 for name in required_captures:
     if name not in capture:
@@ -365,4 +365,4 @@ for token in (
     if token not in settings_view:
         fail(f"notification test UI regression: missing {token}")
 
-print("Build 78 regression guard: OK")
+print("Build 79 regression guard: OK")
