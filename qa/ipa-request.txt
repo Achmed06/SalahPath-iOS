@@ -1,0 +1,2 @@
+SalahPath v3.64 build 80
+Merged legacy-approved prayer/Wudu artwork with current standalone icons, Qibla, tracker and automatic guide flow.
