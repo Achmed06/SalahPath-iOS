@@ -101,7 +101,16 @@ if home.count("NotificationCenter.default.post(name: .prayerTrackerDidChange, ob
 
 # 3) QA routes and screenshots must keep covering the user-reported regressions.
 app = read("SalahZeit/SalahZeitApp.swift")
-for route in ('case "quran-page":', 'case "quran-page-mid":', 'case "quran-page-last":', 'case "prayer-tracker":'):
+for route in (
+    'case "quran-page":',
+    'case "quran-page-mid":',
+    'case "quran-page-last":',
+    'case "prayer-tracker":',
+    'case "wudu-arm":',
+    'case "wudu-arm-left":',
+    'case "wudu-foot":',
+    'case "wudu-foot-left":',
+):
     if route not in app:
         fail(f"QA route missing: {route}")
 
@@ -118,8 +127,10 @@ required_captures = [
     "B78-DE-PrayerSalam.png",
     "B78-DE-FemalePrayerSalam.png",
     "B78-DE-WuduHead.png",
-    "B78-DE-WuduArm.png",
-    "B78-DE-WuduFoot.png",
+    "B78-DE-WuduRightArm.png",
+    "B78-DE-WuduLeftArm.png",
+    "B78-DE-WuduRightFoot.png",
+    "B78-DE-WuduLeftFoot.png",
     "B78-DE-Qibla.png",
     "B78-DE-Onboarding.png",
     "B78-DE-DailyDua.png",
@@ -206,6 +217,8 @@ for token in (
     'case 8: armVisual(mirrored: true)',
     'case 12: footVisual(mirrored: false)',
     'case 13: footVisual(mirrored: true)',
+    'case 7, 12:',
+    'case 8, 13:',
     'Text("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ")',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
