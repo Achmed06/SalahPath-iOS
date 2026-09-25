@@ -10,87 +10,36 @@ struct QiblaView: View {
     var body: some View {
         Group {
             if let location = effectiveLocation {
-                let coordinates = Coordinates(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                let coordinates = Coordinates(
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude
+                )
                 let qibla = Qibla(coordinates: coordinates).direction
                 let qiblaDegrees = qibla.isFinite ? Int(qibla.rounded()) : nil
                 let heading = currentHeading
                 let headingDegrees = heading.map { Int($0.rounded()) }
-                let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
+                let relativeAngle = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
 
                 ScrollView {
-                    VStack(spacing: 11) {
-                        VStack(spacing: 2) {
+                    VStack(spacing: 12) {
+                        VStack(spacing: 3) {
                             Text(settings.t("Qibla", "Kıble"))
-                                .font(.system(size: 20, weight: .bold, design: .serif))
+                                .font(.system(size: 21, weight: .bold, design: .serif))
                                 .foregroundStyle(SalahTheme.ink)
-                            Text(settings.t("Qibla-Richtung", "Kıble Yönü"))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.mutedInk)
+
+                            Text(settings.t(
+                                "Die Pfeilspitze zeigt direkt zur Kaaba.",
+                                "Okun ucu doğrudan Kâbe'yi gösterir."
+                            ))
+                            .font(.system(size: 10.5, weight: .semibold))
+                            .foregroundStyle(SalahTheme.mutedInk)
                         }
 
-                        ZStack {
-                            Circle()
-                                .fill(SalahTheme.cream)
-                                .frame(width: 268, height: 268)
-                                .shadow(color: SalahTheme.deepTeal.opacity(0.055), radius: 8, y: 3)
-
-                            Circle()
-                                .stroke(SalahTheme.gold.opacity(0.60), lineWidth: 1.5)
-                                .frame(width: 258, height: 258)
-
-                            Circle()
-                                .stroke(SalahTheme.teal.opacity(0.14), lineWidth: 1)
-                                .frame(width: 226, height: 226)
-
-                            ForEach(0..<36, id: \.self) { index in
-                                Capsule()
-                                    .fill(SalahTheme.teal.opacity(index % 9 == 0 ? 0.78 : 0.22))
-                                    .frame(width: index % 9 == 0 ? 2.8 : 1.3, height: index % 9 == 0 ? 15 : 7)
-                                    .offset(y: -120)
-                                    .rotationEffect(.degrees(Double(index) * 10))
-                            }
-
-                            Text("N")
-                                .font(.system(size: 10, weight: .black))
-                                .foregroundStyle(SalahTheme.teal)
-                                .offset(y: -103)
-
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color.black.opacity(0.90))
-                                    .frame(width: 45, height: 39)
-                                Rectangle()
-                                    .fill(SalahTheme.gold)
-                                    .frame(width: 45, height: 4)
-                                    .offset(y: -7)
-                            }
-                            .offset(y: 27)
-
-                            if let rotation {
-                                Image(systemName: "location.north.fill")
-                                    .font(.system(size: 88, weight: .medium))
-                                    .foregroundStyle(SalahTheme.teal.opacity(0.92))
-                                    .rotationEffect(.degrees(rotation))
-                                    .offset(y: -25)
-                                    .animation(.easeOut(duration: 0.18), value: rotation)
-                            } else {
-                                ProgressView()
-                                    .tint(SalahTheme.teal)
-                                    .offset(y: -25)
-                            }
-                        }
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
-                        .accessibilityValue(
-                            compassAccessibilityValue(
-                                qiblaDegrees: qiblaDegrees,
-                                headingDegrees: headingDegrees
-                            )
+                        qiblaCompass(
+                            relativeAngle: relativeAngle,
+                            qiblaDegrees: qiblaDegrees,
+                            headingDegrees: headingDegrees
                         )
-                        .accessibilityHint(settings.t(
-                            "Drehe das iPhone, bis der Qibla-Pfeil nach oben zeigt.",
-                            "Kıble oku yukarıyı gösterene kadar iPhone'u çevir."
-                        ))
 
                         HStack(spacing: 8) {
                             compactInfoTile(
@@ -110,6 +59,7 @@ struct QiblaView: View {
                                 HStack(alignment: .top, spacing: 9) {
                                     Image(systemName: "location.slash.fill")
                                         .foregroundStyle(SalahTheme.gold)
+
                                     Text(settings.t(
                                         "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Dein manuell gewählter Ort für Gebetszeiten bleibt dabei unverändert.",
                                         "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
@@ -129,14 +79,17 @@ struct QiblaView: View {
                                 } label: {
                                     Label(
                                         settings.t(
-                                            locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                            locationManager.authorizationStatus == .denied ||
+                                            locationManager.authorizationStatus == .restricted
                                                 ? "iPhone-Einstellungen öffnen"
                                                 : "Gerätestandort für Kompass erlauben",
-                                            locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                            locationManager.authorizationStatus == .denied ||
+                                            locationManager.authorizationStatus == .restricted
                                                 ? "iPhone ayarlarını aç"
                                                 : "Pusula için cihaz konumuna izin ver"
                                         ),
-                                        systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                        systemImage: locationManager.authorizationStatus == .denied ||
+                                        locationManager.authorizationStatus == .restricted
                                             ? "gear"
                                             : "location.fill"
                                     )
@@ -149,13 +102,17 @@ struct QiblaView: View {
                             }
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(SalahTheme.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .background(
+                                SalahTheme.gold.opacity(0.12),
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
                         }
 
                         if let accuracy = headingAccuracy, accuracy > 20 {
                             HStack(alignment: .top, spacing: 9) {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .foregroundStyle(SalahTheme.gold)
+
                                 Text(settings.t(
                                     "Kompassgenauigkeit ist gerade niedrig (±\(Int(accuracy.rounded()))°). Entferne magnetische Hüllen/Zubehör und bewege das iPhone kurz in einer Acht.",
                                     "Pusula doğruluğu şu anda düşük (±\(Int(accuracy.rounded()))°). Manyetik kılıf/aksesuarları uzaklaştır ve iPhone'u kısa süre sekiz şeklinde hareket ettir."
@@ -166,7 +123,10 @@ struct QiblaView: View {
                             }
                             .padding(10)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(SalahTheme.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .background(
+                                SalahTheme.gold.opacity(0.12),
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
                         }
 
                         VStack(spacing: 0) {
@@ -176,11 +136,29 @@ struct QiblaView: View {
                                     ? settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
                                     : (locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
                             )
-                            infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
-                            infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
+                            infoRow(
+                                icon: "compass.drawing",
+                                title: settings.t(
+                                    "iPhone flach halten. Die Pfeilspitze ist die Gebetsrichtung.",
+                                    "iPhone'u düz tut. Okun ucu namaz yönüdür."
+                                )
+                            )
+                            infoRow(
+                                icon: "arrow.triangle.2.circlepath",
+                                title: settings.t(
+                                    "Bei Bedarf kurz in einer Acht bewegen",
+                                    "Gerekirse kısa süre sekiz şeklinde hareket ettir"
+                                )
+                            )
                         }
-                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                        .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1) }
+                        .background(
+                            SalahTheme.cream,
+                            in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                        }
                     }
                     .padding(.horizontal, 12)
                     .padding(.vertical, 10)
@@ -207,14 +185,17 @@ struct QiblaView: View {
                     } label: {
                         Label(
                             settings.t(
-                                locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                locationManager.authorizationStatus == .denied ||
+                                locationManager.authorizationStatus == .restricted
                                     ? "iPhone-Einstellungen öffnen"
                                     : "Aktuellen Standort verwenden",
-                                locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                                locationManager.authorizationStatus == .denied ||
+                                locationManager.authorizationStatus == .restricted
                                     ? "iPhone ayarlarını aç"
                                     : "Mevcut konumu kullan"
                             ),
-                            systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
+                            systemImage: locationManager.authorizationStatus == .denied ||
+                            locationManager.authorizationStatus == .restricted
                                 ? "gear"
                                 : "location.fill"
                         )
@@ -233,10 +214,7 @@ struct QiblaView: View {
         .onAppear {
             UIDevice.current.beginGeneratingDeviceOrientationNotifications()
             locationManager.updateHeadingOrientation(for: UIDevice.current.orientation)
-
-            if deviceLocationAuthorized {
-                locationManager.prepareQiblaHeading()
-            }
+            locationManager.prepareQiblaHeading()
         }
         .onChange(of: locationManager.authorizationStatus) { _, status in
             if status == .authorizedWhenInUse || status == .authorizedAlways {
@@ -252,6 +230,169 @@ struct QiblaView: View {
         }
     }
 
+    @ViewBuilder
+    private func qiblaCompass(
+        relativeAngle: Double?,
+        qiblaDegrees: Int?,
+        headingDegrees: Int?
+    ) -> some View {
+        let aligned = relativeAngle.map { abs($0) <= 5 } ?? false
+
+        VStack(spacing: 9) {
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                SalahTheme.cream,
+                                SalahTheme.softTeal.opacity(0.45)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 280, height: 280)
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 10, y: 4)
+
+                Circle()
+                    .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1.8)
+                    .frame(width: 270, height: 270)
+
+                Circle()
+                    .stroke(SalahTheme.teal.opacity(0.16), lineWidth: 1)
+                    .frame(width: 230, height: 230)
+
+                ForEach(0..<72, id: \.self) { index in
+                    Capsule()
+                        .fill(
+                            index % 18 == 0
+                                ? SalahTheme.deepTeal.opacity(0.82)
+                                : SalahTheme.teal.opacity(index % 6 == 0 ? 0.34 : 0.16)
+                        )
+                        .frame(
+                            width: index % 18 == 0 ? 3 : 1.1,
+                            height: index % 18 == 0 ? 16 : (index % 6 == 0 ? 10 : 6)
+                        )
+                        .offset(y: -125)
+                        .rotationEffect(.degrees(Double(index) * 5))
+                }
+
+                cardinalLabel("N", x: 0, y: -104)
+                cardinalLabel("O", x: 105, y: 0)
+                cardinalLabel("S", x: 0, y: 104)
+                cardinalLabel("W", x: -105, y: 0)
+
+                if let relativeAngle {
+                    QiblaNeedle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    SalahTheme.gold,
+                                    SalahTheme.teal
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .frame(width: 54, height: 146)
+                        .offset(y: -40)
+                        .rotationEffect(.degrees(relativeAngle))
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.16), radius: 4, y: 2)
+                        .animation(.easeOut(duration: 0.18), value: relativeAngle)
+
+                    kaabaMarker
+                        .offset(qiblaMarkerOffset(relativeAngle: relativeAngle, radius: 108))
+
+                    Circle()
+                        .fill(SalahTheme.deepTeal)
+                        .frame(width: 18, height: 18)
+                        .overlay {
+                            Circle()
+                                .fill(SalahTheme.gold)
+                                .frame(width: 7, height: 7)
+                        }
+                } else {
+                    ProgressView()
+                        .tint(SalahTheme.teal)
+                }
+            }
+            .frame(height: 286)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
+            .accessibilityValue(
+                compassAccessibilityValue(
+                    qiblaDegrees: qiblaDegrees,
+                    headingDegrees: headingDegrees
+                )
+            )
+            .accessibilityHint(settings.t(
+                "Die Pfeilspitze zeigt zur Kaaba. Drehe dich, bis die Pfeilspitze nach oben zeigt.",
+                "Okun ucu Kâbe'yi gösterir. Ok yukarıyı gösterene kadar dön."
+            ))
+
+            HStack(spacing: 7) {
+                Image(systemName: aligned ? "checkmark.seal.fill" : "arrow.up.circle.fill")
+                    .foregroundStyle(aligned ? SalahTheme.teal : SalahTheme.gold)
+
+                Text(
+                    aligned
+                        ? settings.t("Qibla ausgerichtet", "Kıbleye hizalandı")
+                        : settings.t(
+                            "Folge der Pfeilspitze zur Kaaba",
+                            "Kâbe için okun ucunu takip et"
+                        )
+                )
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(SalahTheme.ink)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                (aligned ? SalahTheme.softTeal : SalahTheme.gold.opacity(0.10)),
+                in: Capsule()
+            )
+        }
+    }
+
+    private var kaabaMarker: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                .fill(Color.black.opacity(0.92))
+                .frame(width: 38, height: 31)
+
+            Rectangle()
+                .fill(SalahTheme.gold)
+                .frame(width: 38, height: 4)
+                .offset(y: -6)
+
+            Image(systemName: "star.fill")
+                .font(.system(size: 6))
+                .foregroundStyle(SalahTheme.gold.opacity(0.9))
+                .offset(y: 6)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.8), lineWidth: 1)
+        }
+        .shadow(color: Color.black.opacity(0.12), radius: 3, y: 2)
+        .accessibilityHidden(true)
+    }
+
+    private func qiblaMarkerOffset(relativeAngle: Double, radius: CGFloat) -> CGSize {
+        let radians = relativeAngle * .pi / 180
+        return CGSize(
+            width: sin(radians) * radius,
+            height: -cos(radians) * radius
+        )
+    }
+
+    private func cardinalLabel(_ text: String, x: CGFloat, y: CGFloat) -> some View {
+        Text(text)
+            .font(.system(size: 10, weight: .black))
+            .foregroundStyle(SalahTheme.deepTeal)
+            .offset(x: x, y: y)
+    }
+
     private func compassAccessibilityValue(qiblaDegrees: Int?, headingDegrees: Int?) -> String {
         guard let qiblaDegrees else {
             return settings.t(
@@ -262,8 +403,8 @@ struct QiblaView: View {
 
         if let headingDegrees {
             return settings.t(
-                "Qibla \(qiblaDegrees) Grad. Gerät \(headingDegrees) Grad.",
-                "Kıble \(qiblaDegrees) derece. Cihaz \(headingDegrees) derece."
+                "Qibla \(qiblaDegrees) Grad. Gerät \(headingDegrees) Grad. Die Pfeilspitze zeigt zur Kaaba.",
+                "Kıble \(qiblaDegrees) derece. Cihaz \(headingDegrees) derece. Okun ucu Kâbe'yi gösterir."
             )
         }
 
@@ -286,8 +427,14 @@ struct QiblaView: View {
                 .foregroundStyle(SalahTheme.ink)
         }
         .frame(maxWidth: .infinity, minHeight: 82)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
+        .background(
+            SalahTheme.cream,
+            in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1)
+        }
     }
 
     private func infoRow(icon: String, title: String) -> some View {
@@ -295,18 +442,25 @@ struct QiblaView: View {
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(SalahTheme.teal)
+
             Image(systemName: icon)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(SalahTheme.teal)
                 .frame(width: 20)
+
             Text(title)
                 .font(.system(size: 10.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
+
             Spacer()
         }
         .padding(.horizontal, 11)
         .padding(.vertical, 10)
-        .overlay(alignment: .bottom) { Divider().padding(.leading, 50).opacity(0.34) }
+        .overlay(alignment: .bottom) {
+            Divider()
+                .padding(.leading, 50)
+                .opacity(0.34)
+        }
     }
 
     private func openAppSettings() {
@@ -340,12 +494,22 @@ struct QiblaView: View {
 
     private var currentHeading: Double? {
         if isScreenshotQA { return 0 }
+
         guard let heading = locationManager.heading,
               heading.headingAccuracy.isFinite,
-              heading.headingAccuracy >= 0,
-              heading.trueHeading.isFinite,
-              heading.trueHeading >= 0 else { return nil }
-        return heading.trueHeading
+              heading.headingAccuracy >= 0 else {
+            return nil
+        }
+
+        if heading.trueHeading.isFinite, heading.trueHeading >= 0 {
+            return normalized360(heading.trueHeading)
+        }
+
+        if heading.magneticHeading.isFinite, heading.magneticHeading >= 0 {
+            return normalized360(heading.magneticHeading)
+        }
+
+        return nil
     }
 
     private func normalized(_ angle: Double) -> Double {
@@ -353,5 +517,31 @@ struct QiblaView: View {
         if result > 180 { result -= 360 }
         if result < -180 { result += 360 }
         return result
+    }
+
+    private func normalized360(_ angle: Double) -> Double {
+        var result = angle.truncatingRemainder(dividingBy: 360)
+        if result < 0 { result += 360 }
+        return result
+    }
+}
+
+private struct QiblaNeedle: Shape {
+    func path(in rect: CGRect) -> Path {
+        let midX = rect.midX
+        let headY = rect.minY
+        let shoulderY = rect.minY + rect.height * 0.30
+        let tailY = rect.maxY
+
+        var path = Path()
+        path.move(to: CGPoint(x: midX, y: headY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: shoulderY))
+        path.addLine(to: CGPoint(x: midX + rect.width * 0.16, y: shoulderY))
+        path.addLine(to: CGPoint(x: midX + rect.width * 0.16, y: tailY))
+        path.addLine(to: CGPoint(x: midX - rect.width * 0.16, y: tailY))
+        path.addLine(to: CGPoint(x: midX - rect.width * 0.16, y: shoulderY))
+        path.addLine(to: CGPoint(x: rect.minX, y: shoulderY))
+        path.closeSubpath()
+        return path
     }
 }
