@@ -343,7 +343,11 @@ struct SettingsView: View {
                                 notificationStatusText = settings.t("Standort noch nicht verfügbar.", "Konum henüz hazır değil.")
                                 return
                             }
-                            let scheduled = await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
+                            let scheduled = await NotificationManager.shared.scheduleNextSevenDays(
+                                location: location,
+                                settings: settings,
+                                timeZone: locationManager.prayerTimeZone
+                            )
                             if !settings.notificationsEnabled {
                                 notificationStatusText = settings.t("Deaktiviert.", "Kapalı.")
                             } else if scheduled {
