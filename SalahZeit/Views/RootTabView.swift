@@ -822,12 +822,18 @@ struct MoreView: View {
 
             HStack(spacing: 7) {
                 Image("feature_info")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
                 Image("feature_moon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 21, height: 21)
                 Image("feature_sparkles")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 18, height: 18)
             }
-            .resizable()
-            .scaledToFit()
-            .frame(height: 22)
             .opacity(0.42)
             .padding(.trailing, 10)
             .padding(.bottom, 8)
