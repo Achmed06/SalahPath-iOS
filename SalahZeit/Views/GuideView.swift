@@ -960,33 +960,6 @@ struct PrayerHowToView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        if currentStepIndex > 0 {
-                            let target = currentStepIndex - 1
-                            prayerNextTriggerVisible = false
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.headline.bold())
-                            .frame(width: 34, height: 34)
-                    }
-                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
-                }
-            }
             .simultaneousGesture(
                 DragGesture(minimumDistance: 18)
                     .onEnded { value in
@@ -1728,33 +1701,6 @@ struct WuduGuideView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        if currentStepIndex > 0 {
-                            let target = currentStepIndex - 1
-                            wuduNextTriggerVisible = false
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.headline.bold())
-                            .frame(width: 34, height: 34)
-                    }
-                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
-                }
-            }
             .simultaneousGesture(
                 DragGesture(minimumDistance: 18)
                     .onEnded { value in
