@@ -146,7 +146,13 @@ for forbidden in (
         fail(f"German UI language regression: found {forbidden}")
 
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
+if '.replacingOccurrences(of: "male_", with: "")' in guide:
+    fail("female prayer pose routing regression: male_ substring stripping breaks female_ assets")
 for token in (
+    'if assetName.hasPrefix("female_") {',
+    'return String(assetName.dropFirst("female_".count))',
+    'if assetName.hasPrefix("male_") {',
+
     'Canvas { graphics, size in',
     'case "sujud", "second_sujud": drawSujud(&context, size: size)',
     'case "finger": drawSitting(&context, size: size, turn: 0, showFinger: true)',
