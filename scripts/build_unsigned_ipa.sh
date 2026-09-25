@@ -18,8 +18,8 @@ xcodebuild \
   CODE_SIGN_IDENTITY="" \
   PRODUCT_NAME="SalahPath" \
   PRODUCT_BUNDLE_IDENTIFIER="com.achmed06.salahpath" \
-  MARKETING_VERSION="3.63" \
-  CURRENT_PROJECT_VERSION="79" \
+  MARKETING_VERSION="3.64" \
+  CURRENT_PROJECT_VERSION="80" \
   INFOPLIST_KEY_CFBundleDisplayName="SalahPath" \
   build
 
@@ -87,7 +87,7 @@ VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO
 BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
 USES_NONEXEMPT_ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
 
-if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.63" ] || [ "$BUILD" != "79" ]; then
+if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.64" ] || [ "$BUILD" != "80" ]; then
   echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
   exit 1
 fi
