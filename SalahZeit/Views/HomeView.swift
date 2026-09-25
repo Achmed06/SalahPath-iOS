@@ -699,8 +699,14 @@ private struct DailyDuaDetailView: View {
 
             let url = urls[index]
             resolvedURL = url
-            audio.play(
-                url,
+            let playbackURLs = QuranAudioResolver.playbackQueue(
+                urls: [url],
+                surah: dua.audioSurah,
+                startAyah: dua.audioAyah,
+                reciter: reciter
+            )
+            audio.playQueue(
+                playbackURLs,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
                 context: dua.source
@@ -1527,8 +1533,14 @@ struct HomeView: View {
             let url = urls[index]
             dailyDuaAudioIdentity = identity
             dailyDuaAudioURL = url
-            audio.play(
-                url,
+            let playbackURLs = QuranAudioResolver.playbackQueue(
+                urls: [url],
+                surah: dua.audioSurah,
+                startAyah: dua.audioAyah,
+                reciter: reciter
+            )
+            audio.playQueue(
+                playbackURLs,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
                 context: dua.source
