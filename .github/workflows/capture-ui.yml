@@ -138,6 +138,65 @@ jobs:
 
           mkdir -p ui-preview
 
+          cat > /tmp/salahpath-screenshot-check.swift <<'SWIFT'
+          import AppKit
+          import Foundation
+
+          guard CommandLine.arguments.count == 2 else { exit(64) }
+          let path = CommandLine.arguments[1]
+          guard let image = NSImage(contentsOfFile: path),
+                let tiff = image.tiffRepresentation,
+                let bitmap = NSBitmapImageRep(data: tiff),
+                bitmap.pixelsWide > 100,
+                bitmap.pixelsHigh > 100 else {
+              fputs("Could not decode valid screenshot: \(path)\n", stderr)
+              exit(65)
+          }
+
+          let stepX = max(1, bitmap.pixelsWide / 120)
+          let stepY = max(1, bitmap.pixelsHigh / 240)
+          var total = 0
+          var nearWhite = 0
+          var nearBlack = 0
+          var luminanceSum = 0.0
+          var luminanceSquareSum = 0.0
+
+          for y in stride(from: 0, to: bitmap.pixelsHigh, by: stepY) {
+              for x in stride(from: 0, to: bitmap.pixelsWide, by: stepX) {
+                  guard let color = bitmap.colorAt(x: x, y: y)?.usingColorSpace(.deviceRGB) else { continue }
+                  let r = Double(color.redComponent)
+                  let g = Double(color.greenComponent)
+                  let b = Double(color.blueComponent)
+                  let a = Double(color.alphaComponent)
+                  guard a > 0.90 else { continue }
+
+                  total += 1
+                  if r > 0.97 && g > 0.97 && b > 0.97 { nearWhite += 1 }
+                  if r < 0.03 && g < 0.03 && b < 0.03 { nearBlack += 1 }
+
+                  let luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b
+                  luminanceSum += luminance
+                  luminanceSquareSum += luminance * luminance
+              }
+          }
+
+          guard total > 0 else { exit(66) }
+          let n = Double(total)
+          let whiteRatio = Double(nearWhite) / n
+          let blackRatio = Double(nearBlack) / n
+          let mean = luminanceSum / n
+          let variance = max(0.0, luminanceSquareSum / n - mean * mean)
+          let deviation = sqrt(variance)
+
+          print(String(format: "Screenshot QA white=%.4f black=%.4f luminanceSD=%.4f: %@", whiteRatio, blackRatio, deviation, path))
+
+          if whiteRatio > 0.90 || blackRatio > 0.90 || deviation < 0.008 {
+              fputs("Screenshot appears blank or nearly uniform: \(path)\n", stderr)
+              exit(2)
+          }
+          SWIFT
+          swiftc /tmp/salahpath-screenshot-check.swift -o /tmp/salahpath-screenshot-check
+
           # Pull requests use focused visual QA. Pushes to main keep the full
           # release reference capture. This avoids re-rendering 30+ screens
           # for a one-screen fix while preserving full release coverage.
@@ -182,12 +241,24 @@ jobs:
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
             fi
-            if [ "$SCREEN" = "quran-page" ]; then
+            if [[ "$SCREEN" == quran-page* ]]; then
               sleep 12
             else
               sleep 8
             fi
-            run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "ui-preview/$NAME"
+
+            SCREENSHOT="ui-preview/$NAME"
+            run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
+
+            if ! /tmp/salahpath-screenshot-check "$SCREENSHOT"; then
+              echo "Invalid/blank screenshot for $SCREEN; relaunching once and recapturing."
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
+                run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
+              sleep 5
+              run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
+              /tmp/salahpath-screenshot-check "$SCREENSHOT"
+            fi
           }
 
           if [ "$CAPTURE_MODE" = "tracker" ]; then
@@ -204,6 +275,8 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture quran SalahPath-v3.62-B78-DE-Quran.png
             capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+            capture quran-page-mid SalahPath-v3.62-B78-DE-QuranPage302.png
+            capture quran-page-last SalahPath-v3.62-B78-DE-QuranPage604.png
           elif [ "$CAPTURE_MODE" = "qibla" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
@@ -272,6 +345,8 @@ jobs:
             capture namaz SalahPath-v3.62-B78-DE-Namaz.png
             capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
             capture quran-page SalahPath-v3.62-B78-DE-QuranPage1.png
+            capture quran-page-mid SalahPath-v3.62-B78-DE-QuranPage302.png
+            capture quran-page-last SalahPath-v3.62-B78-DE-QuranPage604.png
             capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png
             capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
             capture wudu SalahPath-v3.62-B78-DE-Wudu.png
