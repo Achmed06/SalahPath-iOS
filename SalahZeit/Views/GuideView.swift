@@ -279,9 +279,13 @@ private struct PrayerPoseArtwork: View {
 
     private var female: Bool { assetName.hasPrefix("female_") }
     private var pose: String {
-        assetName
-            .replacingOccurrences(of: "male_", with: "")
-            .replacingOccurrences(of: "female_", with: "")
+        if assetName.hasPrefix("female_") {
+            return String(assetName.dropFirst("female_".count))
+        }
+        if assetName.hasPrefix("male_") {
+            return String(assetName.dropFirst("male_".count))
+        }
+        return assetName
     }
 
     private var garmentColor: Color {
