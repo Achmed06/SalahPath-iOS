@@ -216,6 +216,16 @@ for obsolete in (
     if obsolete in guide:
         fail(f"obsolete generated illustration fallback returned: {obsolete}")
 
+for token in (
+    'Image("feature_\\(kind)")',
+    'private func guideFeatureKind(for symbol: String) -> String?',
+    'return "wudu"',
+    'return "quran_audio"',
+    'return "list"',
+):
+    if token not in guide:
+        fail(f"Guide content icon regression: missing {token}")
+
 # 6) Navigation/discovery icons stay in the same standalone SalahPath system.
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
