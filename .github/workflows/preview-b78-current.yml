@@ -59,8 +59,25 @@ jobs:
       - name: Capture current B78 screens
         shell: bash
         run: |
-          xcrun simctl boot "$SIM_UDID" || true
-          xcrun simctl bootstatus "$SIM_UDID" -b
+          run_timeout() {
+            local seconds="$1"
+            shift
+            python3 - "$seconds" "$@" <<'PY'
+          import subprocess
+          import sys
+          seconds = int(sys.argv[1])
+          command = sys.argv[2:]
+          try:
+              subprocess.run(command, check=True, timeout=seconds)
+          except subprocess.TimeoutExpired:
+              print(f"Timed out after {seconds}s: {' '.join(command)}", file=sys.stderr)
+              raise SystemExit(124)
+          PY
+          }
+
+          xcrun simctl shutdown "$SIM_UDID" || true
+          run_timeout 30 xcrun simctl boot "$SIM_UDID"
+          run_timeout 180 xcrun simctl bootstatus "$SIM_UDID" -b
           APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
           test -n "$APP_PATH"
           xcrun simctl install "$SIM_UDID" "$APP_PATH"
@@ -75,10 +92,12 @@ jobs:
             TARGET="$1"
             NAME="$2"
             xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
-            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
+            run_timeout 45 /usr/bin/env \
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
               xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
             sleep 3
-            xcrun simctl io "$SIM_UDID" screenshot "current-preview/$NAME"
+            run_timeout 45 xcrun simctl io "$SIM_UDID" screenshot "current-preview/$NAME"
           }
 
           capture home SalahPath-B78-Current-Home.png
