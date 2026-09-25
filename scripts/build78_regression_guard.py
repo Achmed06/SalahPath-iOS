@@ -263,13 +263,22 @@ for token in (
         fail(f"standalone tab/discover icon regression: missing {token}")
 
 for token in (
+    'func salahFeatureIndex(for kind: String) -> Int?',
     'struct SalahFeatureIcon: View',
-    'Image("SalahFeatureSheet")',
-    'case "home": return 0',
+    'UIImage(named: "feature_\\(kind)")',
+    'UIImage(named: "SalahFeatureSheet")',
+    'case "home", "start": return 0',
     'case "prayer": return 1',
     'case "wudu": return 2',
     'case "quran": return 3',
     'case "profile": return 9',
+    'case "fajr": return 10',
+    'case "maghrib": return 14',
+    'case "isha": return 15',
+    'case "home_active": return 52',
+    'case "quran_inactive": return 59',
+    'let column = index % 10',
+    'let row = index / 10',
 ):
     if token not in root_tabs:
         fail(f"approved icon sheet routing regression: missing {token}")
