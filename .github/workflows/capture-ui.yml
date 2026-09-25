@@ -1,4 +1,4 @@
-# Release UI verification trigger: v3.63 build 78 / v422 / release verify
+# Release UI verification trigger: v3.63 build 79 / release verify
 name: Capture SalahPath v3.63 Build 79 UI
 
 on:
