@@ -191,43 +191,49 @@ for forbidden in (
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
     fail("female prayer pose routing regression: male_ substring stripping breaks female_ assets")
-for token in (
-    'if assetName.hasPrefix("female_") {',
-    'return String(assetName.dropFirst("female_".count))',
-    'if assetName.hasPrefix("male_") {',
 
-    'Canvas { graphics, size in',
-    'case "sujud", "second_sujud": drawSujud(&context, size: size)',
-    'case "finger": drawSitting(&context, size: size, turn: 0, showFinger: true)',
-    'if pose == "salam_right" {\n            turn = -0.22',
-    '} else if pose == "salam_left" {\n            turn = 0.22',
-    'switch stepNumber {',
-    'case 7: armVisual(mirrored: false)',
-    'case 8: armVisual(mirrored: true)',
-    'case 12: footVisual(mirrored: false)',
-    'case 13: footVisual(mirrored: true)',
-    'Text("بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ")',
+for token in (
+    'Image(key)',
+    'Image(assetName)',
+    'number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm"',
+    'number: 8, image: "wudu_leftarm", deTitle: "Linker Arm"',
+    'number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß"',
+    'number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
     'imageName: "\\(prefix)_salam_right",\n                arrow: "arrow.right"',
     'imageName: "\\(prefix)_salam_left",\n                arrow: "arrow.left"',
 ):
     if token not in guide:
-        fail(f"unified illustration regression: missing {token}")
+        fail(f"standalone illustration regression: missing {token}")
 
-# 6) Navigation/discovery icons stay in the same native SalahPath system.
+for obsolete in (
+    'case 7: armVisual(mirrored: false)',
+    'case 8: armVisual(mirrored: true)',
+    'case 12: footVisual(mirrored: false)',
+    'case 13: footVisual(mirrored: true)',
+):
+    if obsolete in guide:
+        fail(f"obsolete generated illustration fallback returned: {obsolete}")
+
+# 6) Navigation/discovery icons stay in the same standalone SalahPath system.
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
 for token in (
-    'ReferenceDashboardGlyph(kind: glyphKind)',
+    'Image("feature_\\(glyphKind)")',
     'case "quran_audio":',
     'case "bookmarks":',
     'LinearGradient(',
 ):
     if token not in home:
-        fail(f"native dashboard icon regression: missing {token}")
+        fail(f"standalone dashboard icon regression: missing {token}")
 
 for token in (
+    'Image("feature_\\(glyphKind)")',
+    'return "prayer"',
+    'return "wudu"',
+    'return "quran"',
+    'return "qibla"',
     'Image(systemName: item.0)',
     '"house.fill"',
     '"book.closed.fill"',
@@ -239,7 +245,7 @@ for token in (
     'audio.isPlaying ? audio.pause() : audio.resume()',
 ):
     if token not in root_tabs:
-        fail(f"native tab icon regression: missing {token}")
+        fail(f"standalone tab/discover icon regression: missing {token}")
 
 for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
