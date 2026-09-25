@@ -966,7 +966,7 @@ struct HomeView: View {
     private func prayerContent(location: CLLocation, today: PrayerDay) -> some View {
         ScrollView {
             LazyVStack(spacing: 5) {
-                brandHeader
+                brandHeader(today: today)
 
                 if let next = engine.nextPrayer(
                     now: now,
@@ -1005,12 +1005,10 @@ struct HomeView: View {
         }
     }
 
-    private var brandHeader: some View {
+    private func brandHeader(today: PrayerDay? = nil) -> some View {
         HStack(spacing: 9) {
-            Image("salahpath_logo")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 37, height: 44)
+            SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")
+                .frame(width: 42, height: 42)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 1) {
@@ -1040,7 +1038,7 @@ struct HomeView: View {
                         .font(.custom("AvenirNext-Medium", size: 7.0))
                         .foregroundStyle(SalahTheme.gold)
                     NavigationLink { SettingsView() } label: {
-                        Image(systemName: settings.notificationsEnabled ? "bell.fill" : "bell")
+                        SalahFeatureIcon(kind: settings.notificationsEnabled ? "reminder" : "mute")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
@@ -1056,6 +1054,30 @@ struct HomeView: View {
         .frame(maxWidth: .infinity)
         .background(Color.clear)
         .accessibilityElement(children: .contain)
+    }
+
+    private func brandHeaderIconKind(today: PrayerDay) -> String {
+        let current = now
+
+        if let fajr = today.time(for: .fajr), current < fajr {
+            return "isha"
+        }
+        if let sunrise = today.time(for: .sunrise), current < sunrise {
+            return "fajr"
+        }
+        if let dhuhr = today.time(for: .dhuhr), current < dhuhr {
+            return "sunrise"
+        }
+        if let asr = today.time(for: .asr), current < asr {
+            return "dhuhr"
+        }
+        if let maghrib = today.time(for: .maghrib), current < maghrib {
+            return "asr"
+        }
+        if let isha = today.time(for: .isha), current < isha {
+            return "maghrib"
+        }
+        return "isha"
     }
 
     private func nextPrayerHero(_ prayer: PrayerOccurrence) -> some View {
