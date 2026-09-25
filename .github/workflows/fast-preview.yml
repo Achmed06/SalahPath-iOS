@@ -2,7 +2,7 @@ name: FAST SalahPath Screen Preview
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "release/**" ]
     paths:
       - ".github/workflows/fast-preview.yml"
       - "v*-patch/**"
