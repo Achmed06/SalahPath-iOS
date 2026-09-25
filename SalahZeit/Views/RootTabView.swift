@@ -84,19 +84,34 @@ struct SalahFeatureIcon: View {
         GeometryReader { proxy in
             let column = index % 10
             let row = index / 10
+            let cellWidth = proxy.size.width
+            let cellHeight = proxy.size.height
+            let sheetWidth = cellWidth * 10
+            let sheetHeight = cellHeight * 6
 
             Image("SalahFeatureSheet")
                 .resizable()
                 .interpolation(.high)
-                .frame(width: proxy.size.width * 10, height: proxy.size.height * 6)
-                .offset(
-                    x: -CGFloat(column) * proxy.size.width,
-                    y: -CGFloat(row) * proxy.size.height
+                .frame(width: sheetWidth, height: sheetHeight)
+                .position(
+                    x: sheetWidth / 2 - CGFloat(column) * cellWidth,
+                    y: sheetHeight / 2 - CGFloat(row) * cellHeight
                 )
         }
         .clipped()
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
+    }
+}
+
+func salahPrayerFeatureKind(for kind: PrayerKind) -> String {
+    switch kind {
+    case .fajr: return "fajr"
+    case .sunrise: return "sunrise"
+    case .dhuhr: return "dhuhr"
+    case .asr: return "asr"
+    case .maghrib: return "maghrib"
+    case .isha: return "isha"
     }
 }
 
