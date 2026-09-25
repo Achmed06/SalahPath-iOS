@@ -5,7 +5,10 @@ on:
     branches: [ main ]
     paths:
       - ".github/workflows/fast-preview.yml"
-      - "v*-patch/**"
+      - "SalahZeit/**"
+      - "SalahZeit.xcodeproj/**"
+      - "scripts/preflight_reference_build.sh"
+      - "scripts/build78_regression_guard.py"
       - "qa/**"
 
 concurrency:
@@ -22,58 +25,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Restore verified v3.56 base + FAST patches
+      - name: Use checked-in current source
         shell: bash
         run: |
-          cat \
-            v3-source/part-01.b64 \
-            v3-source/part-02a.b64 \
-            v3-source/part-02b.b64 \
-            v3-source/part-03.b64 \
-            v3-source/part-04.b64 \
-            v3-source/part-05.b64 \
-            v3-source/part-06.b64 \
-            v3-source/part-07.b64 \
-            v3-source/part-08.b64 > v3.b64
-          base64 -D -i v3.b64 -o source.zip
-          unzip -oq source.zip
-          rm v3.b64 source.zip
+          test -f SalahZeit.xcodeproj/project.pbxproj
+          test -f SalahZeit/Views/RootTabView.swift
+          test -f SalahZeit/PrivacyInfo.xcprivacy
+          echo "FAST preview uses current checked-in source from $GITHUB_SHA"
 
-          python3 - <<'PY'
-          from pathlib import Path
-          import subprocess
-
-          explicit = [
-              "v31-patch/apply_v31.py",
-              "v32-patch/apply_v32.py",
-              "v33-patch/apply_v33.py",
-              "v33-patch/apply_v33_hotfix.py",
-              "v34-patch/apply_v34.py",
-              "v35-patch/apply_v35.py",
-              "v36-patch/apply_v36.py",
-              "v36-patch/apply_v36_hotfix.py",
-              "v36-patch/apply_v36_audiofallback.py",
-              "v37-patch/apply_v37.py",
-              "v38-patch/apply_v38.py",
-              "v39-patch/apply_v39.py",
-          ]
-          explicit += [f"v3{i}-patch/apply_v3{i}.py" for i in range(10, 26)]
-          explicit += [f"v3{i}-patch/apply_v3{i}.py" for i in range(27, 57)]
-
-          for item in explicit:
-              p = Path(item)
-              if p.exists():
-                  subprocess.run(["python3", str(p)], check=True)
-
-          fast_dirs = []
-          for d in Path(".").glob("v*-patch"):
-              digits = d.name.split("-")[0][1:]
-              if digits.isdigit() and int(digits) >= 357:
-                  fast_dirs.append((int(digits), d))
-          for _, d in sorted(fast_dirs):
-              for script in sorted(d.glob("apply_*.py")):
-                  subprocess.run(["python3", str(script)], check=True)
-          PY
+      - name: Strict source preflight
+        shell: bash
+        run: |
+          chmod +x scripts/preflight_reference_build.sh
+          scripts/preflight_reference_build.sh
 
       - name: Select iPhone simulator
         shell: bash
@@ -102,7 +66,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: DerivedData
-          key: salahpath-fast-${{ runner.os }}-${{ github.sha }}
+          key: salahpath-fast-${{ runner.os }}-${{ hashFiles('SalahZeit.xcodeproj/project.pbxproj', 'SalahZeit/**/*.swift', 'SalahZeit/Assets.xcassets/**') }}
           restore-keys: |
             salahpath-fast-${{ runner.os }}-
 
@@ -166,6 +130,12 @@ jobs:
             *"[de-audio-cache]"*) SCREEN="audio-cache"; LANGUAGE="german" ;;
             *"[de-reader]"*)  SCREEN="quran-reader"; LANGUAGE="german" ;;
             *"[de-quran]"*)   SCREEN="quran";   LANGUAGE="german" ;;
+            *"[de-onboarding]"*) SCREEN="onboarding"; LANGUAGE="german" ;;
+            *"[de-settings]"*) SCREEN="settings"; LANGUAGE="german" ;;
+            *"[de-more]"*)     SCREEN="more"; LANGUAGE="german" ;;
+            *"[de-daily-dua]"*) SCREEN="daily-dua"; LANGUAGE="german" ;;
+            *"[de-sitting]"*)  SCREEN="namaz-sitting"; LANGUAGE="german" ;;
+            *"[de-salam]"*)    SCREEN="namaz-salam"; LANGUAGE="german" ;;
             *"[qa]"*)         SCREEN="qa" ;;
             *"[home]"*)       SCREEN="home" ;;
             *"[dhikr]"*)      SCREEN="dhikr" ;;
@@ -271,6 +241,12 @@ jobs:
             SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
             SIMCTL_CHILD_SALAH_QA_SCREEN="audio-cache" \
               xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+          elif [ "$SCREEN" = "namaz-sitting" ] || [ "$SCREEN" = "namaz-salam" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+            capture_one "$SCREEN" "SalahPath-FAST-Male-$SCREEN.png"
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture_one "$SCREEN" "SalahPath-FAST-Female-$SCREEN.png"
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           else
             capture_one "$SCREEN" "SalahPath-FAST-$SCREEN.png"
           fi
