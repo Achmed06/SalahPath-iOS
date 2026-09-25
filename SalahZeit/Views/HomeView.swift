@@ -1729,7 +1729,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Wudu\nAnleitung", "Abdest\nRehberi"), subtitle: settings.t("Grundlagen", "Temel"), icon: "wudu")
             }
             NavigationLink { HijriCalendarView() } label: {
-                DashboardTile(title: settings.t("Islamischer\nKalender", "İslami Takvim"), subtitle: settings.t("Ereignisse", "Olaylar"), icon: "calendar")
+                DashboardTile(title: settings.t("Islamischer\nKalender", "İslami Takvim"), subtitle: settings.t("Ereignisse", "Olaylar"), icon: "islamic_calendar")
             }
             NavigationLink { DhikrView() } label: {
                 DashboardTile(title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Täglich", "Günlük"), icon: "dhikr")
@@ -1738,7 +1738,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Qibla"), icon: "qibla")
             }
             NavigationLink { PrayerTermsView() } label: {
-                DashboardTile(title: settings.t("Islamwissen", "İslami Bilgiler"), subtitle: settings.t("Wissen", "Bilgi"), icon: "info")
+                DashboardTile(title: settings.t("Islamwissen", "İslami Bilgiler"), subtitle: settings.t("Wissen", "Bilgi"), icon: "islamic_knowledge")
             }
             NavigationLink { PrayerTrackerOverviewView() } label: {
                 DashboardTile(title: settings.t("Gebets-Tracker", "Namaz Takibi"), subtitle: settings.t("Fortschritt", "İlerleme"), icon: "checkmark")
@@ -2796,7 +2796,7 @@ private struct DashboardTile: View {
     private var glyphKind: String {
         switch icon {
         case "quran_audio": return "quran_audio"
-        case "fav": return "bookmarks"
+        case "fav": return "favorites"
         default: return icon
         }
     }
