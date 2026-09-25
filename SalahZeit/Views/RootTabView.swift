@@ -1,86 +1,136 @@
 import SwiftUI
+import UIKit
 
-// Approved standalone green-gold icons. Do not crop the atlas when a
-// dedicated asset exists: atlas cropping caused wrong/partial icons in B78.
+// Approved green-gold icon sheet from the artwork supplied for SalahPath.
+// The source contains 60 individual icons in a fixed 10 x 6 grid.
+func salahFeatureIndex(for kind: String) -> Int? {
+    switch kind {
+    case "home", "start": return 0
+    case "prayer": return 1
+    case "wudu": return 2
+    case "quran": return 3
+    case "discover": return 4
+    case "tracker", "checkmark": return 5
+    case "calendar": return 6
+    case "qibla": return 7
+    case "settings": return 8
+    case "profile": return 9
+
+    case "fajr": return 10
+    case "sunrise": return 11
+    case "dhuhr": return 12
+    case "asr": return 13
+    case "maghrib": return 14
+    case "isha": return 15
+    case "times", "prayer_schedule", "list": return 16
+    case "reminder": return 17
+    case "mute": return 18
+    case "sound", "quran_audio": return 19
+
+    case "mosques": return 20
+    case "duas": return 21
+    case "dhikr": return 22
+    case "hadith": return 23
+    case "islamic_knowledge", "more": return 24
+    case "info", "knowledge", "sparkles": return 25
+    case "favorites": return 26
+    case "bookmarks": return 27
+    case "history": return 28
+    case "downloads": return 29
+
+    case "articles": return 30
+    case "courses": return 31
+    case "videos": return 32
+    case "backgrounds": return 33
+    case "mindfulness": return 34
+    case "donations": return 35
+    case "community": return 36
+    case "forum": return 37
+    case "language": return 38
+    case "islamic_calendar": return 39
+
+    case "prayer_settings": return 40
+    case "location": return 41
+    case "qibla_calibration": return 42
+    case "map": return 43
+    case "moon", "dark_mode": return 44
+    case "light_mode": return 45
+    case "font_size": return 46
+    case "notifications": return 47
+    case "backup": return 48
+    case "sync": return 49
+
+    case "back": return 50
+    case "forward": return 51
+    case "home_active": return 52
+    case "home_inactive": return 53
+    case "prayer_active": return 54
+    case "prayer_inactive": return 55
+    case "wudu_active": return 56
+    case "wudu_inactive": return 57
+    case "quran_active": return 58
+    case "quran_inactive": return 59
+    default: return nil
+    }
+}
+
 struct SalahFeatureIcon: View {
     let kind: String
 
-    private var standaloneAssetName: String? {
-        switch kind {
-        case "home": return "feature_home"
-        case "prayer": return "feature_prayer"
-        case "wudu": return "feature_wudu"
-        case "quran": return "feature_quran"
-        case "discover": return "feature_discover"
-        case "checkmark": return "feature_checkmark"
-        case "calendar": return "feature_calendar"
-        case "qibla": return "feature_qibla"
-        case "settings": return "feature_settings"
-        case "profile": return "feature_profile"
-        case "times": return "feature_times"
-        case "quran_audio": return "feature_quran_audio"
-        case "bookmarks": return "feature_bookmarks"
-        case "dhikr": return "feature_dhikr"
-        case "info": return "feature_info"
-        case "community": return "feature_community"
-        case "moon": return "feature_moon"
-        case "sparkles": return "feature_sparkles"
-        case "language": return "feature_language"
-        case "more": return "feature_more"
-        case "list": return "feature_list"
-        default: return nil
-        }
+    private var index: Int {
+        salahFeatureIndex(for: kind) ?? 4
     }
 
-    private var atlasIndex: Int {
-        switch kind {
-        case "home": return 0
-        case "prayer": return 1
-        case "wudu": return 2
-        case "quran": return 3
-        case "discover": return 4
-        case "checkmark": return 5
-        case "calendar": return 6
-        case "qibla": return 7
-        case "settings": return 8
-        case "profile": return 9
-        case "times": return 10
-        case "quran_audio": return 11
-        case "bookmarks": return 12
-        case "dhikr": return 13
-        case "info": return 14
-        case "community": return 15
-        case "moon": return 16
-        case "sparkles": return 17
-        case "language": return 18
-        case "more": return 19
-        case "list": return 20
-        default: return 4
+    private var standaloneUIImage: UIImage? {
+        UIImage(named: "feature_\(kind)")
+    }
+
+    private var croppedUIImage: UIImage? {
+        guard let source = UIImage(named: "SalahFeatureSheet"),
+              let cgImage = source.cgImage else {
+            return nil
         }
+
+        let column = index % 10
+        let row = index / 10
+        let cellWidth = CGFloat(cgImage.width) / 10
+        let cellHeight = CGFloat(cgImage.height) / 6
+
+        let cropRect = CGRect(
+            x: CGFloat(column) * cellWidth,
+            y: CGFloat(row) * cellHeight,
+            width: cellWidth,
+            height: cellHeight
+        ).integral
+
+        guard let cropped = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+
+        return UIImage(
+            cgImage: cropped,
+            scale: source.scale,
+            orientation: source.imageOrientation
+        )
     }
 
     var body: some View {
         Group {
-            if let standaloneAssetName {
-                Image(standaloneAssetName)
+            if let standaloneUIImage {
+                Image(uiImage: standaloneUIImage)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            } else if let croppedUIImage {
+                Image(uiImage: croppedUIImage)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
             } else {
-                GeometryReader { proxy in
-                    let column = atlasIndex % 7
-                    let row = atlasIndex / 7
-
-                    Image("SalahFeatureSheet")
-                        .resizable()
-                        .interpolation(.high)
-                        .frame(width: proxy.size.width * 7, height: proxy.size.height * 3)
-                        .offset(
-                            x: -CGFloat(column) * proxy.size.width,
-                            y: -CGFloat(row) * proxy.size.height
-                        )
-                }
-                .clipped()
+                Image(systemName: "square.dashed")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(SalahTheme.mutedInk)
             }
         }
         .aspectRatio(1, contentMode: .fit)
@@ -88,8 +138,18 @@ struct SalahFeatureIcon: View {
     }
 }
 
+func salahPrayerFeatureKind(for kind: PrayerKind) -> String {
+    switch kind {
+    case .fajr: return "fajr"
+    case .sunrise: return "sunrise"
+    case .dhuhr: return "dhuhr"
+    case .asr: return "asr"
+    case .maghrib: return "maghrib"
+    case .isha: return "isha"
+    }
+}
+
 import MapKit
-import UIKit
 
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
