@@ -265,7 +265,7 @@ for token in (
 for token in (
     'func salahFeatureIndex(for kind: String) -> Int?',
     'struct SalahFeatureIcon: View',
-    'Image("SalahFeatureSheet")',
+    'UIImage(named: "SalahFeatureSheet")',
     'case "home", "start": return 0',
     'case "prayer": return 1',
     'case "wudu": return 2',
