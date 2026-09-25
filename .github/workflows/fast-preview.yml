@@ -121,7 +121,7 @@ jobs:
             *"[de-qa]"*)      SCREEN="qa";      LANGUAGE="german" ;;
             *"[de-home]"*)    SCREEN="home";    LANGUAGE="german" ;;
             *"[de-dhikr]"*)   SCREEN="dhikr";   LANGUAGE="german" ;;
-            *"[de-prayer]"*)  SCREEN="prayer-sequence"; LANGUAGE="german" ;;
+            *"[de-prayer]"*)  SCREEN="namaz-howto"; LANGUAGE="german" ;;
             *"[de-namaz]"*)   SCREEN="namaz";   LANGUAGE="german" ;;
             *"[de-times]"*)   SCREEN="times";   LANGUAGE="german" ;;
             *"[de-qibla]"*)   SCREEN="qibla";   LANGUAGE="german" ;;
@@ -221,19 +221,17 @@ jobs:
             capture_one quran-juz      SalahPath-FAST-QuranJuz.png
             capture_one quran-progress SalahPath-FAST-QuranProgress.png
           elif [ "$SCREEN" = "wudu" ]; then
-            capture_one wudu-step-1  SalahPath-FAST-Wudu-Step-01.png
-            capture_one wudu-step-2  SalahPath-FAST-Wudu-Step-02.png
-            capture_one wudu-step-3  SalahPath-FAST-Wudu-Step-03.png
-            capture_one wudu-step-4  SalahPath-FAST-Wudu-Step-04.png
-            capture_one wudu-step-5  SalahPath-FAST-Wudu-Step-05.png
-            capture_one wudu-step-6  SalahPath-FAST-Wudu-Step-06.png
-            capture_one wudu-step-7  SalahPath-FAST-Wudu-Step-07.png
-            capture_one wudu-step-8  SalahPath-FAST-Wudu-Step-08.png
-            capture_one wudu-step-9  SalahPath-FAST-Wudu-Step-09.png
-            capture_one wudu-step-10 SalahPath-FAST-Wudu-Step-10.png
-            capture_one wudu-step-11 SalahPath-FAST-Wudu-Step-11.png
-            capture_one wudu-step-12 SalahPath-FAST-Wudu-Step-12.png
-            capture_one wudu-step-13 SalahPath-FAST-Wudu-Step-13.png
+            capture_one wudu       SalahPath-B78-Wudu-Start.png
+            capture_one wudu-arm   SalahPath-B78-Wudu-Arm.png
+            capture_one wudu-head  SalahPath-B78-Wudu-Head.png
+            capture_one wudu-ears  SalahPath-B78-Wudu-Ears.png
+            capture_one wudu-foot  SalahPath-B78-Wudu-Foot.png
+          elif [ "$SCREEN" = "namaz-howto" ]; then
+            capture_one namaz-howto  SalahPath-B78-Prayer-Start.png
+            capture_one namaz-bowing SalahPath-B78-Prayer-Bowing.png
+            capture_one namaz-sujud  SalahPath-B78-Prayer-Sujud.png
+            capture_one namaz-sitting SalahPath-B78-Prayer-Sitting.png
+            capture_one namaz-salam  SalahPath-B78-Prayer-Salam.png
           elif [ "$SCREEN" = "audio-cache" ]; then
             DATA_CONTAINER="$(xcrun simctl get_app_container "$SIM_UDID" com.achmed06.salahpath data)"
             QA_FILE="$DATA_CONTAINER/Library/Application Support/SalahPathAudioCacheQA.txt"
