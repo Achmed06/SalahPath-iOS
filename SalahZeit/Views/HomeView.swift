@@ -1123,10 +1123,7 @@ struct HomeView: View {
 
                 HStack(alignment: .center, spacing: 7) {
                     SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
-                        .font(.system(size: 22, weight: .medium))
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(SalahTheme.gold)
-                        .frame(width: 31)
+                        .frame(width: 31, height: 31)
 
                     VStack(alignment: .leading, spacing: 0) {
                         Text(prayer.kind.localizedName(settings.language))
@@ -1145,8 +1142,7 @@ struct HomeView: View {
 
                 HStack(spacing: 4) {
                     SalahFeatureIcon(kind: "location")
-                        .font(.system(size: 9.5, weight: .bold))
-                        .foregroundStyle(SalahTheme.teal)
+                        .frame(width: 13, height: 13)
                     Text(effectiveLocality)
                         .font(.custom("AvenirNext-DemiBold", size: 9.2))
                         .foregroundStyle(SalahTheme.teal)
@@ -1161,8 +1157,7 @@ struct HomeView: View {
                                 .frame(width: 15, height: 15)
                         } else {
                             SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.gold)
+                                .frame(width: 15, height: 15)
                         }
                     }
 
@@ -3152,8 +3147,7 @@ private struct PrayerRow: View {
     var body: some View {
         HStack(spacing: 11) {
             SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
-                .frame(width: 28)
-                .foregroundStyle(isNext ? SalahTheme.gold : SalahTheme.teal)
+                .frame(width: 28, height: 28)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(prayer.kind.localizedName(settings.language)).font(.subheadline.bold())
