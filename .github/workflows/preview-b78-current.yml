@@ -1,0 +1,96 @@
+name: Preview current guarded B78
+
+on:
+  push:
+    branches:
+      - "release/b78-final-audio-visual-20260925"
+    paths:
+      - ".github/workflows/preview-b78-current.yml"
+      - "qa/preview-b78-current.txt"
+
+jobs:
+  preview:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Select iPhone simulator
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          data=json.loads(subprocess.check_output(["xcrun","simctl","list","devices","available","-j"]))
+          candidates=[]
+          for runtime,devices in data["devices"].items():
+              if "iOS" not in runtime: continue
+              for d in devices:
+                  if d.get("isAvailable") and d["name"].startswith("iPhone"):
+                      candidates.append((d["name"],d["udid"]))
+          priority=["iPhone 16 Pro","iPhone 16","iPhone 15 Pro","iPhone 15"]
+          chosen=next((c for p in priority for c in candidates if c[0]==p),candidates[0])
+          with open(os.environ["GITHUB_ENV"],"a") as f:
+              f.write("SIM_UDID="+chosen[1]+"\n")
+          print("Using",chosen)
+          PY
+
+      - name: Restore Xcode cache
+        uses: actions/cache@v4
+        with:
+          path: DerivedData
+          key: b78-current-preview-${{ runner.os }}-${{ hashFiles('SalahZeit.xcodeproj/project.pbxproj', 'SalahZeit/**/*.swift', 'SalahZeit/Assets.xcassets/**') }}
+          restore-keys: |
+            b78-current-preview-${{ runner.os }}-
+            salahpath-fast-${{ runner.os }}-
+
+      - name: Build simulator
+        shell: bash
+        run: |
+          xcodebuild \
+            -project SalahZeit.xcodeproj \
+            -scheme SalahZeit \
+            -configuration Debug \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Capture current B78 screens
+        shell: bash
+        run: |
+          xcrun simctl boot "$SIM_UDID" || true
+          xcrun simctl bootstatus "$SIM_UDID" -b
+          APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
+          test -n "$APP_PATH"
+          xcrun simctl install "$SIM_UDID" "$APP_PATH"
+          xcrun simctl privacy "$SIM_UDID" grant location com.achmed06.salahpath || true
+          xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
+          xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath onboardingCompleted -bool true
+          mkdir -p current-preview
+
+          capture() {
+            TARGET="$1"
+            NAME="$2"
+            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
+            SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
+              xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+            sleep 3
+            xcrun simctl io "$SIM_UDID" screenshot "current-preview/$NAME"
+          }
+
+          capture home SalahPath-B78-Current-Home.png
+          capture namaz-howto SalahPath-B78-Current-Prayer.png
+          capture namaz-salam SalahPath-B78-Current-Prayer-Salam.png
+          capture wudu SalahPath-B78-Current-Wudu.png
+          capture wudu-arm SalahPath-B78-Current-Wudu-Arm.png
+          capture wudu-foot SalahPath-B78-Current-Wudu-Foot.png
+
+      - name: Upload current preview
+        uses: actions/upload-artifact@v7
+        with:
+          name: SalahPath-B78-current-preview
+          path: current-preview/*.png
+          if-no-files-found: error
