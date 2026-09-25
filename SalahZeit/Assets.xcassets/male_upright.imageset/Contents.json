@@ -1,15 +1,13 @@
 {
   "images": [
     {
-      "filename": "male_upright.svg",
-      "idiom": "universal"
+      "filename": "male_upright.jpg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }

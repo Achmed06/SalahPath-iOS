@@ -172,10 +172,12 @@ if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.
 fi
 
 # Standalone visual regression gates.
-# Prayer, Wudu and feature illustrations intentionally live as one SVG per
-# imageset so every screen can reuse the same SalahPath visual language.
+# Feature/navigation art stays vector. Prayer and Wudu may intentionally use
+# the older approved raster artwork; every imageset must still point to exactly
+# one real standalone file.
 python3 - <<'PY'
 from pathlib import Path
+import json
 
 root = Path("SalahZeit/Assets.xcassets")
 required_wudu = {
@@ -210,10 +212,29 @@ for name in sorted(required):
     folder = root / f"{name}.imageset"
     if not folder.is_dir():
         raise SystemExit(f"PRECHECK ERROR: missing standalone visual imageset: {name}")
-    if not (folder / "Contents.json").is_file():
+    contents = folder / "Contents.json"
+    if not contents.is_file():
         raise SystemExit(f"PRECHECK ERROR: missing Contents.json for visual: {name}")
-    if name not in {"salahpath_logo", "home_mosque"} and not (folder / f"{name}.svg").is_file():
-        raise SystemExit(f"PRECHECK ERROR: missing standalone SVG for visual: {name}")
+
+    payload = json.loads(contents.read_text(encoding="utf-8"))
+    filenames = [
+        entry.get("filename")
+        for entry in payload.get("images", [])
+        if entry.get("filename")
+    ]
+    if len(filenames) != 1:
+        raise SystemExit(
+            f"PRECHECK ERROR: visual must reference exactly one standalone file: {name} -> {filenames}"
+        )
+
+    visual = folder / filenames[0]
+    if not visual.is_file():
+        raise SystemExit(f"PRECHECK ERROR: referenced visual file missing: {visual}")
+    if visual.suffix.lower() not in {".svg", ".png", ".jpg", ".jpeg"}:
+        raise SystemExit(f"PRECHECK ERROR: unsupported standalone visual format: {visual}")
+
+    if name in required_features and visual.suffix.lower() != ".svg":
+        raise SystemExit(f"PRECHECK ERROR: feature/navigation visual must remain SVG: {name}")
 
 print(
     "Standalone SalahPath visual set: "

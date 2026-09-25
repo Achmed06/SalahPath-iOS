@@ -816,12 +816,10 @@ struct PrayerHowToView: View {
             HStack(spacing: 14) {
                 ZStack(alignment: .bottom) {
                     PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
-                        .scaleEffect(1.20, anchor: .bottom)
                 }
                 .frame(width: 118, height: 148)
                 .background(SalahTheme.cream)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .clipped()
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(settings.t("Ganz von vorne lernen", "En baştan öğren"))
@@ -959,33 +957,6 @@ struct PrayerHowToView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        if currentStepIndex > 0 {
-                            let target = currentStepIndex - 1
-                            prayerNextTriggerVisible = false
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.headline.bold())
-                            .frame(width: 34, height: 34)
-                    }
-                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
-                }
-            }
             .simultaneousGesture(
                 DragGesture(minimumDistance: 18)
                     .onEnded { value in
@@ -1064,13 +1035,11 @@ private struct PrayerTutorialStepCard: View {
                 if step.pose == .salam {
                     PrayerSalamVisual()
                 } else if let imageName {
-                    ZStack(alignment: .bottom) {
+                    ZStack(alignment: .center) {
                         PrayerPoseArtwork(assetName: imageName)
-                            .scaleEffect(standingStylePose ? 1.14 : 1.0, anchor: .bottom)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: standingStylePose ? 220 : 205)
-                    .clipped()
+                    .frame(height: standingStylePose ? 236 : 220)
                     .padding(.vertical, 6)
                     .background(SalahTheme.cream)
                 }
@@ -1534,30 +1503,29 @@ private struct WuduInstructionVisual: View {
     let stepNumber: Int
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            Image(key)
-                .resizable()
-                .scaledToFit()
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 188)
-        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
-        }
-        .accessibilityHidden(true)
+        Image(key)
+            .renderingMode(.original)
+            .resizable()
+            .interpolation(.high)
+            .scaledToFit()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .frame(height: 188)
+            .background(
+                LinearGradient(
+                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 26, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+            }
+            .accessibilityHidden(true)
     }
 }
 
@@ -1730,33 +1698,6 @@ struct WuduGuideView: View {
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        if currentStepIndex > 0 {
-                            let target = currentStepIndex - 1
-                            wuduNextTriggerVisible = false
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.headline.bold())
-                            .frame(width: 34, height: 34)
-                    }
-                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
-                }
-            }
             .simultaneousGesture(
                 DragGesture(minimumDistance: 18)
                     .onEnded { value in
