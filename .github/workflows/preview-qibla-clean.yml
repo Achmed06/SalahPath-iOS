@@ -72,7 +72,18 @@ jobs:
             SIMCTL_CHILD_SALAH_QA_SCREEN=qibla \
             xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
           sleep 4
+
+          if ! xcrun simctl spawn "$SIM_UDID" launchctl list | grep -F "com.achmed06.salahpath"; then
+            echo "::error::Qibla screen process exited after launch"
+            xcrun simctl spawn "$SIM_UDID" log show --last 2m --style compact \
+              --predicate 'process == "SalahZeit" OR eventMessage CONTAINS[c] "salahpath"' \
+              | tail -250 || true
+            exit 1
+          fi
+
           run_timeout 45 xcrun simctl io "$SIM_UDID" screenshot preview/SalahPath-B78-Clean-Qibla.png
+
+          test "$(stat -f%z preview/SalahPath-B78-Clean-Qibla.png)" -gt 100000
 
       - uses: actions/upload-artifact@v7
         with:
