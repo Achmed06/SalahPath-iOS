@@ -58,13 +58,13 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Release checkpoint: SalahPath v3.63 build 79
-grep -q 'MARKETING_VERSION = 3.63;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'CURRENT_PROJECT_VERSION = 79;' "SalahZeit.xcodeproj/project.pbxproj"
+# Release checkpoint: SalahPath v3.64 build 80
+grep -q 'MARKETING_VERSION = 3.64;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'CURRENT_PROJECT_VERSION = 80;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_STRICT_CONCURRENCY = complete;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'MARKETING_VERSION="3.63"' "scripts/build_unsigned_ipa.sh"
-grep -q 'CURRENT_PROJECT_VERSION="79"' "scripts/build_unsigned_ipa.sh"
+grep -q 'MARKETING_VERSION="3.64"' "scripts/build_unsigned_ipa.sh"
+grep -q 'CURRENT_PROJECT_VERSION="80"' "scripts/build_unsigned_ipa.sh"
 grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
@@ -324,4 +324,4 @@ PY
 
 python3 scripts/build78_regression_guard.py
 
-printf 'Reference build checks passed for SalahPath v3.63 build 79\n'
+printf 'Reference build checks passed for SalahPath v3.64 build 80\n'
