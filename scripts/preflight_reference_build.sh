@@ -48,6 +48,9 @@ require_file "SalahZeit/Resources/adhan-fajr.caf"
 require_file "qa/adhan-audio-hashes.txt"
 require_file "SalahZeit/Resources/quran-uthmani.json"
 require_file "qa/quran-text-hash.txt"
+require_file "qa/approved-prayer-wudu-assets.tsv"
+require_file "qa/APPROVED_ASSET_POLICY.md"
+require_file "scripts/verify_approved_prayer_wudu_assets.sh"
 
 # Patch/merge integrity.
 if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
@@ -170,6 +173,9 @@ if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.
   echo "Unsupported fixed Istighfar count regression found." >&2
   exit 1
 fi
+
+# Hard lock: approved Prayer/Wudu assets must never drift during unrelated work.
+bash scripts/verify_approved_prayer_wudu_assets.sh
 
 # Standalone visual regression gates.
 # Feature/navigation art stays vector. Prayer and Wudu may intentionally use
