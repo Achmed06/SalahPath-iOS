@@ -154,10 +154,17 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             return false
         }
 
+        let session = AVAudioSession.sharedInstance()
         do {
-            let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .default)
             try session.setActive(true, options: [])
+        } catch {
+            // Do not block the bundled Adhan preview solely because iOS rejected
+            // an audio-session route change. AVAudioPlayer may still use the
+            // already active route.
+        }
+
+        do {
             let player = try AVAudioPlayer(contentsOf: url)
             player.volume = 1
             player.prepareToPlay()
