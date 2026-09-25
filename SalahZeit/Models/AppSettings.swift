@@ -7,16 +7,6 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     case turkish
 
     var id: String { rawValue }
-    var everyAyahFolder: String {
-        switch self {
-        case .alafasy: return "Alafasy_128kbps"
-        case .husary: return "Husary_128kbps"
-        case .minshawi: return "Minshawy_Murattal_128kbps"
-        case .sudais: return "Abdurrahmaan_As-Sudais_192kbps"
-        case .shuraim: return "Saood_ash-Shuraym_128kbps"
-        }
-    }
-
     var title: String { self == .german ? "Deutsch" : "Türkçe" }
 }
 
@@ -89,6 +79,16 @@ enum QuranReciter: String, CaseIterable, Identifiable {
         case .sudais: return ("ar.sudais", 192)
         case .shuraim: return ("ar.shuraim", 128)
         default: return nil
+        }
+    }
+
+    var everyAyahFolder: String {
+        switch self {
+        case .alafasy: return "Alafasy_128kbps"
+        case .husary: return "Husary_128kbps"
+        case .minshawi: return "Minshawy_Murattal_128kbps"
+        case .sudais: return "Abdurrahmaan_As-Sudais_192kbps"
+        case .shuraim: return "Saood_ash-Shuraym_128kbps"
         }
     }
 
