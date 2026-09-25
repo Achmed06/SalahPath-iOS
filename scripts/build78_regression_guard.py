@@ -217,7 +217,7 @@ for obsolete in (
         fail(f"obsolete generated illustration fallback returned: {obsolete}")
 
 for token in (
-    'Image("feature_\\(kind)")',
+    'SalahFeatureIcon(kind: kind)',
     'private func guideFeatureKind(for symbol: String) -> String?',
     'return "wudu"',
     'return "quran_audio"',
@@ -230,8 +230,8 @@ for token in (
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
 for token in (
-    'Image("feature_\\(glyphKind)")',
-    'Image("feature_\\(icon)")',
+    'SalahFeatureIcon(kind: glyphKind)',
+    'SalahFeatureIcon(kind: icon)',
     'icon: "times"',
     'icon: "checkmark"',
     'icon: "quran"',
@@ -243,24 +243,36 @@ for token in (
         fail(f"standalone dashboard icon regression: missing {token}")
 
 for token in (
-    'Image("feature_\\(glyphKind)")',
+    'SalahFeatureIcon(kind: glyphKind)',
     'return "prayer"',
     'return "wudu"',
     'return "quran"',
     'return "qibla"',
-    'Image("feature_\\(item.0)")',
+    'SalahFeatureIcon(kind: item.0)',
     '("home", settings.t("Start", "Ana Sayfa"))',
     '("quran", settings.t("Koran", "Kur\'an"))',
     '("prayer", settings.t("Gebet", "Namaz"))',
     '("discover", settings.t("Entdecken", "Keşfet"))',
     '("profile", settings.t("Profil", "Profil"))',
-    'Image("feature_discover")',
+    'SalahFeatureIcon(kind: "discover")',
     'GlobalAudioMiniPlayer(audio: audio)',
     'private struct GlobalAudioMiniPlayer: View',
     'audio.isPlaying ? audio.pause() : audio.resume()',
 ):
     if token not in root_tabs:
         fail(f"standalone tab/discover icon regression: missing {token}")
+
+for token in (
+    'struct SalahFeatureIcon: View',
+    'Image("SalahFeatureSheet")',
+    'case "home": return 0',
+    'case "prayer": return 1',
+    'case "wudu": return 2',
+    'case "quran": return 3',
+    'case "profile": return 9',
+):
+    if token not in root_tabs:
+        fail(f"approved icon sheet routing regression: missing {token}")
 
 for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
