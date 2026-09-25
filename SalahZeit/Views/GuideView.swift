@@ -4141,6 +4141,22 @@ actor QuranAudioCache {
         return base.appendingPathComponent("SalahPathAudioCache", isDirectory: true)
     }
 
+    func cachedURL(for remoteURL: URL) -> URL? {
+        guard remoteURL.scheme?.lowercased() == "https" else {
+            return remoteURL.isFileURL ? remoteURL : nil
+        }
+
+        do {
+            try ensureDirectory()
+            let localURL = destinationURL(for: remoteURL)
+            guard isValidFile(localURL) else { return nil }
+            touch(localURL)
+            return localURL
+        } catch {
+            return nil
+        }
+    }
+
     func playbackURL(for remoteURL: URL) async -> URL {
         guard remoteURL.scheme?.lowercased() == "https" else { return remoteURL }
 
@@ -4345,6 +4361,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private var remoteCommandTargets: [Any] = []
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
+    private var playbackFallbackAttempted = false
     private(set) var queueSessionID = 0
 
     private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
@@ -4565,18 +4582,17 @@ final class RemoteAudioPlayer: ObservableObject {
         player?.pause()
         player = nil
 
+        let session = AVAudioSession.sharedInstance()
         do {
-            try AVAudioSession.sharedInstance().setCategory(
+            try session.setCategory(
                 .playback,
-                mode: .spokenAudio,
+                mode: .default,
                 options: [.allowAirPlay, .allowBluetoothA2DP]
             )
-            try AVAudioSession.sharedInstance().setActive(true, options: [])
+            try session.setActive(true, options: [])
         } catch {
-            lastError = "Audio konnte nicht gestartet werden. Erneut versuchen. / Ses başlatılamadı. Tekrar dene."
-            isLoading = false
-            isPlaying = false
-            return
+            // AVPlayer can still play on the current route. Session setup must
+            // never block Quran playback completely.
         }
 
         lastError = nil
@@ -4587,16 +4603,27 @@ final class RemoteAudioPlayer: ObservableObject {
 
         let sourceURL = queueURLs[queueIndex]
         let expectedIndex = queueIndex
+        playbackFallbackAttempted = false
         activeURL = sourceURL
         updateNowPlaying()
 
         Task { [weak self] in
-            let playbackURL = await QuranAudioCache.shared.playbackURL(for: sourceURL)
+            let cachedURL = await QuranAudioCache.shared.cachedURL(for: sourceURL)
             guard let self,
                   self.playbackRevision == revision,
                   self.queueIndex == expectedIndex,
                   self.activeURL == sourceURL else { return }
-            self.startPlayback(playbackURL)
+
+            // If the ayah is already cached use it. Otherwise start the HTTPS
+            // stream immediately instead of making the user wait for a complete
+            // download first.
+            self.startPlayback(cachedURL ?? sourceURL)
+
+            if cachedURL == nil, sourceURL.scheme?.lowercased() == "https" {
+                Task {
+                    _ = await QuranAudioCache.shared.playbackURL(for: sourceURL)
+                }
+            }
         }
     }
 
@@ -4636,13 +4663,13 @@ final class RemoteAudioPlayer: ObservableObject {
                     }
                     self.updateNowPlaying()
                 case .failed:
+                    if self.retryPlaybackIfPossible(after: url) {
+                        return
+                    }
                     self.isLoading = false
                     self.isPlaying = false
                     self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
                     self.updateNowPlaying()
-                    if url.isFileURL {
-                        Task { await QuranAudioCache.shared.invalidate(url) }
-                    }
                 default:
                     self.isLoading = true
                 }
@@ -4693,19 +4720,54 @@ final class RemoteAudioPlayer: ObservableObject {
 
             Task { @MainActor in
                 guard let self else { return }
+                if self.retryPlaybackIfPossible(after: url) {
+                    return
+                }
                 self.isLoading = false
                 self.isPlaying = false
                 self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
                 self.updateNowPlaying()
-                if url.isFileURL {
-                    Task { await QuranAudioCache.shared.invalidate(url) }
-                }
             }
         }
 
         newPlayer.playImmediately(atRate: playbackRate)
         isPlaying = true
         updateNowPlaying()
+    }
+
+    private func retryPlaybackIfPossible(after failedURL: URL) -> Bool {
+        if failedURL.isFileURL,
+           let remote = activeURL,
+           remote.scheme?.lowercased() == "https" {
+            Task { await QuranAudioCache.shared.invalidate(failedURL) }
+            removeObservers()
+            player?.pause()
+            player = nil
+            isLoading = true
+            isPlaying = false
+            startPlayback(remote)
+            return true
+        }
+
+        guard !playbackFallbackAttempted,
+              failedURL.scheme?.lowercased() == "https",
+              failedURL.host?.lowercased() == "cdn.islamic.network",
+              var components = URLComponents(url: failedURL, resolvingAgainstBaseURL: false) else {
+            return false
+        }
+
+        components.host = "cdn.alislam.ru"
+        guard let mirrorURL = components.url else { return false }
+
+        playbackFallbackAttempted = true
+        removeObservers()
+        player?.pause()
+        player = nil
+        isLoading = true
+        isPlaying = false
+        lastError = nil
+        startPlayback(mirrorURL)
+        return true
     }
 
     private func seek(to seconds: Double) {
@@ -4933,75 +4995,51 @@ enum QuranAudioResolver {
             throw URLError(.badURL)
         }
 
-        let everyAyah = everyAyahURLs(surah: surah, reciter: reciter)
-        var sources: [(edition: String, bitrate: Int)] = [
-            (reciter.edition, reciter.bitrate)
-        ]
+        var editions: [(String, Int)] = [(reciter.edition, reciter.bitrate)]
         if let alternate = reciter.alternateAudioSource,
            alternate.edition != reciter.edition {
-            sources.append(alternate)
+            editions.append((alternate.edition, alternate.bitrate))
         }
 
         var lastError: Error = URLError(.resourceUnavailable)
-        var firstOfficialURLs: [URL]?
 
-        for source in sources {
+        for (edition, bitrate) in editions {
             do {
-                let official = try await officialURLs(
-                    surah: surah,
-                    edition: source.edition,
-                    bitrate: source.bitrate
-                )
-                if firstOfficialURLs == nil {
-                    firstOfficialURLs = official
-                }
-
-                if let first = official.first,
-                   await isReachableAudio(first) {
-                    return official
-                }
+                return try await apiURLs(surah: surah, edition: edition, bitrate: bitrate)
             } catch {
                 if Task.isCancelled { throw CancellationError() }
                 lastError = error
             }
         }
 
-        if let first = everyAyah.first,
-           await isReachableAudio(first) {
-            return everyAyah
-        }
-
-        // A failed probe can be transient. Prefer the official URL set so AVPlayer
-        // still gets a chance to stream it before surfacing an error to the user.
-        if let firstOfficialURLs, !firstOfficialURLs.isEmpty {
-            return firstOfficialURLs
-        }
-
-        if !everyAyah.isEmpty {
-            return everyAyah
+        let fallback = everyAyahURLs(surah: surah, reciter: reciter)
+        if !fallback.isEmpty {
+            return fallback
         }
 
         throw lastError
     }
 
-    private static func officialURLs(
+    private static func apiURLs(
         surah: Int,
         edition: String,
         bitrate: Int
     ) async throws -> [URL] {
-        guard let url = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(edition)") else {
+        guard let endpoint = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(edition)") else {
             throw URLError(.badURL)
         }
 
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 12
+        var request = URLRequest(url: endpoint)
+        request.timeoutInterval = 15
+        request.cachePolicy = .reloadRevalidatingCacheData
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let http = response as? HTTPURLResponse,
               (200...299).contains(http.statusCode) else {
             throw URLError(.badServerResponse)
         }
-        guard data.count <= QuranNetworkLimits.maxJSONBytes else {
+        guard !data.isEmpty,
+              data.count <= QuranNetworkLimits.maxJSONBytes else {
             throw URLError(.dataLengthExceedsMaximum)
         }
 
@@ -5011,35 +5049,30 @@ enum QuranAudioResolver {
             throw URLError(.resourceUnavailable)
         }
 
-        var urls: [URL] = []
-        var seenAyahs = Set<Int>()
+        var result: [URL] = []
+        result.reserveCapacity(ayahs.count)
 
-        for item in ayahs {
-            let expectedNumberInSurah = urls.count + 1
-            guard item.number > 0,
-                  item.numberInSurah == expectedNumberInSurah,
-                  seenAyahs.insert(item.numberInSurah).inserted else {
+        for (index, ayah) in ayahs.enumerated() {
+            guard ayah.number > 0,
+                  ayah.numberInSurah == index + 1 else {
                 throw URLError(.cannotParseResponse)
             }
 
-            if let raw = item.audio {
-                let secureRaw = raw.replacingOccurrences(of: "http://", with: "https://")
-                if let resolved = URL(string: secureRaw),
-                   resolved.scheme?.lowercased() == "https" {
-                    urls.append(resolved)
-                    continue
+            if let raw = ayah.audio,
+               let url = URL(string: raw.replacingOccurrences(of: "http://", with: "https://")),
+               url.scheme?.lowercased() == "https" {
+                result.append(url)
+            } else {
+                guard let fallback = URL(
+                    string: "https://cdn.islamic.network/quran/audio/\(bitrate)/\(edition)/\(ayah.number).mp3"
+                ) else {
+                    throw URLError(.badURL)
                 }
+                result.append(fallback)
             }
-
-            let fallback = "https://cdn.islamic.network/quran/audio/\(bitrate)/\(edition)/\(item.number).mp3"
-            guard let resolved = URL(string: fallback),
-                  resolved.scheme?.lowercased() == "https" else {
-                throw URLError(.resourceUnavailable)
-            }
-            urls.append(resolved)
         }
 
-        return urls
+        return result
     }
 
     private static func everyAyahURLs(surah: Int, reciter: QuranReciter) -> [URL] {
@@ -5049,29 +5082,6 @@ enum QuranAudioResolver {
         return (1...count).compactMap { ayah in
             let file = String(format: "%03d%03d.mp3", surah, ayah)
             return URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/\(file)")
-        }
-    }
-
-    private static func isReachableAudio(_ url: URL) async -> Bool {
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 4
-        request.setValue("bytes=0-2047", forHTTPHeaderField: "Range")
-        request.cachePolicy = .reloadIgnoringLocalCacheData
-
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            guard let http = response as? HTTPURLResponse,
-                  (200...299).contains(http.statusCode) else {
-                return false
-            }
-
-            if http.statusCode == 204 {
-                return false
-            }
-
-            return !data.isEmpty
-        } catch {
-            return false
         }
     }
 }
