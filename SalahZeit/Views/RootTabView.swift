@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Approved green-gold icon sheet from the reviewed SalahPath artwork.
 struct SalahFeatureIcon: View {
     let kind: String
 
