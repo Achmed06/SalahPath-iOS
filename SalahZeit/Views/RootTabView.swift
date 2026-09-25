@@ -518,6 +518,7 @@ struct NearbyMosquesView: View {
     }
 }
 
+// Branded content/navigation artwork uses the same standalone asset family as Start and Discover.
 private struct ReferenceBottomBar: View {
     @EnvironmentObject private var settings: SettingsStore
     @Binding var selection: Int
