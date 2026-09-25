@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // Approved green-gold icon sheet from the artwork supplied for SalahPath.
 // The source contains 60 individual icons in a fixed 10 x 6 grid.
@@ -80,25 +81,49 @@ struct SalahFeatureIcon: View {
         salahFeatureIndex(for: kind) ?? 4
     }
 
-    var body: some View {
-        GeometryReader { proxy in
-            let column = index % 10
-            let row = index / 10
-            let cellWidth = proxy.size.width
-            let cellHeight = proxy.size.height
-            let sheetWidth = cellWidth * 10
-            let sheetHeight = cellHeight * 6
-
-            Image("SalahFeatureSheet")
-                .resizable()
-                .interpolation(.high)
-                .frame(width: sheetWidth, height: sheetHeight)
-                .position(
-                    x: sheetWidth / 2 - CGFloat(column) * cellWidth,
-                    y: sheetHeight / 2 - CGFloat(row) * cellHeight
-                )
+    private var croppedUIImage: UIImage? {
+        guard let source = UIImage(named: "SalahFeatureSheet"),
+              let cgImage = source.cgImage else {
+            return nil
         }
-        .clipped()
+
+        let column = index % 10
+        let row = index / 10
+        let cellWidth = CGFloat(cgImage.width) / 10
+        let cellHeight = CGFloat(cgImage.height) / 6
+
+        let cropRect = CGRect(
+            x: CGFloat(column) * cellWidth,
+            y: CGFloat(row) * cellHeight,
+            width: cellWidth,
+            height: cellHeight
+        ).integral
+
+        guard let cropped = cgImage.cropping(to: cropRect) else {
+            return nil
+        }
+
+        return UIImage(
+            cgImage: cropped,
+            scale: source.scale,
+            orientation: source.imageOrientation
+        )
+    }
+
+    var body: some View {
+        Group {
+            if let croppedUIImage {
+                Image(uiImage: croppedUIImage)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            } else {
+                Image(systemName: "square.dashed")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(SalahTheme.mutedInk)
+            }
+        }
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
     }
@@ -116,7 +141,6 @@ func salahPrayerFeatureKind(for kind: PrayerKind) -> String {
 }
 
 import MapKit
-import UIKit
 
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
