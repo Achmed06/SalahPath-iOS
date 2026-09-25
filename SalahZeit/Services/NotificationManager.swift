@@ -48,7 +48,11 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     @discardableResult
-    func scheduleNextSevenDays(location: CLLocation, settings: SettingsStore) async -> Bool {
+    func scheduleNextSevenDays(
+        location: CLLocation,
+        settings: SettingsStore,
+        timeZone: TimeZone = .autoupdatingCurrent
+    ) async -> Bool {
         schedulingRevision &+= 1
         let revision = schedulingRevision
 
@@ -59,14 +63,20 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         let granted = await ensureAuthorization()
         guard revision == schedulingRevision, granted else { return false }
 
-        let calendar = Calendar.current
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
         let now = Date()
         var allRequestsScheduled = true
 
         for dayOffset in 0..<7 {
             guard revision == schedulingRevision else { return false }
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
-                  let day = engine.calculateDay(for: date, location: location, settings: settings, calendar: calendar) else {
+                  let day = engine.calculateDay(
+                      for: date,
+                      location: location,
+                      settings: settings,
+                      timeZone: timeZone
+                  ) else {
                 allRequestsScheduled = false
                 continue
             }
@@ -91,13 +101,13 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                             "\(prayerName) için \(leadMinutes) dk kaldı"
                         )
                         reminder.body = settings.t(
-                            "Gebetszeit: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))",
-                            "Namaz vakti: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))"
+                            "Gebetszeit: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                            "Namaz vakti: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
                         )
                         reminder.sound = .default
 
                         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
-                        components.timeZone = .current
+                        components.timeZone = timeZone
                         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                         let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).pre"
                         let added = await add(
@@ -114,14 +124,14 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
                     if let rakats = prayer.kind.fardRakats {
                         content.body = settings.t(
-                            "\(rakats) Rakʿat Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))",
-                            "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language))"
+                            "\(rakats) Rakʿat Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                            "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
                         )
                     }
                     content.sound = prayerTimeSound(for: prayer.kind, settings: settings)
 
                     var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
-                    components.timeZone = .current
+                    components.timeZone = timeZone
                     let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                     let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).time"
                     let added = await add(
@@ -305,9 +315,15 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         [.banner, .list, .sound]
     }
 
-    private func format(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
+    private func format(
+        _ date: Date,
+        use24Hour: Bool,
+        language: AppLanguage,
+        timeZone: TimeZone
+    ) -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = timeZone
         formatter.dateFormat = use24Hour ? "HH:mm" : "h:mm a"
         return formatter.string(from: date)
     }

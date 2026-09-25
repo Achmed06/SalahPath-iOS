@@ -17,11 +17,13 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published private(set) var lastError: String?
     @Published private(set) var locality: String?
     @Published private(set) var usesManualLocation = false
+    @Published private(set) var prayerTimeZone: TimeZone = .autoupdatingCurrent
 
     private enum ManualLocationKeys {
         static let latitude = "manualLocationLatitude"
         static let longitude = "manualLocationLongitude"
         static let locality = "manualLocationLocality"
+        static let timeZone = "manualLocationTimeZone"
         static let enabled = "manualLocationEnabled"
     }
 
@@ -46,17 +48,23 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 if latitude.isFinite, longitude.isFinite, CLLocationCoordinate2DIsValid(coordinate) {
                     location = CLLocation(latitude: latitude, longitude: longitude)
                     locality = defaults.string(forKey: ManualLocationKeys.locality)
+                    if let identifier = defaults.string(forKey: ManualLocationKeys.timeZone),
+                       let storedTimeZone = TimeZone(identifier: identifier) {
+                        prayerTimeZone = storedTimeZone
+                    }
                     usesManualLocation = true
                 } else {
                     defaults.removeObject(forKey: ManualLocationKeys.latitude)
                     defaults.removeObject(forKey: ManualLocationKeys.longitude)
                     defaults.removeObject(forKey: ManualLocationKeys.locality)
+                    defaults.removeObject(forKey: ManualLocationKeys.timeZone)
                     defaults.removeObject(forKey: ManualLocationKeys.enabled)
                 }
             } else {
                 defaults.removeObject(forKey: ManualLocationKeys.latitude)
                 defaults.removeObject(forKey: ManualLocationKeys.longitude)
                 defaults.removeObject(forKey: ManualLocationKeys.locality)
+                defaults.removeObject(forKey: ManualLocationKeys.timeZone)
                 defaults.removeObject(forKey: ManualLocationKeys.enabled)
             }
         }
@@ -181,8 +189,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             .joined(separator: ", ")
 
             let resolvedLabel = label.isEmpty ? query : label
+            let resolvedTimeZone = placemark.timeZone ?? .autoupdatingCurrent
             location = resolvedLocation
             locality = resolvedLabel
+            prayerTimeZone = resolvedTimeZone
             usesManualLocation = true
             lastError = nil
 
@@ -190,6 +200,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             defaults.set(resolvedLocation.coordinate.latitude, forKey: ManualLocationKeys.latitude)
             defaults.set(resolvedLocation.coordinate.longitude, forKey: ManualLocationKeys.longitude)
             defaults.set(resolvedLabel, forKey: ManualLocationKeys.locality)
+            defaults.set(resolvedTimeZone.identifier, forKey: ManualLocationKeys.timeZone)
             defaults.set(true, forKey: ManualLocationKeys.enabled)
 
             return true
@@ -204,6 +215,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         locationIntentRevision &+= 1
         pendingDeviceLocationSwitch = false
         usesManualLocation = false
+        prayerTimeZone = .autoupdatingCurrent
         clearManualLocationStorage()
         location = nil
         locality = nil
@@ -214,12 +226,14 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         defaults.removeObject(forKey: ManualLocationKeys.latitude)
         defaults.removeObject(forKey: ManualLocationKeys.longitude)
         defaults.removeObject(forKey: ManualLocationKeys.locality)
+        defaults.removeObject(forKey: ManualLocationKeys.timeZone)
         defaults.removeObject(forKey: ManualLocationKeys.enabled)
     }
 
     private func adoptDeviceLocation(_ newLocation: CLLocation) {
         pendingDeviceLocationSwitch = false
         usesManualLocation = false
+        prayerTimeZone = .autoupdatingCurrent
         clearManualLocationStorage()
         location = newLocation
         lastError = nil
@@ -340,6 +354,9 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 let value = placemark.locality ?? placemark.subLocality ?? placemark.administrativeArea ?? placemark.country
                 if let value, !value.isEmpty {
                     locality = value
+                }
+                if let resolvedTimeZone = placemark.timeZone {
+                    prayerTimeZone = resolvedTimeZone
                 }
             } catch {
                 // Prayer time calculation must continue even when reverse geocoding is unavailable.

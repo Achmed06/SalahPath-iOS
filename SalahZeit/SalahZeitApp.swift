@@ -79,7 +79,9 @@ struct SalahPathApp: App {
         ]
         .map(String.init)
         .joined(separator: ",")
-        let dayKey = LocalDay.ordinal(for: Date())
+        var prayerCalendar = Calendar(identifier: .gregorian)
+        prayerCalendar.timeZone = locationManager.prayerTimeZone
+        let dayKey = prayerCalendar.ordinality(of: .day, in: .era, for: Date()) ?? 1
 
         return [
             String(lat),
@@ -93,7 +95,7 @@ struct SalahPathApp: App {
             offsets,
             settings.language.rawValue,
             settings.use24Hour ? "24h" : "12h",
-            TimeZone.current.identifier,
+            locationManager.prayerTimeZone.identifier,
             String(dayKey),
             String(notificationScheduleRevision)
         ].joined(separator: "|")
@@ -112,7 +114,8 @@ struct SalahPathApp: App {
 
         _ = await NotificationManager.shared.scheduleNextSevenDays(
             location: location,
-            settings: settings
+            settings: settings,
+            timeZone: locationManager.prayerTimeZone
         )
     }
 

@@ -128,6 +128,47 @@ for name in required_captures:
     if name not in capture:
         fail(f"visual QA coverage missing: {name}")
 
+# 3b) Prayer calculations must remain Gregorian and location-time-zone aware.
+location_manager = read("SalahZeit/Services/LocationManager.swift")
+prayer_engine = read("SalahZeit/Services/PrayerEngine.swift")
+notifications = read("SalahZeit/Services/NotificationManager.swift")
+app_source = read("SalahZeit/SalahZeitApp.swift")
+home_source = read("SalahZeit/Views/HomeView.swift")
+
+for token in (
+    'static let timeZone = "manualLocationTimeZone"',
+    '@Published private(set) var prayerTimeZone: TimeZone = .autoupdatingCurrent',
+    'defaults.set(resolvedTimeZone.identifier, forKey: ManualLocationKeys.timeZone)',
+):
+    if token not in location_manager:
+        fail(f"manual-location timezone regression: missing {token}")
+
+for token in (
+    'Calendar(identifier: .gregorian)',
+    'timeZone: TimeZone = .autoupdatingCurrent',
+    'parameters.highLatitudeRule = HighLatitudeRule.recommended(for: coordinates)',
+):
+    if token not in prayer_engine:
+        fail(f"prayer calculation timezone/calendar regression: missing {token}")
+
+for token in (
+    'timeZone: locationManager.prayerTimeZone',
+    'locationManager.prayerTimeZone.identifier',
+):
+    if token not in app_source:
+        fail(f"notification timezone scheduling regression: missing {token}")
+
+if notifications.count('components.timeZone = timeZone') < 2:
+    fail("notification trigger timezone regression")
+
+for token in (
+    'return locationManager.prayerTimeZone',
+    'timeZone: effectiveTimeZone',
+    'locationManager.$prayerTimeZone',
+):
+    if token not in home_source:
+        fail(f"prayer UI timezone regression: missing {token}")
+
 # 4) Wudu copy + German prayer labels must not regress.
 root_tab = read("SalahZeit/Views/RootTabView.swift")
 for token in (

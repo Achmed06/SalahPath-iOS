@@ -31,29 +31,42 @@ enum LocalDay {
 }
 
 
-func timeString(_ date: Date, use24Hour: Bool, language: AppLanguage) -> String {
+func timeString(
+    _ date: Date,
+    use24Hour: Bool,
+    language: AppLanguage,
+    timeZone: TimeZone = .autoupdatingCurrent
+) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
-    formatter.timeZone = .autoupdatingCurrent
+    formatter.timeZone = timeZone
     formatter.dateFormat = use24Hour ? "HH:mm" : "h:mm a"
     return formatter.string(from: date)
 }
 
-func gregorianDateString(_ date: Date, language: AppLanguage = .german) -> String {
+func gregorianDateString(
+    _ date: Date,
+    language: AppLanguage = .german,
+    timeZone: TimeZone = .autoupdatingCurrent
+) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
-    formatter.timeZone = .autoupdatingCurrent
+    formatter.timeZone = timeZone
     formatter.dateStyle = .full
     return formatter.string(from: date)
 }
 
-func hijriDateString(_ date: Date, language: AppLanguage = .german) -> String {
+func hijriDateString(
+    _ date: Date,
+    language: AppLanguage = .german,
+    timeZone: TimeZone = .autoupdatingCurrent
+) -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: language == .german ? "de_DE" : "tr_TR")
     var calendar = Calendar(identifier: .islamicUmmAlQura)
-    calendar.timeZone = .autoupdatingCurrent
+    calendar.timeZone = timeZone
     formatter.calendar = calendar
-    formatter.timeZone = .autoupdatingCurrent
+    formatter.timeZone = timeZone
     formatter.dateFormat = "d MMMM yyyy"
     return formatter.string(from: date)
 }
