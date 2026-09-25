@@ -4418,6 +4418,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private var remoteCommandTargets: [Any] = []
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
+    private var playbackFallbackAttempted = false
     private(set) var queueSessionID = 0
 
     private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
@@ -4659,6 +4660,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
         let sourceURL = queueURLs[queueIndex]
         let expectedIndex = queueIndex
+        playbackFallbackAttempted = false
         activeURL = sourceURL
         updateNowPlaying()
 
@@ -4718,13 +4720,13 @@ final class RemoteAudioPlayer: ObservableObject {
                     }
                     self.updateNowPlaying()
                 case .failed:
+                    if self.retryPlaybackIfPossible(after: url) {
+                        return
+                    }
                     self.isLoading = false
                     self.isPlaying = false
                     self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
                     self.updateNowPlaying()
-                    if url.isFileURL {
-                        Task { await QuranAudioCache.shared.invalidate(url) }
-                    }
                 default:
                     self.isLoading = true
                 }
@@ -4775,19 +4777,54 @@ final class RemoteAudioPlayer: ObservableObject {
 
             Task { @MainActor in
                 guard let self else { return }
+                if self.retryPlaybackIfPossible(after: url) {
+                    return
+                }
                 self.isLoading = false
                 self.isPlaying = false
                 self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
                 self.updateNowPlaying()
-                if url.isFileURL {
-                    Task { await QuranAudioCache.shared.invalidate(url) }
-                }
             }
         }
 
         newPlayer.playImmediately(atRate: playbackRate)
         isPlaying = true
         updateNowPlaying()
+    }
+
+    private func retryPlaybackIfPossible(after failedURL: URL) -> Bool {
+        if failedURL.isFileURL,
+           let remote = activeURL,
+           remote.scheme?.lowercased() == "https" {
+            Task { await QuranAudioCache.shared.invalidate(failedURL) }
+            removeObservers()
+            player?.pause()
+            player = nil
+            isLoading = true
+            isPlaying = false
+            startPlayback(remote)
+            return true
+        }
+
+        guard !playbackFallbackAttempted,
+              failedURL.scheme?.lowercased() == "https",
+              failedURL.host?.lowercased() == "cdn.islamic.network",
+              var components = URLComponents(url: failedURL, resolvingAgainstBaseURL: false) else {
+            return false
+        }
+
+        components.host = "cdn.alislam.ru"
+        guard let mirrorURL = components.url else { return false }
+
+        playbackFallbackAttempted = true
+        removeObservers()
+        player?.pause()
+        player = nil
+        isLoading = true
+        isPlaying = false
+        lastError = nil
+        startPlayback(mirrorURL)
+        return true
     }
 
     private func seek(to seconds: Double) {
