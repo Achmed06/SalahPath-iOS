@@ -1,0 +1,4 @@
+SalahPath v3.63 Build 79 targeted browser QA
+Target: restored legacy v3.5 prayer artwork only
+Source commit under test: 408bc630c875df45236ac66c53e9710f8bae6476
+Expected: male/female prayer poses render from restored legacy artwork; second sujud matches sujud; Salam is right then left; no unrelated icons/assets changed.
