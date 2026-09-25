@@ -1040,7 +1040,7 @@ struct HomeView: View {
                         .font(.custom("AvenirNext-Medium", size: 7.0))
                         .foregroundStyle(SalahTheme.gold)
                     NavigationLink { SettingsView() } label: {
-                        Image(systemName: settings.notificationsEnabled ? "bell.fill" : "bell")
+                        SalahFeatureIcon(kind: settings.notificationsEnabled ? "reminder" : "mute")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 24, height: 24)
@@ -1100,7 +1100,7 @@ struct HomeView: View {
                 }
 
                 HStack(alignment: .center, spacing: 7) {
-                    Image(systemName: prayer.kind.systemImage)
+                    SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
                         .font(.system(size: 22, weight: .medium))
                         .symbolRenderingMode(.hierarchical)
                         .foregroundStyle(SalahTheme.gold)
@@ -1122,7 +1122,7 @@ struct HomeView: View {
                 }
 
                 HStack(spacing: 4) {
-                    Image(systemName: "mappin")
+                    SalahFeatureIcon(kind: "location")
                         .font(.system(size: 9.5, weight: .bold))
                         .foregroundStyle(SalahTheme.teal)
                     Text(effectiveLocality)
@@ -1138,7 +1138,7 @@ struct HomeView: View {
                             ReferenceSunGlyph()
                                 .frame(width: 15, height: 15)
                         } else {
-                            Image(systemName: prayer.kind.systemImage)
+                            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
                                 .font(.system(size: 10, weight: .semibold))
                                 .foregroundStyle(SalahTheme.gold)
                         }
@@ -1238,7 +1238,7 @@ struct HomeView: View {
             ForEach(displayedTimes, id: \.id) { prayer in
                 let active = isNext(prayer, location: location)
                 HStack(alignment: .center, spacing: 8) {
-                    Image(systemName: prayer.kind.systemImage)
+                    SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
                         .font(.system(size: 12, weight: .bold))
                         .foregroundStyle(active ? SalahTheme.teal : SalahTheme.mutedInk)
                         .frame(width: 16)
@@ -3129,7 +3129,7 @@ private struct PrayerRow: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            Image(systemName: prayer.kind.systemImage)
+            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
                 .frame(width: 28)
                 .foregroundStyle(isNext ? SalahTheme.gold : SalahTheme.teal)
             VStack(alignment: .leading, spacing: 2) {
