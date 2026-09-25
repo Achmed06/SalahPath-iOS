@@ -1,0 +1,70 @@
+name: Apply clean approved artwork
+
+on:
+  push:
+    branches:
+      - release/b78-final-audio-visual-20260925
+    paths:
+      - qa/apply-clean-approved-artwork.txt
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/b78-final-audio-visual-20260925
+          fetch-depth: 0
+
+      - name: Install Pillow
+        run: python3 -m pip install --disable-pip-version-check pillow
+
+      - name: Remove embedded text from approved artwork
+        run: python3 scripts/clean_approved_legacy_artwork.py
+
+      - name: Refresh explicitly-approved asset lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "# SalahPath approved Prayer/Wudu asset lock"
+            echo "# Updated only because the user explicitly approved the text-removal pass."
+            echo "# Columns: git_blob_sha<TAB>size<TAB>path"
+            find SalahZeit/Assets.xcassets -type f \
+              \( -path '*/male_*.imageset/*' -o -path '*/female_*.imageset/*' -o -path '*/wudu_*.imageset/*' \) \
+              | LC_ALL=C sort \
+              | while read -r file; do
+                  printf '%s\t%s\t%s\n' "$(git hash-object "$file")" "$(wc -c < "$file" | tr -d '[:space:]')" "$file"
+                done
+          } > qa/approved-prayer-wudu-assets.tsv
+
+      - name: Verify lock and exact change scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/verify_approved_prayer_wudu_assets.sh
+          changed="$(git diff --name-only)"
+          echo "$changed"
+          bad="$(printf '%s\n' "$changed" | grep -Ev '^(SalahZeit/Assets\.xcassets/(male_|female_|wudu_).*\.imageset/.*\.jpg|qa/approved-prayer-wudu-assets\.tsv)$' || true)"
+          if [[ -n "$bad" ]]; then
+            echo "Unexpected files changed:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+
+      - name: Commit cleaned artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git config user.name "SalahPath QA"
+          git config user.email "actions@users.noreply.github.com"
+          git add SalahZeit/Assets.xcassets qa/approved-prayer-wudu-assets.tsv
+          git commit -m "[visual] Remove embedded text from approved Prayer and Wudu art"
+          git push origin HEAD:release/b78-final-audio-visual-20260925
