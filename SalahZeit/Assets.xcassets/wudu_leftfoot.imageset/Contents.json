@@ -1,15 +1,13 @@
 {
   "images": [
     {
-      "filename": "wudu_leftfoot.svg",
-      "idiom": "universal"
+      "filename": "wudu_leftfoot.jpg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }
