@@ -2759,8 +2759,11 @@ private struct DashboardTile: View {
                     .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
                     .frame(width: 42, height: 42)
 
-                ReferenceDashboardGlyph(kind: glyphKind)
+                Image("feature_\(glyphKind)")
+                    .resizable()
+                    .scaledToFit()
                     .frame(width: 27, height: 27)
+                    .accessibilityHidden(true)
             }
 
             Text(title)
