@@ -873,7 +873,9 @@ struct MoreView: View {
                 .frame(width: size * 0.74, height: size * 0.74)
 
             if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
-                ReferenceDashboardGlyph(kind: glyphKind)
+                Image("feature_\(glyphKind)")
+                    .resizable()
+                    .scaledToFit()
                     .frame(width: size * 0.52, height: size * 0.52)
             } else {
                 Image(systemName: symbol)
@@ -903,12 +905,28 @@ struct MoreView: View {
             return "wudu"
         case "text.book.closed.fill", "books.vertical.fill", "book.pages.fill":
             return "quran"
-        case "hands.sparkles.fill", "circle.grid.cross.fill":
+        case "play.square.stack.fill", "rectangle.stack.badge.play.fill":
+            return "quran_audio"
+        case "hands.sparkles.fill", "circle.grid.cross.fill", "sparkles":
             return "dhikr"
         case "location.north.circle.fill", "map.fill":
             return "qibla"
         case "calendar":
             return "calendar"
+        case "clock.arrow.circlepath":
+            return "times"
+        case "checklist", "pause.circle.fill":
+            return "checkmark"
+        case "building.columns.fill", "text.quote":
+            return "info"
+        case "person.3.sequence.fill":
+            return "community"
+        case "moon.stars.fill":
+            return "moon"
+        case "character.book.closed.fill":
+            return "language"
+        case "ellipsis.circle.fill":
+            return "more"
         default:
             return nil
         }
