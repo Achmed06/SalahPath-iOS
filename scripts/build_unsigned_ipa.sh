@@ -46,6 +46,14 @@ if [ ! -f "$INFO_PLIST" ]; then
   exit 1
 fi
 
+# Ensure iOS keeps Quran/Dua playback alive in the background and exposes
+# lock-screen / Control Center transport controls like a media app.
+# Xcode's generated Info.plist did not reliably materialize the build setting,
+# so write and verify the array in the packaged app explicitly.
+ /usr/libexec/PlistBuddy -c "Delete :UIBackgroundModes" "$INFO_PLIST" >/dev/null 2>&1 || true
+ /usr/libexec/PlistBuddy -c "Add :UIBackgroundModes array" "$INFO_PLIST"
+ /usr/libexec/PlistBuddy -c "Add :UIBackgroundModes:0 string audio" "$INFO_PLIST"
+
 if [ ! -f "$PRIVACY_MANIFEST" ]; then
   echo "PrivacyInfo.xcprivacy fehlt im gebauten App-Bundle." >&2
   exit 1
@@ -86,6 +94,7 @@ BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$INFO_PLIST
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$INFO_PLIST")"
 BUILD="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$INFO_PLIST")"
 USES_NONEXEMPT_ENCRYPTION="$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$INFO_PLIST")"
+BACKGROUND_AUDIO="$(/usr/libexec/PlistBuddy -c 'Print :UIBackgroundModes:0' "$INFO_PLIST")"
 
 if [ "$BUNDLE_ID" != "com.achmed06.salahpath" ] || [ "$VERSION" != "3.62" ] || [ "$BUILD" != "78" ]; then
   echo "Unerwartete App-Metadaten: $BUNDLE_ID · $VERSION ($BUILD)" >&2
@@ -94,6 +103,11 @@ fi
 
 if [ "$USES_NONEXEMPT_ENCRYPTION" != "false" ] && [ "$USES_NONEXEMPT_ENCRYPTION" != "NO" ]; then
   echo "ITSAppUsesNonExemptEncryption ist nicht auf false gesetzt: $USES_NONEXEMPT_ENCRYPTION" >&2
+  exit 1
+fi
+
+if [ "$BACKGROUND_AUDIO" != "audio" ]; then
+  echo "UIBackgroundModes enthält keinen audio-Eintrag." >&2
   exit 1
 fi
 
