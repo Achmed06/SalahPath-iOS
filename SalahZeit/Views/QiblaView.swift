@@ -301,7 +301,7 @@ struct QiblaView: View {
                         .animation(.easeOut(duration: 0.18), value: relativeAngle)
 
                     kaabaMarker
-                        .offset(qiblaMarkerOffset(relativeAngle: relativeAngle, radius: 108))
+                        .offset(qiblaMarkerOffset(relativeAngle: relativeAngle, radius: 120))
 
                     Circle()
                         .fill(SalahTheme.deepTeal)
