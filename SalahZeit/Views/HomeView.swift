@@ -1005,9 +1005,9 @@ struct HomeView: View {
         }
     }
 
-    private func brandHeader(today: PrayerDay) -> some View {
+    private func brandHeader(today: PrayerDay? = nil) -> some View {
         HStack(spacing: 9) {
-            SalahFeatureIcon(kind: brandHeaderIconKind(today: today))
+            SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")
                 .frame(width: 42, height: 42)
                 .accessibilityHidden(true)
 
@@ -1911,7 +1911,7 @@ struct HomeView: View {
     private var locationState: some View {
         ScrollView {
             VStack(spacing: 0) {
-                brandHeader
+                brandHeader()
                     .padding(.horizontal, 7)
                     .padding(.top, 3)
                     .padding(.bottom, 5)
