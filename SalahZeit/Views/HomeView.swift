@@ -1309,7 +1309,7 @@ struct HomeView: View {
                 PrayerTimesOverviewView()
             } label: {
                 quickActionPill(
-                    icon: "clock.fill",
+                    icon: "times",
                     title: settings.t("Zeiten", "Vakitler"),
                     subtitle: settings.t("Heute", "Bugün")
                 )
@@ -1320,7 +1320,7 @@ struct HomeView: View {
                 PrayerTrackerOverviewView()
             } label: {
                 quickActionPill(
-                    icon: "checkmark.circle.fill",
+                    icon: "checkmark",
                     title: settings.t("Tracker", "Takip"),
                     subtitle: settings.t("Fortschritt", "İlerleme")
                 )
@@ -1331,7 +1331,7 @@ struct HomeView: View {
                 QuranView()
             } label: {
                 quickActionPill(
-                    icon: "book.fill",
+                    icon: "quran",
                     title: settings.t("Koran", "Kur'an"),
                     subtitle: settings.t("Lesen", "Oku")
                 )
@@ -1346,9 +1346,11 @@ struct HomeView: View {
                 Circle()
                     .fill(SalahTheme.softTeal)
                     .frame(width: 30, height: 30)
-                Image(systemName: icon)
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(SalahTheme.teal)
+                Image("feature_\(icon)")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 18, height: 18)
+                    .accessibilityHidden(true)
             }
 
             Text(title)
