@@ -16,25 +16,29 @@ function syncAssets() {
     return;
   }
 
-  const prefixes = ["feature_", "salahpath_logo", "home_mosque", "male_", "female_", "wudu_"];
   let copied = 0;
-
   for (const entry of fs.readdirSync(assetCatalog, { withFileTypes: true })) {
     if (!entry.isDirectory() || !entry.name.endsWith(".imageset")) continue;
-    const assetName = entry.name.slice(0, -".imageset".length);
-    if (!prefixes.some(prefix => assetName.startsWith(prefix))) continue;
 
+    const assetName = entry.name.slice(0, -".imageset".length);
     const folder = path.join(assetCatalog, entry.name);
     const contentsPath = path.join(folder, "Contents.json");
     if (!fs.existsSync(contentsPath)) continue;
 
     try {
       const payload = JSON.parse(fs.readFileSync(contentsPath, "utf8"));
-      const image = payload.images?.find(item => item.filename)?.filename;
-      if (!image) continue;
-      const source = path.join(folder, image);
+      const candidates = (payload.images || []).filter(item => item.filename);
+      const preferred =
+        candidates.find(item => item.scale === "3x") ||
+        candidates.find(item => item.scale === "2x") ||
+        candidates.find(item => item.scale === "1x") ||
+        candidates[0];
+
+      if (!preferred?.filename) continue;
+      const source = path.join(folder, preferred.filename);
       if (!fs.existsSync(source)) continue;
-      const ext = path.extname(image).toLowerCase() || ".svg";
+
+      const ext = path.extname(preferred.filename).toLowerCase() || ".png";
       fs.copyFileSync(source, path.join(publicAssets, assetName + ext));
       copied++;
     } catch (error) {
@@ -42,7 +46,7 @@ function syncAssets() {
     }
   }
 
-  console.log(`Synced ${copied} SalahPath assets into browser preview.`);
+  console.log(`Synced ${copied} native SalahPath assets into browser preview.`);
 }
 
 syncAssets();
@@ -56,6 +60,7 @@ const mime = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
+  ".webp": "image/webp",
   ".ico": "image/x-icon"
 };
 
@@ -97,7 +102,7 @@ const host = process.env.HOST || "127.0.0.1";
 
 server.listen(port, host, () => {
   console.log("");
-  console.log("SalahPath browser preview is running:");
+  console.log("SalahPath v3.62 Build 78 browser reference is running:");
   console.log(`  http://localhost:${port}`);
   console.log("");
   console.log("Press Ctrl+C to stop.");
