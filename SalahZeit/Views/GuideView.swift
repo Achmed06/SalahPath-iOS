@@ -1520,7 +1520,7 @@ private struct WuduTutorialStep: Identifiable {
     let hanafiFard: Bool
 }
 
-// Standalone asset-backed Wudu artwork; keep right/left semantics in the asset name.
+// Standalone asset-backed Wudu/prayer artwork; keep right/left semantics and Guide icon routing consistent.
 private struct WuduInstructionVisual: View {
     let key: String
     let stepNumber: Int
