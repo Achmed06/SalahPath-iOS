@@ -55,28 +55,30 @@ struct QiblaView: View {
                                 .foregroundStyle(SalahTheme.teal)
                                 .offset(y: -103)
 
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color.black.opacity(0.90))
-                                    .frame(width: 45, height: 39)
-                                Rectangle()
-                                    .fill(SalahTheme.gold)
-                                    .frame(width: 45, height: 4)
-                                    .offset(y: -7)
-                            }
-                            .offset(y: 27)
-
                             if let rotation {
-                                Image(systemName: "location.north.fill")
-                                    .font(.system(size: 88, weight: .medium))
-                                    .foregroundStyle(SalahTheme.teal.opacity(0.92))
-                                    .rotationEffect(.degrees(rotation))
-                                    .offset(y: -25)
-                                    .animation(.easeOut(duration: 0.18), value: rotation)
+                                ZStack {
+                                    Image(systemName: "location.north.fill")
+                                        .font(.system(size: 80, weight: .medium))
+                                        .foregroundStyle(SalahTheme.teal.opacity(0.94))
+                                        .offset(y: -18)
+
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(Color.black.opacity(0.92))
+                                            .frame(width: 42, height: 36)
+                                        Rectangle()
+                                            .fill(SalahTheme.gold)
+                                            .frame(width: 42, height: 4)
+                                            .offset(y: -7)
+                                    }
+                                    .offset(y: -96)
+                                }
+                                .frame(width: 226, height: 226)
+                                .rotationEffect(.degrees(rotation))
+                                .animation(.easeOut(duration: 0.18), value: rotation)
                             } else {
                                 ProgressView()
                                     .tint(SalahTheme.teal)
-                                    .offset(y: -25)
                             }
                         }
                         .accessibilityElement(children: .ignore)
@@ -88,8 +90,8 @@ struct QiblaView: View {
                             )
                         )
                         .accessibilityHint(settings.t(
-                            "Drehe das iPhone, bis der Qibla-Pfeil nach oben zeigt.",
-                            "Kıble oku yukarıyı gösterene kadar iPhone'u çevir."
+                            "Drehe das iPhone, bis Pfeil und Kaaba gemeinsam oben liegen. Die Pfeilspitze zeigt dann direkt auf die Kaaba.",
+                            "Ok ve Kâbe birlikte yukarıda olana kadar iPhone'u çevir. Okun ucu doğrudan Kâbe'yi gösterir."
                         ))
 
                         HStack(spacing: 8) {
@@ -275,9 +277,16 @@ struct QiblaView: View {
 
     private func compactInfoTile(icon: String, title: String, value: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 21, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            Group {
+                if icon == "location.north.circle.fill" {
+                    SalahFeatureIcon(kind: "qibla")
+                        .frame(width: 28, height: 28)
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 21, weight: .semibold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
             Text(title)
                 .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(SalahTheme.mutedInk)
