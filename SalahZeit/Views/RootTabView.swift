@@ -1,45 +1,94 @@
 import SwiftUI
 
-// Approved green-gold icon sheet from the reviewed SalahPath artwork.
+// Approved green-gold icon sheet from the artwork supplied for SalahPath.
+// The source contains 60 individual icons in a fixed 10 x 6 grid.
+func salahFeatureIndex(for kind: String) -> Int? {
+    switch kind {
+    case "home", "start": return 0
+    case "prayer": return 1
+    case "wudu": return 2
+    case "quran": return 3
+    case "discover": return 4
+    case "tracker", "checkmark": return 5
+    case "calendar": return 6
+    case "qibla": return 7
+    case "settings": return 8
+    case "profile": return 9
+
+    case "fajr": return 10
+    case "sunrise": return 11
+    case "dhuhr": return 12
+    case "asr": return 13
+    case "maghrib": return 14
+    case "isha": return 15
+    case "times", "prayer_schedule", "list": return 16
+    case "reminder": return 17
+    case "mute": return 18
+    case "sound", "quran_audio": return 19
+
+    case "mosques": return 20
+    case "duas": return 21
+    case "dhikr": return 22
+    case "hadith": return 23
+    case "islamic_knowledge", "more": return 24
+    case "info", "knowledge", "sparkles": return 25
+    case "favorites": return 26
+    case "bookmarks": return 27
+    case "history": return 28
+    case "downloads": return 29
+
+    case "articles": return 30
+    case "courses": return 31
+    case "videos": return 32
+    case "backgrounds": return 33
+    case "mindfulness": return 34
+    case "donations": return 35
+    case "community": return 36
+    case "forum": return 37
+    case "language": return 38
+    case "islamic_calendar": return 39
+
+    case "prayer_settings": return 40
+    case "location": return 41
+    case "qibla_calibration": return 42
+    case "map": return 43
+    case "moon", "dark_mode": return 44
+    case "light_mode": return 45
+    case "font_size": return 46
+    case "notifications": return 47
+    case "backup": return 48
+    case "sync": return 49
+
+    case "back": return 50
+    case "forward": return 51
+    case "home_active": return 52
+    case "home_inactive": return 53
+    case "prayer_active": return 54
+    case "prayer_inactive": return 55
+    case "wudu_active": return 56
+    case "wudu_inactive": return 57
+    case "quran_active": return 58
+    case "quran_inactive": return 59
+    default: return nil
+    }
+}
+
 struct SalahFeatureIcon: View {
     let kind: String
 
     private var index: Int {
-        switch kind {
-        case "home": return 0
-        case "prayer": return 1
-        case "wudu": return 2
-        case "quran": return 3
-        case "discover": return 4
-        case "checkmark": return 5
-        case "calendar": return 6
-        case "qibla": return 7
-        case "settings": return 8
-        case "profile": return 9
-        case "times": return 10
-        case "quran_audio": return 11
-        case "bookmarks": return 12
-        case "dhikr": return 13
-        case "info": return 14
-        case "community": return 15
-        case "moon": return 16
-        case "sparkles": return 17
-        case "language": return 18
-        case "more": return 19
-        case "list": return 20
-        default: return 4
-        }
+        salahFeatureIndex(for: kind) ?? 4
     }
 
     var body: some View {
         GeometryReader { proxy in
-            let column = index % 7
-            let row = index / 7
+            let column = index % 10
+            let row = index / 10
 
             Image("SalahFeatureSheet")
                 .resizable()
                 .interpolation(.high)
-                .frame(width: proxy.size.width * 7, height: proxy.size.height * 3)
+                .frame(width: proxy.size.width * 10, height: proxy.size.height * 6)
                 .offset(
                     x: -CGFloat(column) * proxy.size.width,
                     y: -CGFloat(row) * proxy.size.height
@@ -575,13 +624,19 @@ private struct ReferenceBottomBar: View {
     @EnvironmentObject private var settings: SettingsStore
     @Binding var selection: Int
 
-    private var items: [(String, String)] {
+    private struct Item {
+        let activeIcon: String
+        let inactiveIcon: String
+        let title: String
+    }
+
+    private var items: [Item] {
         [
-            ("home", settings.t("Start", "Ana Sayfa")),
-            ("quran", settings.t("Koran", "Kur'an")),
-            ("prayer", settings.t("Gebet", "Namaz")),
-            ("discover", settings.t("Entdecken", "Keşfet")),
-            ("profile", settings.t("Profil", "Profil"))
+            Item(activeIcon: "home_active", inactiveIcon: "home_inactive", title: settings.t("Start", "Ana Sayfa")),
+            Item(activeIcon: "quran_active", inactiveIcon: "quran_inactive", title: settings.t("Koran", "Kur'an")),
+            Item(activeIcon: "prayer_active", inactiveIcon: "prayer_inactive", title: settings.t("Gebet", "Namaz")),
+            Item(activeIcon: "discover", inactiveIcon: "discover", title: settings.t("Entdecken", "Keşfet")),
+            Item(activeIcon: "profile", inactiveIcon: "profile", title: settings.t("Profil", "Profil"))
         ]
     }
 
@@ -600,20 +655,13 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            SalahFeatureIcon(kind: item.0)
-                                .frame(width: 22, height: 22)
-                                .saturation(selection == index ? 1 : 0.45)
-                                .opacity(selection == index ? 1 : 0.72)
-                                .frame(width: 24, height: 24)
-                                .background(
-                                    Circle()
-                                        .fill(selection == index ? SalahTheme.softTeal.opacity(0.72) : Color.clear)
-                                )
-                                .accessibilityHidden(true)
-                        }
-                        .frame(height: 22)
 
-                        Text(item.1)
+                            SalahFeatureIcon(kind: selection == index ? item.activeIcon : item.inactiveIcon)
+                                .frame(width: 25, height: 25)
+                        }
+                        .frame(height: 25)
+
+                        Text(item.title)
                             .font(.system(size: 7.7, weight: selection == index ? .bold : .semibold))
                             .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
                             .lineLimit(1)
@@ -967,26 +1015,36 @@ struct MoreView: View {
             return "wudu"
         case "text.book.closed.fill", "books.vertical.fill", "book.pages.fill":
             return "quran"
-        case "play.square.stack.fill", "rectangle.stack.badge.play.fill":
+        case "play.square.stack.fill":
             return "quran_audio"
-        case "hands.sparkles.fill", "circle.grid.cross.fill", "sparkles":
+        case "rectangle.stack.badge.play.fill":
+            return "prayer"
+        case "hands.sparkles.fill", "circle.grid.cross.fill":
             return "dhikr"
-        case "location.north.circle.fill", "map.fill":
-            return "qibla"
+        case "sparkles":
+            return "knowledge"
+        case "location.north.circle.fill":
+            return "qibla_calibration"
+        case "map.fill":
+            return "map"
         case "calendar":
             return "calendar"
         case "clock.arrow.circlepath":
-            return "times"
+            return "history"
         case "checklist", "pause.circle.fill":
-            return "checkmark"
-        case "building.columns.fill", "text.quote":
-            return "info"
+            return "tracker"
+        case "building.columns.fill":
+            return "hadith"
+        case "text.quote":
+            return "duas"
         case "person.3.sequence.fill":
             return "community"
         case "moon.stars.fill":
-            return "moon"
+            return "islamic_calendar"
         case "character.book.closed.fill":
             return "language"
+        case "slider.horizontal.3":
+            return "settings"
         case "ellipsis.circle.fill":
             return "more"
         default:
