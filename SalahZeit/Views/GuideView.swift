@@ -572,7 +572,9 @@ private enum PrayerText {
 
 struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
+    @State private var prayerNextTriggerVisible = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
@@ -826,8 +828,8 @@ struct PrayerHowToView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe, schau dir die Haltung an und tippe erst dann auf Weiter.",
-                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku, duruşa bak ve sonra İleri'ye dokun."
+                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe und scrolle bis zum Ende. Wenn du dort weiter nach oben wischst, öffnet sich automatisch der nächste Schritt.",
+                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku ve adımın sonuna kadar kaydır. Orada yukarı doğru kaydırmaya devam edince sonraki adım otomatik açılır."
                     ))
                     .font(.subheadline)
                     .foregroundStyle(SalahTheme.ink)
@@ -925,74 +927,84 @@ struct PrayerHowToView: View {
                     PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
                         .id("prayer-step-card-\(currentStepIndex)")
 
-                    HStack(spacing: 12) {
-                        Button {
-                            guard currentStepIndex > 0 else { return }
-                            let target = currentStepIndex - 1
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } label: {
-                            Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
-                                .font(.headline.bold())
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 13)
+                    if currentStepIndex < steps.count - 1 {
+                        HStack(spacing: 7) {
+                            Image(systemName: "chevron.down")
+                            Text(settings.t("Weiter wischen", "Devam etmek için kaydır"))
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(currentStepIndex > 0 ? SalahTheme.deepTeal : SalahTheme.mutedInk.opacity(0.45))
-                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
-                        .disabled(currentStepIndex == 0)
-
-                        Button {
-                            guard currentStepIndex < steps.count - 1 else { return }
-                            let target = currentStepIndex + 1
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Text(currentStepIndex == steps.count - 1 ? settings.t("Fertig", "Bitti") : settings.t("Weiter", "İleri"))
-                                Image(systemName: currentStepIndex == steps.count - 1 ? "checkmark" : "chevron.right")
-                            }
-                            .font(.headline.bold())
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 13)
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.white)
-                        .background(currentStepIndex == steps.count - 1 ? SalahTheme.mutedInk : SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .disabled(currentStepIndex == steps.count - 1)
+                        .font(.caption.bold())
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
+                        .onAppear { prayerNextTriggerVisible = true }
+                        .onDisappear { prayerNextTriggerVisible = false }
                     }
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
-                        Text(settings.t(
-                            "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
-                            "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    if currentStepIndex == steps.count - 1 {
+                        VStack(alignment: .leading, spacing: 8) {
+                                                Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
+                                                Text(settings.t(
+                                                    "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
+                                                    "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
+                                                ))
+                                                .font(.footnote)
+                                                .foregroundStyle(.secondary)
+                                            }
+                                            .cardStyle(material: true)
                     }
-                    .cardStyle(material: true)
                 }
                 .padding()
             }
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        if currentStepIndex > 0 {
+                            let target = currentStepIndex - 1
+                            prayerNextTriggerVisible = false
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
+                                }
+                            }
+                        } else {
+                            dismiss()
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.headline.bold())
+                            .frame(width: 34, height: 34)
+                    }
+                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
+                }
+            }
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 18)
+                    .onEnded { value in
+                        guard currentStepIndex < steps.count - 1,
+                              prayerNextTriggerVisible,
+                              value.translation.height < -30 else { return }
+                        let target = currentStepIndex + 1
+                        prayerNextTriggerVisible = false
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            currentStepIndex = target
+                        }
+                        Task { @MainActor in
+                            await Task.yield()
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
+                            }
+                        }
+                    }
+            )
             .onAppear {
                 guard currentStepIndex > 0 else { return }
                 Task { @MainActor in
@@ -1551,8 +1563,10 @@ private struct WuduInstructionVisual: View {
 
 struct WuduGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
+    @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
     @State private var showExactDetail = true
+    @State private var wuduNextTriggerVisible = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 12))
@@ -1640,56 +1654,18 @@ struct WuduGuideView: View {
                     wuduStepCard(steps[safeCurrentStepIndex])
                         .id("wudu-step-card-\(currentStepIndex)")
 
-                    HStack(spacing: 12) {
-                        Button {
-                            guard currentStepIndex > 0 else { return }
-                            let target = currentStepIndex - 1
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } label: {
-                            Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
-                                .font(.headline.bold())
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 13)
+                    if currentStepIndex < steps.count - 1 {
+                        HStack(spacing: 7) {
+                            Image(systemName: "chevron.down")
+                            Text(settings.t("Weiter wischen", "Devam etmek için kaydır"))
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(currentStepIndex > 0 ? SalahTheme.deepTeal : SalahTheme.mutedInk.opacity(0.45))
-                        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
-                        .disabled(currentStepIndex == 0)
-
-                        Button {
-                            guard currentStepIndex < steps.count - 1 else { return }
-                            let target = currentStepIndex + 1
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                currentStepIndex = target
-                            }
-                            Task { @MainActor in
-                                await Task.yield()
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Text(currentStepIndex == steps.count - 1 ? settings.t("Wudu fertig", "Abdest tamam") : settings.t("Weiter", "İleri"))
-                                Image(systemName: currentStepIndex == steps.count - 1 ? "checkmark" : "chevron.right")
-                            }
-                            .font(.headline.bold())
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 13)
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.white)
-                        .background(currentStepIndex == steps.count - 1 ? SalahTheme.mutedInk : SalahTheme.deepTeal, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        .disabled(currentStepIndex == steps.count - 1)
+                        .font(.caption.bold())
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
+                        .onAppear { wuduNextTriggerVisible = true }
+                        .onDisappear { wuduNextTriggerVisible = false }
                     }
 
                     if currentStepIndex == steps.count - 1 {
@@ -1712,46 +1688,94 @@ struct WuduGuideView: View {
                         .cardStyle()
                     }
 
-                    VStack(alignment: .leading, spacing: 9) {
-                        Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
-                            .font(.headline.bold())
-                            .foregroundStyle(SalahTheme.deepTeal)
-
-                        NavigationLink { GhuslGuideView() } label: {
-                            Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
-
-                        Divider()
-
-                        NavigationLink { TayammumGuideView() } label: {
-                            Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
+                    if currentStepIndex == steps.count - 1 {
+                        VStack(alignment: .leading, spacing: 9) {
+                                                Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
+                                                    .font(.headline.bold())
+                                                    .foregroundStyle(SalahTheme.deepTeal)
+                        
+                                                NavigationLink { GhuslGuideView() } label: {
+                                                    Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
+                                                        .font(.headline)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                }
+                                                .buttonStyle(.plain)
+                        
+                                                Divider()
+                        
+                                                NavigationLink { TayammumGuideView() } label: {
+                                                    Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
+                                                        .font(.headline)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                }
+                                                .buttonStyle(.plain)
+                                            }
+                                            .cardStyle()
+                        
+                                            VStack(alignment: .leading, spacing: 7) {
+                                                Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                                                    .font(.headline)
+                                                Text(settings.t(
+                                                    "Diyanet Namaz İlmihali und Din İşleri Yüksek Kurulu. Die vier Farz-Bestandteile und die vollständige hanafitische Lernreihenfolge werden direkt in SalahPath erklärt. Nacken/Ense ist hier als Sunnah dargestellt, nicht als Farz.",
+                                                    "Diyanet Namaz İlmihali ve Din İşleri Yüksek Kurulu. Abdestin dört farzı ve tam Hanefî öğrenme sırası doğrudan SalahPath içinde açıklanır. Boyun/ense burada sünnet olarak gösterilir, farz değildir."
+                                                ))
+                                                .font(.footnote)
+                                                .foregroundStyle(.secondary)
+                                            }
+                                            .cardStyle(material: true)
                     }
-                    .cardStyle()
-
-                    VStack(alignment: .leading, spacing: 7) {
-                        Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
-                            .font(.headline)
-                        Text(settings.t(
-                            "Diyanet Namaz İlmihali und Din İşleri Yüksek Kurulu. Die vier Farz-Bestandteile und die vollständige hanafitische Lernreihenfolge werden direkt in SalahPath erklärt. Nacken/Ense ist hier als Sunnah dargestellt, nicht als Farz.",
-                            "Diyanet Namaz İlmihali ve Din İşleri Yüksek Kurulu. Abdestin dört farzı ve tam Hanefî öğrenme sırası doğrudan SalahPath içinde açıklanır. Boyun/ense burada sünnet olarak gösterilir, farz değildir."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    }
-                    .cardStyle(material: true)
                 }
                 .padding()
             }
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        if currentStepIndex > 0 {
+                            let target = currentStepIndex - 1
+                            wuduNextTriggerVisible = false
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                currentStepIndex = target
+                            }
+                            Task { @MainActor in
+                                await Task.yield()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                                }
+                            }
+                        } else {
+                            dismiss()
+                        }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.headline.bold())
+                            .frame(width: 34, height: 34)
+                    }
+                    .accessibilityLabel(settings.t(currentStepIndex > 0 ? "Vorheriger Schritt" : "Zurück", currentStepIndex > 0 ? "Önceki adım" : "Geri"))
+                }
+            }
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 18)
+                    .onEnded { value in
+                        guard currentStepIndex < steps.count - 1,
+                              wuduNextTriggerVisible,
+                              value.translation.height < -30 else { return }
+                        let target = currentStepIndex + 1
+                        wuduNextTriggerVisible = false
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            currentStepIndex = target
+                        }
+                        Task { @MainActor in
+                            await Task.yield()
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                            }
+                        }
+                    }
+            )
             .onAppear {
                 guard currentStepIndex > 0 else { return }
                 Task { @MainActor in
