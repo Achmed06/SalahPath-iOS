@@ -670,6 +670,8 @@ private struct DailyDuaDetailView: View {
 
     @MainActor
     private func toggleAudio() async {
+        audio.setInterfaceLanguage(settings.language)
+
         if let resolvedURL, audio.activeURL == resolvedURL {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
