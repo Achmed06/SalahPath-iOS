@@ -279,9 +279,13 @@ private struct PrayerPoseArtwork: View {
 
     private var female: Bool { assetName.hasPrefix("female_") }
     private var pose: String {
-        assetName
-            .replacingOccurrences(of: "male_", with: "")
-            .replacingOccurrences(of: "female_", with: "")
+        if assetName.hasPrefix("female_") {
+            return String(assetName.dropFirst("female_".count))
+        }
+        if assetName.hasPrefix("male_") {
+            return String(assetName.dropFirst("male_".count))
+        }
+        return assetName
     }
 
     private var garmentColor: Color {
@@ -651,11 +655,69 @@ private struct PrayerPoseArtwork: View {
         }
 
         if female {
-            garmentPolyline(&context, [hip, point(0.60, 0.70, in: size), point(0.74, 0.80, in: size)], width: 15)
-            garmentPolyline(&context, [point(0.46, 0.65, in: size), point(0.57, 0.77, in: size), point(0.71, 0.84, in: size)], width: 15)
+            // Hanafi sitting for women: both lower legs/feet are taken out to
+            // the worshipper's right side. In a front-facing drawing her
+            // right side appears on the viewer's left.
+            garmentPolyline(
+                &context,
+                [hip, point(0.40, 0.70, in: size), point(0.29, 0.80, in: size)],
+                width: 16
+            )
+            garmentPolyline(
+                &context,
+                [point(0.46, 0.65, in: size), point(0.36, 0.76, in: size), point(0.24, 0.84, in: size)],
+                width: 16
+            )
+
+            let upperFoot = CGRect(
+                x: size.width * 0.245 - 15,
+                y: size.height * 0.815,
+                width: 30,
+                height: 11
+            )
+            let lowerFoot = CGRect(
+                x: size.width * 0.205 - 15,
+                y: size.height * 0.855,
+                width: 30,
+                height: 11
+            )
+            context.fill(Path(roundedRect: upperFoot, cornerRadius: 5.5), with: .color(garmentColor))
+            context.fill(Path(roundedRect: lowerFoot, cornerRadius: 5.5), with: .color(garmentColor))
         } else {
-            garmentPolyline(&context, [hip, point(0.40, 0.76, in: size), point(0.29, 0.84, in: size)], width: 14)
-            garmentPolyline(&context, [point(0.51, 0.65, in: size), point(0.62, 0.78, in: size), point(0.72, 0.84, in: size)], width: 14)
+            // Hanafi sitting for men: sit on the flattened left foot while
+            // the right foot remains upright with its toes toward Qibla.
+            // Front-facing: the worshipper's right side is the viewer's left.
+            garmentPolyline(
+                &context,
+                [hip, point(0.39, 0.71, in: size), point(0.35, 0.78, in: size)],
+                width: 14
+            )
+            garmentPolyline(
+                &context,
+                [point(0.51, 0.65, in: size), point(0.58, 0.75, in: size), point(0.51, 0.82, in: size)],
+                width: 14
+            )
+
+            // Left foot flattened beneath the body.
+            let leftFoot = CGRect(
+                x: size.width * 0.46,
+                y: size.height * 0.805,
+                width: size.width * 0.15,
+                height: max(size.height * 0.045, 9)
+            )
+            context.fill(Path(roundedRect: leftFoot, cornerRadius: 8), with: .color(garmentColor))
+            context.stroke(Path(roundedRect: leftFoot, cornerRadius: 8), with: .color(garmentOutline), lineWidth: 2)
+
+            // Right foot upright. The narrow vertical shape makes the
+            // distinction from the flattened left foot visible at a glance.
+            let rightFoot = CGRect(
+                x: size.width * 0.315,
+                y: size.height * 0.775,
+                width: max(size.width * 0.055, 12),
+                height: max(size.height * 0.105, 22)
+            )
+            context.fill(Path(roundedRect: rightFoot, cornerRadius: 8), with: .color(skinTone))
+            context.stroke(Path(roundedRect: rightFoot, cornerRadius: 8), with: .color(garmentOutline.opacity(0.70)), lineWidth: 2)
         }
 
         // No body-direction arrow here: the worshipper remains facing Qibla.
@@ -1346,14 +1408,7 @@ private struct PrayerTutorialStepCard: View {
 
     private var imageName: String? {
         guard let key = step.imageKey else { return nil }
-        let resolvedKey: String
-        switch key {
-        case "sitting":
-            resolvedKey = "final_sitting"
-        default:
-            resolvedKey = key
-        }
-        return "\(audience == .male ? "male" : "female")_\(resolvedKey)"
+        return "\(audience == .male ? "male" : "female")_\(key)"
     }
 
     var body: some View {

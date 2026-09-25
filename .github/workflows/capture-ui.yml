@@ -157,6 +157,7 @@ jobs:
               *quran*|*Quran*) CAPTURE_MODE="quran" ;;
               *qibla*|*Qibla*) CAPTURE_MODE="qibla" ;;
               *times*|*Times*|*gebetszeit*|*Gebetszeit*|*map*|*Map*) CAPTURE_MODE="times" ;;
+              *sitting*|*Sitting*|*sitzt*|*Sitzt*) CAPTURE_MODE="sitting" ;;
               *polish*|*Polish*) CAPTURE_MODE="polish" ;;
               *namaz*|*Namaz*|*prayer*|*Prayer*) CAPTURE_MODE="prayer" ;;
               *icon*|*Icon*|*discover*|*Discover*) CAPTURE_MODE="icons" ;;
@@ -209,6 +210,15 @@ jobs:
           elif [ "$CAPTURE_MODE" = "times" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
+          elif [ "$CAPTURE_MODE" = "sitting" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-bowing SalahPath-v3.62-B78-DE-FemalePrayerBowing.png
+            capture namaz-sujud SalahPath-v3.62-B78-DE-FemalePrayerSujud.png
+            capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "polish" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
