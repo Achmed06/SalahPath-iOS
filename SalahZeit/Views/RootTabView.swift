@@ -81,6 +81,10 @@ struct SalahFeatureIcon: View {
         salahFeatureIndex(for: kind) ?? 4
     }
 
+    private var standaloneUIImage: UIImage? {
+        UIImage(named: "feature_\(kind)")
+    }
+
     private var croppedUIImage: UIImage? {
         guard let source = UIImage(named: "SalahFeatureSheet"),
               let cgImage = source.cgImage else {
@@ -112,7 +116,12 @@ struct SalahFeatureIcon: View {
 
     var body: some View {
         Group {
-            if let croppedUIImage {
+            if let standaloneUIImage {
+                Image(uiImage: standaloneUIImage)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            } else if let croppedUIImage {
                 Image(uiImage: croppedUIImage)
                     .resizable()
                     .interpolation(.high)
