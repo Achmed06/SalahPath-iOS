@@ -24,7 +24,7 @@ struct SettingsView: View {
                             Button(language.title) { settings.language = language }
                         }
                     } label: {
-                        profileRow(icon: "globe", title: settings.t("Sprache", "Dil"), value: settings.language.title)
+                        profileRow(icon: "language", title: settings.t("Sprache", "Dil"), value: settings.language.title)
                     }
 
                     Menu {
@@ -32,14 +32,14 @@ struct SettingsView: View {
                             Button(audience.title(settings.language)) { settings.prayerAudience = audience }
                         }
                     } label: {
-                        profileRow(icon: "person.2.fill", title: settings.t("Gebetsanleitung", "Namaz anlatımı"), value: settings.prayerAudience.title(settings.language))
+                        profileRow(icon: "prayer_settings", title: settings.t("Gebetsanleitung", "Namaz anlatımı"), value: settings.prayerAudience.title(settings.language))
                     }
 
                     Button {
                         settings.restartOnboarding()
                     } label: {
                         profileRow(
-                            icon: "wand.and.stars",
+                            icon: "settings",
                             title: settings.t("Ersteinrichtung erneut öffnen", "İlk kurulumu yeniden aç"),
                             value: settings.t("Start", "Başlat")
                         )
@@ -56,7 +56,7 @@ struct SettingsView: View {
                         }
                     } label: {
                         profileRow(
-                            icon: "circle.lefthalf.filled",
+                            icon: "dark_mode",
                             title: settings.t("Farbschema", "Renk düzeni"),
                             value: settings.appearance.title(settings.language)
                         )
@@ -78,7 +78,7 @@ struct SettingsView: View {
                             Button(method.title(settings.language)) { settings.calculationPreset = method }
                         }
                     } label: {
-                        profileRow(icon: "clock.fill", title: settings.t("Berechnung", "Hesaplama"), value: settings.calculationPreset.title(settings.language))
+                        profileRow(icon: "times", title: settings.t("Berechnung", "Hesaplama"), value: settings.calculationPreset.title(settings.language))
                     }
 
                     Menu {
@@ -86,10 +86,10 @@ struct SettingsView: View {
                             Button(rule.title(settings.language)) { settings.asrRule = rule }
                         }
                     } label: {
-                        profileRow(icon: "sun.max.fill", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
+                        profileRow(icon: "asr", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
                     }
 
-                    referenceToggle(icon: "24.circle.fill", title: settings.t("24-Stunden-Zeit", "24 saat biçimi"), isOn: $settings.use24Hour)
+                    referenceToggle(icon: "times", title: settings.t("24-Stunden-Zeit", "24 saat biçimi"), isOn: $settings.use24Hour)
                 }
 
                 referenceSection(settings.t("Quran & Audio", "Kur'an ve Ses")) {
@@ -98,7 +98,7 @@ struct SettingsView: View {
                             Button(reciter.title) { settings.quranReciter = reciter }
                         }
                     } label: {
-                        profileRow(icon: "waveform", title: settings.t("Rezitation", "Kâri"), value: settings.quranReciter.title)
+                        profileRow(icon: "sound", title: settings.t("Rezitation", "Kâri"), value: settings.quranReciter.title)
                     }
 
                     VStack(spacing: 8) {
@@ -122,7 +122,7 @@ struct SettingsView: View {
                     referenceToggle(icon: "character.cursor.ibeam", title: settings.t("Transliteration anzeigen", "Latin harfli okunuşu göster"), isOn: $settings.quranShowTransliteration)
 
                     profileRow(
-                        icon: "doc.text.fill",
+                        icon: "quran",
                         title: settings.t("Offline-Qurantext", "Çevrimdışı Kur'an metni"),
                         value: quranTextCacheText,
                         showsChevron: false
@@ -160,7 +160,7 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     profileRow(
-                        icon: "arrow.down.circle.fill",
+                        icon: "downloads",
                         title: settings.t("Offline-Audio", "Çevrimdışı ses"),
                         value: audioCacheText,
                         showsChevron: false
@@ -209,13 +209,13 @@ struct SettingsView: View {
 
                 referenceSection(settings.t("Benachrichtigungen", "Bildirimler")) {
                     referenceToggle(
-                        icon: "bell.fill",
+                        icon: "notifications",
                         title: settings.t("Gebetsbenachrichtigungen", "Namaz bildirimleri"),
                         isOn: $settings.notificationsEnabled
                     )
 
                     referenceToggle(
-                        icon: "clock.badge.checkmark",
+                        icon: "reminder",
                         title: settings.t("Zum Gebetsbeginn erinnern", "Vakit girince bildir"),
                         isOn: $settings.notifyAtPrayerTime
                     )
@@ -223,7 +223,7 @@ struct SettingsView: View {
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
                     referenceToggle(
-                        icon: "speaker.wave.3.fill",
+                        icon: "sound",
                         title: settings.t("Gebetsruf (Adhan) abspielen", "Ezan sesi çal"),
                         isOn: $settings.adhanSoundEnabled
                     )
@@ -319,11 +319,11 @@ struct SettingsView: View {
                             .padding(.top, 9)
                             .padding(.bottom, 3)
 
-                        referenceToggle(icon: "sun.horizon.fill", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
-                        referenceToggle(icon: "sun.max.fill", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
-                        referenceToggle(icon: "sun.min.fill", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
-                        referenceToggle(icon: "sunset.fill", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
-                        referenceToggle(icon: "moon.stars.fill", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
+                        referenceToggle(icon: "fajr", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
+                        referenceToggle(icon: "dhuhr", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
+                        referenceToggle(icon: "asr", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
+                        referenceToggle(icon: "maghrib", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
+                        referenceToggle(icon: "isha", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
                     }
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
@@ -389,7 +389,7 @@ struct SettingsView: View {
 
                 referenceSection(settings.t("Standort & Datenschutz", "Konum ve gizlilik")) {
                     profileRow(
-                        icon: locationManager.usesManualLocation ? "mappin.and.ellipse" : "location.fill",
+                        icon: "location",
                         title: settings.t("Standortstatus", "Konum durumu"),
                         value: locationManager.locality ?? statusText,
                         showsChevron: false
@@ -696,11 +696,19 @@ struct SettingsView: View {
 
     private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
+            Group {
+                if salahFeatureIndex(for: icon) != nil {
+                    SalahFeatureIcon(kind: icon)
+                        .padding(2)
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 28, height: 28)
+            .background(SalahTheme.softTeal, in: Circle())
+            .accessibilityHidden(true)
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -724,11 +732,19 @@ struct SettingsView: View {
 
     private func referenceToggle(icon: String, title: String, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
+            Group {
+                if salahFeatureIndex(for: icon) != nil {
+                    SalahFeatureIcon(kind: icon)
+                        .padding(2)
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 28, height: 28)
+            .background(SalahTheme.softTeal, in: Circle())
+            .accessibilityHidden(true)
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
