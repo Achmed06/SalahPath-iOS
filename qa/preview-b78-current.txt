@@ -1,2 +1,2 @@
-Current B78 visual verification after final icon routing and polished text-free Prayer/Wudu cleanup.
-run=2026-09-25T23:30
+Final B78 visual verification: standalone icons + text-free Prayer/Wudu + clean Salam crops.
+run=2026-09-25T23:36
