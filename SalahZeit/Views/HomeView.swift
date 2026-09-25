@@ -2199,7 +2199,7 @@ struct PrayerTimesOverviewView: View {
             Spacer(minLength: 2)
 
             ReferencePosterQiblaArt()
-                .frame(maxWidth: .infinity, minHeight: 73, maxHeight: 73)
+                .frame(maxWidth: .infinity, minHeight: 90, maxHeight: 90)
                 .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, minHeight: 126, alignment: .leading)
@@ -2379,7 +2379,7 @@ private struct ReferencePosterQiblaArt: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding(12)
+        .padding(4)
         .accessibilityHidden(true)
     }
 }
