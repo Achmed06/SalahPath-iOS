@@ -798,6 +798,19 @@ struct HomeView: View {
         return locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum")
     }
 
+    private var effectiveTimeZone: TimeZone {
+        if isScreenshotQA {
+            return TimeZone(identifier: "Europe/Istanbul") ?? .autoupdatingCurrent
+        }
+        return locationManager.prayerTimeZone
+    }
+
+    private var prayerCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = effectiveTimeZone
+        return calendar
+    }
+
     private var effectiveNow: Date {
         now
     }
@@ -811,7 +824,12 @@ struct HomeView: View {
 
             Group {
                 if let location = effectiveLocation,
-                   let today = engine.calculateDay(for: now, location: location, settings: settings) {
+                   let today = engine.calculateDay(
+                       for: now,
+                       location: location,
+                       settings: settings,
+                       timeZone: effectiveTimeZone
+                   ) {
                     prayerContent(location: location, today: today)
                 } else {
                     locationState
@@ -848,6 +866,9 @@ struct HomeView: View {
         .onReceive(locationManager.$location) { _ in
             updateNowPlayingPrayerContext()
         }
+        .onReceive(locationManager.$prayerTimeZone) { _ in
+            updateNowPlayingPrayerContext()
+        }
         .onChange(of: settings.language) { _, _ in
             updateNowPlayingPrayerContext()
         }
@@ -860,10 +881,25 @@ struct HomeView: View {
         }
         .sheet(item: $selectedPrayer) { prayer in
             if let location = effectiveLocation,
-               let today = engine.calculateDay(for: prayer.date, location: location, settings: settings),
-               let tomorrowDate = Calendar.current.date(byAdding: .day, value: 1, to: prayer.date),
-               let tomorrow = engine.calculateDay(for: tomorrowDate, location: location, settings: settings) {
-                PrayerDetailView(prayer: prayer, day: today, nextDay: tomorrow)
+               let today = engine.calculateDay(
+                   for: prayer.date,
+                   location: location,
+                   settings: settings,
+                   timeZone: effectiveTimeZone
+               ),
+               let tomorrowDate = prayerCalendar.date(byAdding: .day, value: 1, to: prayer.date),
+               let tomorrow = engine.calculateDay(
+                   for: tomorrowDate,
+                   location: location,
+                   settings: settings,
+                   timeZone: effectiveTimeZone
+               ) {
+                PrayerDetailView(
+                    prayer: prayer,
+                    day: today,
+                    nextDay: tomorrow,
+                    timeZone: effectiveTimeZone
+                )
                     .environmentObject(settings)
             }
         }
@@ -899,7 +935,8 @@ struct HomeView: View {
             now: now,
             location: location,
             settings: settings,
-            count: 2
+            count: 2,
+            timeZone: effectiveTimeZone
         )
         guard !upcoming.isEmpty else {
             RemoteAudioPlayer.shared.setPrayerContext(nil)
@@ -908,7 +945,7 @@ struct HomeView: View {
 
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
-        formatter.timeZone = .autoupdatingCurrent
+        formatter.timeZone = effectiveTimeZone
         formatter.dateFormat = settings.use24Hour ? "HH:mm" : "h:mm a"
 
         let times = upcoming.map {
@@ -931,7 +968,12 @@ struct HomeView: View {
             LazyVStack(spacing: 5) {
                 brandHeader
 
-                if let next = engine.nextPrayer(now: now, location: location, settings: settings) {
+                if let next = engine.nextPrayer(
+                    now: now,
+                    location: location,
+                    settings: settings,
+                    timeZone: effectiveTimeZone
+                ) {
                     nextPrayerHero(next)
                 }
 
@@ -954,7 +996,11 @@ struct HomeView: View {
         .refreshable {
             locationManager.refresh()
             if settings.notificationsEnabled {
-                await NotificationManager.shared.scheduleNextSevenDays(location: location, settings: settings)
+                await NotificationManager.shared.scheduleNextSevenDays(
+                    location: location,
+                    settings: settings,
+                    timeZone: effectiveTimeZone
+                )
             }
         }
     }
@@ -1206,7 +1252,12 @@ struct HomeView: View {
 
                     Spacer()
 
-                    Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
+                    Text(timeString(
+                        prayer.date,
+                        use24Hour: settings.use24Hour,
+                        language: settings.language,
+                        timeZone: effectiveTimeZone
+                    ))
                         .font(.system(size: 11, weight: .bold, design: .rounded).monospacedDigit())
                         .foregroundStyle(active ? SalahTheme.deepTeal : SalahTheme.ink)
                 }
@@ -1761,7 +1812,7 @@ struct HomeView: View {
     private func shortWeekdayLetter(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
-        f.timeZone = .autoupdatingCurrent
+        f.timeZone = effectiveTimeZone
         f.dateFormat = "EE"
         return f.string(from: date)
             .replacingOccurrences(of: ".", with: "")
@@ -1771,7 +1822,7 @@ struct HomeView: View {
     private func shortWeekday(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
-        f.timeZone = .autoupdatingCurrent
+        f.timeZone = effectiveTimeZone
         f.dateFormat = "EEEE"
         return f.string(from: date).capitalized
     }
@@ -1789,7 +1840,11 @@ struct HomeView: View {
 
             ForEach(today.prayers) { prayer in
                 Button { selectedPrayer = prayer } label: {
-                    PrayerRow(prayer: prayer, isNext: isNext(prayer, location: location))
+                    PrayerRow(
+                        prayer: prayer,
+                        isNext: isNext(prayer, location: location),
+                        timeZone: effectiveTimeZone
+                    )
                 }
                 .buttonStyle(.plain)
                 if prayer.id != today.prayers.last?.id { Divider().opacity(0.6) }
@@ -1817,10 +1872,10 @@ struct HomeView: View {
                 Label(settings.t("Nacht", "Gece"), systemImage: "moon.stars.fill")
                     .font(.headline).foregroundStyle(SalahTheme.teal)
                 if let middle = day.middleOfNight {
-                    valueRow(settings.t("Mitte der Nacht", "Gecenin yarısı"), timeString(middle, use24Hour: settings.use24Hour, language: settings.language))
+                    valueRow(settings.t("Mitte der Nacht", "Gecenin yarısı"), timeString(middle, use24Hour: settings.use24Hour, language: settings.language, timeZone: effectiveTimeZone))
                 }
                 if let lastThird = day.lastThirdOfNight {
-                    valueRow(settings.t("Letztes Drittel beginnt", "Son üçte birlik bölüm başlar"), timeString(lastThird, use24Hour: settings.use24Hour, language: settings.language))
+                    valueRow(settings.t("Letztes Drittel beginnt", "Son üçte birlik bölüm başlar"), timeString(lastThird, use24Hour: settings.use24Hour, language: settings.language, timeZone: effectiveTimeZone))
                 }
             }
             .salahCard()
@@ -1948,14 +2003,19 @@ struct HomeView: View {
     }
 
     private func isNext(_ prayer: PrayerOccurrence, location: CLLocation) -> Bool {
-        guard let next = engine.nextPrayer(now: now, location: location, settings: settings) else { return false }
-        return prayer.kind == next.kind && LocalDay.calendar().isDate(prayer.date, inSameDayAs: next.date)
+        guard let next = engine.nextPrayer(
+            now: now,
+            location: location,
+            settings: settings,
+            timeZone: effectiveTimeZone
+        ) else { return false }
+        return prayer.kind == next.kind && prayerCalendar.isDate(prayer.date, inSameDayAs: next.date)
     }
 
     private func gregorianDateShort(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
-        f.timeZone = .autoupdatingCurrent
+        f.timeZone = effectiveTimeZone
         f.dateFormat = settings.language == .german ? "dd.MM.yyyy" : "d MMMM yyyy"
         return f.string(from: date)
     }
@@ -1988,6 +2048,19 @@ struct PrayerTimesOverviewView: View {
         return locationManager.location
     }
 
+    private var effectiveTimeZone: TimeZone {
+        if isScreenshotQA {
+            return TimeZone(identifier: "Europe/Istanbul") ?? .autoupdatingCurrent
+        }
+        return locationManager.prayerTimeZone
+    }
+
+    private var prayerCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = effectiveTimeZone
+        return calendar
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -2017,7 +2090,12 @@ struct PrayerTimesOverviewView: View {
                 .overlay { RoundedRectangle(cornerRadius: 8).stroke(SalahTheme.gold.opacity(0.32), lineWidth: 0.7) }
 
                 if let location = effectiveLocation {
-                    if period == 0, let day = engine.calculateDay(for: referenceDate, location: location, settings: settings) {
+                    if period == 0, let day = engine.calculateDay(
+                        for: referenceDate,
+                        location: location,
+                        settings: settings,
+                        timeZone: effectiveTimeZone
+                    ) {
                         referenceTodayCard(day: day, location: location)
 
                         HStack(spacing: 8) {
@@ -2035,7 +2113,12 @@ struct PrayerTimesOverviewView: View {
                         }
                     } else {
                         ForEach(days, id: \.self) { date in
-                            if let day = engine.calculateDay(for: date, location: location, settings: settings) {
+                            if let day = engine.calculateDay(
+                                for: date,
+                                location: location,
+                                settings: settings,
+                                timeZone: effectiveTimeZone
+                            ) {
                                 compactDayCard(day: day, date: date)
                             }
                         }
@@ -2125,7 +2208,12 @@ struct PrayerTimesOverviewView: View {
     }
 
     private func referenceTodayCard(day: PrayerDay, location: CLLocation) -> some View {
-        let next = engine.nextPrayer(now: referenceDate, location: location, settings: settings)
+        let next = engine.nextPrayer(
+            now: referenceDate,
+            location: location,
+            settings: settings,
+            timeZone: effectiveTimeZone
+        )
 
         return VStack(spacing: 0) {
             VStack(spacing: 0) {
@@ -2133,7 +2221,7 @@ struct PrayerTimesOverviewView: View {
                     let isNext = isScreenshotQA
                         ? prayer.kind == .asr
                         : (next?.kind == prayer.kind &&
-                           LocalDay.calendar().isDate(prayer.date, inSameDayAs: next?.date ?? .distantPast))
+                           prayerCalendar.isDate(prayer.date, inSameDayAs: next?.date ?? .distantPast))
 
                     HStack(spacing: 9) {
                         ZStack {
@@ -2184,7 +2272,12 @@ struct PrayerTimesOverviewView: View {
             case .isha: return "20:19"
             }
         }
-        return timeString(actual, use24Hour: settings.use24Hour, language: settings.language)
+        return timeString(
+            actual,
+            use24Hour: settings.use24Hour,
+            language: settings.language,
+            timeZone: effectiveTimeZone
+        )
     }
 
     private var referenceQiblaTile: some View {
@@ -2275,12 +2368,12 @@ struct PrayerTimesOverviewView: View {
                     Text(shortDate(date))
                         .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(SalahTheme.ink)
-                    Text(hijriDateString(date, language: settings.language))
+                    Text(hijriDateString(date, language: settings.language, timeZone: effectiveTimeZone))
                         .font(.system(size: 8.5, weight: .medium))
                         .foregroundStyle(SalahTheme.mutedInk)
                 }
                 Spacer()
-                if LocalDay.calendar().isDateInToday(date) {
+                if prayerCalendar.isDate(date, inSameDayAs: referenceDate) {
                     Text(settings.t("HEUTE", "BUGÜN"))
                         .font(.system(size: 8, weight: .black))
                         .foregroundStyle(SalahTheme.teal)
@@ -2295,7 +2388,12 @@ struct PrayerTimesOverviewView: View {
                     Text(referencePrayerName(prayer.kind))
                         .font(.system(size: 10.5, weight: .semibold))
                     Spacer()
-                    Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
+                    Text(timeString(
+                        prayer.date,
+                        use24Hour: settings.use24Hour,
+                        language: settings.language,
+                        timeZone: effectiveTimeZone
+                    ))
                         .font(.system(size: 10.5, weight: .bold).monospacedDigit())
                 }
                 .foregroundStyle(SalahTheme.ink)
@@ -2308,14 +2406,14 @@ struct PrayerTimesOverviewView: View {
 
     private var days: [Date] {
         let count = period == 1 ? 7 : 30
-        let start = LocalDay.startOfDay(for: referenceDate)
-        return (0..<count).compactMap { LocalDay.addingDays($0, to: start) }
+        let start = prayerCalendar.startOfDay(for: referenceDate)
+        return (0..<count).compactMap { prayerCalendar.date(byAdding: .day, value: $0, to: start) }
     }
 
     private func shortDate(_ date: Date) -> String {
         let f = DateFormatter()
         f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
-        f.timeZone = .autoupdatingCurrent
+        f.timeZone = effectiveTimeZone
         f.dateFormat = "EEE, d. MMM"
         return f.string(from: date)
     }
@@ -3026,6 +3124,7 @@ private struct PrayerRow: View {
     @EnvironmentObject private var settings: SettingsStore
     let prayer: PrayerOccurrence
     let isNext: Bool
+    let timeZone: TimeZone
 
     var body: some View {
         HStack(spacing: 11) {
@@ -3048,7 +3147,12 @@ private struct PrayerRow: View {
                     .lineLimit(2)
             }
             Spacer()
-            Text(timeString(prayer.date, use24Hour: settings.use24Hour, language: settings.language))
+            Text(timeString(
+                prayer.date,
+                use24Hour: settings.use24Hour,
+                language: settings.language,
+                timeZone: timeZone
+            ))
                 .font(.headline.monospacedDigit())
                 .foregroundStyle(SalahTheme.ink)
         }
