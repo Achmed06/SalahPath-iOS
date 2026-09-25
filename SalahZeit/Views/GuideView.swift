@@ -5013,22 +5013,98 @@ enum QuranAudioResolver {
     ]
 
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
-        guard (1...114).contains(surah),
-              ayahCounts.indices.contains(surah - 1) else {
+        guard (1...114).contains(surah) else {
             throw URLError(.badURL)
         }
 
+        var editions: [(String, Int)] = [(reciter.edition, reciter.bitrate)]
+        if let alternate = reciter.alternateAudioSource,
+           alternate.edition != reciter.edition {
+            editions.append((alternate.edition, alternate.bitrate))
+        }
+
+        var lastError: Error = URLError(.resourceUnavailable)
+
+        for (edition, bitrate) in editions {
+            do {
+                return try await apiURLs(surah: surah, edition: edition, bitrate: bitrate)
+            } catch {
+                if Task.isCancelled { throw CancellationError() }
+                lastError = error
+            }
+        }
+
+        let fallback = everyAyahURLs(surah: surah, reciter: reciter)
+        if !fallback.isEmpty {
+            return fallback
+        }
+
+        throw lastError
+    }
+
+    private static func apiURLs(
+        surah: Int,
+        edition: String,
+        bitrate: Int
+    ) async throws -> [URL] {
+        guard let endpoint = URL(string: "https://api.alquran.cloud/v1/surah/\(surah)/\(edition)") else {
+            throw URLError(.badURL)
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.timeoutInterval = 15
+        request.cachePolicy = .reloadRevalidatingCacheData
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse,
+              (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        guard !data.isEmpty,
+              data.count <= QuranNetworkLimits.maxJSONBytes else {
+            throw URLError(.dataLengthExceedsMaximum)
+        }
+
+        let decoded = try JSONDecoder().decode(AudioEditionResponse.self, from: data)
+        let ayahs = decoded.data.ayahs.sorted { $0.numberInSurah < $1.numberInSurah }
+        guard !ayahs.isEmpty else {
+            throw URLError(.resourceUnavailable)
+        }
+
+        var result: [URL] = []
+        result.reserveCapacity(ayahs.count)
+
+        for (index, ayah) in ayahs.enumerated() {
+            guard ayah.number > 0,
+                  ayah.numberInSurah == index + 1 else {
+                throw URLError(.cannotParseResponse)
+            }
+
+            if let raw = ayah.audio,
+               let url = URL(string: raw.replacingOccurrences(of: "http://", with: "https://")),
+               url.scheme?.lowercased() == "https" {
+                result.append(url)
+            } else {
+                guard let fallback = URL(
+                    string: "https://cdn.islamic.network/quran/audio/\(bitrate)/\(edition)/\(ayah.number).mp3"
+                ) else {
+                    throw URLError(.badURL)
+                }
+                result.append(fallback)
+            }
+        }
+
+        return result
+    }
+
+    private static func everyAyahURLs(surah: Int, reciter: QuranReciter) -> [URL] {
+        guard ayahCounts.indices.contains(surah - 1) else { return [] }
         let count = ayahCounts[surah - 1]
-        let urls = (1...count).compactMap { ayah -> URL? in
+
+        return (1...count).compactMap { ayah in
             let file = String(format: "%03d%03d.mp3", surah, ayah)
             return URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/\(file)")
         }
-
-        guard urls.count == count else {
-            throw URLError(.cannotParseResponse)
-        }
-
-        return urls
     }
 }
 
