@@ -214,7 +214,10 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-bowing SalahPath-v3.62-B78-DE-FemalePrayerBowing.png
+            capture namaz-sujud SalahPath-v3.62-B78-DE-FemalePrayerSujud.png
             capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
+            capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "polish" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
