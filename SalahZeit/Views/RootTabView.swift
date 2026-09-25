@@ -79,6 +79,12 @@ struct RootTabView: View {
         }
         .preferredColorScheme(preferredColorScheme)
         .tint(SalahTheme.teal)
+        .onAppear {
+            audio.setInterfaceLanguage(settings.language)
+        }
+        .onChange(of: settings.language) { _, language in
+            audio.setInterfaceLanguage(language)
+        }
     }
 
     private var preferredColorScheme: ColorScheme? {
