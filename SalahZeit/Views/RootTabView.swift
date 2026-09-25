@@ -1,10 +1,38 @@
 import SwiftUI
 
-// Approved green-gold icon sheet from the reviewed SalahPath artwork.
+// Approved standalone green-gold icons. Do not crop the atlas when a
+// dedicated asset exists: atlas cropping caused wrong/partial icons in B78.
 struct SalahFeatureIcon: View {
     let kind: String
 
-    private var index: Int {
+    private var standaloneAssetName: String? {
+        switch kind {
+        case "home": return "feature_home"
+        case "prayer": return "feature_prayer"
+        case "wudu": return "feature_wudu"
+        case "quran": return "feature_quran"
+        case "discover": return "feature_discover"
+        case "checkmark": return "feature_checkmark"
+        case "calendar": return "feature_calendar"
+        case "qibla": return "feature_qibla"
+        case "settings": return "feature_settings"
+        case "profile": return "feature_profile"
+        case "times": return "feature_times"
+        case "quran_audio": return "feature_quran_audio"
+        case "bookmarks": return "feature_bookmarks"
+        case "dhikr": return "feature_dhikr"
+        case "info": return "feature_info"
+        case "community": return "feature_community"
+        case "moon": return "feature_moon"
+        case "sparkles": return "feature_sparkles"
+        case "language": return "feature_language"
+        case "more": return "feature_more"
+        case "list": return "feature_list"
+        default: return nil
+        }
+    }
+
+    private var atlasIndex: Int {
         switch kind {
         case "home": return 0
         case "prayer": return 1
@@ -32,20 +60,29 @@ struct SalahFeatureIcon: View {
     }
 
     var body: some View {
-        GeometryReader { proxy in
-            let column = index % 7
-            let row = index / 7
+        Group {
+            if let standaloneAssetName {
+                Image(standaloneAssetName)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            } else {
+                GeometryReader { proxy in
+                    let column = atlasIndex % 7
+                    let row = atlasIndex / 7
 
-            Image("SalahFeatureSheet")
-                .resizable()
-                .interpolation(.high)
-                .frame(width: proxy.size.width * 7, height: proxy.size.height * 3)
-                .offset(
-                    x: -CGFloat(column) * proxy.size.width,
-                    y: -CGFloat(row) * proxy.size.height
-                )
+                    Image("SalahFeatureSheet")
+                        .resizable()
+                        .interpolation(.high)
+                        .frame(width: proxy.size.width * 7, height: proxy.size.height * 3)
+                        .offset(
+                            x: -CGFloat(column) * proxy.size.width,
+                            y: -CGFloat(row) * proxy.size.height
+                        )
+                }
+                .clipped()
+            }
         }
-        .clipped()
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
     }
