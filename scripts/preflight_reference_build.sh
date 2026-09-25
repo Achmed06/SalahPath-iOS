@@ -200,6 +200,7 @@ required_features = {
     "feature_dhikr", "feature_qibla", "feature_info", "feature_checkmark",
     "feature_settings", "feature_community", "feature_moon",
     "feature_sparkles", "feature_language", "feature_more", "feature_list",
+    "feature_home", "feature_discover", "feature_profile",
 }
 required = required_wudu | required_prayer | required_features | {
     "salahpath_logo", "home_mosque"
@@ -217,7 +218,7 @@ for name in sorted(required):
 print(
     "Standalone SalahPath visual set: "
     f"{len(required_wudu)} Wudu, {len(required_prayer)} prayer, "
-    f"{len(required_features)} feature icons"
+    f"{len(required_features)} feature/navigation icons"
 )
 PY
 
