@@ -152,6 +152,7 @@ jobs:
           fi
 
           xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage "$LANGUAGE"
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath onboardingCompleted -bool true
           echo "FAST preview target: $SCREEN ($LANGUAGE)"
           mkdir -p fast-preview
 
