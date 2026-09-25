@@ -102,10 +102,7 @@ jobs:
 
           capture home SalahPath-B78-Current-Home.png
           capture namaz-howto SalahPath-B78-Current-Prayer.png
-          capture namaz-salam SalahPath-B78-Current-Prayer-Salam.png
           capture wudu SalahPath-B78-Current-Wudu.png
-          capture wudu-arm SalahPath-B78-Current-Wudu-Arm.png
-          capture wudu-foot SalahPath-B78-Current-Wudu-Foot.png
 
       - name: Upload current preview
         uses: actions/upload-artifact@v7
