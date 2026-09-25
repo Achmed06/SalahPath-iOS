@@ -225,9 +225,19 @@ struct GuideView: View {
 
     private func learnTile(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 7) {
-            Image(systemName: icon)
-                .font(.system(size: 25, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            Group {
+                if let kind = guideFeatureKind(for: icon) {
+                    Image("feature_\(kind)")
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 25, weight: .semibold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 30, height: 30)
+            .accessibilityHidden(true)
             Text(title)
                 .font(.system(size: 11, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
@@ -245,13 +255,51 @@ struct GuideView: View {
         .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 
+    private func guideFeatureKind(for symbol: String) -> String? {
+        switch symbol {
+        case "rectangle.stack.badge.play.fill":
+            return "prayer"
+        case "drop.fill":
+            return "wudu"
+        case "list.number":
+            return "list"
+        case "books.vertical.fill", "text.book.closed.fill", "book.pages.fill":
+            return "quran"
+        case "play.square.stack.fill":
+            return "quran_audio"
+        case "hands.sparkles.fill":
+            return "dhikr"
+        case "map.fill":
+            return "qibla"
+        case "calendar.badge.plus":
+            return "calendar"
+        case "person.3.sequence.fill":
+            return "community"
+        case "moon.stars.fill":
+            return "moon"
+        default:
+            return nil
+        }
+    }
+
     private func referenceRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: icon)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 31, height: 31)
-                .background(SalahTheme.softTeal, in: Circle())
+            Group {
+                if let kind = guideFeatureKind(for: icon) {
+                    Image("feature_\(kind)")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(4)
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 31, height: 31)
+            .background(SalahTheme.softTeal, in: Circle())
+            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.7) }
+            .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.system(size: 12, weight: .bold))
