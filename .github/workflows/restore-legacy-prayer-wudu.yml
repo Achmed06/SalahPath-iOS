@@ -1,0 +1,148 @@
+name: Restore approved legacy prayer and Wudu artwork
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/restore-legacy-prayer-wudu.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: macos-26
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild only approved legacy visual payloads
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # v3.5 contains the user's preferred original prayer crops and early Wudu sheet crops.
+          # It writes assets before touching legacy code, so code is restored immediately afterwards.
+          python3 v35-patch/apply_v35.py || true
+          git restore SalahZeit/Views/GuideView.swift scripts/build_unsigned_ipa.sh
+
+          # v3.10 contains the older standalone Wudu neck image.
+          python3 v310-patch/apply_v310.py || true
+          git restore SalahZeit/Views/GuideView.swift SalahZeit/Views/SettingsView.swift scripts/build_unsigned_ipa.sh
+
+          # v438 contains the Sep-21 direction-correct Salam crops from the approved reference art.
+          python3 v438-patch/apply_v438.py || true
+          git restore SalahZeit/Views/GuideView.swift SalahZeit.xcodeproj/project.pbxproj
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, shutil
+
+          root = Path("SalahZeit/Assets.xcassets")
+
+          prayer = [
+              "male_intention","male_takbir","male_standing","male_upright",
+              "male_bowing","male_sujud","male_sitting","male_final_sitting",
+              "female_intention","female_takbir","female_standing","female_upright",
+              "female_bowing","female_sujud","female_sitting","female_final_sitting",
+          ]
+          salam = [
+              "male_salam_right","male_salam_left",
+              "female_salam_right","female_salam_left",
+          ]
+          wudu = [
+              "wudu_intention","wudu_hands","wudu_mouth","wudu_nose","wudu_face",
+              "wudu_rightarm","wudu_leftarm","wudu_head","wudu_ears","wudu_neck",
+          ]
+
+          def contents(filename):
+              return json.dumps({
+                  "images": [{"filename": filename, "idiom": "universal", "scale": "1x"}],
+                  "info": {"author": "xcode", "version": 1},
+              }, ensure_ascii=False, indent=2) + "\n"
+
+          def keep_only(name, source, dest_ext):
+              d = root / f"{name}.imageset"
+              d.mkdir(parents=True, exist_ok=True)
+              source = Path(source)
+              dest = d / f"{name}.{dest_ext}"
+              if source.resolve() != dest.resolve():
+                  shutil.copy2(source, dest)
+              for f in d.iterdir():
+                  if f.name not in {dest.name, "Contents.json"} and f.is_file():
+                      f.unlink()
+              (d / "Contents.json").write_text(contents(dest.name), encoding="utf-8")
+
+          for name in prayer:
+              src = root / f"{name}.imageset" / f"{name}.jpg"
+              if not src.is_file():
+                  raise SystemExit(f"missing restored v3.5 prayer crop: {name}")
+              keep_only(name, src, "jpg")
+
+          # The second sujud is the same physical pose; reuse the exact old sujud crop.
+          for audience in ("male", "female"):
+              keep_only(
+                  f"{audience}_second_sujud",
+                  root / f"{audience}_sujud.imageset" / f"{audience}_sujud.jpg",
+                  "jpg",
+              )
+
+          # Salam comes from the Sep-21 direction-correct approved crops.
+          for name in salam:
+              d = root / f"{name}.imageset"
+              src = d / f"{name}.jpg"
+              if not src.is_file():
+                  raise SystemExit(f"missing approved Salam crop: {name}")
+              keep_only(name, src, "jpg")
+
+          for name in wudu:
+              src = root / f"{name}.imageset" / f"{name}.jpg"
+              if not src.is_file():
+                  raise SystemExit(f"missing restored Wudu crop: {name}")
+              keep_only(name, src, "jpg")
+
+          # Old flow reused the intention artwork for the Basmala card.
+          keep_only(
+              "wudu_basmala",
+              root / "wudu_intention.imageset" / "wudu_intention.jpg",
+              "jpg",
+          )
+
+          # Build-75 had one old feet source plus direction-specific rendering.
+          # Keep the old source for both current route keys; direction is validated in the next visual pass.
+          feet = root / "wudu_feet.imageset" / "wudu_feet.jpg"
+          if not feet.is_file():
+              raise SystemExit("missing restored v3.5 Wudu feet crop")
+          keep_only("wudu_rightfoot", feet, "jpg")
+          keep_only("wudu_leftfoot", feet, "jpg")
+          shutil.rmtree(root / "wudu_feet.imageset", ignore_errors=True)
+          PY
+
+          # Never let this restore job touch app code, icons, Quran, logos or unrelated assets.
+          git restore SalahZeit/Views/GuideView.swift SalahZeit/Views/SettingsView.swift SalahZeit.xcodeproj/project.pbxproj scripts/build_unsigned_ipa.sh
+          git add SalahZeit/Assets.xcassets/male_*.imageset \
+                  SalahZeit/Assets.xcassets/female_*.imageset \
+                  SalahZeit/Assets.xcassets/wudu_*.imageset
+
+          BAD="$(git diff --cached --name-only | grep -Ev '^SalahZeit/Assets\.xcassets/(male_|female_|wudu_)' || true)"
+          if [ -n "$BAD" ]; then
+            echo "::error::restore attempted unrelated paths"
+            echo "$BAD"
+            exit 1
+          fi
+
+          git diff --cached --name-status
+
+      - name: Commit exact asset-only restore
+        shell: bash
+        run: |
+          if git diff --cached --quiet; then
+            echo "No legacy artwork changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "FAST [de-qa] Restore approved legacy prayer and Wudu artwork only"
+          git push origin HEAD:main
