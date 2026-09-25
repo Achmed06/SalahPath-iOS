@@ -646,9 +646,8 @@ struct SettingsView: View {
                 Circle()
                     .fill(SalahTheme.gold.opacity(0.18))
                     .frame(width: 58, height: 58)
-                Image(systemName: "person.crop.circle.fill")
-                    .font(.system(size: 38))
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "profile")
+                    .frame(width: 42, height: 42)
             }
 
             VStack(alignment: .leading, spacing: 3) {
@@ -659,7 +658,8 @@ struct SettingsView: View {
                     .font(.system(size: 9.5, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.82))
                 HStack(spacing: 5) {
-                    Image(systemName: "globe")
+                    SalahFeatureIcon(kind: "language")
+                        .frame(width: 13, height: 13)
                     Text(settings.language.title)
                     Text("·")
                     Image(systemName: settings.prayerAudience == .male ? "person.fill" : "person.fill")
