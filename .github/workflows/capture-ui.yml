@@ -361,10 +361,12 @@ jobs:
             capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
-            capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+            capture wudu-arm SalahPath-v3.62-B78-DE-WuduRightArm.png
+            capture wudu-arm-left SalahPath-v3.62-B78-DE-WuduLeftArm.png
             capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
             capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
-            capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
+            capture wudu-foot SalahPath-v3.62-B78-DE-WuduRightFoot.png
+            capture wudu-foot-left SalahPath-v3.62-B78-DE-WuduLeftFoot.png
 
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
