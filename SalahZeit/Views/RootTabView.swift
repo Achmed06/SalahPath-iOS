@@ -524,11 +524,11 @@ private struct ReferenceBottomBar: View {
 
     private var items: [(String, String)] {
         [
-            ("house.fill", settings.t("Start", "Ana Sayfa")),
-            ("book.closed.fill", settings.t("Koran", "Kur'an")),
-            ("figure.mind.and.body", settings.t("Gebet", "Namaz")),
-            ("sparkles.rectangle.stack.fill", settings.t("Entdecken", "Keşfet")),
-            ("person.crop.circle.fill", settings.t("Profil", "Profil"))
+            ("home", settings.t("Start", "Ana Sayfa")),
+            ("quran", settings.t("Koran", "Kur'an")),
+            ("prayer", settings.t("Gebet", "Namaz")),
+            ("discover", settings.t("Entdecken", "Keşfet")),
+            ("profile", settings.t("Profil", "Profil"))
         ]
     }
 
@@ -547,15 +547,18 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            Image(systemName: item.0)
-                                .symbolRenderingMode(.hierarchical)
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundStyle(selection == index ? SalahTheme.deepTeal : SalahTheme.mutedInk)
+                            Image("feature_\(item.0)")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 22, height: 22)
+                                .saturation(selection == index ? 1 : 0.45)
+                                .opacity(selection == index ? 1 : 0.72)
                                 .frame(width: 24, height: 24)
                                 .background(
                                     Circle()
                                         .fill(selection == index ? SalahTheme.softTeal.opacity(0.72) : Color.clear)
                                 )
+                                .accessibilityHidden(true)
                         }
                         .frame(height: 22)
 
@@ -782,11 +785,22 @@ struct MoreView: View {
 
     private func discoverSectionTitle(_ title: String, icon: String) -> some View {
         HStack(spacing: 7) {
-            Image(systemName: icon)
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(SalahTheme.gold)
-                .frame(width: 24, height: 24)
-                .background(SalahTheme.deepTeal, in: Circle())
+            Group {
+                if let glyphKind = discoverDashboardGlyphKind(for: icon) {
+                    Image("feature_\(glyphKind)")
+                        .resizable()
+                        .scaledToFit()
+                        .padding(4)
+                } else {
+                    Image(systemName: icon)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(SalahTheme.gold)
+                }
+            }
+            .frame(width: 24, height: 24)
+            .background(SalahTheme.softTeal, in: Circle())
+            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.55), lineWidth: 0.8) }
+            .accessibilityHidden(true)
 
             Text(title)
                 .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -807,16 +821,17 @@ struct MoreView: View {
             )
 
             HStack(spacing: 7) {
-                Image(systemName: "building.columns.fill")
-                    .font(.system(size: 26))
-                Image(systemName: "moon.stars.fill")
-                    .font(.system(size: 19))
-                Image(systemName: "sparkles")
-                    .font(.system(size: 14))
+                Image("feature_info")
+                Image("feature_moon")
+                Image("feature_sparkles")
             }
-            .foregroundStyle(SalahTheme.gold.opacity(0.34))
+            .resizable()
+            .scaledToFit()
+            .frame(height: 22)
+            .opacity(0.42)
             .padding(.trailing, 10)
             .padding(.bottom, 8)
+            .accessibilityHidden(true)
 
             HStack(spacing: 11) {
                 ZStack {
@@ -826,10 +841,12 @@ struct MoreView: View {
                     RoundedRectangle(cornerRadius: 13, style: .continuous)
                         .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
                         .frame(width: 50, height: 50)
-                    Image(systemName: "safari.fill")
-                        .font(.system(size: 23, weight: .semibold))
-                        .foregroundStyle(SalahTheme.gold)
+                    Image("feature_discover")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 31, height: 31)
                 }
+                .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(settings.t("Entdecken", "Keşfet"))
