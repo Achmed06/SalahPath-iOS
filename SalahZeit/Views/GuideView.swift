@@ -4953,11 +4953,22 @@ private struct AudioAyahData: Decodable {
 }
 
 enum QuranAudioResolver {
+    private static let ayahCounts: [Int] = [
+        7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128,
+        111, 110, 98, 135, 112, 78, 118, 64, 77, 227, 93, 88, 69, 60, 34, 30,
+        73, 54, 45, 83, 182, 88, 75, 85, 54, 53, 89, 59, 37, 35, 38, 29, 18, 45,
+        60, 49, 62, 55, 78, 96, 29, 22, 24, 13, 14, 11, 11, 18, 12, 12, 30, 52,
+        52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29, 19, 36, 25, 22, 17,
+        19, 26, 30, 20, 15, 21, 11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4,
+        7, 3, 6, 3, 5, 4, 5, 6
+    ]
+
     static func urls(surah: Int, reciter: QuranReciter) async throws -> [URL] {
         guard (1...114).contains(surah) else {
             throw URLError(.badURL)
         }
 
+        let everyAyah = everyAyahURLs(surah: surah, reciter: reciter)
         var sources: [(edition: String, bitrate: Int)] = [
             (reciter.edition, reciter.bitrate)
         ]
@@ -4967,24 +4978,48 @@ enum QuranAudioResolver {
         }
 
         var lastError: Error = URLError(.resourceUnavailable)
+        var firstOfficialURLs: [URL]?
 
         for source in sources {
             do {
-                return try await urls(
+                let official = try await officialURLs(
                     surah: surah,
                     edition: source.edition,
                     bitrate: source.bitrate
                 )
+                if firstOfficialURLs == nil {
+                    firstOfficialURLs = official
+                }
+
+                if let first = official.first,
+                   await isReachableAudio(first) {
+                    return official
+                }
             } catch {
                 if Task.isCancelled { throw CancellationError() }
                 lastError = error
             }
         }
 
+        if let first = everyAyah.first,
+           await isReachableAudio(first) {
+            return everyAyah
+        }
+
+        // A failed probe can be transient. Prefer the official URL set so AVPlayer
+        // still gets a chance to stream it before surfacing an error to the user.
+        if let firstOfficialURLs, !firstOfficialURLs.isEmpty {
+            return firstOfficialURLs
+        }
+
+        if !everyAyah.isEmpty {
+            return everyAyah
+        }
+
         throw lastError
     }
 
-    private static func urls(
+    private static func officialURLs(
         surah: Int,
         edition: String,
         bitrate: Int
@@ -4994,7 +5029,7 @@ enum QuranAudioResolver {
         }
 
         var request = URLRequest(url: url)
-        request.timeoutInterval = 20
+        request.timeoutInterval = 12
 
         let (data, response) = try await URLSession.shared.data(for: request)
         guard let http = response as? HTTPURLResponse,
@@ -5040,6 +5075,39 @@ enum QuranAudioResolver {
         }
 
         return urls
+    }
+
+    private static func everyAyahURLs(surah: Int, reciter: QuranReciter) -> [URL] {
+        guard ayahCounts.indices.contains(surah - 1) else { return [] }
+        let count = ayahCounts[surah - 1]
+
+        return (1...count).compactMap { ayah in
+            let file = String(format: "%03d%03d.mp3", surah, ayah)
+            return URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/\(file)")
+        }
+    }
+
+    private static func isReachableAudio(_ url: URL) async -> Bool {
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 4
+        request.setValue("bytes=0-2047", forHTTPHeaderField: "Range")
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200...299).contains(http.statusCode) else {
+                return false
+            }
+
+            if http.statusCode == 204 {
+                return false
+            }
+
+            return !data.isEmpty
+        } catch {
+            return false
+        }
     }
 }
 
