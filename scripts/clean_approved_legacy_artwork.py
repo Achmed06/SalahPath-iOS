@@ -21,8 +21,8 @@ CROPS = {
     "male_bowing": None,
     "male_final_sitting": (0, 18, 158, 175),
     "male_intention": (0, 0, 110, 275),
-    "male_salam_left": (18, 28, 80, 132),
-    "male_salam_right": (18, 28, 80, 132),
+    "male_salam_left": (30, 25, 80, 145),
+    "male_salam_right": (30, 25, 80, 145),
     "male_second_sujud": (0, 24, 215, 225),
     "male_sitting": (0, 18, 210, 220),
     "male_standing": (0, 0, 110, 188),
@@ -30,39 +30,51 @@ CROPS = {
     "male_takbir": (0, 0, 215, 145),
     "male_upright": (0, 10, 140, 175),
 
-    "female_bowing": (0, 55, 155, 260),
+    "female_bowing": (5, 55, 185, 260),
     "female_final_sitting": (22, 0, 165, 175),
-    "female_intention": (0, 0, 195, 275),
-    "female_salam_left": (18, 28, 80, 132),
-    "female_salam_right": (18, 28, 80, 132),
+    "female_intention": (0, 8, 195, 275),
+    "female_salam_left": (30, 25, 80, 145),
+    "female_salam_right": (30, 25, 80, 145),
     "female_second_sujud": (0, 98, 215, 225),
     "female_sitting": (0, 18, 210, 220),
-    "female_standing": (0, 0, 116, 255),
+    "female_standing": (0, 5, 116, 255),
     "female_sujud": (0, 98, 215, 225),
-    "female_takbir": (0, 0, 215, 208),
-    "female_upright": (0, 15, 195, 220),
+    "female_takbir": (0, 12, 215, 208),
+    "female_upright": (0, 18, 195, 220),
 
-    "wudu_basmala": None,
-    "wudu_ears": None,
+    "wudu_basmala": (0, 0, 132, 180),
+    "wudu_ears": (0, 5, 270, 150),
     "wudu_face": None,
     "wudu_hands": None,
     "wudu_head": None,
-    "wudu_intention": None,
+    "wudu_intention": (0, 0, 132, 180),
     "wudu_leftarm": None,
-    "wudu_leftfoot": None,
+    "wudu_leftfoot": (0, 5, 260, 150),
     "wudu_mouth": None,
     "wudu_neck": None,
     "wudu_nose": None,
     "wudu_rightarm": None,
-    "wudu_rightfoot": None,
+    "wudu_rightfoot": (0, 5, 260, 150),
 }
 
 # Text/counter-only masks, also in original source coordinates.
 # These areas are background in the approved artwork and do not contain the
 # instructional body part/pose that the user needs to see.
+POLYGON_MASKS = {
+    # The old Hanafi note sits above/behind the female ruku silhouette.
+    # Cover only the empty note area and follow the shoulder/back contour so
+    # the approved pose itself is preserved.
+    "female_bowing": [
+        (
+            [(65, 0), (180, 0), (180, 45), (155, 45), (135, 42),
+             (115, 37), (95, 30), (80, 24), (65, 18)],
+            (253, 252, 242),
+        )
+    ],
+}
+
 MASKS = {
     "male_bowing": [(118, 0, 215, 55), (0, 224, 138, 260)],
-    "female_bowing": [(100, 55, 215, 108)],
 
     "wudu_basmala": [(132, 0, 215, 108)],
     "wudu_intention": [(132, 0, 215, 108)],
@@ -111,6 +123,9 @@ def clean(name: str) -> None:
         image = image.crop(crop)
 
     draw = ImageDraw.Draw(image)
+    for points, fill in POLYGON_MASKS.get(name, []):
+        draw.polygon(points, fill=fill)
+
     for original_rect in MASKS.get(name, []):
         x1, y1, x2, y2 = original_rect
         rect = (
