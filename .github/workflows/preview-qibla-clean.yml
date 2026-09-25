@@ -6,6 +6,7 @@ on:
       - "release/b78-clean-audio-qibla-20260926"
     paths:
       - ".github/workflows/preview-qibla-clean.yml"
+      - "SalahZeit/Views/QiblaView.swift"
 
 jobs:
   preview:
