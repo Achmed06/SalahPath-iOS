@@ -622,32 +622,71 @@ private struct PrayerPoseArtwork: View {
     }
 
     private func drawSitting(_ context: inout GraphicsContext, size: CGSize, turn: Int, showFinger: Bool) {
-        let hip = point(0.48, 0.62, in: size)
-        let shoulder = point(0.48, 0.40, in: size)
-        // Keep the whole body and head centered. For Salam only the facial
-        // features indicate the head turn; the torso never appears to rotate.
-        let headCenter = point(0.48, 0.27, in: size)
+        let c: CGFloat = 0.50
+        let shoulder = point(c, 0.38, in: size)
+        let hip = point(c, 0.61, in: size)
+        let headCenter = point(c, 0.25, in: size)
 
-        torso(&context, shoulder: shoulder, hip: hip, width: female ? 37 : 31)
+        // Keep the torso facing Qibla. Salam only changes facial direction.
+        if female {
+            garmentLine(&context, shoulder, hip, width: 38)
+
+            // Seated khimar/garment volume around the hips. Unlike the standing
+            // skirt, this does not create two misleading vertical "legs".
+            var seatedSkirt = Path()
+            seatedSkirt.move(to: point(0.43, 0.58, in: size))
+            seatedSkirt.addQuadCurve(
+                to: point(0.59, 0.72, in: size),
+                control: point(0.55, 0.62, in: size)
+            )
+            seatedSkirt.addLine(to: point(0.43, 0.76, in: size))
+            seatedSkirt.addQuadCurve(
+                to: point(0.36, 0.68, in: size),
+                control: point(0.37, 0.73, in: size)
+            )
+            seatedSkirt.closeSubpath()
+            context.fill(seatedSkirt, with: .color(garmentColor.opacity(0.98)))
+            context.stroke(seatedSkirt, with: .color(garmentOutline), lineWidth: 3)
+        } else {
+            garmentLine(&context, shoulder, hip, width: 31)
+
+            var robe = Path()
+            robe.move(to: point(0.43, 0.37, in: size))
+            robe.addLine(to: point(0.57, 0.37, in: size))
+            robe.addLine(to: point(0.58, 0.66, in: size))
+            robe.addQuadCurve(
+                to: point(0.42, 0.66, in: size),
+                control: point(0.50, 0.70, in: size)
+            )
+            robe.closeSubpath()
+            context.fill(robe, with: .color(garmentColor.opacity(0.98)))
+            context.stroke(robe, with: .color(garmentOutline), lineWidth: 3)
+        }
+
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.068)
-        garmentLine(&context, point(0.39, 0.42, in: size), point(0.39, 0.61, in: size), width: 10)
-        garmentLine(&context, point(0.57, 0.42, in: size), point(0.57, 0.61, in: size), width: 10)
-        line(&context, point(0.39, 0.60, in: size), point(0.53, 0.68, in: size), width: 9, color: skinTone)
-        line(&context, point(0.57, 0.60, in: size), point(0.67, 0.68, in: size), width: 9, color: skinTone)
+
+        let leftShoulder = point(0.41, 0.40, in: size)
+        let rightShoulder = point(0.59, 0.40, in: size)
+        let leftHand = point(0.44, 0.64, in: size)
+        let rightHand = point(0.58, 0.64, in: size)
+
+        garmentPolyline(&context, [leftShoulder, point(0.41, 0.55, in: size), leftHand], width: 10)
+        garmentPolyline(&context, [rightShoulder, point(0.59, 0.55, in: size), rightHand], width: 10)
+        handDot(&context, center: leftHand, radius: 6)
+        handDot(&context, center: rightHand, radius: 6)
 
         if showFinger {
-            // Hanafi tashahhud detail: the worshipper's right index finger.
-            // Front-facing artwork means the worshipper's right is on the viewer's left.
+            // Hanafi tashahhud: worshipper's right hand is on the viewer's left.
             line(
                 &context,
-                point(0.39, 0.59, in: size),
-                point(0.36, 0.51, in: size),
-                width: 5,
+                point(0.44, 0.63, in: size),
+                point(0.41, 0.54, in: size),
+                width: 4.5,
                 color: skinTone
             )
             let tip = CGRect(
-                x: size.width * 0.36 - 4,
-                y: size.height * 0.51 - 4,
+                x: size.width * 0.41 - 4,
+                y: size.height * 0.54 - 4,
                 width: 8,
                 height: 8
             )
@@ -655,74 +694,90 @@ private struct PrayerPoseArtwork: View {
         }
 
         if female {
-            // Hanafi sitting for women: both lower legs/feet are taken out to
-            // the worshipper's right side. In a front-facing drawing her
-            // right side appears on the viewer's left.
+            // Hanafi/Diyanet: both lower legs and feet leave to the worshipper's
+            // right side. In this front-facing drawing that is the viewer's left.
+            let upperKnee = point(0.46, 0.70, in: size)
+            let lowerKnee = point(0.53, 0.72, in: size)
+
             garmentPolyline(
                 &context,
-                [hip, point(0.40, 0.70, in: size), point(0.29, 0.80, in: size)],
-                width: 16
+                [hip, upperKnee, point(0.35, 0.79, in: size), point(0.24, 0.84, in: size)],
+                width: 17
             )
             garmentPolyline(
                 &context,
-                [point(0.46, 0.65, in: size), point(0.36, 0.76, in: size), point(0.24, 0.84, in: size)],
-                width: 16
+                [point(0.54, 0.64, in: size), lowerKnee, point(0.38, 0.84, in: size), point(0.27, 0.89, in: size)],
+                width: 17
             )
 
             let upperFoot = CGRect(
-                x: size.width * 0.245 - 15,
-                y: size.height * 0.815,
-                width: 30,
-                height: 11
+                x: size.width * 0.19,
+                y: size.height * 0.825,
+                width: size.width * 0.18,
+                height: max(size.height * 0.045, 10)
             )
             let lowerFoot = CGRect(
-                x: size.width * 0.205 - 15,
-                y: size.height * 0.855,
-                width: 30,
-                height: 11
+                x: size.width * 0.22,
+                y: size.height * 0.875,
+                width: size.width * 0.19,
+                height: max(size.height * 0.045, 10)
             )
-            context.fill(Path(roundedRect: upperFoot, cornerRadius: 5.5), with: .color(garmentColor))
-            context.fill(Path(roundedRect: lowerFoot, cornerRadius: 5.5), with: .color(garmentColor))
+            context.fill(Path(roundedRect: upperFoot, cornerRadius: 7), with: .color(garmentColor))
+            context.stroke(Path(roundedRect: upperFoot, cornerRadius: 7), with: .color(garmentOutline), lineWidth: 2)
+            context.fill(Path(roundedRect: lowerFoot, cornerRadius: 7), with: .color(garmentColor))
+            context.stroke(Path(roundedRect: lowerFoot, cornerRadius: 7), with: .color(garmentOutline), lineWidth: 2)
         } else {
-            // Hanafi sitting for men: sit on the flattened left foot while
-            // the right foot remains upright with its toes toward Qibla.
-            // Front-facing: the worshipper's right side is the viewer's left.
+            // Hanafi/Diyanet: sit on the flattened left foot; the worshipper's
+            // right foot remains upright with toes toward Qibla.
+            // Front-facing means worshipper's right is viewer's left.
+            let rightKnee = point(0.40, 0.71, in: size)
+            let leftKnee = point(0.59, 0.71, in: size)
+
             garmentPolyline(
                 &context,
-                [hip, point(0.39, 0.71, in: size), point(0.35, 0.78, in: size)],
-                width: 14
+                [hip, rightKnee, point(0.35, 0.79, in: size)],
+                width: 15
             )
             garmentPolyline(
                 &context,
-                [point(0.51, 0.65, in: size), point(0.58, 0.75, in: size), point(0.51, 0.82, in: size)],
-                width: 14
+                [point(0.53, 0.64, in: size), leftKnee, point(0.55, 0.81, in: size)],
+                width: 15
             )
 
-            // Left foot flattened beneath the body.
+            // Flattened left foot beneath the seated body.
             let leftFoot = CGRect(
                 x: size.width * 0.46,
-                y: size.height * 0.805,
-                width: size.width * 0.15,
-                height: max(size.height * 0.045, 9)
+                y: size.height * 0.80,
+                width: size.width * 0.20,
+                height: max(size.height * 0.050, 10)
             )
             context.fill(Path(roundedRect: leftFoot, cornerRadius: 8), with: .color(garmentColor))
             context.stroke(Path(roundedRect: leftFoot, cornerRadius: 8), with: .color(garmentOutline), lineWidth: 2)
 
-            // Right foot upright. The narrow vertical shape makes the
-            // distinction from the flattened left foot visible at a glance.
-            let rightFoot = CGRect(
-                x: size.width * 0.315,
-                y: size.height * 0.775,
-                width: max(size.width * 0.055, 12),
-                height: max(size.height * 0.105, 22)
+            // Upright right foot and a small row of toe marks toward Qibla.
+            let uprightFoot = CGRect(
+                x: size.width * 0.305,
+                y: size.height * 0.75,
+                width: max(size.width * 0.065, 13),
+                height: max(size.height * 0.145, 28)
             )
-            context.fill(Path(roundedRect: rightFoot, cornerRadius: 8), with: .color(skinTone))
-            context.stroke(Path(roundedRect: rightFoot, cornerRadius: 8), with: .color(garmentOutline.opacity(0.70)), lineWidth: 2)
+            context.fill(Path(roundedRect: uprightFoot, cornerRadius: 8), with: .color(skinTone))
+            context.stroke(Path(roundedRect: uprightFoot, cornerRadius: 8), with: .color(garmentOutline.opacity(0.75)), lineWidth: 2)
+
+            for offset in 0..<3 {
+                let toe = CGRect(
+                    x: uprightFoot.minX + 2 + CGFloat(offset) * 5,
+                    y: uprightFoot.minY - 3,
+                    width: 4,
+                    height: 6
+                )
+                context.fill(Path(ellipseIn: toe), with: .color(skinTone))
+            }
         }
 
-        // No body-direction arrow here: the worshipper remains facing Qibla.
-        // PrayerPoseArtwork.drawFace shifts only the facial features for Salam.
+        // The worshipper remains facing Qibla throughout the sitting.
     }
+
 }
 
 private struct ReferencePrayerPerson: View {
