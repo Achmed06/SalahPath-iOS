@@ -1954,8 +1954,20 @@ private struct WuduTutorialStep: Identifiable {
 }
 
 private struct WuduInstructionVisual: View {
+    @EnvironmentObject private var settings: SettingsStore
     let key: String
     let stepNumber: Int
+
+    private var sideLabel: String? {
+        switch stepNumber {
+        case 7, 12:
+            return settings.t("RECHTS", "SAĞ")
+        case 8, 13:
+            return settings.t("LINKS", "SOL")
+        default:
+            return nil
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -1972,6 +1984,25 @@ private struct WuduInstructionVisual: View {
                 .fill(SalahTheme.softTeal.opacity(0.44))
                 .frame(width: 176, height: 176)
                 .offset(x: 72, y: -38)
+
+            if let sideLabel {
+                HStack(spacing: 5) {
+                    Image(systemName: "arrow.left.and.right")
+                        .font(.system(size: 10, weight: .bold))
+                    Text(sideLabel)
+                        .font(.system(size: 11, weight: .black))
+                }
+                .foregroundStyle(SalahTheme.deepTeal)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(SalahTheme.cream.opacity(0.94), in: Capsule())
+                .overlay {
+                    Capsule()
+                        .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding(12)
+            }
 
             Group {
                 switch stepNumber {
