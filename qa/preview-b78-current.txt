@@ -1,2 +1,2 @@
-Current B78 visual verification after standalone icon routing and approved Prayer/Wudu text cleanup.
-run=2026-09-25T21:12
+Current B78 visual verification after refined text cleanup and standalone icons.
+run=2026-09-25T21:23
