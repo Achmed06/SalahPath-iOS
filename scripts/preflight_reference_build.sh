@@ -171,24 +171,55 @@ if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.
   exit 1
 fi
 
-# Only true brand/hero artwork remains in the asset catalog.
-# Prayer, Wudu, dashboard and navigation visuals are rendered from one
-# native SalahPath visual system in SwiftUI to prevent mixed styles.
-for asset in \
-  "SalahZeit/Assets.xcassets/salahpath_logo.imageset" \
-  "SalahZeit/Assets.xcassets/home_mosque.imageset"; do
-  require_dir "$asset"
-done
+# Standalone visual regression gates.
+# Prayer, Wudu and feature illustrations intentionally live as one SVG per
+# imageset so every screen can reuse the same SalahPath visual language.
+python3 - <<'PY'
+from pathlib import Path
 
-if find SalahZeit/Assets.xcassets -maxdepth 1 -type d \( \
-    -name 'male_*.imageset' -o \
-    -name 'female_*.imageset' -o \
-    -name 'wudu_*.imageset' -o \
-    -name 'ref_dash_*.imageset' -o \
-    -name 'sp_icon_*.imageset' \
-  \) | grep -q .; then
-  fail "legacy mixed-style prayer/Wudu/icon imagesets were reintroduced"
-fi
+root = Path("SalahZeit/Assets.xcassets")
+required_wudu = {
+    "wudu_intention", "wudu_basmala", "wudu_hands", "wudu_mouth",
+    "wudu_nose", "wudu_face", "wudu_rightarm", "wudu_leftarm",
+    "wudu_head", "wudu_ears", "wudu_neck", "wudu_rightfoot",
+    "wudu_leftfoot",
+}
+poses = {
+    "intention", "takbir", "standing", "bowing", "upright", "sujud",
+    "sitting", "second_sujud", "final_sitting", "salam_right",
+    "salam_left", "finger",
+}
+required_prayer = {
+    f"{audience}_{pose}"
+    for audience in ("male", "female")
+    for pose in poses
+}
+required_features = {
+    "feature_quran", "feature_quran_audio", "feature_bookmarks",
+    "feature_times", "feature_prayer", "feature_wudu", "feature_calendar",
+    "feature_dhikr", "feature_qibla", "feature_info", "feature_checkmark",
+    "feature_settings", "feature_community", "feature_moon",
+    "feature_sparkles", "feature_language", "feature_more", "feature_list",
+}
+required = required_wudu | required_prayer | required_features | {
+    "salahpath_logo", "home_mosque"
+}
+
+for name in sorted(required):
+    folder = root / f"{name}.imageset"
+    if not folder.is_dir():
+        raise SystemExit(f"PRECHECK ERROR: missing standalone visual imageset: {name}")
+    if not (folder / "Contents.json").is_file():
+        raise SystemExit(f"PRECHECK ERROR: missing Contents.json for visual: {name}")
+    if name not in {"salahpath_logo", "home_mosque"} and not (folder / f"{name}.svg").is_file():
+        raise SystemExit(f"PRECHECK ERROR: missing standalone SVG for visual: {name}")
+
+print(
+    "Standalone SalahPath visual set: "
+    f"{len(required_wudu)} Wudu, {len(required_prayer)} prayer, "
+    f"{len(required_features)} feature icons"
+)
+PY
 
 # Validate all asset-catalog JSON and PNG structure.
 python3 - <<'PY'
@@ -197,6 +228,7 @@ import json
 import struct
 import sys
 import zlib
+import xml.etree.ElementTree as ET
 
 root = Path("SalahZeit/Assets.xcassets")
 for path in root.rglob("Contents.json"):
@@ -241,7 +273,18 @@ for path in root.rglob("*.png"):
         print(f"PRECHECK ERROR: PNG missing IEND: {path}", file=sys.stderr)
         raise SystemExit(1)
 
-print("Asset JSON + PNG structural integrity: OK")
+for path in root.rglob("*.svg"):
+    try:
+        tree = ET.parse(path)
+        svg_root = tree.getroot()
+    except Exception as exc:
+        print(f"PRECHECK ERROR: invalid SVG XML {path}: {exc}", file=sys.stderr)
+        raise SystemExit(1)
+    if not svg_root.tag.endswith("svg"):
+        print(f"PRECHECK ERROR: SVG root element missing: {path}", file=sys.stderr)
+        raise SystemExit(1)
+
+print("Asset JSON + PNG + SVG structural integrity: OK")
 PY
 
 python3 scripts/build78_regression_guard.py
