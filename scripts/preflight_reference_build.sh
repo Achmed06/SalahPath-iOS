@@ -37,6 +37,10 @@ require_file "SalahZeit.xcodeproj/project.pbxproj"
 require_file "scripts/build_unsigned_ipa.sh"
 require_file "SalahZeit/Views/RootTabView.swift"
 require_file "SalahZeit/Views/GuideView.swift"
+
+# Navigation/Discover icons must prefer standalone assets before atlas fallback.
+grep -q 'UIImage(named: "feature_\\(kind)")' "SalahZeit/Views/RootTabView.swift" || fail "SalahFeatureIcon no longer prefers standalone feature assets"
+grep -q 'if let standaloneUIImage' "SalahZeit/Views/RootTabView.swift" || fail "standalone icon routing guard missing"
 require_file "SalahZeit/PrivacyInfo.xcprivacy"
 require_file "PRIVACY.md"
 require_file "SUPPORT.md"
