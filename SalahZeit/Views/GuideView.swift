@@ -5198,6 +5198,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private var mediaArtist = "SalahPath"
     private var mediaContext: String?
     private var prayerContext: String?
+    private var interfaceLanguage: AppLanguage = .german
 
     private init() {
         configureRemoteCommands()
@@ -5205,6 +5206,14 @@ final class RemoteAudioPlayer: ObservableObject {
 
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
+
+    func setInterfaceLanguage(_ language: AppLanguage) {
+        interfaceLanguage = language
+    }
+
+    func localizedMessage(_ de: String, _ tr: String) -> String {
+        interfaceLanguage == .german ? de : tr
+    }
 
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -5249,7 +5258,7 @@ final class RemoteAudioPlayer: ObservableObject {
         let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
         guard !cleaned.isEmpty else {
             stop()
-            lastError = "Audio nicht verfügbar / Ses mevcut değil."
+            lastError = localizedMessage("Audio ist nicht verfügbar.", "Ses mevcut değil.")
             return
         }
 
@@ -5405,15 +5414,11 @@ final class RemoteAudioPlayer: ObservableObject {
         player?.pause()
         player = nil
 
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playback,
-                mode: .spokenAudio,
-                options: [.allowAirPlay, .allowBluetoothA2DP]
+        guard activateAudioSession() else {
+            lastError = localizedMessage(
+                "Audio konnte nicht gestartet werden. Erneut versuchen.",
+                "Ses başlatılamadı. Tekrar dene."
             )
-            try AVAudioSession.sharedInstance().setActive(true, options: [])
-        } catch {
-            lastError = "Audio konnte nicht gestartet werden. Erneut versuchen. / Ses başlatılamadı. Tekrar dene."
             isLoading = false
             isPlaying = false
             return
@@ -5437,6 +5442,24 @@ final class RemoteAudioPlayer: ObservableObject {
                   self.queueIndex == expectedIndex,
                   self.activeURL == sourceURL else { return }
             self.startPlayback(playbackURL)
+        }
+    }
+
+    private func activateAudioSession() -> Bool {
+        let session = AVAudioSession.sharedInstance()
+
+        do {
+            try session.setCategory(.playback, mode: .spokenAudio, options: [])
+            try session.setActive(true, options: [])
+            return true
+        } catch {
+            do {
+                try session.setCategory(.playback, mode: .default, options: [])
+                try session.setActive(true, options: [])
+                return true
+            } catch {
+                return false
+            }
         }
     }
 
@@ -5478,7 +5501,10 @@ final class RemoteAudioPlayer: ObservableObject {
                 case .failed:
                     self.isLoading = false
                     self.isPlaying = false
-                    self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                    self.lastError = item.error?.localizedDescription ?? self.localizedMessage(
+                        "Audio konnte nicht geladen werden.",
+                        "Ses yüklenemedi."
+                    )
                     self.updateNowPlaying()
                     if url.isFileURL {
                         Task { await QuranAudioCache.shared.invalidate(url) }
@@ -5535,7 +5561,10 @@ final class RemoteAudioPlayer: ObservableObject {
                 guard let self else { return }
                 self.isLoading = false
                 self.isPlaying = false
-                self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                self.lastError = errorDescription ?? self.localizedMessage(
+                    "Audio-Wiedergabe fehlgeschlagen.",
+                    "Ses oynatılamadı."
+                )
                 self.updateNowPlaying()
                 if url.isFileURL {
                     Task { await QuranAudioCache.shared.invalidate(url) }
@@ -5917,7 +5946,10 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 self.expectedSessionID = nil
                 player.finishContinuation(
                     expectedSessionID: sessionID,
-                    error: "Nächste Sura konnte nicht geladen werden / Sonraki sûre yüklenemedi."
+                    error: player.localizedMessage(
+                        "Nächste Sura konnte nicht geladen werden.",
+                        "Sonraki sûre yüklenemedi."
+                    )
                 )
             }
         }
