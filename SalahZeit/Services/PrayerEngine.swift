@@ -8,7 +8,7 @@ struct PrayerEngine {
         for date: Date,
         location: CLLocation,
         settings: SettingsStore,
-        calendar: Calendar = .current
+        timeZone: TimeZone = .autoupdatingCurrent
     ) -> PrayerDay? {
         let coordinate = location.coordinate
         guard coordinate.latitude.isFinite,
@@ -17,6 +17,7 @@ struct PrayerEngine {
             return nil
         }
 
+        let calendar = calculationCalendar(timeZone: timeZone)
         let coordinates = Coordinates(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let components = calendar.dateComponents([.year, .month, .day], from: date)
 
@@ -55,9 +56,15 @@ struct PrayerEngine {
         now: Date,
         location: CLLocation,
         settings: SettingsStore,
-        calendar: Calendar = .current
+        timeZone: TimeZone = .autoupdatingCurrent
     ) -> PrayerOccurrence? {
-        guard let today = calculateDay(for: now, location: location, settings: settings, calendar: calendar) else {
+        let calendar = calculationCalendar(timeZone: timeZone)
+        guard let today = calculateDay(
+            for: now,
+            location: location,
+            settings: settings,
+            timeZone: timeZone
+        ) else {
             return nil
         }
 
@@ -66,7 +73,12 @@ struct PrayerEngine {
         }
 
         guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: now),
-              let day = calculateDay(for: tomorrow, location: location, settings: settings, calendar: calendar) else {
+              let day = calculateDay(
+                  for: tomorrow,
+                  location: location,
+                  settings: settings,
+                  timeZone: timeZone
+              ) else {
             return nil
         }
 
@@ -78,16 +90,17 @@ struct PrayerEngine {
         location: CLLocation,
         settings: SettingsStore,
         count: Int = 2,
-        calendar: Calendar = .current
+        timeZone: TimeZone = .autoupdatingCurrent
     ) -> [PrayerOccurrence] {
         let safeCount = min(max(count, 1), 10)
+        let calendar = calculationCalendar(timeZone: timeZone)
         var candidates: [PrayerOccurrence] = []
 
         if let today = calculateDay(
             for: now,
             location: location,
             settings: settings,
-            calendar: calendar
+            timeZone: timeZone
         ) {
             candidates.append(contentsOf: today.prayers)
         }
@@ -97,7 +110,7 @@ struct PrayerEngine {
                for: tomorrowDate,
                location: location,
                settings: settings,
-               calendar: calendar
+               timeZone: timeZone
            ) {
             candidates.append(contentsOf: tomorrow.prayers)
         }
@@ -135,6 +148,12 @@ struct PrayerEngine {
 
         guard let end, end > occurrence.date else { return nil }
         return DateInterval(start: occurrence.date, end: end)
+    }
+
+    private func calculationCalendar(timeZone: TimeZone) -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        return calendar
     }
 
     private func adjusted(_ date: Date, kind: PrayerKind, settings: SettingsStore) -> Date {
