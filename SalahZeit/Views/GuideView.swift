@@ -4459,6 +4459,7 @@ final class RemoteAudioPlayer: ObservableObject {
         continuation: RemoteAudioPlayerQueueContinuation? = nil
     ) {
         var cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        let contentQueueCount = cleaned.count
         sessionIntroURL = nil
         if prependIntro,
            let introURL,
@@ -4487,7 +4488,7 @@ final class RemoteAudioPlayer: ObservableObject {
         queueContinuationDelegate = continuation
         continuationRequestInFlight = false
         queueURLs = cleaned
-        queueCount = cleaned.count
+        queueCount = contentQueueCount
         queueIndex = 0
         updateRemoteCommandAvailability()
         loadCurrentAndPlay()
