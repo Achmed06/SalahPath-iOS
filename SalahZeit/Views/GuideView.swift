@@ -8341,6 +8341,7 @@ private final class QuranStore: ObservableObject {
     }
 }
 
+#if DEBUG
 struct QuranAudioCacheQAView: View {
     @State private var status = "Prüfe Offline-Audio …"
     @State private var detail = ""
@@ -8468,6 +8469,8 @@ struct QuranReaderQAView: View {
         )
     }
 }
+
+#endif
 
 private struct QuranBookmark: Hashable {
     let surah: Int
