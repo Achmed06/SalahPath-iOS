@@ -1032,12 +1032,12 @@ struct HomeView: View {
             Image("home_mosque")
                 .resizable()
                 .scaledToFit()
-                .frame(height: 190)
+                .frame(height: 230)
                 .foregroundStyle(.white)
-                .saturation(0.88)
-                .brightness(0.10)
-                .offset(y: 18)
-                .shadow(color: Color.black.opacity(0.18), radius: 12, y: 7)
+                .saturation(0.92)
+                .brightness(0.13)
+                .offset(y: -24)
+                .shadow(color: Color.black.opacity(0.18), radius: 14, y: 8)
                 .accessibilityHidden(true)
 
             LinearGradient(
@@ -2996,13 +2996,8 @@ private struct PremiumHomeActionTile: View {
                     )
                     .frame(width: 46, height: 46)
 
-                if kind == "discover" {
-                    discoverGlyph
-                        .frame(width: 31, height: 31)
-                } else {
-                    ReferenceDashboardGlyph(kind: kind)
-                        .frame(width: 30, height: 30)
-                }
+                PremiumHomeGlyph(kind: kind)
+                    .frame(width: 34, height: 34)
 
                 Circle()
                     .fill(SalahTheme.gold)
@@ -3047,21 +3042,156 @@ private struct PremiumHomeActionTile: View {
         .shadow(color: SalahTheme.deepTeal.opacity(0.055), radius: 6, y: 3)
     }
 
-    private var discoverGlyph: some View {
-        ZStack {
-            ForEach(0..<4, id: \.self) { index in
-                let x: CGFloat = index % 2 == 0 ? -7 : 7
-                let y: CGFloat = index < 2 ? -7 : 7
-                RoundedRectangle(cornerRadius: 3, style: .continuous)
-                    .fill(index == 3 ? SalahTheme.gold : SalahTheme.teal)
-                    .frame(width: 10, height: 10)
-                    .offset(x: x, y: y)
-            }
+}
 
-            Image(systemName: "sparkles")
-                .font(.system(size: 9, weight: .bold))
-                .foregroundStyle(SalahTheme.deepTeal)
-                .offset(x: 13, y: -13)
+private struct PremiumHomeGlyph: View {
+    let kind: String
+
+    var body: some View {
+        ZStack {
+            switch kind {
+            case "times":
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 30, height: 30)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 3, y: 2)
+
+                    Circle()
+                        .stroke(Color.white.opacity(0.88), lineWidth: 2)
+                        .frame(width: 20, height: 20)
+
+                    Capsule()
+                        .fill(Color.white)
+                        .frame(width: 2.2, height: 7)
+                        .offset(y: -3.5)
+
+                    Capsule()
+                        .fill(Color.white)
+                        .frame(width: 7, height: 2.2)
+                        .rotationEffect(.degrees(-28))
+                        .offset(x: 2.5, y: 1.2)
+
+                    Circle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: 8, height: 8)
+                        .offset(x: 13, y: -13)
+                }
+
+            case "qibla":
+                ZStack {
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .fill(Color.black.opacity(0.92))
+                        .frame(width: 23, height: 20)
+                        .offset(y: -6)
+                        .overlay {
+                            Rectangle()
+                                .fill(SalahTheme.gold)
+                                .frame(width: 23, height: 3)
+                                .offset(y: -10)
+                        }
+
+                    Image(systemName: "location.north.fill")
+                        .font(.system(size: 19, weight: .black))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [SalahTheme.gold, SalahTheme.deepTeal],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .offset(y: 9)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.16), radius: 2, y: 1)
+                }
+
+            case "quran":
+                ZStack {
+                    ReferenceDashboardGlyph(kind: "quran")
+                        .frame(width: 32, height: 32)
+                    Capsule()
+                        .fill(SalahTheme.gold)
+                        .frame(width: 3, height: 15)
+                        .offset(y: 3)
+                    Circle()
+                        .fill(SalahTheme.gold.opacity(0.82))
+                        .frame(width: 5, height: 5)
+                        .offset(x: 12, y: -11)
+                }
+
+            case "prayer":
+                ZStack {
+                    RoundedRectangle(cornerRadius: 3, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [SalahTheme.gold.opacity(0.88), SalahTheme.gold.opacity(0.48)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .frame(width: 30, height: 8)
+                        .offset(y: 13)
+
+                    ReferenceDashboardGlyph(kind: "prayer")
+                        .frame(width: 30, height: 30)
+                        .offset(y: -2)
+                }
+
+            case "wudu":
+                ZStack {
+                    Image(systemName: "drop.fill")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.cyan.opacity(0.92), SalahTheme.teal],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .offset(y: -4)
+
+                    HStack(spacing: 8) {
+                        Image(systemName: "hand.raised.fill")
+                        Image(systemName: "hand.raised.fill")
+                            .scaleEffect(x: -1, y: 1)
+                    }
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .offset(y: 11)
+
+                    Circle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: 5, height: 5)
+                        .offset(x: 12, y: -12)
+                }
+
+            case "discover":
+                ZStack {
+                    ForEach(0..<4, id: \.self) { index in
+                        let x: CGFloat = index % 2 == 0 ? -7 : 7
+                        let y: CGFloat = index < 2 ? -7 : 7
+                        RoundedRectangle(cornerRadius: 3, style: .continuous)
+                            .fill(index == 3 ? SalahTheme.gold : SalahTheme.teal)
+                            .frame(width: 11, height: 11)
+                            .offset(x: x, y: y)
+                            .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1, y: 1)
+                    }
+
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                        .offset(x: 13, y: -13)
+                }
+
+            default:
+                ReferenceDashboardGlyph(kind: kind)
+                    .frame(width: 32, height: 32)
+            }
         }
     }
 }
