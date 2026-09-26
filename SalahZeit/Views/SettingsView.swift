@@ -697,7 +697,7 @@ struct SettingsView: View {
     private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {
         HStack(spacing: 9) {
             Group {
-                if salahFeatureIndex(for: icon) != nil {
+                if !icon.contains(".") {
                     SalahFeatureIcon(kind: icon)
                         .padding(2)
                 } else {
@@ -733,7 +733,7 @@ struct SettingsView: View {
     private func referenceToggle(icon: String, title: String, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 9) {
             Group {
-                if salahFeatureIndex(for: icon) != nil {
+                if !icon.contains(".") {
                     SalahFeatureIcon(kind: icon)
                         .padding(2)
                 } else {
