@@ -215,6 +215,7 @@ jobs:
               *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
               *quran*|*Quran*) CAPTURE_MODE="quran" ;;
               *qibla*|*Qibla*) CAPTURE_MODE="qibla" ;;
+              *home*|*Home*) CAPTURE_MODE="home" ;;
               *times*|*Times*|*gebetszeit*|*Gebetszeit*|*map*|*Map*) CAPTURE_MODE="times" ;;
               *sitting*|*Sitting*|*sitzt*|*Sitzt*) CAPTURE_MODE="sitting" ;;
               *polish*|*Polish*) CAPTURE_MODE="polish" ;;
@@ -261,7 +262,10 @@ jobs:
             fi
           }
 
-          if [ "$CAPTURE_MODE" = "tracker" ]; then
+          if [ "$CAPTURE_MODE" = "home" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture home SalahPath-v3.63-B79-DE-Home.png
+          elif [ "$CAPTURE_MODE" = "tracker" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture prayer-tracker SalahPath-v3.63-B79-DE-PrayerTracker.png
           elif [ "$CAPTURE_MODE" = "wudu" ]; then
@@ -373,6 +377,7 @@ jobs:
           fi
 
       - name: Upload UI previews
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: SalahPath-v3.63-build79-ui-preview
