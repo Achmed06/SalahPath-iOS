@@ -37,6 +37,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func requestAuthorization() async -> Bool {
+        if liveContainerHomeURL != nil, liveContainerNotificationFixEnabled != true {
+            return false
+        }
         do {
             return try await center.requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
@@ -74,6 +77,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         await removeExistingPrayerNotifications(for: revision)
         guard revision == schedulingRevision else { return false }
         guard settings.notificationsEnabled else { return false }
+        guard liveContainerHomeURL == nil || liveContainerNotificationFixEnabled == true else {
+            return false
+        }
 
         let granted = await ensureAuthorization()
         guard revision == schedulingRevision, granted else { return false }
@@ -211,6 +217,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
     @discardableResult
     func scheduleAdhanPreview(settings: SettingsStore, fajr: Bool) async -> Bool {
+        guard liveContainerHomeURL == nil || liveContainerNotificationFixEnabled == true else {
+            return false
+        }
         guard await ensureAuthorization() else { return false }
 
         center.removePendingNotificationRequests(withIdentifiers: [adhanPreviewIdentifier])
@@ -244,6 +253,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
     @discardableResult
     func scheduleNotificationPreview(settings: SettingsStore) async -> Bool {
+        guard liveContainerHomeURL == nil || liveContainerNotificationFixEnabled == true else {
+            return false
+        }
         guard await ensureAuthorization() else { return false }
 
         center.removePendingNotificationRequests(withIdentifiers: [notificationPreviewIdentifier])
