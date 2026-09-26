@@ -321,27 +321,85 @@ struct GuideView: View {
 private struct PrayerPoseArtwork: View {
     let assetName: String
 
+    private var cropZoom: CGFloat {
+        if assetName.contains("_salam_") { return 2.7 }
+        if assetName.contains("_final_sitting") { return 1.55 }
+        if assetName.contains("_intention") {
+            return assetName.hasPrefix("male_") ? 1.72 : 1.14
+        }
+        if assetName.contains("_standing") { return 1.58 }
+        if assetName.contains("_takbir") { return 1.42 }
+        if assetName.contains("_bowing") { return 1.22 }
+        if assetName.contains("_upright") { return 1.24 }
+        if assetName.contains("_sitting") { return 1.14 }
+        if assetName.contains("_sujud") { return 1.12 }
+        if assetName.contains("_finger") { return 1.15 }
+        return 1.0
+    }
+
+    private var cropAnchor: UnitPoint {
+        if assetName.hasPrefix("male_") && (
+            assetName.contains("_intention") ||
+            assetName.contains("_standing") ||
+            assetName.contains("_final_sitting")
+        ) {
+            return .leading
+        }
+        if assetName.contains("_bowing") {
+            return assetName.hasPrefix("female_") ? .bottomLeading : .bottom
+        }
+        if assetName.contains("_sitting") || assetName.contains("_sujud") {
+            return .bottom
+        }
+        return .center
+    }
+
+    private var verticalOffset: CGFloat {
+        if assetName.contains("_sitting") { return 7 }
+        if assetName.contains("_sujud") { return 7 }
+        if assetName.contains("_upright") { return 6 }
+        if assetName.contains("_takbir") { return -3 }
+        return 0
+    }
+
     var body: some View {
-        Image(assetName)
-            .renderingMode(.original)
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(4)
-            .background(
-                LinearGradient(
-                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.96),
+                    SalahTheme.cream,
+                    SalahTheme.softTeal.opacity(0.18)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
-            .overlay {
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 0.7)
-            }
-            .accessibilityHidden(true)
+
+            Image(assetName)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .scaleEffect(cropZoom, anchor: cropAnchor)
+                .offset(y: verticalOffset)
+                .padding(4)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.90),
+                            SalahTheme.gold.opacity(0.32)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.8
+                )
+        }
+        .accessibilityHidden(true)
     }
 }
 
