@@ -1081,74 +1081,96 @@ struct HomeView: View {
     }
 
     private func nextPrayerHero(_ prayer: PrayerOccurrence) -> some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack {
+            Image("home_prayer_scene")
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 198)
+                .clipped()
+                .accessibilityHidden(true)
+
             LinearGradient(
                 colors: [
-                    Color.clear,
-                    SalahTheme.gold.opacity(0.08),
-                    SalahTheme.gold.opacity(0.16)
+                    SalahTheme.deepTeal.opacity(0.74),
+                    SalahTheme.deepTeal.opacity(0.42),
+                    SalahTheme.deepTeal.opacity(0.10)
                 ],
                 startPoint: .leading,
                 endPoint: .trailing
             )
-            .frame(width: 205, height: 116)
-            .offset(x: 9, y: -40)
-            .allowsHitTesting(false)
 
-            Image("home_mosque")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 188, height: 108)
-                .opacity(0.96)
-                .offset(x: 7, y: -4)
-                .accessibilityHidden(true)
+            LinearGradient(
+                colors: [
+                    Color.black.opacity(0.18),
+                    Color.clear,
+                    SalahTheme.gold.opacity(0.08)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .center) {
                     Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))
-                        .font(.system(size: 11.6, weight: .bold))
-                        .foregroundStyle(SalahTheme.ink)
+                        .font(.system(size: 11.8, weight: .bold))
+                        .foregroundStyle(Color.white)
 
                     Spacer()
 
                     VStack(alignment: .trailing, spacing: 0) {
                         Text(gregorianDateShort(now))
                             .font(.system(size: 8.8, weight: .bold))
-                            .foregroundStyle(SalahTheme.ink)
                         Text(shortWeekday(now))
-                            .font(.system(size: 7.8, weight: .semibold))
-                            .foregroundStyle(SalahTheme.mutedInk)
+                            .font(.system(size: 7.6, weight: .semibold))
+                    }
+                    .foregroundStyle(Color.white.opacity(0.90))
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay {
+                        Capsule().stroke(Color.white.opacity(0.34), lineWidth: 0.8)
                     }
                 }
 
-                HStack(alignment: .center, spacing: 7) {
-                    SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
-                        .frame(width: 31, height: 31)
+                HStack(alignment: .center, spacing: 9) {
+                    ZStack {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 43, height: 43)
+                            .overlay {
+                                Circle()
+                                    .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1)
+                            }
+
+                        SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                            .frame(width: 27, height: 27)
+                    }
 
                     VStack(alignment: .leading, spacing: 0) {
                         Text(prayer.kind.localizedName(settings.language))
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundStyle(SalahTheme.ink)
+                            .font(.system(size: 18.5, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.white)
 
                         Text(countdownString(from: now, to: prayer.date))
-                            .font(.system(size: 25, weight: .bold, design: .rounded).monospacedDigit())
-                            .foregroundStyle(SalahTheme.deepTeal)
+                            .font(.system(size: 26, weight: .black, design: .rounded).monospacedDigit())
+                            .foregroundStyle(SalahTheme.gold)
                             .lineLimit(1)
                             .minimumScaleFactor(0.72)
                     }
 
-                    Spacer(minLength: 90)
+                    Spacer(minLength: 80)
                 }
 
-                HStack(spacing: 4) {
-                    SalahFeatureIcon(kind: "location")
-                        .frame(width: 13, height: 13)
+                HStack(spacing: 5) {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 8.5, weight: .bold))
                     Text(effectiveLocality)
                         .font(.custom("AvenirNext-DemiBold", size: 9.2))
-                        .foregroundStyle(SalahTheme.teal)
                         .lineLimit(1)
                     Spacer()
                 }
+                .foregroundStyle(Color.white.opacity(0.90))
 
                 HStack(spacing: 5) {
                     Group {
@@ -1180,37 +1202,51 @@ struct HomeView: View {
 
                     Spacer(minLength: 0)
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 7.5, weight: .bold))
+                        .font(.system(size: 8, weight: .black))
                         .foregroundStyle(SalahTheme.gold)
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(SalahTheme.cream.opacity(0.94), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(Color.white.opacity(0.90), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 0.7)
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .stroke(Color.white.opacity(0.70), lineWidth: 0.8)
                 }
+                .shadow(color: Color.black.opacity(0.08), radius: 4, y: 2)
 
-                Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“ (An-Nisāʾ 4:103)", "„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)"))
+                Text(settings.t(
+                    "„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“ (An-Nisāʾ 4:103)",
+                    "„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)"
+                ))
                     .font(.custom("Georgia-Italic", size: 6.9))
                     .italic()
-                    .foregroundStyle(SalahTheme.mutedInk)
+                    .foregroundStyle(Color.white.opacity(0.80))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 11)
+            .padding(.vertical, 9)
         }
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .frame(minHeight: 198)
+        .clipShape(RoundedRectangle(cornerRadius: 19, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.66), lineWidth: 0.8)
+            RoundedRectangle(cornerRadius: 19, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.55),
+                            SalahTheme.gold.opacity(0.78),
+                            Color.white.opacity(0.20)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         }
-        .shadow(color: SalahTheme.deepTeal.opacity(0.025), radius: 2, y: 1)
-        .frame(minHeight: 178)
-        .clipped()
+        .shadow(color: SalahTheme.deepTeal.opacity(0.20), radius: 14, y: 7)
     }
 
     private var prayerLegendCard: some View {
