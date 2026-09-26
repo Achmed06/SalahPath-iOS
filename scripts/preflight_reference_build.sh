@@ -325,3 +325,11 @@ PY
 python3 scripts/build78_regression_guard.py
 
 printf 'Reference build checks passed for SalahPath v3.64 build 80\n'
+
+# Compile and execute the actual Foundation-only geometry used by the compass.
+if command -v swiftc >/dev/null 2>&1; then
+  QIBLA_SMOKE="$(mktemp)"
+  trap 'rm -f "$QIBLA_SMOKE"' EXIT
+  swiftc SalahZeit/Domain/QiblaGeometry.swift qa/QiblaGeometrySmoke.swift -o "$QIBLA_SMOKE"
+  "$QIBLA_SMOKE"
+fi

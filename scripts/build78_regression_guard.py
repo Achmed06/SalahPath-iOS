@@ -77,6 +77,7 @@ if "private func bundledPage(page: Int) throws -> QuranPageData" not in guide:
 
 # 2) Prayer tracker: five obligatory prayers, persisted state and cross-view refresh.
 home = read("SalahZeit/Views/HomeView.swift")
+tracker = read("SalahZeit/Models/PrayerTrackerStore.swift")
 tracker_tokens = [
     "static let prayerTrackerDidChange",
     "static let requiredKinds: [PrayerKind] = [.fajr, .dhuhr, .asr, .maghrib, .isha]",
@@ -87,16 +88,15 @@ tracker_tokens = [
     "NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)",
     "static func completedCount(on date: Date) -> Int",
     "static func streak(upTo date: Date) -> Int",
-    "NotificationCenter.default.publisher(for: .prayerTrackerDidChange)",
-]
+ ]
 for token in tracker_tokens:
-    if token not in home:
+    if token not in tracker:
         fail(f"prayer tracker regression: missing {token}")
 
 if home.count("NotificationCenter.default.publisher(for: .prayerTrackerDidChange)") < 3:
     fail("tracker mutations no longer refresh Home + tracker screens consistently")
 
-if home.count("NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)") < 2:
+if tracker.count("NotificationCenter.default.post(name: .prayerTrackerDidChange, object: nil)") < 2:
     fail("tracker toggle/pause mutations no longer broadcast changes")
 
 # 3) QA routes and screenshots must keep covering the user-reported regressions.
@@ -196,11 +196,9 @@ for token in (
     'Image(key)',
     'Image(assetName)',
     'number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm"',
-    'number: 8, image: "wudu_rightarm", deTitle: "Linker Arm"',
+    'number: 8, image: "wudu_leftarm", deTitle: "Linker Arm"',
     'number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß"',
-    'number: 13, image: "wudu_rightfoot", deTitle: "Linker Fuß"',
-    '.scaleEffect(x: stepNumber == 8 ? -1 : 1, y: 1)',
-    '.scaleEffect(x: stepNumber == 13 ? -1 : 1, y: 1)',
+    'number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
     'case 1, 2, 4, 5, 6, 9, 10, 11:',
     'WuduBareHeadVisual(stepNumber: stepNumber)',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',

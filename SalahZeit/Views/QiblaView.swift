@@ -15,7 +15,7 @@ struct QiblaView: View {
                 let qiblaDegrees = qibla.isFinite ? Int(qibla.rounded()) : nil
                 let heading = currentHeading
                 let headingDegrees = heading.map { Int($0.rounded()) }
-                let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
+                let rotation = heading.flatMap { QiblaGeometry.arrowRotation(bearing: qibla, trueHeading: $0) }
 
                 ScrollView {
                     VStack(spacing: 11) {
@@ -329,12 +329,6 @@ struct QiblaView: View {
         return heading.trueHeading
     }
 
-    private func normalized(_ angle: Double) -> Double {
-        var result = angle.truncatingRemainder(dividingBy: 360)
-        if result > 180 { result -= 360 }
-        if result < -180 { result += 360 }
-        return result
-    }
 }
 
 
