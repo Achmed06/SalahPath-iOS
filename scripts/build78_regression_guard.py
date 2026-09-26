@@ -263,21 +263,29 @@ for token in (
         fail(f"standalone tab/discover icon regression: missing {token}")
 
 for token in (
-    'func salahFeatureIndex(for kind: String) -> Int?',
     'struct SalahFeatureIcon: View',
+    'UIImage(named: "feature_\\(kind)")',
+    'private var fallbackSymbol: String',
+    'Image(systemName: fallbackSymbol)',
+    'case "fajr": return "sun.horizon.fill"',
+    'case "sunrise": return "sunrise.fill"',
+    'case "dhuhr": return "sun.max.fill"',
+    'case "asr": return "sun.haze.fill"',
+    'case "maghrib": return "sunset.fill"',
+    'case "isha": return "moon.stars.fill"',
+    'case "mosques": return "building.columns.fill"',
+):
+    if token not in root_tabs:
+        fail(f"premium standalone/native icon routing regression: missing {token}")
+
+for obsolete in (
     'UIImage(named: "SalahFeatureSheet")',
-    'case "home", "start": return 0',
-    'case "prayer": return 1',
-    'case "wudu": return 2',
-    'case "quran": return 3',
-    'case "profile": return 9',
-    'case "home_active": return 52',
-    'case "quran_inactive": return 59',
+    'cropping(to: cropRect)',
     'let column = index % 10',
     'let row = index / 10',
 ):
-    if token not in root_tabs:
-        fail(f"approved icon sheet routing regression: missing {token}")
+    if obsolete in root_tabs:
+        fail(f"legacy sprite-sheet icon routing returned: {obsolete}")
 
 for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
