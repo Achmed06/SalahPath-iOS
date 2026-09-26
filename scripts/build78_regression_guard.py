@@ -365,4 +365,35 @@ for token in (
     if token not in settings_view:
         fail(f"notification test UI regression: missing {token}")
 
+# 8) Once-only Bismillah session intro and Qibla target geometry must not regress.
+audio_guard_tokens = [
+    'private var sessionIntroURL: URL?',
+    'func isCurrentRequest(_ url: URL) -> Bool',
+    'let contentQueueCount = cleaned.count',
+    'private func consumeFinishedIntroIfNeeded() -> Bool',
+    'static func basmalaIntroURL(reciter: QuranReciter) -> URL?',
+    'https://everyayah.com/data/\\(reciter.everyAyahFolder)/001001.mp3',
+    'if currentSurah == 1, startsAtFirstAyah, contentURLs.count > 1',
+    'introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter)',
+]
+for token in audio_guard_tokens:
+    if token not in guide and token not in home:
+        fail(f"once-only Bismillah regression: missing {token}")
+
+if guide.count('prependIntro: true') < 2:
+    fail("once-only Bismillah regression: expected Quran session intro entry points are missing")
+
+qibla = read("SalahZeit/Views/QiblaView.swift")
+for token in (
+    'let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil',
+    'heading.trueHeading.isFinite',
+    'return heading.trueHeading',
+    'let targetX = sin(radians) * targetRadius',
+    'let targetY = -cos(radians) * targetRadius',
+    '.offset(x: targetX, y: targetY)',
+    'Image(systemName: "arrowtriangle.up.fill")',
+):
+    if token not in qibla:
+        fail(f"Qibla direction regression: missing {token}")
+
 print("Build 79 regression guard: OK")
