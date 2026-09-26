@@ -111,6 +111,22 @@ if [ "$BACKGROUND_AUDIO" != "audio" ]; then
   exit 1
 fi
 
+# App Store release hygiene: these markers belong only to local/internal testing
+# environments and must never ship in the Release executable.
+FORBIDDEN_RELEASE_MARKERS=(
+  "LiveContainer"
+  "LC_HOME_PATH"
+  "fixLocalNotification"
+  "SALAH_QA_SCREEN"
+  "SALAH_QA_SCREENSHOT"
+)
+for marker in "${FORBIDDEN_RELEASE_MARKERS[@]}"; do
+  if /usr/bin/strings "$APP_BINARY" | /usr/bin/grep -Fq "$marker"; then
+    echo "Verbotener interner Release-Marker im App-Binary: $marker" >&2
+    exit 1
+  fi
+done
+
 mkdir -p Payload
 cp -R "$APP_PATH" Payload/
 /usr/bin/zip -qry SalahPath-unsigned.ipa Payload
