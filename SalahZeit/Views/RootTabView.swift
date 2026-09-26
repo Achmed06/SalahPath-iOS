@@ -152,33 +152,23 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $selection) {
             NavigationStack { HomeView() }
-                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .tag(0)
 
-            NavigationStack { QuranView() }
-                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
+            NavigationStack { PrayerTimesOverviewView() }
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .tag(1)
 
-            NavigationStack { GuideView() }
-                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
+            NavigationStack { QiblaView() }
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .tag(2)
 
-            NavigationStack { MoreView() }
-                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
+            NavigationStack { QuranView() }
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .tag(3)
 
-            NavigationStack { SettingsView() }
-                .toolbarBackground(SalahTheme.navigationTeal, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
+            NavigationStack { MoreView() }
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .tag(4)
         }
         .toolbar(.hidden, for: .tabBar)
@@ -641,18 +631,17 @@ private struct ReferenceBottomBar: View {
     @Binding var selection: Int
 
     private struct Item {
-        let activeIcon: String
-        let inactiveIcon: String
+        let symbol: String
         let title: String
     }
 
     private var items: [Item] {
         [
-            Item(activeIcon: "home_active", inactiveIcon: "home_inactive", title: settings.t("Start", "Ana Sayfa")),
-            Item(activeIcon: "quran_active", inactiveIcon: "quran_inactive", title: settings.t("Koran", "Kur'an")),
-            Item(activeIcon: "prayer_active", inactiveIcon: "prayer_inactive", title: settings.t("Gebet", "Namaz")),
-            Item(activeIcon: "discover", inactiveIcon: "discover", title: settings.t("Entdecken", "Keşfet")),
-            Item(activeIcon: "profile", inactiveIcon: "profile", title: settings.t("Profil", "Profil"))
+            Item(symbol: "house.fill", title: settings.t("Home", "Ana Sayfa")),
+            Item(symbol: "clock", title: settings.t("Gebetszeiten", "Vakitler")),
+            Item(symbol: "cube.transparent", title: settings.t("Qibla", "Kıble")),
+            Item(symbol: "book", title: settings.t("Quran", "Kur'an")),
+            Item(symbol: "square.grid.2x2", title: settings.t("Entdecken", "Keşfet"))
         ]
     }
 
@@ -672,7 +661,10 @@ private struct ReferenceBottomBar: View {
                                     .frame(width: 39, height: 24)
                             }
 
-                            SalahFeatureIcon(kind: selection == index ? item.activeIcon : item.inactiveIcon)
+                            Image(systemName: item.symbol)
+                                .symbolRenderingMode(.monochrome)
+                                .font(.system(size: 18, weight: selection == index ? .bold : .medium))
+                                .foregroundStyle(selection == index ? SalahTheme.deepTeal : Color.gray.opacity(0.78))
                                 .frame(width: 25, height: 25)
                         }
                         .frame(height: 25)
@@ -683,9 +675,7 @@ private struct ReferenceBottomBar: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.72)
 
-                        Circle()
-                            .fill(selection == index ? SalahTheme.gold : Color.clear)
-                            .frame(width: 3.5, height: 3.5)
+
                     }
                     .frame(maxWidth: .infinity)
                     .contentShape(Rectangle())
@@ -693,19 +683,19 @@ private struct ReferenceBottomBar: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 5)
-        .padding(.top, 5)
-        .padding(.bottom, 2)
+        .padding(.horizontal, 6)
+        .padding(.top, 9)
+        .padding(.bottom, 6)
         .background {
-            SalahTheme.cream
+            Color(red: 0.985, green: 0.972, blue: 0.944)
                 .overlay(alignment: .top) {
                     Rectangle()
-                        .fill(SalahTheme.gold.opacity(0.42))
-                        .frame(height: 0.7)
+                        .fill(Color.white.opacity(0.86))
+                        .frame(height: 1)
                 }
                 .ignoresSafeArea(edges: .bottom)
         }
-        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 7, y: -2)
+        .shadow(color: Color.black.opacity(0.08), radius: 14, y: -4)
     }
 }
 
