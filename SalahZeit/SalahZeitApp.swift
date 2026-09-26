@@ -110,6 +110,12 @@ struct SalahPathApp: App {
             return
         }
 
+        // The toggle may have been persisted from an older installation while
+        // iOS notification permission was reset. Ask for authorization before
+        // requiring a location so the app cannot remain "enabled" but ungranted.
+        let granted = await NotificationManager.shared.requestAuthorization()
+        guard granted else { return }
+
         guard let location = locationManager.location else { return }
 
         _ = await NotificationManager.shared.scheduleNextSevenDays(
