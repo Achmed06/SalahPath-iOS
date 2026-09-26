@@ -10,13 +10,6 @@ on:
       - "SalahZeit/**"
       - "SalahZeit.xcodeproj/**"
       - "scripts/preflight_reference_build.sh"
-  push:
-    branches: [ main ]
-    paths:
-      - ".github/workflows/capture-ui.yml"
-      - "SalahZeit/**"
-      - "SalahZeit.xcodeproj/**"
-      - "scripts/preflight_reference_build.sh"
 
 concurrency:
   group: capture-ui-${{ github.ref }}
