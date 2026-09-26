@@ -1507,20 +1507,20 @@ private struct WuduInstructionVisual: View {
 
     private var zoom: CGFloat {
         switch key {
-        case "wudu_mouth", "wudu_nose": return 1.34
-        case "wudu_face": return 1.30
+        case "wudu_mouth", "wudu_nose": return 1.58
+        case "wudu_face": return 1.56
         case "wudu_rightarm", "wudu_leftarm": return 1.18
-        case "wudu_neck": return 1.22
+        case "wudu_neck": return 1.38
         default: return 1.05
         }
     }
 
     private var verticalOffset: CGFloat {
         switch key {
-        case "wudu_mouth", "wudu_nose": return -18
-        case "wudu_face": return -16
+        case "wudu_mouth", "wudu_nose": return -39
+        case "wudu_face": return -38
         case "wudu_rightarm", "wudu_leftarm": return -10
-        case "wudu_neck": return -24
+        case "wudu_neck": return -42
         default: return 0
         }
     }
