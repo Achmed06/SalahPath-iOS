@@ -4362,6 +4362,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
     private var playbackFallbackAttempted = false
+    private var sessionIntroURL: URL?
     private(set) var queueSessionID = 0
 
     private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
@@ -4383,6 +4384,20 @@ final class RemoteAudioPlayer: ObservableObject {
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
 
+    func isCurrentRequest(_ url: URL) -> Bool {
+        if activeURL == url { return true }
+
+        guard let introURL = sessionIntroURL,
+              activeURL == introURL,
+              queueIndex == 0,
+              queueURLs.count > 1,
+              queueURLs[0] == introURL else {
+            return false
+        }
+
+        return queueURLs[1] == url
+    }
+
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
         prayerContext = (trimmed?.isEmpty == false) ? trimmed : nil
@@ -4398,7 +4413,7 @@ final class RemoteAudioPlayer: ObservableObject {
         introURL: URL? = nil,
         prependIntro: Bool = true
     ) {
-        if activeURL == url, player != nil {
+        if isCurrentRequest(url), player != nil {
             if isPlaying {
                 pause()
             } else {
@@ -4444,11 +4459,13 @@ final class RemoteAudioPlayer: ObservableObject {
         continuation: RemoteAudioPlayerQueueContinuation? = nil
     ) {
         var cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        sessionIntroURL = nil
         if prependIntro,
            let introURL,
            (introURL.isFileURL || introURL.scheme?.lowercased() == "https"),
            cleaned.first != introURL {
             cleaned.insert(introURL, at: 0)
+            sessionIntroURL = introURL
         }
         guard !cleaned.isEmpty else {
             stop()
@@ -4477,6 +4494,11 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     func next() {
+        if consumeFinishedIntroIfNeeded() {
+            loadCurrentAndPlay()
+            return
+        }
+
         if hasNext {
             queueIndex += 1
             updateRemoteCommandAvailability()
@@ -4548,6 +4570,26 @@ final class RemoteAudioPlayer: ObservableObject {
         updateNowPlaying()
     }
 
+    private func consumeFinishedIntroIfNeeded() -> Bool {
+        guard let introURL = sessionIntroURL,
+              queueIndex == 0,
+              queueURLs.count > 1,
+              queueURLs[0] == introURL,
+              activeURL == introURL else {
+            return false
+        }
+
+        queueURLs.removeFirst()
+        sessionIntroURL = nil
+        queueIndex = 0
+        queueCount = queueURLs.count
+        activeURL = nil
+        currentTime = 0
+        duration = 0
+        updateRemoteCommandAvailability()
+        return !queueURLs.isEmpty
+    }
+
     func pause() {
         player?.pause()
         isPlaying = false
@@ -4587,6 +4629,7 @@ final class RemoteAudioPlayer: ObservableObject {
         player?.pause()
         player = nil
         queueURLs = []
+        sessionIntroURL = nil
         queueIndex = 0
         queueCount = 0
         activeURL = nil
@@ -4723,7 +4766,9 @@ final class RemoteAudioPlayer: ObservableObject {
         ) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                if self.hasNext {
+                if self.consumeFinishedIntroIfNeeded() {
+                    self.loadCurrentAndPlay()
+                } else if self.hasNext {
                     self.next()
                 } else if self.queueContinuationDelegate != nil {
                     self.requestContinuationIfAvailable()
@@ -8874,9 +8919,8 @@ struct QuranView: View {
 
     @MainActor
     private func togglePreviewAudio() async {
-        if !previewAudioURLs.isEmpty,
-           let active = previewAudio.activeURL,
-           previewAudioURLs.contains(active) {
+        if let firstURL = previewAudioURLs.first,
+           previewAudio.isCurrentRequest(firstURL) {
             previewAudio.isPlaying ? previewAudio.pause() : previewAudio.resume()
             return
         }
@@ -9486,7 +9530,7 @@ struct QuranPageReaderView: View {
                                                 } else {
                                                     Image(systemName:
                                                         ayahAudioURL != nil &&
-                                                        audio.activeURL == ayahAudioURL &&
+                                                        audio.isCurrentRequest(ayahAudioURL!) &&
                                                         audio.isPlaying
                                                         ? "pause.circle.fill"
                                                         : "play.circle"
@@ -9500,10 +9544,10 @@ struct QuranPageReaderView: View {
                                         .buttonStyle(.plain)
                                         .disabled(resolvingAyahNumber != nil && resolvingAyahNumber != ayah.number)
                                         .accessibilityLabel(settings.t(
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                            ayahAudioURL != nil && audio.isCurrentRequest(ayahAudioURL!) && audio.isPlaying
                                                 ? "Vers \(ayah.numberInSurah) pausieren"
                                                 : "Vers \(ayah.numberInSurah) abspielen",
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                            ayahAudioURL != nil && audio.isCurrentRequest(ayahAudioURL!) && audio.isPlaying
                                                 ? "\(ayah.numberInSurah). ayeti duraklat"
                                                 : "\(ayah.numberInSurah). ayeti dinle"
                                         ))
@@ -9673,7 +9717,7 @@ struct QuranPageReaderView: View {
         let selectedURL = urls[startIndex]
         QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
 
-        if audio.activeURL == selectedURL {
+        if audio.isCurrentRequest(selectedURL) {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
@@ -10476,14 +10520,14 @@ private struct QuranSurahView: View {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
                         playFromAyah(index: index, ayahNumber: ar.numberInSurah)
                     } label: {
-                        Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        Image(systemName: audio.isCurrentRequest(audioURL) && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(settings.t(
-                        audio.activeURL == audioURL && audio.isPlaying
+                        audio.isCurrentRequest(audioURL) && audio.isPlaying
                             ? "Vers \(ar.numberInSurah) pausieren"
                             : "Vers \(ar.numberInSurah) abspielen",
-                        audio.activeURL == audioURL && audio.isPlaying
+                        audio.isCurrentRequest(audioURL) && audio.isPlaying
                             ? "\(ar.numberInSurah). ayeti duraklat"
                             : "\(ar.numberInSurah). ayeti oynat"
                     ))
@@ -10675,7 +10719,7 @@ private struct QuranSurahView: View {
         }
 
         let selectedURL = resolvedAudioURLs[index]
-        if audio.activeURL == selectedURL {
+        if audio.isCurrentRequest(selectedURL) {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
@@ -10699,7 +10743,10 @@ private struct QuranSurahView: View {
             return
         }
 
-        if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
+        if let firstURL = resolvedAudioURLs.first,
+           audio.isCurrentRequest(firstURL) {
+            audio.isPlaying ? audio.pause() : audio.resume()
+        } else if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
             audio.isPlaying ? audio.pause() : audio.resume()
         } else {
             QuranContinuousPlaybackCoordinator.shared.play(
