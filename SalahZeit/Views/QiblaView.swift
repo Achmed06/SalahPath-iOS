@@ -19,104 +19,40 @@ struct QiblaView: View {
 
                 ScrollView {
                     VStack(spacing: 11) {
-                        VStack(spacing: 2) {
-                            Text(settings.t("Qibla", "Kıble"))
-                                .font(.system(size: 20, weight: .bold, design: .serif))
-                                .foregroundStyle(SalahTheme.ink)
-                            Text(settings.t("Qibla-Richtung", "Kıble Yönü"))
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.mutedInk)
-                        }
+                        HStack(spacing: 11) {
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                SalahTheme.deepTeal,
+                                                SalahTheme.teal
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 46, height: 46)
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.20), radius: 10, y: 5)
 
-                        ZStack {
-                            Circle()
-                                .fill(SalahTheme.cream)
-                                .frame(width: 268, height: 268)
-                                .shadow(color: SalahTheme.deepTeal.opacity(0.055), radius: 8, y: 3)
-
-                            Circle()
-                                .stroke(SalahTheme.gold.opacity(0.60), lineWidth: 1.5)
-                                .frame(width: 258, height: 258)
-
-                            Circle()
-                                .stroke(SalahTheme.teal.opacity(0.14), lineWidth: 1)
-                                .frame(width: 226, height: 226)
-
-                            ForEach(0..<36, id: \.self) { index in
-                                Capsule()
-                                    .fill(SalahTheme.teal.opacity(index % 9 == 0 ? 0.78 : 0.22))
-                                    .frame(width: index % 9 == 0 ? 2.8 : 1.3, height: index % 9 == 0 ? 15 : 7)
-                                    .offset(y: -120)
-                                    .rotationEffect(.degrees(Double(index) * 10))
+                                QiblaKaabaGlyph()
+                                    .frame(width: 28, height: 28)
                             }
 
-                            Text("N")
-                                .font(.system(size: 10, weight: .black))
-                                .foregroundStyle(SalahTheme.teal)
-                                .offset(y: -103)
-
-                            if let rotation {
-                                let radians = rotation * .pi / 180
-                                let targetRadius: CGFloat = 102
-                                let targetX = sin(radians) * targetRadius
-                                let targetY = -cos(radians) * targetRadius
-
-                                ZStack {
-                                    Circle()
-                                        .fill(SalahTheme.teal.opacity(abs(rotation) <= 4 ? 0.085 : 0.045))
-                                        .frame(width: 170, height: 170)
-
-                                    ZStack {
-                                        Capsule()
-                                            .fill(SalahTheme.gold.opacity(0.34))
-                                            .frame(width: 12, height: 72)
-                                            .offset(y: -34)
-
-                                        Capsule()
-                                            .fill(SalahTheme.teal)
-                                            .frame(width: 6, height: 72)
-                                            .offset(y: -34)
-
-                                        Image(systemName: "arrowtriangle.up.fill")
-                                            .font(.system(size: 35, weight: .black))
-                                            .foregroundStyle(SalahTheme.teal)
-                                            .offset(y: -76)
-
-                                        Circle()
-                                            .fill(SalahTheme.deepTeal)
-                                            .frame(width: 20, height: 20)
-                                            .overlay {
-                                                Circle()
-                                                    .stroke(SalahTheme.gold, lineWidth: 3)
-                                                    .frame(width: 10, height: 10)
-                                            }
-                                    }
-                                    .frame(width: 226, height: 226)
-                                    .rotationEffect(.degrees(rotation))
-
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                            .fill(Color.black.opacity(0.96))
-                                            .frame(width: 44, height: 38)
-                                        Rectangle()
-                                            .fill(SalahTheme.gold)
-                                            .frame(width: 44, height: 4)
-                                            .offset(y: -7)
-                                        RoundedRectangle(cornerRadius: 2)
-                                            .stroke(SalahTheme.gold.opacity(0.80), lineWidth: 1)
-                                            .frame(width: 30, height: 20)
-                                            .offset(y: 5)
-                                    }
-                                    .shadow(color: SalahTheme.gold.opacity(abs(rotation) <= 4 ? 0.48 : 0.16), radius: abs(rotation) <= 4 ? 8 : 3)
-                                    .offset(x: targetX, y: targetY)
-                                }
-                                .frame(width: 226, height: 226)
-                                .animation(.easeOut(duration: 0.16), value: rotation)
-                            } else {
-                                ProgressView()
-                                    .tint(SalahTheme.teal)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(settings.t("Qibla", "Kıble"))
+                                    .font(.system(size: 23, weight: .bold, design: .serif))
+                                    .foregroundStyle(SalahTheme.ink)
+                                Text(settings.t("Richte dein Herz zur Kaaba", "Kalbini Kâbe'ye yönelt"))
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.mutedInk)
                             }
+
+                            Spacer()
                         }
+                        .padding(.horizontal, 4)
+
+                        QiblaCompassVisual(rotation: rotation)
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
                         .accessibilityValue(
@@ -398,5 +334,282 @@ struct QiblaView: View {
         if result > 180 { result -= 360 }
         if result < -180 { result += 360 }
         return result
+    }
+}
+
+
+private struct QiblaCompassVisual: View {
+    @EnvironmentObject private var settings: SettingsStore
+    let rotation: Double?
+
+    private var isAligned: Bool {
+        guard let rotation else { return false }
+        return abs(rotation) <= 4
+    }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            Color.white.opacity(0.98),
+                            SalahTheme.cream,
+                            SalahTheme.softTeal.opacity(0.24)
+                        ],
+                        center: .topLeading,
+                        startRadius: 10,
+                        endRadius: 155
+                    )
+                )
+                .frame(width: 286, height: 286)
+                .overlay {
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    SalahTheme.gold.opacity(0.95),
+                                    SalahTheme.gold.opacity(0.32),
+                                    SalahTheme.teal.opacity(0.32),
+                                    SalahTheme.gold.opacity(0.82)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 2.2
+                        )
+                }
+                .shadow(color: SalahTheme.deepTeal.opacity(0.12), radius: 18, y: 9)
+                .shadow(color: SalahTheme.gold.opacity(0.12), radius: 2, y: -1)
+
+            Circle()
+                .stroke(SalahTheme.teal.opacity(0.09), lineWidth: 18)
+                .frame(width: 250, height: 250)
+
+            Circle()
+                .stroke(SalahTheme.gold.opacity(0.26), lineWidth: 1)
+                .frame(width: 232, height: 232)
+
+            ForEach(0..<72, id: \.self) { index in
+                Capsule()
+                    .fill(
+                        index % 18 == 0
+                            ? SalahTheme.deepTeal.opacity(0.88)
+                            : index % 6 == 0
+                                ? SalahTheme.teal.opacity(0.48)
+                                : SalahTheme.teal.opacity(0.18)
+                    )
+                    .frame(
+                        width: index % 18 == 0 ? 3 : (index % 6 == 0 ? 2 : 1),
+                        height: index % 18 == 0 ? 17 : (index % 6 == 0 ? 11 : 6)
+                    )
+                    .offset(y: -121)
+                    .rotationEffect(.degrees(Double(index) * 5))
+            }
+
+            compassLabel(settings.t("N", "K"), x: 0, y: -100, emphasized: true)
+            compassLabel(settings.t("O", "D"), x: 100, y: 0)
+            compassLabel(settings.t("S", "G"), x: 0, y: 100)
+            compassLabel(settings.t("W", "B"), x: -100, y: 0)
+
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            SalahTheme.gold.opacity(isAligned ? 0.22 : 0.10),
+                            SalahTheme.teal.opacity(0.035),
+                            .clear
+                        ],
+                        center: .center,
+                        startRadius: 6,
+                        endRadius: 92
+                    )
+                )
+                .frame(width: 184, height: 184)
+                .animation(.easeOut(duration: 0.2), value: isAligned)
+
+            if let rotation {
+                let radians = rotation * .pi / 180
+                let targetRadius: CGFloat = 104
+                let targetX = sin(radians) * targetRadius
+                let targetY = -cos(radians) * targetRadius
+
+                ZStack {
+                    QiblaNeedleShape()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    SalahTheme.gold,
+                                    SalahTheme.teal,
+                                    SalahTheme.deepTeal
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .overlay {
+                            QiblaNeedleShape()
+                                .stroke(Color.white.opacity(0.70), lineWidth: 0.8)
+                        }
+                        .frame(width: 226, height: 226)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.24), radius: 4, y: 2)
+                        .rotationEffect(.degrees(rotation))
+
+                    QiblaKaabaMarker(aligned: isAligned)
+                        .offset(x: targetX, y: targetY)
+                }
+                .frame(width: 226, height: 226)
+                .animation(.easeOut(duration: 0.16), value: rotation)
+            } else {
+                ProgressView()
+                    .tint(SalahTheme.teal)
+            }
+
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [SalahTheme.deepTeal, SalahTheme.teal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 31, height: 31)
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.24), radius: 5, y: 2)
+
+                Circle()
+                    .stroke(SalahTheme.gold, lineWidth: 3)
+                    .frame(width: 17, height: 17)
+
+                Circle()
+                    .fill(SalahTheme.gold)
+                    .frame(width: 5, height: 5)
+            }
+
+            if isAligned {
+                Text(settings.t("AUSGERICHTET", "HİZALI"))
+                    .font(.system(size: 8.5, weight: .black))
+                    .tracking(1.2)
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay {
+                        Capsule()
+                            .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
+                    }
+                    .offset(y: 91)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .frame(width: 300, height: 300)
+    }
+
+    private func compassLabel(
+        _ text: String,
+        x: CGFloat,
+        y: CGFloat,
+        emphasized: Bool = false
+    ) -> some View {
+        Text(text)
+            .font(.system(size: emphasized ? 12 : 9, weight: .black, design: .rounded))
+            .foregroundStyle(emphasized ? SalahTheme.deepTeal : SalahTheme.mutedInk.opacity(0.82))
+            .offset(x: x, y: y)
+    }
+}
+
+private struct QiblaNeedleShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let midX = rect.midX
+        let midY = rect.midY
+        let top = rect.minY + 15
+        let shoulderY = rect.minY + 50
+        let stemTop = rect.minY + 47
+        let stemHalf: CGFloat = 6
+        let wing: CGFloat = 20
+
+        var path = Path()
+        path.move(to: CGPoint(x: midX, y: top))
+        path.addLine(to: CGPoint(x: midX + wing, y: shoulderY))
+        path.addLine(to: CGPoint(x: midX + stemHalf, y: stemTop))
+        path.addLine(to: CGPoint(x: midX + stemHalf, y: midY))
+        path.addLine(to: CGPoint(x: midX - stemHalf, y: midY))
+        path.addLine(to: CGPoint(x: midX - stemHalf, y: stemTop))
+        path.addLine(to: CGPoint(x: midX - wing, y: shoulderY))
+        path.closeSubpath()
+        return path
+    }
+}
+
+private struct QiblaKaabaMarker: View {
+    let aligned: Bool
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.98),
+                            Color.black.opacity(0.86)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 48, height: 42)
+
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            SalahTheme.gold.opacity(0.98),
+                            SalahTheme.gold.opacity(0.68)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(width: 48, height: 5)
+                .offset(y: -8)
+
+            RoundedRectangle(cornerRadius: 2)
+                .stroke(SalahTheme.gold.opacity(0.88), lineWidth: 1)
+                .frame(width: 29, height: 19)
+                .offset(y: 6)
+
+            Rectangle()
+                .fill(SalahTheme.gold.opacity(0.78))
+                .frame(width: 4, height: 12)
+                .offset(x: 9, y: 7)
+        }
+        .rotation3DEffect(.degrees(-7), axis: (x: 1, y: -0.7, z: 0))
+        .shadow(
+            color: aligned ? SalahTheme.gold.opacity(0.52) : SalahTheme.deepTeal.opacity(0.18),
+            radius: aligned ? 11 : 5,
+            y: 3
+        )
+        .scaleEffect(aligned ? 1.06 : 1)
+        .animation(.easeOut(duration: 0.2), value: aligned)
+    }
+}
+
+private struct QiblaKaabaGlyph: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 4, style: .continuous)
+                .fill(Color.black.opacity(0.92))
+                .frame(width: 24, height: 21)
+
+            Rectangle()
+                .fill(SalahTheme.gold)
+                .frame(width: 24, height: 3)
+                .offset(y: -4)
+
+            RoundedRectangle(cornerRadius: 1.5)
+                .stroke(SalahTheme.gold.opacity(0.9), lineWidth: 1)
+                .frame(width: 14, height: 10)
+                .offset(y: 3)
+        }
     }
 }
