@@ -22,7 +22,7 @@ struct SalahPathApp: App {
 
     var body: some Scene {
         WindowGroup {
-            qaRoot
+            appRoot
                 .environmentObject(locationManager)
                 .environmentObject(settings)
                 .task(id: prayerNotificationScheduleID) {
@@ -40,7 +40,24 @@ struct SalahPathApp: App {
     }
 
     private var isQAMode: Bool {
+#if DEBUG
         ProcessInfo.processInfo.environment["SALAH_QA_SCREEN"] != nil
+#else
+        false
+#endif
+    }
+
+    @ViewBuilder
+    private var appRoot: some View {
+#if DEBUG
+        qaRoot
+#else
+        if settings.onboardingCompleted {
+            RootTabView()
+        } else {
+            OnboardingFlowView()
+        }
+#endif
     }
 
     private var prayerNotificationScheduleID: String {
@@ -125,6 +142,7 @@ struct SalahPathApp: App {
         )
     }
 
+#if DEBUG
     @ToolbarContentBuilder
     private var referenceQAToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
@@ -265,6 +283,7 @@ struct SalahPathApp: App {
             }
         }
     }
+#endif
 }
 
 private struct OnboardingFlowView: View {
