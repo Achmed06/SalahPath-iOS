@@ -1,0 +1,110 @@
+name: Preview B78 audio qibla fix
+
+on:
+  push:
+    branches:
+      - "release/b78-audio-qibla-fix-20260926"
+    paths:
+      - ".github/workflows/preview-b78-audio-qibla.yml"
+      - "qa/preview-b78-audio-qibla.txt"
+
+jobs:
+  preview:
+    runs-on: macos-26
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Select iPhone simulator
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, os
+          data=json.loads(subprocess.check_output(["xcrun","simctl","list","devices","available","-j"]))
+          candidates=[]
+          for runtime,devices in data["devices"].items():
+              if "iOS" not in runtime: continue
+              for d in devices:
+                  if d.get("isAvailable") and d["name"].startswith("iPhone"):
+                      candidates.append((d["name"],d["udid"]))
+          priority=["iPhone 17 Pro","iPhone 16 Pro","iPhone 16","iPhone 15 Pro","iPhone 15"]
+          chosen=next((c for p in priority for c in candidates if c[0]==p),candidates[0])
+          with open(os.environ["GITHUB_ENV"],"a") as f:
+              f.write("SIM_UDID="+chosen[1]+"\n")
+          print("Using",chosen)
+          PY
+
+      - name: Restore Xcode cache
+        uses: actions/cache@v4
+        with:
+          path: DerivedData
+          key: b78-audio-qibla-${{ runner.os }}-${{ hashFiles('SalahZeit.xcodeproj/project.pbxproj', 'SalahZeit/**/*.swift', 'SalahZeit/Assets.xcassets/**') }}
+          restore-keys: |
+            b78-audio-qibla-${{ runner.os }}-
+            salahpath-fast-${{ runner.os }}-
+
+      - name: Build simulator
+        shell: bash
+        run: |
+          xcodebuild \
+            -project SalahZeit.xcodeproj \
+            -scheme SalahZeit \
+            -configuration Debug \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Capture home and Qibla
+        shell: bash
+        run: |
+          run_timeout() {
+            local seconds="$1"
+            shift
+            python3 - "$seconds" "$@" <<'PY'
+          import subprocess, sys
+          seconds=int(sys.argv[1])
+          command=sys.argv[2:]
+          try:
+              subprocess.run(command, check=True, timeout=seconds)
+          except subprocess.TimeoutExpired:
+              print("Timed out:", " ".join(command), file=sys.stderr)
+              raise SystemExit(124)
+          PY
+          }
+
+          xcrun simctl shutdown "$SIM_UDID" || true
+          run_timeout 30 xcrun simctl boot "$SIM_UDID"
+          run_timeout 180 xcrun simctl bootstatus "$SIM_UDID" -b
+          APP_PATH="$(find DerivedData/Build/Products/Debug-iphonesimulator -maxdepth 1 -name '*.app' | head -1)"
+          test -n "$APP_PATH"
+          xcrun simctl install "$SIM_UDID" "$APP_PATH"
+          xcrun simctl privacy "$SIM_UDID" grant location com.achmed06.salahpath || true
+          xcrun simctl location "$SIM_UDID" set 51.1805,6.4428 || true
+          xcrun simctl status_bar "$SIM_UDID" override --time 09:41 --batteryLevel 100 --wifiBars 3 --cellularBars 4 || true
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+          xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath onboardingCompleted -bool true
+          mkdir -p preview
+
+          capture() {
+            TARGET="$1"
+            NAME="$2"
+            xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
+            run_timeout 45 /usr/bin/env \
+              SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_SCREEN="$TARGET" \
+              xcrun simctl launch "$SIM_UDID" com.achmed06.salahpath
+            sleep 3
+            run_timeout 45 xcrun simctl io "$SIM_UDID" screenshot "preview/$NAME"
+          }
+
+          capture home SalahPath-B78-Home.png
+          capture qibla SalahPath-B78-Qibla.png
+
+      - name: Upload preview
+        uses: actions/upload-artifact@v7
+        with:
+          name: SalahPath-B78-audio-qibla-preview
+          path: preview/*.png
+          if-no-files-found: error
