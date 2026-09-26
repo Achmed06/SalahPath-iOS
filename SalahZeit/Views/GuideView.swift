@@ -4365,6 +4365,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
     private var playbackFallbackAttempted = false
+    private var sessionIntroURL: URL?
     private(set) var queueSessionID = 0
 
     private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
@@ -4386,6 +4387,20 @@ final class RemoteAudioPlayer: ObservableObject {
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
 
+    func isCurrentRequest(_ url: URL) -> Bool {
+        if activeURL == url { return true }
+
+        guard let introURL = sessionIntroURL,
+              activeURL == introURL,
+              queueIndex == 0,
+              queueURLs.count > 1,
+              queueURLs[0] == introURL else {
+            return false
+        }
+
+        return queueURLs[1] == url
+    }
+
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
         prayerContext = (trimmed?.isEmpty == false) ? trimmed : nil
@@ -4397,9 +4412,11 @@ final class RemoteAudioPlayer: ObservableObject {
         _ url: URL,
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
-        context: String? = nil
+        context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true
     ) {
-        if activeURL == url, player != nil {
+        if isCurrentRequest(url), player != nil {
             if isPlaying {
                 pause()
             } else {
@@ -4407,16 +4424,32 @@ final class RemoteAudioPlayer: ObservableObject {
             }
             return
         }
-        playQueue([url], title: title, artist: artist, context: context)
+        playQueue(
+            [url],
+            title: title,
+            artist: artist,
+            context: context,
+            introURL: introURL,
+            prependIntro: prependIntro
+        )
     }
 
     func play(
         _ url: URL,
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
-        context: String? = nil
+        context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true
     ) {
-        playQueue([url], title: title, artist: artist, context: context)
+        playQueue(
+            [url],
+            title: title,
+            artist: artist,
+            context: context,
+            introURL: introURL,
+            prependIntro: prependIntro
+        )
     }
 
     func playQueue(
@@ -4424,9 +4457,20 @@ final class RemoteAudioPlayer: ObservableObject {
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
         context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true,
         continuation: RemoteAudioPlayerQueueContinuation? = nil
     ) {
-        let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        var cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        let contentQueueCount = cleaned.count
+        sessionIntroURL = nil
+        if prependIntro,
+           let introURL,
+           (introURL.isFileURL || introURL.scheme?.lowercased() == "https"),
+           cleaned.first != introURL {
+            cleaned.insert(introURL, at: 0)
+            sessionIntroURL = introURL
+        }
         guard !cleaned.isEmpty else {
             stop()
             lastError = "Audio nicht verfügbar / Ses mevcut değil."
@@ -4447,13 +4491,18 @@ final class RemoteAudioPlayer: ObservableObject {
         queueContinuationDelegate = continuation
         continuationRequestInFlight = false
         queueURLs = cleaned
-        queueCount = cleaned.count
+        queueCount = contentQueueCount
         queueIndex = 0
         updateRemoteCommandAvailability()
         loadCurrentAndPlay()
     }
 
     func next() {
+        if consumeFinishedIntroIfNeeded() {
+            loadCurrentAndPlay()
+            return
+        }
+
         if hasNext {
             queueIndex += 1
             updateRemoteCommandAvailability()
@@ -4525,6 +4574,26 @@ final class RemoteAudioPlayer: ObservableObject {
         updateNowPlaying()
     }
 
+    private func consumeFinishedIntroIfNeeded() -> Bool {
+        guard let introURL = sessionIntroURL,
+              queueIndex == 0,
+              queueURLs.count > 1,
+              queueURLs[0] == introURL,
+              activeURL == introURL else {
+            return false
+        }
+
+        queueURLs.removeFirst()
+        sessionIntroURL = nil
+        queueIndex = 0
+        queueCount = queueURLs.count
+        activeURL = nil
+        currentTime = 0
+        duration = 0
+        updateRemoteCommandAvailability()
+        return !queueURLs.isEmpty
+    }
+
     func pause() {
         player?.pause()
         isPlaying = false
@@ -4564,6 +4633,7 @@ final class RemoteAudioPlayer: ObservableObject {
         player?.pause()
         player = nil
         queueURLs = []
+        sessionIntroURL = nil
         queueIndex = 0
         queueCount = 0
         activeURL = nil
@@ -4700,7 +4770,9 @@ final class RemoteAudioPlayer: ObservableObject {
         ) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                if self.hasNext {
+                if self.consumeFinishedIntroIfNeeded() {
+                    self.loadCurrentAndPlay()
+                } else if self.hasNext {
                     self.next()
                 } else if self.queueContinuationDelegate != nil {
                     self.requestContinuationIfAvailable()
@@ -5087,6 +5159,13 @@ enum QuranAudioResolver {
             return URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/\(file)")
         }
     }
+
+    static func basmalaIntroURL(reciter: QuranReciter) -> URL? {
+        // One full "Bismillāhir-Raḥmānir-Raḥīm" at the beginning of a
+        // user-started audio session. It is NOT inserted again for repeats,
+        // the next ayah, or automatic continuation into the next surah.
+        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
+    }
 }
 
 @MainActor
@@ -5104,19 +5183,27 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         currentSurah: Int,
         reciter: QuranReciter,
         title: String,
-        context: String
+        context: String,
+        startsAtFirstAyah: Bool = true
     ) {
         guard (1...114).contains(currentSurah), !urls.isEmpty else { return }
 
         self.reciter = reciter
         nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
 
+        var contentURLs = urls
+        if currentSurah == 1, startsAtFirstAyah, contentURLs.count > 1 {
+            contentURLs.removeFirst()
+        }
+
         let player = RemoteAudioPlayer.shared
         player.playQueue(
-            urls,
+            contentURLs,
             title: title,
             artist: reciter.title,
             context: context,
+            introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
+            prependIntro: true,
             continuation: nextSurah == nil ? nil : self
         )
         expectedSessionID = player.queueSessionID
@@ -5510,11 +5597,23 @@ struct ShortSurahLearningView: View {
                 repeatCount = safeRepeatCount
             }
 
+            let repeatUnit: [URL]
+            if item.surahNumber == 1, urls.count > 1 {
+                // Al-Fatiha 1:1 is the Bismillah. The session prelude supplies
+                // it once; repeated rounds therefore begin at 1:2.
+                repeatUnit = Array(urls.dropFirst())
+            } else {
+                repeatUnit = urls
+            }
+            let repeatedContent = Array(repeating: repeatUnit, count: safeRepeatCount).flatMap { $0 }
+
             audio.playQueue(
-                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 },
+                repeatedContent,
                 title: item.latinName,
                 artist: reciter.title,
-                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
+                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre"),
+                introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
+                prependIntro: true
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
