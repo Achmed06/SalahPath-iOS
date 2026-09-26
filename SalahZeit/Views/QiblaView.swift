@@ -58,28 +58,47 @@ struct QiblaView: View {
                             if let rotation {
                                 ZStack {
                                     Circle()
-                                        .fill(SalahTheme.teal.opacity(0.055))
+                                        .fill(SalahTheme.teal.opacity(0.045))
                                         .frame(width: 170, height: 170)
 
-                                    Image(systemName: "location.north.fill")
-                                        .font(.system(size: 80, weight: .medium))
-                                        .foregroundStyle(SalahTheme.teal.opacity(0.95))
-                                        .offset(y: -17)
+                                    Capsule()
+                                        .fill(SalahTheme.gold.opacity(0.35))
+                                        .frame(width: 11, height: 66)
+                                        .offset(y: -31)
+
+                                    Capsule()
+                                        .fill(SalahTheme.teal)
+                                        .frame(width: 6, height: 66)
+                                        .offset(y: -31)
+
+                                    Image(systemName: "arrowtriangle.up.fill")
+                                        .font(.system(size: 34, weight: .black))
+                                        .foregroundStyle(SalahTheme.teal)
+                                        .offset(y: -67)
+
+                                    Circle()
+                                        .fill(SalahTheme.deepTeal)
+                                        .frame(width: 20, height: 20)
+                                        .overlay {
+                                            Circle()
+                                                .stroke(SalahTheme.gold, lineWidth: 3)
+                                                .frame(width: 10, height: 10)
+                                        }
 
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                            .fill(Color.black.opacity(0.94))
+                                            .fill(Color.black.opacity(0.95))
                                             .frame(width: 44, height: 38)
                                         Rectangle()
                                             .fill(SalahTheme.gold)
                                             .frame(width: 44, height: 4)
                                             .offset(y: -7)
                                         RoundedRectangle(cornerRadius: 2)
-                                            .stroke(SalahTheme.gold.opacity(0.75), lineWidth: 1)
+                                            .stroke(SalahTheme.gold.opacity(0.78), lineWidth: 1)
                                             .frame(width: 30, height: 20)
                                             .offset(y: 5)
                                     }
-                                    .offset(y: -94)
+                                    .offset(y: -96)
                                 }
                                 .frame(width: 226, height: 226)
                                 .rotationEffect(.degrees(rotation))
@@ -285,16 +304,9 @@ struct QiblaView: View {
 
     private func compactInfoTile(icon: String, title: String, value: String) -> some View {
         VStack(spacing: 4) {
-            Group {
-                if icon == "location.north.circle.fill" {
-                    SalahFeatureIcon(kind: "qibla")
-                        .frame(width: 28, height: 28)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 21, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
-                }
-            }
+            Image(systemName: icon)
+                .font(.system(size: 21, weight: .semibold))
+                .foregroundStyle(SalahTheme.teal)
             Text(title)
                 .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(SalahTheme.mutedInk)
