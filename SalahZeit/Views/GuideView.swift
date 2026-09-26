@@ -5020,6 +5020,29 @@ enum QuranAudioResolver {
         throw lastError
     }
 
+    static func bismillahURL(reciter: QuranReciter) -> URL? {
+        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
+    }
+
+    static func playbackQueue(
+        urls: [URL],
+        surah: Int,
+        startAyah: Int,
+        reciter: QuranReciter
+    ) -> [URL] {
+        guard !urls.isEmpty else { return [] }
+
+        // Prefix the Basmalah only when playback starts at the actual beginning
+        // of a surah. Al-Fatiha 1:1 already is the Basmalah, while At-Tawbah
+        // intentionally begins without it.
+        guard startAyah == 1, surah != 1, surah != 9,
+              let basmalah = bismillahURL(reciter: reciter) else {
+            return urls
+        }
+
+        return [basmalah] + urls
+    }
+
     private static func apiURLs(
         surah: Int,
         edition: String,
@@ -5099,6 +5122,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
     func play(
         urls: [URL],
         currentSurah: Int,
+        startAyah: Int = 1,
         reciter: QuranReciter,
         title: String,
         context: String
@@ -5109,8 +5133,14 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
 
         let player = RemoteAudioPlayer.shared
+        let playbackURLs = QuranAudioResolver.playbackQueue(
+            urls: urls,
+            surah: currentSurah,
+            startAyah: max(1, startAyah),
+            reciter: reciter
+        )
         player.playQueue(
-            urls,
+            playbackURLs,
             title: title,
             artist: reciter.title,
             context: context,
@@ -5136,8 +5166,14 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                       player.queueSessionID == sessionID else { return }
 
                 self.nextSurah = surah < 114 ? surah + 1 : nil
+                let playbackURLs = QuranAudioResolver.playbackQueue(
+                    urls: urls,
+                    surah: surah,
+                    startAyah: 1,
+                    reciter: reciter
+                )
                 player.appendContinuation(
-                    urls,
+                    playbackURLs,
                     expectedSessionID: sessionID,
                     title: "Quran · Sura \(surah)",
                     context: "Quran · automatisch weiter"
@@ -5507,8 +5543,14 @@ struct ShortSurahLearningView: View {
                 repeatCount = safeRepeatCount
             }
 
+            let playbackURLs = QuranAudioResolver.playbackQueue(
+                urls: urls,
+                surah: item.surahNumber,
+                startAyah: 1,
+                reciter: reciter
+            )
             audio.playQueue(
-                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 },
+                Array(repeating: playbackURLs, count: safeRepeatCount).flatMap { $0 },
                 title: item.latinName,
                 artist: reciter.title,
                 context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
@@ -9646,6 +9688,7 @@ struct QuranPageReaderView: View {
         QuranContinuousPlaybackCoordinator.shared.play(
             urls: Array(urls.dropFirst(startIndex)),
             currentSurah: ayah.surah.number,
+            startAyah: ayah.numberInSurah,
             reciter: reciter,
             title: ayah.surah.englishName,
             context: settings.t(
@@ -10647,6 +10690,7 @@ private struct QuranSurahView: View {
         QuranContinuousPlaybackCoordinator.shared.play(
             urls: Array(resolvedAudioURLs.dropFirst(index)),
             currentSurah: surah.number,
+            startAyah: ayahNumber,
             reciter: settings.quranReciter,
             title: surah.englishName,
             context: settings.t(
