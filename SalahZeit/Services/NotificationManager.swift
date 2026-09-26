@@ -12,6 +12,8 @@ struct NotificationDiagnostics: Sendable {
     let pendingTotalRequests: Int
     let standardAdhanInstalled: Bool
     let fajrAdhanInstalled: Bool
+    let runningInLiveContainer: Bool
+    let liveContainerLocalNotificationsFixed: Bool?
 }
 
 @MainActor
@@ -286,15 +288,55 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             pendingPrayerRequests: pending.filter { $0.identifier.hasPrefix(prayerIdentifierPrefix) }.count,
             pendingTotalRequests: pending.count,
             standardAdhanInstalled: standardInstalled,
-            fajrAdhanInstalled: fajrInstalled
+            fajrAdhanInstalled: fajrInstalled,
+            runningInLiveContainer: liveContainerHomeURL != nil,
+            liveContainerLocalNotificationsFixed: liveContainerNotificationFixEnabled
         )
     }
 
     private func soundExists(resourceName: String, fileName: String) -> Bool {
         let bundled = Bundle.main.url(forResource: resourceName, withExtension: "caf") != nil
-        let installed = notificationSoundURL(fileName: fileName)
-            .map { FileManager.default.fileExists(atPath: $0.path) } ?? false
+        let installed = notificationSoundInstallDirectories()
+            .map { $0.appendingPathComponent(fileName, isDirectory: false) }
+            .contains { FileManager.default.fileExists(atPath: $0.path) }
         return bundled || installed
+    }
+
+    private var liveContainerHomeURL: URL? {
+        guard let path = ProcessInfo.processInfo.environment["LC_HOME_PATH"],
+              !path.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return nil
+        }
+        return URL(fileURLWithPath: path, isDirectory: true)
+    }
+
+    private var liveContainerNotificationFixEnabled: Bool? {
+        guard liveContainerHomeURL != nil else { return nil }
+        let infoURL = Bundle.main.bundleURL.appendingPathComponent("LCAppInfo.plist", isDirectory: false)
+        guard let info = NSDictionary(contentsOf: infoURL) as? [String: Any] else {
+            return nil
+        }
+        return (info["fixLocalNotification"] as? NSNumber)?.boolValue ??
+            (info["fixLocalNotification"] as? Bool)
+    }
+
+    private func notificationSoundInstallDirectories() -> [URL] {
+        var directories: [URL] = []
+
+        if let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first {
+            directories.append(library.appendingPathComponent("Sounds", isDirectory: true))
+        }
+
+        if let liveContainerHomeURL {
+            let hostSounds = liveContainerHomeURL
+                .appendingPathComponent("Library", isDirectory: true)
+                .appendingPathComponent("Sounds", isDirectory: true)
+            if !directories.contains(where: { $0.standardizedFileURL == hostSounds.standardizedFileURL }) {
+                directories.append(hostSounds)
+            }
+        }
+
+        return directories
     }
 
     private func prayerTimeSound(for kind: PrayerKind, settings: SettingsStore) -> UNNotificationSound {
@@ -322,44 +364,48 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     private func notificationSoundURL(fileName: String) -> URL? {
-        FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)
-            .first?
-            .appendingPathComponent("Sounds", isDirectory: true)
-            .appendingPathComponent(fileName, isDirectory: false)
+        let directories = notificationSoundInstallDirectories()
+        if let existing = directories
+            .map({ $0.appendingPathComponent(fileName, isDirectory: false) })
+            .first(where: { FileManager.default.fileExists(atPath: $0.path) }) {
+            return existing
+        }
+        return directories.first?.appendingPathComponent(fileName, isDirectory: false)
     }
 
     private func installNotificationSoundsIfNeeded() {
-        guard let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
-            return
-        }
+        let fileManager = FileManager.default
+        let directories = notificationSoundInstallDirectories()
+        guard !directories.isEmpty else { return }
 
-        let soundsDirectory = library.appendingPathComponent("Sounds", isDirectory: true)
-        do {
-            try FileManager.default.createDirectory(
-                at: soundsDirectory,
-                withIntermediateDirectories: true
-            )
-        } catch {
-            return
-        }
-
-        for resourceName in ["adhan-standard", "adhan-fajr"] {
-            guard let source = Bundle.main.url(forResource: resourceName, withExtension: "caf") else {
-                continue
-            }
-            let destination = soundsDirectory.appendingPathComponent("\(resourceName).caf")
+        for soundsDirectory in directories {
             do {
-                if FileManager.default.fileExists(atPath: destination.path) {
-                    let sourceSize = (try? source.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -1
-                    let destinationSize = (try? destination.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -2
-                    if sourceSize == destinationSize, sourceSize > 0 {
-                        continue
-                    }
-                    try FileManager.default.removeItem(at: destination)
-                }
-                try FileManager.default.copyItem(at: source, to: destination)
+                try fileManager.createDirectory(
+                    at: soundsDirectory,
+                    withIntermediateDirectories: true
+                )
             } catch {
                 continue
+            }
+
+            for resourceName in ["adhan-standard", "adhan-fajr"] {
+                guard let source = Bundle.main.url(forResource: resourceName, withExtension: "caf") else {
+                    continue
+                }
+                let destination = soundsDirectory.appendingPathComponent("\(resourceName).caf")
+                do {
+                    if fileManager.fileExists(atPath: destination.path) {
+                        let sourceSize = (try? source.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -1
+                        let destinationSize = (try? destination.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -2
+                        if sourceSize == destinationSize, sourceSize > 0 {
+                            continue
+                        }
+                        try fileManager.removeItem(at: destination)
+                    }
+                    try fileManager.copyItem(at: source, to: destination)
+                } catch {
+                    continue
+                }
             }
         }
     }
