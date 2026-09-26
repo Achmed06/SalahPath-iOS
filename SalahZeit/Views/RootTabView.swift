@@ -77,67 +77,106 @@ func salahFeatureIndex(for kind: String) -> Int? {
 struct SalahFeatureIcon: View {
     let kind: String
 
-    private var index: Int {
-        salahFeatureIndex(for: kind) ?? 4
-    }
-
     private var standaloneUIImage: UIImage? {
         UIImage(named: "feature_\(kind)")
     }
 
-    private var croppedUIImage: UIImage? {
-        guard let source = UIImage(named: "SalahFeatureSheet"),
-              let cgImage = source.cgImage else {
-            return nil
+    private var fallbackSymbol: String {
+        switch kind {
+        case "home", "start", "home_active", "home_inactive": return "house.fill"
+        case "prayer", "prayer_active", "prayer_inactive": return "figure.mind.and.body"
+        case "wudu", "wudu_active", "wudu_inactive": return "drop.fill"
+        case "quran", "quran_active", "quran_inactive": return "book.closed.fill"
+        case "discover": return "sparkles"
+        case "tracker", "checkmark": return "checkmark.circle.fill"
+        case "calendar": return "calendar"
+        case "qibla", "qibla_calibration": return "location.north.fill"
+        case "settings", "prayer_settings": return "gearshape.fill"
+        case "profile": return "person.crop.circle.fill"
+
+        case "fajr": return "sun.horizon.fill"
+        case "sunrise": return "sunrise.fill"
+        case "dhuhr": return "sun.max.fill"
+        case "asr": return "sun.haze.fill"
+        case "maghrib": return "sunset.fill"
+        case "isha": return "moon.stars.fill"
+        case "times", "prayer_schedule", "list": return "clock.fill"
+        case "reminder", "notifications": return "bell.fill"
+        case "mute": return "speaker.slash.fill"
+        case "sound", "quran_audio": return "speaker.wave.2.fill"
+
+        case "mosques": return "building.columns.fill"
+        case "duas": return "text.book.closed.fill"
+        case "dhikr": return "circle.grid.cross.fill"
+        case "hadith": return "text.book.closed.fill"
+        case "islamic_knowledge", "knowledge", "info", "sparkles": return "sparkles"
+        case "favorites": return "heart.fill"
+        case "bookmarks": return "bookmark.fill"
+        case "history": return "clock.arrow.circlepath"
+        case "downloads": return "arrow.down.circle.fill"
+
+        case "articles": return "doc.text.fill"
+        case "courses": return "graduationcap.fill"
+        case "videos": return "play.rectangle.fill"
+        case "backgrounds": return "photo.fill"
+        case "mindfulness": return "leaf.fill"
+        case "donations": return "heart.circle.fill"
+        case "community": return "person.3.fill"
+        case "forum": return "bubble.left.and.bubble.right.fill"
+        case "language": return "globe"
+        case "islamic_calendar": return "moon.stars.fill"
+
+        case "location": return "location.fill"
+        case "map": return "map.fill"
+        case "moon", "dark_mode": return "moon.stars.fill"
+        case "light_mode": return "sun.max.fill"
+        case "font_size": return "textformat.size"
+        case "backup": return "externaldrive.fill.badge.timemachine"
+        case "sync": return "arrow.triangle.2.circlepath"
+        case "back": return "chevron.left"
+        case "forward": return "chevron.right"
+        case "more": return "ellipsis"
+        default: return "sparkles"
         }
-
-        let column = index % 10
-        let row = index / 10
-        let cellWidth = CGFloat(cgImage.width) / 10
-        let cellHeight = CGFloat(cgImage.height) / 6
-
-        let cropRect = CGRect(
-            x: CGFloat(column) * cellWidth,
-            y: CGFloat(row) * cellHeight,
-            width: cellWidth,
-            height: cellHeight
-        ).integral
-
-        guard let cropped = cgImage.cropping(to: cropRect) else {
-            return nil
-        }
-
-        return UIImage(
-            cgImage: cropped,
-            scale: source.scale,
-            orientation: source.imageOrientation
-        )
     }
 
     var body: some View {
-        Group {
-            if let standaloneUIImage {
-                Image(uiImage: standaloneUIImage)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-            } else if let croppedUIImage {
-                Image(uiImage: croppedUIImage)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-            } else {
-                Image(systemName: "square.dashed")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(SalahTheme.mutedInk)
+        GeometryReader { proxy in
+            let side = max(1, min(proxy.size.width, proxy.size.height))
+
+            ZStack {
+                if let standaloneUIImage {
+                    Image(uiImage: standaloneUIImage)
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                } else {
+                    Image(systemName: fallbackSymbol)
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.system(size: side * 0.70, weight: .semibold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [
+                                    SalahTheme.teal,
+                                    SalahTheme.deepTeal
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .shadow(
+                            color: side >= 24 ? SalahTheme.deepTeal.opacity(0.16) : .clear,
+                            radius: side >= 24 ? 1.5 : 0,
+                            y: side >= 24 ? 1 : 0
+                        )
+                }
             }
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
         .aspectRatio(1, contentMode: .fit)
         .accessibilityHidden(true)
     }
 }
-
 func salahPrayerFeatureKind(for kind: PrayerKind) -> String {
     switch kind {
     case .fajr: return "fajr"
@@ -1014,42 +1053,103 @@ struct MoreView: View {
     @ViewBuilder
     private func salahFeatureIcon(_ symbol: String, size: CGFloat) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
+            RoundedRectangle(cornerRadius: size * 0.30, style: .continuous)
                 .fill(
                     LinearGradient(
-                        colors: [SalahTheme.softTeal, SalahTheme.cream],
+                        colors: [
+                            Color.white.opacity(0.98),
+                            SalahTheme.cream,
+                            SalahTheme.softTeal.opacity(0.62)
+                        ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
                 .frame(width: size, height: size)
+                .shadow(
+                    color: SalahTheme.deepTeal.opacity(0.12),
+                    radius: max(2, size * 0.08),
+                    y: max(1, size * 0.05)
+                )
 
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
+            RoundedRectangle(cornerRadius: size * 0.30, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            SalahTheme.gold.opacity(0.82),
+                            SalahTheme.gold.opacity(0.30),
+                            SalahTheme.teal.opacity(0.24)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: max(0.8, size * 0.022)
+                )
                 .frame(width: size, height: size)
 
             Circle()
-                .fill(SalahTheme.cream.opacity(0.88))
-                .frame(width: size * 0.74, height: size * 0.74)
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            Color.white.opacity(0.98),
+                            SalahTheme.cream.opacity(0.94),
+                            SalahTheme.softTeal.opacity(0.46)
+                        ],
+                        center: .topLeading,
+                        startRadius: 2,
+                        endRadius: size * 0.42
+                    )
+                )
+                .frame(width: size * 0.72, height: size * 0.72)
+                .overlay {
+                    Circle()
+                        .stroke(Color.white.opacity(0.78), lineWidth: max(0.6, size * 0.015))
+                }
+                .shadow(
+                    color: SalahTheme.deepTeal.opacity(0.08),
+                    radius: max(1, size * 0.04),
+                    y: 1
+                )
+
+            Ellipse()
+                .fill(Color.white.opacity(0.58))
+                .frame(width: size * 0.42, height: size * 0.16)
+                .blur(radius: size * 0.025)
+                .offset(x: -size * 0.10, y: -size * 0.20)
+                .allowsHitTesting(false)
 
             if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
                 SalahFeatureIcon(kind: glyphKind)
-                    .frame(width: size * 0.52, height: size * 0.52)
+                    .frame(width: size * 0.54, height: size * 0.54)
             } else {
                 Image(systemName: symbol)
                     .symbolRenderingMode(.hierarchical)
                     .font(.system(size: size * 0.40, weight: .semibold))
-                    .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: size * 0.74, height: size * 0.74)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: size * 0.72, height: size * 0.72)
             }
 
-            Circle()
-                .fill(SalahTheme.gold)
-                .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
-                .overlay {
-                    Circle().stroke(SalahTheme.cream.opacity(0.90), lineWidth: 1)
-                }
-                .offset(x: size * 0.31, y: -size * 0.31)
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [SalahTheme.gold, SalahTheme.gold.opacity(0.72)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                Circle()
+                    .stroke(Color.white.opacity(0.92), lineWidth: max(0.8, size * 0.02))
+            }
+            .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
+            .offset(x: size * 0.31, y: -size * 0.31)
+            .shadow(color: SalahTheme.gold.opacity(0.22), radius: 2, y: 1)
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
@@ -1082,7 +1182,7 @@ struct MoreView: View {
         case "checklist", "pause.circle.fill":
             return "tracker"
         case "building.columns.fill":
-            return "hadith"
+            return "mosques"
         case "text.quote":
             return "duas"
         case "person.3.sequence.fill":
@@ -1116,10 +1216,35 @@ struct MoreView: View {
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
-        .frame(maxWidth: .infinity, minHeight: 102)
+        .frame(maxWidth: .infinity, minHeight: 104)
         .padding(7)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1) }
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.86),
+                    SalahTheme.cream,
+                    SalahTheme.softTeal.opacity(0.16)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            SalahTheme.gold.opacity(0.58),
+                            SalahTheme.gold.opacity(0.24)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.045), radius: 5, y: 2)
     }
 
     private func discoverRow(icon: String, title: String, subtitle: String) -> some View {
