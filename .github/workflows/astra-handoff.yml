@@ -1,0 +1,39 @@
+name: Astra handoff bundle
+
+on:
+  push:
+    branches:
+      - handoff/astra-bundle-20260926
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current SalahPath main
+        uses: actions/checkout@v7
+        with:
+          ref: f4c858ad2934c756de6bffb214f56f6a1eb821c9
+          fetch-depth: 1
+
+      - name: Build repository handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p handoff/SalahPath-iOS
+          rsync -a --exclude='.git' --exclude='handoff' ./ handoff/SalahPath-iOS/
+          cat > handoff/REPO_STATE.txt <<'EOF'
+          Repository: Achmed06/SalahPath-iOS
+          Source branch: main
+          Exact source SHA: f4c858ad2934c756de6bffb214f56f6a1eb821c9
+          Packaged: 2026-09-26
+          EOF
+          find handoff/SalahPath-iOS/SalahZeit/Assets.xcassets -type f | sort > handoff/ASSET_FILE_LIST.txt
+          find handoff/SalahPath-iOS -type f | sort > handoff/ALL_FILE_LIST.txt
+
+      - name: Upload repository bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: SalahPath-Astra-Repo-f4c858ad
+          path: handoff
+          if-no-files-found: error
+          retention-days: 30
