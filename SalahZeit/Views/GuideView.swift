@@ -5158,7 +5158,7 @@ enum QuranAudioResolver {
     }
     
     static func basmalaIntroURL(reciter: QuranReciter) -> URL? {
-        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
+        URL(string: "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/1.mp3")
     }
 }
 
@@ -5185,14 +5185,19 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         self.reciter = reciter
         nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
 
+        var contentURLs = urls
+        if currentSurah == 1, startsAtFirstAyah, contentURLs.count > 1 {
+            contentURLs.removeFirst()
+        }
+
         let player = RemoteAudioPlayer.shared
         player.playQueue(
-            urls,
+            contentURLs,
             title: title,
             artist: reciter.title,
             context: context,
             introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
-            prependIntro: !(currentSurah == 1 && startsAtFirstAyah),
+            prependIntro: true,
             continuation: nextSurah == nil ? nil : self
         )
         expectedSessionID = player.queueSessionID
@@ -5586,13 +5591,23 @@ struct ShortSurahLearningView: View {
                 repeatCount = safeRepeatCount
             }
 
+            let repeatUnit: [URL]
+            if item.surahNumber == 1, urls.count > 1 {
+                // Al-Fatiha 1:1 is the Bismillah. The session prelude supplies
+                // it once; repeated rounds therefore begin at 1:2.
+                repeatUnit = Array(urls.dropFirst())
+            } else {
+                repeatUnit = urls
+            }
+            let repeatedContent = Array(repeating: repeatUnit, count: safeRepeatCount).flatMap { $0 }
+
             audio.playQueue(
-                Array(repeating: urls, count: safeRepeatCount).flatMap { $0 },
+                repeatedContent,
                 title: item.latinName,
                 artist: reciter.title,
                 context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre"),
                 introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
-                prependIntro: item.surahNumber != 1
+                prependIntro: true
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
