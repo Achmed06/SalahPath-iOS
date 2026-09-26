@@ -5158,7 +5158,10 @@ enum QuranAudioResolver {
     }
     
     static func basmalaIntroURL(reciter: QuranReciter) -> URL? {
-        URL(string: "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/1.mp3")
+        // One full "Bismillāhir-Raḥmānir-Raḥīm" at the beginning of a
+        // user-started audio session. It is NOT inserted again for repeats,
+        // the next ayah, or automatic continuation into the next surah.
+        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
     }
 }
 
