@@ -574,7 +574,7 @@ struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
-    @State private var prayerNextTriggerVisible = false
+    @State private var prayerStepTransitionLocked = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
@@ -826,8 +826,8 @@ struct PrayerHowToView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe und scrolle bis zum Ende. Wenn du dort weiter nach oben wischst, öffnet sich automatisch der nächste Schritt.",
-                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku ve adımın sonuna kadar kaydır. Orada yukarı doğru kaydırmaya devam edince sonraki adım otomatik açılır."
+                        "Du siehst immer nur einen Schritt. Vertikal scrollst du innerhalb des Schritts. Wische nach links für den nächsten Schritt und nach rechts für den vorherigen.",
+                        "Her seferinde yalnız bir adım görürsün. Dikey kaydırma adımın içinde gezinir. Sonraki adım için sola, önceki adım için sağa kaydır."
                     ))
                     .font(.subheadline)
                     .foregroundStyle(SalahTheme.ink)
@@ -925,18 +925,26 @@ struct PrayerHowToView: View {
                     PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
                         .id("prayer-step-card-\(currentStepIndex)")
 
-                    if currentStepIndex < steps.count - 1 {
-                        HStack(spacing: 7) {
-                            Image(systemName: "chevron.down")
-                            Text(settings.t("Weiter wischen", "Devam etmek için kaydır"))
+                    if steps.count > 1 {
+                        HStack(spacing: 10) {
+                            if currentStepIndex > 0 {
+                                Label(
+                                    settings.t("Rechts wischen · zurück", "Sağa kaydır · geri"),
+                                    systemImage: "arrow.right"
+                                )
+                            }
+                            Spacer(minLength: 8)
+                            if currentStepIndex < steps.count - 1 {
+                                Label(
+                                    settings.t("Links wischen · weiter", "Sola kaydır · devam"),
+                                    systemImage: "arrow.left"
+                                )
+                            }
                         }
                         .font(.caption.bold())
                         .foregroundStyle(SalahTheme.mutedInk)
-                        .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
-                        .onAppear { prayerNextTriggerVisible = true }
-                        .onDisappear { prayerNextTriggerVisible = false }
+                        .accessibilityElement(children: .combine)
                     }
 
                     if currentStepIndex == steps.count - 1 {
@@ -958,21 +966,32 @@ struct PrayerHowToView: View {
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 18)
+                DragGesture(minimumDistance: 24)
                     .onEnded { value in
-                        guard currentStepIndex < steps.count - 1,
-                              prayerNextTriggerVisible,
-                              value.translation.height < -30 else { return }
-                        let target = currentStepIndex + 1
-                        prayerNextTriggerVisible = false
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        guard !prayerStepTransitionLocked else { return }
+                        let horizontal = value.translation.width
+                        let vertical = value.translation.height
+                        guard abs(horizontal) > 56,
+                              abs(horizontal) > abs(vertical) * 1.25 else { return }
+
+                        let target: Int
+                        if horizontal < 0 {
+                            guard currentStepIndex < steps.count - 1 else { return }
+                            target = currentStepIndex + 1
+                        } else {
+                            guard currentStepIndex > 0 else { return }
+                            target = currentStepIndex - 1
+                        }
+
+                        prayerStepTransitionLocked = true
+                        withAnimation(.easeInOut(duration: 0.18)) {
                             currentStepIndex = target
                         }
                         Task { @MainActor in
                             await Task.yield()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                            }
+                            proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
+                            try? await Task.sleep(for: .milliseconds(220))
+                            prayerStepTransitionLocked = false
                         }
                     }
             )
@@ -1534,7 +1553,7 @@ struct WuduGuideView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
     @State private var showExactDetail = true
-    @State private var wuduNextTriggerVisible = false
+    @State private var wuduStepTransitionLocked = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 12))
@@ -1572,8 +1591,8 @@ struct WuduGuideView: View {
                             .foregroundStyle(SalahTheme.deepTeal)
 
                         Text(settings.t(
-                            "Männer und Frauen machen Wudu grundsätzlich gleich. Du siehst immer nur einen Schritt. Mach ihn in Ruhe fertig und gehe dann weiter.",
-                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Her seferinde yalnız bir adım görürsün. Adımı sakin şekilde tamamla, sonra devam et."
+                            "Männer und Frauen machen Wudu grundsätzlich gleich. Vertikal scrollst du innerhalb eines Schritts. Wische nach links für den nächsten Schritt und nach rechts für den vorherigen.",
+                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Dikey kaydırma adımın içinde gezinir. Sonraki adım için sola, önceki adım için sağa kaydır."
                         ))
                         .font(.subheadline)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1622,18 +1641,26 @@ struct WuduGuideView: View {
                     wuduStepCard(steps[safeCurrentStepIndex])
                         .id("wudu-step-card-\(currentStepIndex)")
 
-                    if currentStepIndex < steps.count - 1 {
-                        HStack(spacing: 7) {
-                            Image(systemName: "chevron.down")
-                            Text(settings.t("Weiter wischen", "Devam etmek için kaydır"))
+                    if steps.count > 1 {
+                        HStack(spacing: 10) {
+                            if currentStepIndex > 0 {
+                                Label(
+                                    settings.t("Rechts wischen · zurück", "Sağa kaydır · geri"),
+                                    systemImage: "arrow.right"
+                                )
+                            }
+                            Spacer(minLength: 8)
+                            if currentStepIndex < steps.count - 1 {
+                                Label(
+                                    settings.t("Links wischen · weiter", "Sola kaydır · devam"),
+                                    systemImage: "arrow.left"
+                                )
+                            }
                         }
                         .font(.caption.bold())
                         .foregroundStyle(SalahTheme.mutedInk)
-                        .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
-                        .onAppear { wuduNextTriggerVisible = true }
-                        .onDisappear { wuduNextTriggerVisible = false }
+                        .accessibilityElement(children: .combine)
                     }
 
                     if currentStepIndex == steps.count - 1 {
@@ -1699,21 +1726,32 @@ struct WuduGuideView: View {
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 18)
+                DragGesture(minimumDistance: 24)
                     .onEnded { value in
-                        guard currentStepIndex < steps.count - 1,
-                              wuduNextTriggerVisible,
-                              value.translation.height < -30 else { return }
-                        let target = currentStepIndex + 1
-                        wuduNextTriggerVisible = false
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        guard !wuduStepTransitionLocked else { return }
+                        let horizontal = value.translation.width
+                        let vertical = value.translation.height
+                        guard abs(horizontal) > 56,
+                              abs(horizontal) > abs(vertical) * 1.25 else { return }
+
+                        let target: Int
+                        if horizontal < 0 {
+                            guard currentStepIndex < steps.count - 1 else { return }
+                            target = currentStepIndex + 1
+                        } else {
+                            guard currentStepIndex > 0 else { return }
+                            target = currentStepIndex - 1
+                        }
+
+                        wuduStepTransitionLocked = true
+                        withAnimation(.easeInOut(duration: 0.18)) {
                             currentStepIndex = target
                         }
                         Task { @MainActor in
                             await Task.yield()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                            }
+                            proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                            try? await Task.sleep(for: .milliseconds(220))
+                            wuduStepTransitionLocked = false
                         }
                     }
             )
