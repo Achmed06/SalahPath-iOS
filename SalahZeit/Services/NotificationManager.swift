@@ -4,6 +4,17 @@ import UserNotifications
 import AVFoundation
 
 @MainActor
+struct NotificationDiagnostics: Sendable {
+    let authorizationStatus: UNAuthorizationStatus
+    let alertsEnabled: Bool
+    let soundsEnabled: Bool
+    let pendingPrayerRequests: Int
+    let pendingTotalRequests: Int
+    let standardAdhanInstalled: Bool
+    let fajrAdhanInstalled: Bool
+}
+
+@MainActor
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
     private let center = UNUserNotificationCenter.current()
@@ -12,6 +23,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     private let adhanPreviewIdentifier = "salahzeit.adhan.preview"
     private let standardAdhanSoundFileName = "adhan-standard.caf"
     private let fajrAdhanSoundFileName = "adhan-fajr.caf"
+    private let maximumPrayerRequests = 60
+    private let notificationPreviewIdentifier = "salahzeit.notification.preview"
     private var schedulingRevision = 0
     private var adhanPreviewPlayer: AVAudioPlayer?
 
@@ -67,6 +80,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         calendar.timeZone = timeZone
         let now = Date()
         var allRequestsScheduled = true
+        var scheduledIdentifiers = Set<String>()
+        var scheduledRequestCount = 0
 
         for dayOffset in 0..<7 {
             guard revision == schedulingRevision else { return false }
@@ -92,7 +107,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     ? settings.notificationLeadMinutes
                     : 10
 
-                if leadMinutes > 0 {
+                if leadMinutes > 0, scheduledRequestCount < maximumPrayerRequests {
                     let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
                     if reminderDate > now {
                         let reminder = UNMutableNotificationContent()
@@ -115,11 +130,17 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                             revision: revision
                         )
                         allRequestsScheduled = allRequestsScheduled && added
+                        if added {
+                            scheduledIdentifiers.insert(identifier)
+                            scheduledRequestCount += 1
+                        }
                         guard revision == schedulingRevision else { return false }
                     }
                 }
 
-                if settings.notifyAtPrayerTime, prayer.date > now {
+                if settings.notifyAtPrayerTime,
+                   prayer.date > now,
+                   scheduledRequestCount < maximumPrayerRequests {
                     let content = UNMutableNotificationContent()
                     content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
                     if let rakats = prayer.kind.fardRakats {
@@ -139,12 +160,28 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                         revision: revision
                     )
                     allRequestsScheduled = allRequestsScheduled && added
+                    if added {
+                        scheduledIdentifiers.insert(identifier)
+                        scheduledRequestCount += 1
+                    }
                     guard revision == schedulingRevision else { return false }
                 }
             }
         }
 
-        return revision == schedulingRevision && allRequestsScheduled
+        guard revision == schedulingRevision else { return false }
+
+        let pending = await center.pendingNotificationRequests()
+        guard revision == schedulingRevision else { return false }
+        let pendingIDs = Set(
+            pending
+                .map(\.identifier)
+                .filter { $0.hasPrefix(prayerIdentifierPrefix) }
+        )
+
+        return allRequestsScheduled &&
+            !scheduledIdentifiers.isEmpty &&
+            scheduledIdentifiers.isSubset(of: pendingIDs)
     }
 
     @discardableResult
@@ -187,7 +224,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         )
         content.sound = adhanSound(fajr: fajr)
 
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         do {
             try await center.add(
                 UNNotificationRequest(
@@ -196,10 +233,68 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     trigger: trigger
                 )
             )
-            return true
+            let pending = await center.pendingNotificationRequests()
+            return pending.contains { $0.identifier == adhanPreviewIdentifier }
         } catch {
             return false
         }
+    }
+
+    @discardableResult
+    func scheduleNotificationPreview(settings: SettingsStore) async -> Bool {
+        guard await ensureAuthorization() else { return false }
+
+        center.removePendingNotificationRequests(withIdentifiers: [notificationPreviewIdentifier])
+
+        let content = UNMutableNotificationContent()
+        content.title = settings.t("SalahPath Test", "SalahPath Test")
+        content.body = settings.t(
+            "Wenn du diese Mitteilung siehst, funktioniert die iOS-Zustellung.",
+            "Bu bildirimi görüyorsan iOS teslimatı çalışıyor."
+        )
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        do {
+            try await center.add(
+                UNNotificationRequest(
+                    identifier: notificationPreviewIdentifier,
+                    content: content,
+                    trigger: trigger
+                )
+            )
+            let pending = await center.pendingNotificationRequests()
+            return pending.contains { $0.identifier == notificationPreviewIdentifier }
+        } catch {
+            return false
+        }
+    }
+
+    func diagnostics() async -> NotificationDiagnostics {
+        let systemSettings = await center.notificationSettings()
+        let pending = await center.pendingNotificationRequests()
+
+        let standardInstalled = soundExists(resourceName: "adhan-standard", fileName: standardAdhanSoundFileName)
+        let fajrInstalled = soundExists(resourceName: "adhan-fajr", fileName: fajrAdhanSoundFileName)
+
+        return NotificationDiagnostics(
+            authorizationStatus: systemSettings.authorizationStatus,
+            alertsEnabled: systemSettings.alertSetting == .enabled ||
+                systemSettings.notificationCenterSetting == .enabled ||
+                systemSettings.lockScreenSetting == .enabled,
+            soundsEnabled: systemSettings.soundSetting == .enabled,
+            pendingPrayerRequests: pending.filter { $0.identifier.hasPrefix(prayerIdentifierPrefix) }.count,
+            pendingTotalRequests: pending.count,
+            standardAdhanInstalled: standardInstalled,
+            fajrAdhanInstalled: fajrInstalled
+        )
+    }
+
+    private func soundExists(resourceName: String, fileName: String) -> Bool {
+        let bundled = Bundle.main.url(forResource: resourceName, withExtension: "caf") != nil
+        let installed = notificationSoundURL(fileName: fileName)
+            .map { FileManager.default.fileExists(atPath: $0.path) } ?? false
+        return bundled || installed
     }
 
     private func prayerTimeSound(for kind: PrayerKind, settings: SettingsStore) -> UNNotificationSound {
