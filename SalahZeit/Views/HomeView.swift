@@ -703,7 +703,8 @@ private struct DailyDuaDetailView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: dua.source,
+                introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter)
             )
         } catch {
             guard revision == audioRequestRevision else { return }
