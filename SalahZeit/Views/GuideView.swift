@@ -4394,7 +4394,9 @@ final class RemoteAudioPlayer: ObservableObject {
         _ url: URL,
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
-        context: String? = nil
+        context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true
     ) {
         if activeURL == url, player != nil {
             if isPlaying {
@@ -4404,16 +4406,32 @@ final class RemoteAudioPlayer: ObservableObject {
             }
             return
         }
-        playQueue([url], title: title, artist: artist, context: context)
+        playQueue(
+            [url],
+            title: title,
+            artist: artist,
+            context: context,
+            introURL: introURL,
+            prependIntro: prependIntro
+        )
     }
 
     func play(
         _ url: URL,
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
-        context: String? = nil
+        context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true
     ) {
-        playQueue([url], title: title, artist: artist, context: context)
+        playQueue(
+            [url],
+            title: title,
+            artist: artist,
+            context: context,
+            introURL: introURL,
+            prependIntro: prependIntro
+        )
     }
 
     func playQueue(
@@ -4421,9 +4439,17 @@ final class RemoteAudioPlayer: ObservableObject {
         title: String = "SalahPath Audio",
         artist: String = "SalahPath",
         context: String? = nil,
+        introURL: URL? = nil,
+        prependIntro: Bool = true,
         continuation: RemoteAudioPlayerQueueContinuation? = nil
     ) {
-        let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        var cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
+        if prependIntro,
+           let introURL,
+           (introURL.isFileURL || introURL.scheme?.lowercased() == "https"),
+           cleaned.first != introURL {
+            cleaned.insert(introURL, at: 0)
+        }
         guard !cleaned.isEmpty else {
             stop()
             lastError = "Audio nicht verfügbar / Ses mevcut değil."
@@ -5084,6 +5110,10 @@ enum QuranAudioResolver {
             return URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/\(file)")
         }
     }
+    
+    static func basmalaIntroURL(reciter: QuranReciter) -> URL? {
+        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
+    }
 }
 
 @MainActor
@@ -5101,7 +5131,8 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         currentSurah: Int,
         reciter: QuranReciter,
         title: String,
-        context: String
+        context: String,
+        startsAtFirstAyah: Bool = true
     ) {
         guard (1...114).contains(currentSurah), !urls.isEmpty else { return }
 
@@ -5114,6 +5145,8 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
             title: title,
             artist: reciter.title,
             context: context,
+            introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
+            prependIntro: !(currentSurah == 1 && startsAtFirstAyah),
             continuation: nextSurah == nil ? nil : self
         )
         expectedSessionID = player.queueSessionID
@@ -5511,7 +5544,9 @@ struct ShortSurahLearningView: View {
                 Array(repeating: urls, count: safeRepeatCount).flatMap { $0 },
                 title: item.latinName,
                 artist: reciter.title,
-                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
+                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre"),
+                introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
+                prependIntro: item.surahNumber != 1
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
@@ -9651,7 +9686,8 @@ struct QuranPageReaderView: View {
             context: settings.t(
                 "Quran \(ayah.surah.number):\(ayah.numberInSurah) · automatisch weiter",
                 "Kur'an \(ayah.surah.number):\(ayah.numberInSurah) · otomatik devam"
-            )
+            ),
+            startsAtFirstAyah: startIndex == 0
         )
     }
 
@@ -10652,7 +10688,8 @@ private struct QuranSurahView: View {
             context: settings.t(
                 "Quran \(surah.number):\(ayahNumber) · automatisch weiter",
                 "Kur'an \(surah.number):\(ayahNumber) · otomatik devam"
-            )
+            ),
+            startsAtFirstAyah: index == 0
         )
     }
 
