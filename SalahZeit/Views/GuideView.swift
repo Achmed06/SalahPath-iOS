@@ -1506,29 +1506,383 @@ private struct WuduInstructionVisual: View {
     let stepNumber: Int
 
     var body: some View {
-        Image(key)
-            .renderingMode(.original)
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity)
-            .frame(height: 188)
-            .background(
-                LinearGradient(
-                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 26, style: .continuous)
+        ZStack {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.96),
+                            SalahTheme.cream,
+                            SalahTheme.gold.opacity(0.08)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 16, y: 8)
+
+            instructionArtwork
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+
+            LinearGradient(
+                colors: [Color.white.opacity(0.24), .clear, SalahTheme.deepTeal.opacity(0.035)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
-            .overlay {
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .allowsHitTesting(false)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 224)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.95),
+                            SalahTheme.gold.opacity(0.52),
+                            SalahTheme.gold.opacity(0.20)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private var instructionArtwork: some View {
+        switch stepNumber {
+        case 1, 2, 4, 5, 6, 9, 10, 11:
+            WuduBareHeadVisual(stepNumber: stepNumber)
+        case 7, 8:
+            Image(key)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .scaleEffect(x: stepNumber == 8 ? -1 : 1, y: 1)
+                .scaleEffect(1.14)
+                .offset(y: 16)
+                .clipped()
+        default:
+            Image(key)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .scaleEffect(x: stepNumber == 13 ? -1 : 1, y: 1)
+        }
+    }
+}
+
+private struct WuduBareHeadVisual: View {
+    let stepNumber: Int
+
+    private let skin = Color(red: 0.82, green: 0.62, blue: 0.45)
+    private let hair = SalahTheme.deepTeal
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            let h = proxy.size.height
+            let cx = w * 0.50
+            let cy = h * 0.48
+
+            ZStack {
+                Circle()
+                    .fill(SalahTheme.softTeal.opacity(0.34))
+                    .frame(width: min(w, h) * 0.86, height: min(w, h) * 0.86)
+
+                RoundedRectangle(cornerRadius: 36, style: .continuous)
+                    .fill(Color.white.opacity(0.96))
+                    .frame(width: w * 0.46, height: h * 0.40)
+                    .offset(y: h * 0.30)
+
+                Ellipse()
+                    .fill(skin)
+                    .frame(width: w * 0.34, height: h * 0.48)
+                    .position(x: cx, y: cy)
+
+                WuduHairShape()
+                    .fill(
+                        LinearGradient(
+                            colors: [hair, hair.opacity(0.82)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: w * 0.34, height: h * 0.22)
+                    .position(x: cx, y: cy - h * 0.17)
+                    .overlay {
+                        HStack(spacing: 5) {
+                            ForEach(0..<5, id: \.self) { _ in
+                                Capsule()
+                                    .fill(Color.white.opacity(0.08))
+                                    .frame(width: 3, height: h * 0.07)
+                                    .rotationEffect(.degrees(18))
+                            }
+                        }
+                        .position(x: cx, y: cy - h * 0.19)
+                    }
+
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(hair)
+                    .frame(width: w * 0.27, height: h * 0.11)
+                    .position(x: cx, y: cy + h * 0.15)
+
+                HStack(spacing: w * 0.08) {
+                    Capsule().fill(hair).frame(width: 17, height: 4)
+                    Capsule().fill(hair).frame(width: 17, height: 4)
+                }
+                .position(x: cx, y: cy - h * 0.035)
+
+                Capsule()
+                    .fill(hair.opacity(0.72))
+                    .frame(width: 4, height: 18)
+                    .position(x: cx, y: cy + h * 0.035)
+
+                faceAction(in: proxy.size)
             }
-            .accessibilityHidden(true)
+        }
+        .aspectRatio(1.45, contentMode: .fit)
+    }
+
+    @ViewBuilder
+    private func faceAction(in size: CGSize) -> some View {
+        let w = size.width
+        let h = size.height
+
+        switch stepNumber {
+        case 1:
+            ZStack {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: min(w, h) * 0.15, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [SalahTheme.gold, SalahTheme.gold.opacity(0.72)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .offset(x: w * 0.17, y: h * 0.17)
+
+                Image(systemName: "drop.fill")
+                    .font(.system(size: min(w, h) * 0.08, weight: .bold))
+                    .foregroundStyle(Color.cyan.opacity(0.78))
+                    .offset(x: w * 0.25, y: -h * 0.21)
+            }
+
+        case 2:
+            HStack(spacing: w * 0.05) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(-20))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(20))
+            }
+            .font(.system(size: min(w, h) * 0.16))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.17)
+            .overlay {
+                Image(systemName: "drop.fill")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(Color.cyan.opacity(0.78))
+                    .offset(y: h * 0.08)
+            }
+
+        case 4:
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: min(w, h) * 0.24))
+                .foregroundStyle(skin)
+                .rotationEffect(.degrees(-52))
+                .offset(x: w * 0.13, y: h * 0.10)
+                .overlay {
+                    Image(systemName: "drop.fill")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(Color.cyan.opacity(0.78))
+                        .offset(x: w * 0.08, y: h * 0.02)
+                }
+
+        case 5:
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: min(w, h) * 0.23))
+                .foregroundStyle(skin)
+                .rotationEffect(.degrees(-58))
+                .offset(x: w * 0.12, y: h * 0.02)
+                .overlay {
+                    HStack(spacing: 4) {
+                        Image(systemName: "drop.fill")
+                        Image(systemName: "drop.fill")
+                    }
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(Color.cyan.opacity(0.78))
+                    .offset(x: w * 0.07, y: -h * 0.02)
+                }
+
+        case 6:
+            HStack(spacing: w * 0.12) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(-20))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(20))
+            }
+            .font(.system(size: min(w, h) * 0.20))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.02)
+            .overlay {
+                VStack(spacing: 2) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.76))
+                .offset(y: h * 0.12)
+            }
+
+        case 9:
+            HStack(spacing: w * 0.09) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(18))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(-18))
+            }
+            .font(.system(size: min(w, h) * 0.20))
+            .foregroundStyle(skin)
+            .offset(y: -h * 0.20)
+            .overlay {
+                HStack(spacing: 8) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.74))
+                .offset(y: -h * 0.12)
+            }
+
+        case 10:
+            ZStack {
+                HStack(spacing: w * 0.27) {
+                    WuduEarFingers(mirrored: false, skin: skin)
+                    WuduEarFingers(mirrored: true, skin: skin)
+                }
+                .offset(y: h * 0.01)
+
+                HStack(spacing: w * 0.31) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.72))
+                .offset(y: -h * 0.01)
+            }
+
+        case 11:
+            HStack(spacing: w * 0.12) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(82))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(-82))
+            }
+            .font(.system(size: min(w, h) * 0.15))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.24)
+
+        default:
+            EmptyView()
+        }
+    }
+}
+
+private struct WuduHairShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        let w = rect.width
+        let h = rect.height
+
+        p.move(to: CGPoint(x: w * 0.05, y: h * 0.72))
+        p.addCurve(
+            to: CGPoint(x: w * 0.18, y: h * 0.24),
+            control1: CGPoint(x: w * 0.04, y: h * 0.48),
+            control2: CGPoint(x: w * 0.10, y: h * 0.26)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.42, y: h * 0.08),
+            control1: CGPoint(x: w * 0.24, y: h * 0.10),
+            control2: CGPoint(x: w * 0.34, y: h * 0.06)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.66, y: h * 0.10),
+            control1: CGPoint(x: w * 0.49, y: h * 0.00),
+            control2: CGPoint(x: w * 0.59, y: h * 0.02)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.91, y: h * 0.40),
+            control1: CGPoint(x: w * 0.78, y: h * 0.12),
+            control2: CGPoint(x: w * 0.88, y: h * 0.23)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.95, y: h * 0.72),
+            control1: CGPoint(x: w * 0.95, y: h * 0.50),
+            control2: CGPoint(x: w * 0.97, y: h * 0.62)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.77, y: h * 0.62),
+            control1: CGPoint(x: w * 0.90, y: h * 0.67),
+            control2: CGPoint(x: w * 0.84, y: h * 0.63)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.58, y: h * 0.70),
+            control1: CGPoint(x: w * 0.70, y: h * 0.60),
+            control2: CGPoint(x: w * 0.64, y: h * 0.72)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.39, y: h * 0.64),
+            control1: CGPoint(x: w * 0.51, y: h * 0.68),
+            control2: CGPoint(x: w * 0.46, y: h * 0.60)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.20, y: h * 0.70),
+            control1: CGPoint(x: w * 0.32, y: h * 0.70),
+            control2: CGPoint(x: w * 0.26, y: h * 0.72)
+        )
+        p.closeSubpath()
+        return p
+    }
+}
+
+private struct WuduEarFingers: View {
+    let mirrored: Bool
+    let skin: Color
+
+    var body: some View {
+        ZStack {
+            Capsule()
+                .fill(skin)
+                .frame(width: 12, height: 48)
+                .rotationEffect(.degrees(mirrored ? 16 : -16))
+                .offset(x: mirrored ? -4 : 4, y: 2)
+
+            Capsule()
+                .fill(skin)
+                .frame(width: 10, height: 39)
+                .rotationEffect(.degrees(mirrored ? 5 : -5))
+                .offset(x: mirrored ? 6 : -6, y: 7)
+
+            Circle()
+                .stroke(SalahTheme.gold.opacity(0.75), lineWidth: 2)
+                .frame(width: 22, height: 30)
+                .offset(x: mirrored ? -10 : 10, y: 6)
+        }
+        .frame(width: 54, height: 64)
+        .scaleEffect(x: mirrored ? -1 : 1, y: 1)
     }
 }
 
@@ -1555,12 +1909,12 @@ struct WuduGuideView: View {
         .init(number: 5, image: "wudu_nose", deTitle: "Nase: Wasser & reinigen", trTitle: "Buruna su verme ve temizleme", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
         .init(number: 6, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht: vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr. Kein Bereich darf trocken bleiben. Einmal vollständig ist Farz; dreimal entspricht der Sunnah-Praxis.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka. Kuru yer kalmamalı. Bir kez tam yıkamak farzdır; üç kez yıkamak sünnet uygulamasıdır.", repeatText: "3×", hanafiFard: true),
         .init(number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 8, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
+        .init(number: 8, image: "wudu_rightarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
         .init(number: 9, image: "wudu_head", deTitle: "Masah des Kopfes", trTitle: "Başın meshi", deAction: "Mit feuchten Händen direkt über Kopf bzw. Haar streichen. Die feuchte Hand muss Kopf oder Haar erreichen; eine Kopfbedeckung, die das verhindert, darf nicht dazwischenliegen. Hanafi: Für die Gültigkeit muss mindestens ein Viertel des Kopfes vom Masah erfasst werden; die vollständige Masah wird in dieser Lernreihenfolge einmal gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır; bunu engelleyen takke, bone vb. arada olmamalıdır. Hanefî: Geçerlilik için başın en az dörtte biri mesh edilmelidir; bu öğrenme sıralamasında tam baş meshi bir kez gösterilir.", repeatText: "1×", hanafiFard: true),
         .init(number: 10, image: "wudu_ears", deTitle: "Ohren", trTitle: "Kulaklar", deAction: "Mit erneut angefeuchteten Händen die Ohren abwischen: außen mit den Daumen, innen mit Zeige- oder kleinen Fingern. Nicht einer der vier Fard-Bestandteile.", trAction: "Eller tekrar ıslatılarak kulakların dışı başparmakla, içi işaret veya serçe parmakla mesh edilir. Dört farzdan biri değildir.", repeatText: "1×", hanafiFard: false),
         .init(number: 11, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "In der Diyanet/Hanafi-Lernreihenfolge wird die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger gewischt. Nicht die Kehle oder Vorderseite des Halses wischen. Dieser Schritt ist Sunnah und gehört NICHT zu den vier Farz-Bestandteilen.", trAction: "Diyanet/Hanefî öğrenme sıralamasında ense, ıslak parmakların dış kısmıyla mesh edilir. Boğazın ön tarafı mesh edilmez. Bu adım sünnettir ve abdestin dört farzından biri DEĞİLDİR.", repeatText: "1×", hanafiFard: false),
         .init(number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true)
+        .init(number: 13, image: "wudu_rightfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true)
     ]
 
     var body: some View {
@@ -1569,58 +1923,115 @@ struct WuduGuideView: View {
                 LazyVStack(spacing: 14) {
                     Color.clear.frame(height: 1).id("wudu-step-top")
 
-                    VStack(alignment: .leading, spacing: 9) {
-                        Label(settings.t("Wudu ganz von vorne", "Abdesti en baştan öğren"), systemImage: "drop.fill")
-                            .font(.title3.bold())
-                            .foregroundStyle(SalahTheme.deepTeal)
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(alignment: .center, spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 48, height: 48)
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 10, y: 5)
+
+                                Image(systemName: "drop.fill")
+                                    .font(.system(size: 21, weight: .semibold))
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [Color.white, SalahTheme.gold.opacity(0.92)],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                            }
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(settings.t("Abdest", "Abdest"))
+                                    .font(.system(size: 27, weight: .bold, design: .serif))
+                                    .foregroundStyle(SalahTheme.ink)
+                                Text(settings.t("Schritt für Schritt", "Adım adım"))
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.mutedInk)
+                            }
+
+                            Spacer()
+                        }
 
                         Text(settings.t(
-                            "Männer und Frauen machen Wudu grundsätzlich gleich. Du siehst immer nur einen Schritt. Mach ihn in Ruhe fertig und gehe dann weiter.",
-                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Her seferinde yalnız bir adım görürsün. Adımı sakin şekilde tamamla, sonra devam et."
+                            "Männer und Frauen führen Wudu grundsätzlich gleich aus. Folge den Schritten ruhig nacheinander.",
+                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Adımları sırayla ve sakin şekilde uygula."
                         ))
-                        .font(.subheadline)
+                        .font(.system(size: 11.5, weight: .medium))
+                        .foregroundStyle(SalahTheme.mutedInk)
                         .fixedSize(horizontal: false, vertical: true)
 
-                        Divider()
-
-                        Text(settings.t(
-                            "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: 1) Gesicht waschen, 2) Arme mit Ellenbogen waschen, 3) mindestens ein Viertel des Kopfes mit nasser Hand wischen, 4) Füße mit Knöcheln waschen.",
-                            "Hanefî/Diyanet anlatımında abdestin 4 farzı: 1) yüzü yıkamak, 2) kolları dirseklerle yıkamak, 3) başın en az dörtte birini mesh etmek, 4) ayakları aşık kemikleriyle yıkamaktır."
-                        ))
-                        .font(.footnote.bold())
+                        HStack(spacing: 7) {
+                            Label(settings.t("4 Farz", "4 Farz"), systemImage: "checkmark.seal.fill")
+                            Label(settings.t("Hanafi", "Hanefî"), systemImage: "book.closed.fill")
+                        }
+                        .font(.system(size: 9.5, weight: .bold))
                         .foregroundStyle(SalahTheme.deepTeal)
-
-                        Text(settings.t(
-                            "Bei den Farz-Waschschritten reicht für die Gültigkeit eine vollständige Waschung; dreimaliges Waschen ist die Sunnah-Praxis. Kopf-Masah wird einmal gezeigt.",
-                            "Farz olan yıkama bölümlerinde geçerlilik için bir kez tam yıkamak yeterlidir; üç kez yıkamak sünnettir. Baş meshi bir kez gösterilir."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                     }
-                    .cardStyle(material: true)
+                    .padding(15)
+                    .background(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.94),
+                                SalahTheme.cream.opacity(0.98),
+                                SalahTheme.gold.opacity(0.06)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                    }
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.06), radius: 12, y: 6)
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 10) {
                         HStack {
                             Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
+                                .font(.system(size: 12, weight: .bold))
                                 .foregroundStyle(SalahTheme.deepTeal)
                             Spacer()
-                            Text(steps[safeCurrentStepIndex].hanafiFard ? settings.t("FARZ · PFLICHT", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
+                            Text(steps[safeCurrentStepIndex].hanafiFard ? settings.t("FARZ", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
+                                .font(.system(size: 9.5, weight: .black))
+                                .tracking(0.5)
+                                .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
                                 .background(
-                                    (steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal),
+                                    steps[safeCurrentStepIndex].hanafiFard
+                                        ? SalahTheme.gold.opacity(0.24)
+                                        : SalahTheme.softTeal.opacity(0.74),
                                     in: Capsule()
                                 )
                                 .foregroundStyle(SalahTheme.deepTeal)
                         }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
+
+                        GeometryReader { proxy in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(SalahTheme.deepTeal.opacity(0.08))
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [SalahTheme.teal, SalahTheme.gold],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: proxy.size.width * CGFloat(currentStepIndex + 1) / CGFloat(steps.count))
+                            }
+                        }
+                        .frame(height: 6)
                     }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+                    .padding(.horizontal, 4)
 
                     wuduStepCard(steps[safeCurrentStepIndex])
                         .id("wudu-step-card-\(currentStepIndex)")
@@ -1733,30 +2144,39 @@ struct WuduGuideView: View {
     @ViewBuilder
     private func wuduStepCard(_ step: WuduTutorialStep) -> some View {
         VStack(spacing: 0) {
-            HStack(spacing: 12) {
+            HStack(spacing: 11) {
                 Text("\(step.number)")
-                    .font(.title3.bold())
-                    .frame(width: 40, height: 40)
-                    .background(SalahTheme.gold.opacity(0.95), in: Circle())
-                    .foregroundStyle(SalahTheme.deepTeal)
+                    .font(.system(size: 13, weight: .black))
+                    .frame(width: 34, height: 34)
+                    .background(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: Circle()
+                    )
+                    .foregroundStyle(.white)
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.16), radius: 5, y: 2)
 
                 Text(settings.language == .german ? step.deTitle : step.trTitle)
-                    .font(.title3.bold())
-                    .foregroundStyle(.white)
+                    .font(.system(size: 19, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Spacer(minLength: 6)
 
                 Text(repeatLabel(for: step))
-                    .font(.caption.bold())
+                    .font(.system(size: 9, weight: .bold))
                     .multilineTextAlignment(.trailing)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 5)
-                    .background(Color.white.opacity(0.92), in: Capsule())
+                    .background(SalahTheme.gold.opacity(0.14), in: Capsule())
                     .foregroundStyle(SalahTheme.deepTeal)
             }
-            .padding(14)
-            .background(SalahTheme.navigationTeal)
+            .padding(.horizontal, 15)
+            .padding(.top, 15)
+            .padding(.bottom, 10)
 
             VStack(alignment: .leading, spacing: 14) {
                 if let image = step.image {
@@ -1787,14 +2207,33 @@ struct WuduGuideView: View {
                         .foregroundStyle(SalahTheme.deepTeal)
                 }
             }
-            .padding(16)
-            .background(SalahTheme.cream)
+            .padding(.horizontal, 15)
+            .padding(.bottom, 16)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.97),
+                    SalahTheme.cream,
+                    SalahTheme.gold.opacity(0.05)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        )
         .overlay {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.94), SalahTheme.gold.opacity(0.46)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 14, y: 7)
     }
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
