@@ -34,7 +34,7 @@ Quran text, translations, and recitation audio are requested directly from AlQur
 
 SalahPath does not intentionally send your GPS coordinates, manually selected latitude/longitude, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
 
-SalahPath does not control the Quran provider's server logs. As of 23 September 2026, the public AlQuran.cloud / Islamic Network material reviewed for release did not specify a retention period for API/CDN source IPs or request logs. Because retention beyond real-time request handling cannot be ruled out, SalahPath conservatively treats this source-IP connection metadata as collected for App Store privacy disclosure. It is disclosed as a device/network identifier used for app functionality such as service delivery, rate limiting, abuse prevention, reliability, and scalability; it is not used by SalahPath for advertising or cross-app tracking.
+SalahPath does not create, read, or transmit an advertising identifier or another device-level identifier. Normal HTTPS requests to Quran-content providers necessarily expose ordinary connection metadata such as the requesting IP address to those providers while the request is served. SalahPath does not receive or store those providers' server logs. Any provider-side retention is governed by the provider's own terms and must be reflected accurately in the final App Store Connect privacy answers.
 
 Provider terms: https://alquran.cloud/terms-and-conditions
 
