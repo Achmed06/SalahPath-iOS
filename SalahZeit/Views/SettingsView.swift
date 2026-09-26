@@ -662,12 +662,21 @@ struct SettingsView: View {
                 Task { await refreshNotificationDiagnostics() }
             } else {
                 Task {
-                    let granted = await NotificationManager.shared.requestAuthorization()
-                    if !granted {
+                    let diagnostics = await NotificationManager.shared.diagnostics()
+                    if diagnostics.runningInLiveContainer,
+                       diagnostics.liveContainerLocalNotificationsFixed != true {
                         notificationStatusText = settings.t(
-                            "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
-                            "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
+                            "LiveContainer: Bitte zuerst bei SalahPath „Fix Local Notifications“ aktivieren und die App neu starten.",
+                            "LiveContainer: Önce SalahPath için „Fix Local Notifications“ seçeneğini etkinleştir ve uygulamayı yeniden başlat."
                         )
+                    } else {
+                        let granted = await NotificationManager.shared.requestAuthorization()
+                        if !granted {
+                            notificationStatusText = settings.t(
+                                "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
+                                "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
+                            )
+                        }
                     }
                     await refreshNotificationDiagnostics()
                 }
@@ -680,6 +689,16 @@ struct SettingsView: View {
         guard settings.notificationsEnabled else { return }
 
         let before = await NotificationManager.shared.diagnostics()
+
+        if before.runningInLiveContainer,
+           before.liveContainerLocalNotificationsFixed != true {
+            notificationStatusText = settings.t(
+                "LiveContainer erkannt: Öffne in LiveContainer die Einstellungen von SalahPath und aktiviere „Fix Local Notifications“. Danach SalahPath vollständig schließen und neu starten.",
+                "LiveContainer algılandı: LiveContainer içinde SalahPath ayarlarını aç ve „Fix Local Notifications“ seçeneğini etkinleştir. Ardından SalahPath'i tamamen kapatıp yeniden başlat."
+            )
+            return
+        }
+
         if before.authorizationStatus == .notDetermined {
             let granted = await NotificationManager.shared.requestAuthorization()
             if !granted {
@@ -739,8 +758,16 @@ struct SettingsView: View {
             "Namaz istekleri: \(diagnostics.pendingPrayerRequests)"
         )
 
-        notificationSystemStatusText = [permission, alerts, sounds, adhanFiles, pending]
-            .joined(separator: " · ")
+        var statusParts: [String] = []
+        if diagnostics.runningInLiveContainer {
+            let lcFix = diagnostics.liveContainerLocalNotificationsFixed == true
+                ? settings.t("LiveContainer-Fix: AN", "LiveContainer düzeltmesi: AÇIK")
+                : settings.t("LiveContainer-Fix: AUS", "LiveContainer düzeltmesi: KAPALI")
+            statusParts.append(lcFix)
+        }
+        statusParts.append(contentsOf: [permission, alerts, sounds, adhanFiles, pending])
+
+        notificationSystemStatusText = statusParts.joined(separator: " · ")
     }
 
     @MainActor
