@@ -5,6 +5,7 @@ struct SettingsView: View {
     @EnvironmentObject private var settings: SettingsStore
     @EnvironmentObject private var locationManager: LocationManager
     @State private var notificationStatusText: String?
+    @State private var notificationSystemStatusText = "—"
     @State private var audioCacheText = "—"
     @State private var isClearingAudioCache = false
     @State private var quranTextCacheText = "—"
@@ -53,6 +54,7 @@ struct SettingsView: View {
                             Button(appearance.title(settings.language)) {
                                 settings.appearance = appearance
                             }
+                            await refreshNotificationDiagnostics()
                         }
                     } label: {
                         profileRow(
@@ -262,33 +264,74 @@ struct SettingsView: View {
                     .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime || !settings.adhanSoundEnabled)
                     .opacity(settings.notificationsEnabled && settings.notifyAtPrayerTime && settings.adhanSoundEnabled ? 1 : 0.45)
 
-                    Button {
-                        Task {
-                            let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
-                            notificationStatusText = scheduled
-                                ? settings.t(
-                                    "iOS-Testmitteilung wurde geplant. Sperre den Bildschirm oder verlasse SalahPath kurz, um die Systemzustellung zu prüfen.",
-                                    "iOS test bildirimi planlandı. Sistem teslimini kontrol etmek için ekranı kilitle veya SalahPath'ten kısa süre çık."
-                                )
-                                : settings.t(
-                                    "iOS-Testmitteilung konnte nicht geplant werden. Prüfe die Benachrichtigungsberechtigung.",
-                                    "iOS test bildirimi planlanamadı. Bildirim iznini kontrol et."
-                                )
+                    HStack(spacing: 8) {
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleNotificationPreview(settings: settings)
+                                notificationStatusText = scheduled
+                                    ? settings.t(
+                                        "Normale Testmitteilung kommt in 5 Sekunden.",
+                                        "Normal test bildirimi 5 saniye içinde gelecek."
+                                    )
+                                    : settings.t(
+                                        "Testmitteilung konnte nicht bei iOS registriert werden.",
+                                        "Test bildirimi iOS'a kaydedilemedi."
+                                    )
+                                await refreshNotificationDiagnostics()
+                            }
+                        } label: {
+                            Label(
+                                settings.t("Mitteilung · 5 s", "Bildirim · 5 sn"),
+                                systemImage: "bell.badge.fill"
+                            )
+                            .font(.system(size: 10.5, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 9)
                         }
-                    } label: {
-                        Label(
-                            settings.t("iOS-Mitteilung testen", "iOS bildirimini test et"),
-                            systemImage: "bell.badge.fill"
-                        )
-                        .font(.system(size: 10.5, weight: .bold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 9)
+                        .buttonStyle(.bordered)
+
+                        Button {
+                            Task {
+                                let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
+                                notificationStatusText = scheduled
+                                    ? settings.t(
+                                        "Adhan-Test kommt in 5 Sekunden. Sperre das iPhone oder verlasse SalahPath kurz.",
+                                        "Ezan testi 5 saniye içinde gelecek. iPhone'u kilitle veya SalahPath'ten kısa süre çık."
+                                    )
+                                    : settings.t(
+                                        "Adhan-Test konnte nicht bei iOS registriert werden.",
+                                        "Ezan testi iOS'a kaydedilemedi."
+                                    )
+                                await refreshNotificationDiagnostics()
+                            }
+                        } label: {
+                            Label(
+                                settings.t("Adhan · 5 s", "Ezan · 5 sn"),
+                                systemImage: "speaker.wave.3.fill"
+                            )
+                            .font(.system(size: 10.5, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 9)
+                        }
+                        .buttonStyle(.bordered)
                     }
-                    .buttonStyle(.bordered)
                     .tint(SalahTheme.teal)
                     .padding(.horizontal, 12)
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(settings.t("iOS-Systemstatus", "iOS sistem durumu"))
+                            .font(.system(size: 9.5, weight: .bold))
+                            .foregroundStyle(SalahTheme.teal)
+                        Text(notificationSystemStatusText)
+                            .font(.system(size: 9.5, weight: .medium))
+                            .foregroundStyle(SalahTheme.mutedInk)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 7)
 
                     Text(settings.t(
                         "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
@@ -351,9 +394,10 @@ struct SettingsView: View {
                             if !settings.notificationsEnabled {
                                 notificationStatusText = settings.t("Deaktiviert.", "Kapalı.")
                             } else if scheduled {
+                                let diagnostics = await NotificationManager.shared.diagnostics()
                                 notificationStatusText = settings.t(
-                                    "Für die nächsten 7 Tage aktualisiert.",
-                                    "Önümüzdeki 7 gün için güncellendi."
+                                    "\(diagnostics.pendingPrayerRequests) Gebetsbenachrichtigungen sind tatsächlich bei iOS geplant.",
+                                    "\(diagnostics.pendingPrayerRequests) namaz bildirimi gerçekten iOS'ta planlandı."
                                 )
                             } else {
                                 notificationStatusText = settings.t(
@@ -608,11 +652,64 @@ struct SettingsView: View {
             Task {
                 await refreshAudioCacheText()
                 await refreshQuranTextCacheText()
+                await refreshNotificationDiagnostics()
             }
         }
         .onChange(of: settings.notificationsEnabled) { _, enabled in
-            if !enabled { NotificationManager.shared.removePrayerNotifications() }
+            if !enabled {
+                NotificationManager.shared.removePrayerNotifications()
+                Task { await refreshNotificationDiagnostics() }
+            } else {
+                Task {
+                    let granted = await NotificationManager.shared.requestAuthorization()
+                    if !granted {
+                        notificationStatusText = settings.t(
+                            "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
+                            "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
+                        )
+                    }
+                    await refreshNotificationDiagnostics()
+                }
+            }
         }
+    }
+
+    @MainActor
+    private func refreshNotificationDiagnostics() async {
+        let diagnostics = await NotificationManager.shared.diagnostics()
+
+        let permission: String
+        switch diagnostics.authorizationStatus {
+        case .authorized:
+            permission = settings.t("Berechtigung: erlaubt", "İzin: açık")
+        case .provisional:
+            permission = settings.t("Berechtigung: vorläufig", "İzin: geçici")
+        case .ephemeral:
+            permission = settings.t("Berechtigung: temporär", "İzin: geçici")
+        case .denied:
+            permission = settings.t("Berechtigung: AUS", "İzin: KAPALI")
+        case .notDetermined:
+            permission = settings.t("Berechtigung: noch nicht gefragt", "İzin: henüz sorulmadı")
+        @unknown default:
+            permission = settings.t("Berechtigung: unbekannt", "İzin: bilinmiyor")
+        }
+
+        let alerts = diagnostics.alertsEnabled
+            ? settings.t("Hinweise: AN", "Uyarılar: AÇIK")
+            : settings.t("Hinweise: AUS", "Uyarılar: KAPALI")
+        let sounds = diagnostics.soundsEnabled
+            ? settings.t("Ton: AN", "Ses: AÇIK")
+            : settings.t("Ton: AUS", "Ses: KAPALI")
+        let adhanFiles = diagnostics.standardAdhanInstalled && diagnostics.fajrAdhanInstalled
+            ? settings.t("Adhan-Dateien: OK", "Ezan dosyaları: OK")
+            : settings.t("Adhan-Dateien: FEHLEN", "Ezan dosyaları: EKSİK")
+        let pending = settings.t(
+            "Gebets-Requests: \(diagnostics.pendingPrayerRequests)",
+            "Namaz istekleri: \(diagnostics.pendingPrayerRequests)"
+        )
+
+        notificationSystemStatusText = [permission, alerts, sounds, adhanFiles, pending]
+            .joined(separator: " · ")
     }
 
     @MainActor
