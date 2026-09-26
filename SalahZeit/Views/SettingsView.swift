@@ -281,7 +281,7 @@ struct SettingsView: View {
                             }
                         } label: {
                             Label(
-                                settings.t("Mitteilung · 5 s", "Bildirim · 5 sn"),
+                                settings.t("iOS-Mitteilung testen · 5 s", "iOS bildirimini test et · 5 sn"),
                                 systemImage: "bell.badge.fill"
                             )
                             .font(.system(size: 10.5, weight: .bold))
@@ -405,6 +405,7 @@ struct SettingsView: View {
                                     "Bildirimler tam olarak planlanamadı. iOS iznini kontrol edip tekrar dene."
                                 )
                             }
+                            await refreshNotificationDiagnostics()
                         }
                     } label: {
                         HStack {
