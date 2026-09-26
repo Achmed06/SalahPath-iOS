@@ -1535,6 +1535,7 @@ private struct WuduInstructionVisual: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: 224)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .stroke(
@@ -1558,13 +1559,23 @@ private struct WuduInstructionVisual: View {
         switch stepNumber {
         case 1, 2, 4, 5, 6, 9, 10, 11:
             WuduBareHeadVisual(stepNumber: stepNumber)
+        case 7, 8:
+            Image(key)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .scaleEffect(x: stepNumber == 8 ? -1 : 1, y: 1)
+                .scaleEffect(1.12)
+                .offset(y: -12)
+                .clipped()
         default:
             Image(key)
                 .renderingMode(.original)
                 .resizable()
                 .interpolation(.high)
                 .scaledToFit()
-                .scaleEffect(x: (stepNumber == 8 || stepNumber == 13) ? -1 : 1, y: 1)
+                .scaleEffect(x: stepNumber == 13 ? -1 : 1, y: 1)
         }
     }
 }
@@ -1597,10 +1608,27 @@ private struct WuduBareHeadVisual: View {
                     .frame(width: w * 0.34, height: h * 0.48)
                     .position(x: cx, y: cy)
 
-                Ellipse()
-                    .fill(hair)
-                    .frame(width: w * 0.33, height: h * 0.18)
-                    .position(x: cx, y: cy - h * 0.18)
+                WuduHairShape()
+                    .fill(
+                        LinearGradient(
+                            colors: [hair, hair.opacity(0.82)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: w * 0.34, height: h * 0.22)
+                    .position(x: cx, y: cy - h * 0.17)
+                    .overlay {
+                        HStack(spacing: 5) {
+                            ForEach(0..<5, id: \.self) { _ in
+                                Capsule()
+                                    .fill(Color.white.opacity(0.08))
+                                    .frame(width: 3, height: h * 0.07)
+                                    .rotationEffect(.degrees(18))
+                            }
+                        }
+                        .position(x: cx, y: cy - h * 0.19)
+                    }
 
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                     .fill(hair)
@@ -1739,13 +1767,21 @@ private struct WuduBareHeadVisual: View {
             }
 
         case 10:
-            HStack(spacing: w * 0.28) {
-                Image(systemName: "hand.point.up.left.fill")
-                Image(systemName: "hand.point.up.right.fill")
+            ZStack {
+                HStack(spacing: w * 0.27) {
+                    WuduEarFingers(mirrored: false, skin: skin)
+                    WuduEarFingers(mirrored: true, skin: skin)
+                }
+                .offset(y: h * 0.01)
+
+                HStack(spacing: w * 0.31) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.72))
+                .offset(y: -h * 0.01)
             }
-            .font(.system(size: min(w, h) * 0.13))
-            .foregroundStyle(skin)
-            .offset(y: h * 0.01)
 
         case 11:
             HStack(spacing: w * 0.12) {
@@ -1762,6 +1798,91 @@ private struct WuduBareHeadVisual: View {
         default:
             EmptyView()
         }
+    }
+}
+
+private struct WuduHairShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        let w = rect.width
+        let h = rect.height
+
+        p.move(to: CGPoint(x: w * 0.05, y: h * 0.72))
+        p.addCurve(
+            to: CGPoint(x: w * 0.18, y: h * 0.24),
+            control1: CGPoint(x: w * 0.04, y: h * 0.48),
+            control2: CGPoint(x: w * 0.10, y: h * 0.26)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.42, y: h * 0.08),
+            control1: CGPoint(x: w * 0.24, y: h * 0.10),
+            control2: CGPoint(x: w * 0.34, y: h * 0.06)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.66, y: h * 0.10),
+            control1: CGPoint(x: w * 0.49, y: h * 0.00),
+            control2: CGPoint(x: w * 0.59, y: h * 0.02)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.91, y: h * 0.40),
+            control1: CGPoint(x: w * 0.78, y: h * 0.12),
+            control2: CGPoint(x: w * 0.88, y: h * 0.23)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.95, y: h * 0.72),
+            control1: CGPoint(x: w * 0.95, y: h * 0.50),
+            control2: CGPoint(x: w * 0.97, y: h * 0.62)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.77, y: h * 0.62),
+            control1: CGPoint(x: w * 0.90, y: h * 0.67),
+            control2: CGPoint(x: w * 0.84, y: h * 0.63)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.58, y: h * 0.70),
+            control1: CGPoint(x: w * 0.70, y: h * 0.60),
+            control2: CGPoint(x: w * 0.64, y: h * 0.72)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.39, y: h * 0.64),
+            control1: CGPoint(x: w * 0.51, y: h * 0.68),
+            control2: CGPoint(x: w * 0.46, y: h * 0.60)
+        )
+        p.addCurve(
+            to: CGPoint(x: w * 0.20, y: h * 0.70),
+            control1: CGPoint(x: w * 0.32, y: h * 0.70),
+            control2: CGPoint(x: w * 0.26, y: h * 0.72)
+        )
+        p.closeSubpath()
+        return p
+    }
+}
+
+private struct WuduEarFingers: View {
+    let mirrored: Bool
+    let skin: Color
+
+    var body: some View {
+        ZStack {
+            Capsule()
+                .fill(skin)
+                .frame(width: 12, height: 48)
+                .rotationEffect(.degrees(mirrored ? 16 : -16))
+                .offset(x: mirrored ? -4 : 4, y: 2)
+
+            Capsule()
+                .fill(skin)
+                .frame(width: 10, height: 39)
+                .rotationEffect(.degrees(mirrored ? 5 : -5))
+                .offset(x: mirrored ? 6 : -6, y: 7)
+
+            Circle()
+                .stroke(SalahTheme.gold.opacity(0.75), lineWidth: 2)
+                .frame(width: 22, height: 30)
+                .offset(x: mirrored ? -10 : 10, y: 6)
+        }
+        .frame(width: 54, height: 64)
+        .scaleEffect(x: mirrored ? -1 : 1, y: 1)
     }
 }
 
