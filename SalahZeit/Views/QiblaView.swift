@@ -16,43 +16,18 @@ struct QiblaView: View {
                 let heading = currentHeading
                 let headingDegrees = heading.map { Int($0.rounded()) }
                 let rotation = qibla.isFinite ? heading.map { normalized(qibla - $0) } : nil
+                let distanceKilometers = location.distance(from: Self.kaabaLocation) / 1000
 
                 ScrollView {
                     VStack(spacing: 11) {
-                        HStack(spacing: 11) {
-                            ZStack {
-                                Circle()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                SalahTheme.deepTeal,
-                                                SalahTheme.teal
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                                    .frame(width: 46, height: 46)
-                                    .shadow(color: SalahTheme.deepTeal.opacity(0.20), radius: 10, y: 5)
-
-                                QiblaKaabaGlyph()
-                                    .frame(width: 28, height: 28)
-                            }
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(settings.t("Qibla", "Kıble"))
-                                    .font(.system(size: 23, weight: .bold, design: .serif))
-                                    .foregroundStyle(SalahTheme.ink)
-                                Text(settings.t("Richte dein Herz zur Kaaba", "Kalbini Kâbe'ye yönelt"))
-                                    .font(.system(size: 11, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.mutedInk)
-                            }
-
-                            Spacer()
-                        }
-                        .padding(.horizontal, 4)
-
-                        QiblaCompassVisual(rotation: rotation)
+                        QiblaHeroScene(
+                            rotation: rotation,
+                            qiblaDegrees: qiblaDegrees,
+                            distanceKilometers: distanceKilometers,
+                            locationTitle: isScreenshotQA
+                                ? settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
+                                : (locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
+                        )
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(settings.t("Qibla-Kompass", "Kıble pusulası"))
                         .accessibilityValue(
@@ -266,9 +241,35 @@ struct QiblaView: View {
                 .font(.system(size: 18, weight: .bold).monospacedDigit())
                 .foregroundStyle(SalahTheme.ink)
         }
-        .frame(maxWidth: .infinity, minHeight: 82)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
+        .frame(maxWidth: .infinity, minHeight: 86)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.96),
+                    SalahTheme.cream,
+                    SalahTheme.softTeal.opacity(0.18)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            SalahTheme.gold.opacity(0.78),
+                            SalahTheme.gold.opacity(0.24),
+                            SalahTheme.teal.opacity(0.18)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 8, y: 4)
     }
 
     private func infoRow(icon: String, title: String) -> some View {
@@ -319,6 +320,8 @@ struct QiblaView: View {
         locationManager.authorizationStatus == .authorizedAlways
     }
 
+    private static let kaabaLocation = CLLocation(latitude: 21.4225, longitude: 39.8262)
+
     private var currentHeading: Double? {
         if isScreenshotQA { return 0 }
         guard let heading = locationManager.heading,
@@ -338,6 +341,119 @@ struct QiblaView: View {
 }
 
 
+private struct QiblaHeroScene: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    let rotation: Double?
+    let qiblaDegrees: Int?
+    let distanceKilometers: Double
+    let locationTitle: String
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            Image("qibla_scene")
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 480)
+                .clipped()
+
+            LinearGradient(
+                colors: [
+                    SalahTheme.deepTeal.opacity(0.76),
+                    SalahTheme.deepTeal.opacity(0.16),
+                    Color.clear,
+                    SalahTheme.page.opacity(0.18),
+                    SalahTheme.page.opacity(0.92)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            VStack(spacing: 4) {
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(settings.t("Qibla", "Kıble"))
+                            .font(.system(size: 28, weight: .bold, design: .serif))
+                            .foregroundStyle(Color.white)
+                            .shadow(color: Color.black.opacity(0.28), radius: 6, y: 2)
+
+                        Text(settings.t("Richte dein Herz zur Kaaba", "Kalbini Kâbe'ye yönelt"))
+                            .font(.system(size: 11.5, weight: .semibold))
+                            .foregroundStyle(Color.white.opacity(0.90))
+                    }
+
+                    Spacer()
+
+                    VStack(alignment: .trailing, spacing: 5) {
+                        if let qiblaDegrees {
+                            Text("\(qiblaDegrees)°")
+                                .font(.system(size: 18, weight: .black, design: .rounded))
+                                .foregroundStyle(SalahTheme.deepTeal)
+                        }
+
+                        Text(String(format: "%.0f km", distanceKilometers))
+                            .font(.system(size: 9.5, weight: .bold))
+                            .foregroundStyle(SalahTheme.mutedInk)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .overlay {
+                        Capsule()
+                            .stroke(Color.white.opacity(0.70), lineWidth: 1)
+                    }
+                    .shadow(color: Color.black.opacity(0.14), radius: 8, y: 4)
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 16)
+
+                Spacer(minLength: 0)
+
+                QiblaCompassVisual(rotation: rotation)
+                    .scaleEffect(0.66)
+                    .frame(height: 200)
+
+                HStack(spacing: 7) {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 10, weight: .bold))
+                    Text(locationTitle)
+                        .font(.system(size: 9.5, weight: .bold))
+                        .lineLimit(1)
+                }
+                .foregroundStyle(SalahTheme.deepTeal)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(.ultraThinMaterial, in: Capsule())
+                .overlay {
+                    Capsule()
+                        .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+                }
+                .padding(.bottom, 14)
+            }
+        }
+        .frame(height: 480)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.74),
+                            SalahTheme.gold.opacity(0.62),
+                            SalahTheme.deepTeal.opacity(0.24)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.2
+                )
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 20, y: 10)
+    }
+}
+
+
 private struct QiblaCompassVisual: View {
     @EnvironmentObject private var settings: SettingsStore
     let rotation: Double?
@@ -350,28 +466,32 @@ private struct QiblaCompassVisual: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            Color.white.opacity(0.98),
-                            SalahTheme.cream,
-                            SalahTheme.softTeal.opacity(0.24)
-                        ],
-                        center: .topLeading,
-                        startRadius: 10,
-                        endRadius: 155
-                    )
-                )
+                .fill(.ultraThinMaterial)
                 .frame(width: 286, height: 286)
+                .overlay {
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    Color.white.opacity(0.54),
+                                    SalahTheme.cream.opacity(0.34),
+                                    SalahTheme.softTeal.opacity(0.10)
+                                ],
+                                center: .topLeading,
+                                startRadius: 8,
+                                endRadius: 155
+                            )
+                        )
+                }
                 .overlay {
                     Circle()
                         .stroke(
                             LinearGradient(
                                 colors: [
-                                    SalahTheme.gold.opacity(0.95),
-                                    SalahTheme.gold.opacity(0.32),
-                                    SalahTheme.teal.opacity(0.32),
-                                    SalahTheme.gold.opacity(0.82)
+                                    Color.white.opacity(0.92),
+                                    SalahTheme.gold.opacity(0.92),
+                                    SalahTheme.teal.opacity(0.26),
+                                    SalahTheme.gold.opacity(0.72)
                                 ],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -379,8 +499,8 @@ private struct QiblaCompassVisual: View {
                             lineWidth: 2.2
                         )
                 }
-                .shadow(color: SalahTheme.deepTeal.opacity(0.12), radius: 18, y: 9)
-                .shadow(color: SalahTheme.gold.opacity(0.12), radius: 2, y: -1)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 18, y: 9)
+                .shadow(color: SalahTheme.gold.opacity(0.20), radius: 3, y: -1)
 
             Circle()
                 .stroke(SalahTheme.teal.opacity(0.09), lineWidth: 18)
