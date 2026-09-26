@@ -1,79 +1,8 @@
 import SwiftUI
 import UIKit
 
-// Approved green-gold icon sheet from the artwork supplied for SalahPath.
-// The source contains 60 individual icons in a fixed 10 x 6 grid.
-func salahFeatureIndex(for kind: String) -> Int? {
-    switch kind {
-    case "home", "start": return 0
-    case "prayer": return 1
-    case "wudu": return 2
-    case "quran": return 3
-    case "discover": return 4
-    case "tracker", "checkmark": return 5
-    case "calendar": return 6
-    case "qibla": return 7
-    case "settings": return 8
-    case "profile": return 9
-
-    case "fajr": return 10
-    case "sunrise": return 11
-    case "dhuhr": return 12
-    case "asr": return 13
-    case "maghrib": return 14
-    case "isha": return 15
-    case "times", "prayer_schedule", "list": return 16
-    case "reminder": return 17
-    case "mute": return 18
-    case "sound", "quran_audio": return 19
-
-    case "mosques": return 20
-    case "duas": return 21
-    case "dhikr": return 22
-    case "hadith": return 23
-    case "islamic_knowledge", "more": return 24
-    case "info", "knowledge", "sparkles": return 25
-    case "favorites": return 26
-    case "bookmarks": return 27
-    case "history": return 28
-    case "downloads": return 29
-
-    case "articles": return 30
-    case "courses": return 31
-    case "videos": return 32
-    case "backgrounds": return 33
-    case "mindfulness": return 34
-    case "donations": return 35
-    case "community": return 36
-    case "forum": return 37
-    case "language": return 38
-    case "islamic_calendar": return 39
-
-    case "prayer_settings": return 40
-    case "location": return 41
-    case "qibla_calibration": return 42
-    case "map": return 43
-    case "moon", "dark_mode": return 44
-    case "light_mode": return 45
-    case "font_size": return 46
-    case "notifications": return 47
-    case "backup": return 48
-    case "sync": return 49
-
-    case "back": return 50
-    case "forward": return 51
-    case "home_active": return 52
-    case "home_inactive": return 53
-    case "prayer_active": return 54
-    case "prayer_inactive": return 55
-    case "wudu_active": return 56
-    case "wudu_inactive": return 57
-    case "quran_active": return 58
-    case "quran_inactive": return 59
-    default: return nil
-    }
-}
-
+// Individual SalahPath feature assets are preferred. Missing kinds use native vector glyphs;
+// the old sprite-sheet crop fallback is intentionally retired to prevent mis-cropped icons.
 struct SalahFeatureIcon: View {
     let kind: String
 
