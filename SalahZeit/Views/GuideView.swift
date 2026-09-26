@@ -1354,44 +1354,91 @@ private struct PrayerSalamVisual: View {
     }
 
     private func salamDirection(number: String, direction: String, imageName: String, arrow: String, instruction: String) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
                 Text(number)
-                    .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(.white)
                     .frame(width: 32, height: 32)
-                    .background(SalahTheme.gold.opacity(0.82), in: Circle())
+                    .background(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: Circle()
+                    )
+
                 Text(direction)
-                    .font(.title2.bold())
-                    .foregroundStyle(SalahTheme.teal)
+                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.ink)
+
                 Spacer()
-                Image(systemName: arrow)
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(SalahTheme.gold)
+
+                ZStack {
+                    Circle()
+                        .fill(SalahTheme.gold.opacity(0.16))
+                        .frame(width: 38, height: 38)
+                    Image(systemName: arrow)
+                        .font(.system(size: 18, weight: .black))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                }
             }
 
             HStack(alignment: .center, spacing: 14) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 118, height: 150)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.98), SalahTheme.cream],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+
+                    PrayerPoseArtwork(assetName: imageName)
+                        .padding(5)
+                }
+                .frame(width: 122, height: 154)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                }
 
                 Text(instruction)
-                    .font(.subheadline)
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(SalahTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            Text("السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ")
-                .font(.title3)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            Text("As-salāmu ʿalaykum wa raḥmatullāh")
-                .font(.subheadline.bold())
-                .foregroundStyle(SalahTheme.ink)
+            VStack(alignment: .trailing, spacing: 5) {
+                Text("السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ")
+                    .font(.title3)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("As-salāmu ʿalaykum wa raḥmatullāh")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+            }
+            .padding(10)
+            .background(Color.white.opacity(0.62), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
-        .padding(11)
-        .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 16))
-        .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+        .padding(12)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.95),
+                    SalahTheme.cream,
+                    SalahTheme.gold.opacity(0.05)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+        }
     }
 }
 
