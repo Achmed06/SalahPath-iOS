@@ -652,6 +652,7 @@ struct SettingsView: View {
             Task {
                 await refreshAudioCacheText()
                 await refreshQuranTextCacheText()
+                await recoverNotificationPermissionIfNeeded()
                 await refreshNotificationDiagnostics()
             }
         }
@@ -671,6 +672,36 @@ struct SettingsView: View {
                     await refreshNotificationDiagnostics()
                 }
             }
+        }
+    }
+
+    @MainActor
+    private func recoverNotificationPermissionIfNeeded() async {
+        guard settings.notificationsEnabled else { return }
+
+        let before = await NotificationManager.shared.diagnostics()
+        if before.authorizationStatus == .notDetermined {
+            let granted = await NotificationManager.shared.requestAuthorization()
+            if !granted {
+                notificationStatusText = settings.t(
+                    "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
+                    "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
+                )
+                return
+            }
+        }
+
+        let after = await NotificationManager.shared.diagnostics()
+        guard after.authorizationStatus == .authorized ||
+                after.authorizationStatus == .provisional ||
+                after.authorizationStatus == .ephemeral else { return }
+
+        if let location = locationManager.location {
+            _ = await NotificationManager.shared.scheduleNextSevenDays(
+                location: location,
+                settings: settings,
+                timeZone: locationManager.prayerTimeZone
+            )
         }
     }
 
