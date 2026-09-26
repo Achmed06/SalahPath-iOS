@@ -965,33 +965,23 @@ struct HomeView: View {
     @ViewBuilder
     private func prayerContent(location: CLLocation, today: PrayerDay) -> some View {
         ScrollView {
-            LazyVStack(spacing: 5) {
-                brandHeader(today: today)
+            LazyVStack(spacing: 10) {
+                premiumHomeHero(today: today, location: location)
+                premiumPrimaryGrid
 
-                if let next = engine.nextPrayer(
-                    now: now,
-                    location: location,
-                    settings: settings,
-                    timeZone: effectiveTimeZone
-                ) {
-                    nextPrayerHero(next)
-                }
-
+                // Secondary content stays available below the first viewport.
                 todayPrayersCard(today, location: location)
-
-                quickActionStrip
-
                 dailyDuaCard
                 NavigationLink { PrayerTrackerOverviewView() } label: { streakCard }
                     .buttonStyle(.plain)
                     .accessibilityHint(settings.t("Gebets-Tracking öffnen", "Namaz takibini aç"))
-                dashboardGrid
                 referenceQuoteStrip
             }
-            .padding(.horizontal, 7)
-            .padding(.top, 3)
-            .padding(.bottom, 4)
+            .padding(.horizontal, 8)
+            .padding(.top, 6)
+            .padding(.bottom, 8)
         }
+        .background(SalahTheme.page)
         .scrollIndicators(.hidden)
         .refreshable {
             locationManager.refresh()
@@ -1003,6 +993,222 @@ struct HomeView: View {
                 )
             }
         }
+    }
+
+    private func premiumHomeHero(today: PrayerDay, location: CLLocation) -> some View {
+        let next = engine.nextPrayer(
+            now: now,
+            location: location,
+            settings: settings,
+            timeZone: effectiveTimeZone
+        )
+
+        return ZStack(alignment: .bottom) {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.18, green: 0.29, blue: 0.34),
+                            Color(red: 0.52, green: 0.48, blue: 0.42),
+                            Color(red: 0.91, green: 0.68, blue: 0.39)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+
+            RadialGradient(
+                colors: [
+                    SalahTheme.gold.opacity(0.58),
+                    SalahTheme.gold.opacity(0.14),
+                    .clear
+                ],
+                center: UnitPoint(x: 0.32, y: 0.28),
+                startRadius: 10,
+                endRadius: 170
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+
+            Image("home_mosque")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 190)
+                .foregroundStyle(.white)
+                .saturation(0.88)
+                .brightness(0.10)
+                .offset(y: 18)
+                .shadow(color: Color.black.opacity(0.18), radius: 12, y: 7)
+                .accessibilityHidden(true)
+
+            LinearGradient(
+                colors: [
+                    Color.clear,
+                    Color.black.opacity(0.04),
+                    Color.black.opacity(0.28)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+
+            VStack(spacing: 10) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("SalahPath")
+                            .font(.system(size: 29, weight: .bold, design: .serif))
+                            .foregroundStyle(.white)
+                            .shadow(color: .black.opacity(0.18), radius: 3, y: 1)
+
+                        Text(settings.t("Dein täglicher Begleiter", "Günlük rehberin"))
+                            .font(.system(size: 10.5, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.88))
+                    }
+
+                    Spacer()
+
+                    NavigationLink { SettingsView() } label: {
+                        ZStack {
+                            Circle()
+                                .fill(.ultraThinMaterial)
+                                .frame(width: 38, height: 38)
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(SalahTheme.deepTeal)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(settings.t("Einstellungen", "Ayarlar"))
+                }
+
+                Spacer(minLength: 70)
+
+                VStack(spacing: 7) {
+                    HStack(spacing: 9) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(SalahTheme.teal)
+                            .frame(width: 30, height: 30)
+                            .background(SalahTheme.softTeal.opacity(0.82), in: Circle())
+
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(gregorianDateShort(now))
+                                .font(.system(size: 11.5, weight: .bold))
+                                .foregroundStyle(SalahTheme.ink)
+                            Text(hijriDateString(now, language: settings.language))
+                                .font(.system(size: 9, weight: .medium))
+                                .foregroundStyle(SalahTheme.mutedInk)
+                        }
+
+                        Spacer()
+
+                        Text(effectiveLocality)
+                            .font(.system(size: 9.5, weight: .semibold))
+                            .foregroundStyle(SalahTheme.deepTeal)
+                            .lineLimit(1)
+                    }
+                    .padding(.horizontal, 11)
+                    .padding(.vertical, 8)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(Color.white.opacity(0.56), lineWidth: 1)
+                    }
+
+                    if let next {
+                        HStack(spacing: 10) {
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [SalahTheme.gold, SalahTheme.gold.opacity(0.72)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 42, height: 42)
+                                SalahFeatureIcon(kind: salahPrayerFeatureKind(for: next.kind))
+                                    .frame(width: 25, height: 25)
+                            }
+
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(settings.t("Nächstes Gebet", "Sıradaki Namaz"))
+                                    .font(.system(size: 9, weight: .semibold))
+                                    .foregroundStyle(SalahTheme.mutedInk)
+                                Text(next.kind.localizedName(settings.language))
+                                    .font(.system(size: 18, weight: .bold, design: .serif))
+                                    .foregroundStyle(SalahTheme.ink)
+                            }
+
+                            Spacer()
+
+                            VStack(alignment: .trailing, spacing: 1) {
+                                Text(timeString(
+                                    next.date,
+                                    use24Hour: settings.use24Hour,
+                                    language: settings.language,
+                                    timeZone: effectiveTimeZone
+                                ))
+                                .font(.system(size: 17, weight: .bold, design: .rounded).monospacedDigit())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                                Text(countdownString(from: now, to: next.date))
+                                    .font(.system(size: 9.5, weight: .bold).monospacedDigit())
+                                    .foregroundStyle(SalahTheme.teal)
+                            }
+                        }
+                        .padding(.horizontal, 11)
+                        .padding(.vertical, 9)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(SalahTheme.gold.opacity(0.54), lineWidth: 1)
+                        }
+                        .shadow(color: Color.black.opacity(0.08), radius: 10, y: 4)
+                    }
+                }
+            }
+            .padding(14)
+        }
+        .frame(height: 325)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.72), SalahTheme.gold.opacity(0.42)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 18, y: 10)
+    }
+
+    private var premiumPrimaryGrid: some View {
+        let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 3)
+
+        return LazyVGrid(columns: columns, spacing: 8) {
+            NavigationLink { PrayerTimesOverviewView() } label: {
+                PremiumHomeActionTile(kind: "times", title: settings.t("Gebetszeiten", "Namaz Vakitleri"))
+            }
+            NavigationLink { QiblaView() } label: {
+                PremiumHomeActionTile(kind: "qibla", title: settings.t("Qibla", "Kıble"))
+            }
+            NavigationLink { QuranView() } label: {
+                PremiumHomeActionTile(kind: "quran", title: settings.t("Quran", "Kur'an"))
+            }
+            NavigationLink { PrayerHowToView() } label: {
+                PremiumHomeActionTile(kind: "prayer", title: settings.t("Beten", "Namaz"))
+            }
+            NavigationLink { WuduGuideView() } label: {
+                PremiumHomeActionTile(kind: "wudu", title: settings.t("Abdest", "Abdest"))
+            }
+            NavigationLink { MoreView() } label: {
+                PremiumHomeActionTile(kind: "discover", title: settings.t("Entdecken", "Keşfet"))
+            }
+        }
+        .buttonStyle(.plain)
     }
 
     private func brandHeader(today: PrayerDay? = nil) -> some View {
@@ -2751,6 +2957,112 @@ private struct ReferenceMosqueSkyline: View {
                 .frame(width: width, height: max(8, height - width / 2))
         }
         .frame(height: height, alignment: .bottom)
+    }
+}
+
+private struct PremiumHomeActionTile: View {
+    let kind: String
+    let title: String
+
+    var body: some View {
+        VStack(spacing: 7) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.96),
+                                SalahTheme.cream,
+                                SalahTheme.softTeal.opacity(0.28)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 58, height: 58)
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 7, y: 4)
+
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [
+                                SalahTheme.gold.opacity(0.22),
+                                Color.clear
+                            ],
+                            center: .topLeading,
+                            startRadius: 1,
+                            endRadius: 28
+                        )
+                    )
+                    .frame(width: 46, height: 46)
+
+                if kind == "discover" {
+                    discoverGlyph
+                        .frame(width: 31, height: 31)
+                } else {
+                    ReferenceDashboardGlyph(kind: kind)
+                        .frame(width: 30, height: 30)
+                }
+
+                Circle()
+                    .fill(SalahTheme.gold)
+                    .frame(width: 7, height: 7)
+                    .overlay {
+                        Circle().stroke(Color.white.opacity(0.85), lineWidth: 1)
+                    }
+                    .offset(x: 22, y: -22)
+            }
+
+            Text(title)
+                .font(.system(size: 9.6, weight: .bold))
+                .foregroundStyle(SalahTheme.ink)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.76)
+        }
+        .frame(maxWidth: .infinity, minHeight: 96)
+        .padding(.vertical, 7)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.92),
+                    SalahTheme.cream.opacity(0.98)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.90), SalahTheme.gold.opacity(0.42)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.055), radius: 6, y: 3)
+    }
+
+    private var discoverGlyph: some View {
+        ZStack {
+            ForEach(0..<4, id: \.self) { index in
+                let x: CGFloat = index % 2 == 0 ? -7 : 7
+                let y: CGFloat = index < 2 ? -7 : 7
+                RoundedRectangle(cornerRadius: 3, style: .continuous)
+                    .fill(index == 3 ? SalahTheme.gold : SalahTheme.teal)
+                    .frame(width: 10, height: 10)
+                    .offset(x: x, y: y)
+            }
+
+            Image(systemName: "sparkles")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .offset(x: 13, y: -13)
+        }
     }
 }
 
