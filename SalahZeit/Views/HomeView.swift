@@ -546,11 +546,13 @@ private enum DailyDuaStore {
 }
 
 
+#if DEBUG
 struct DailyDuaQAView: View {
     var body: some View {
         DailyDuaDetailView(dua: DailyDuaStore.items[0])
     }
 }
+#endif
 
 private struct DailyDuaDetailView: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -782,7 +784,11 @@ struct HomeView: View {
     private let engine = PrayerEngine()
 
     private var isScreenshotQA: Bool {
+#if DEBUG
         ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
+#else
+        false
+#endif
     }
 
     private var effectiveLocation: CLLocation? {
@@ -2053,7 +2059,11 @@ struct PrayerTimesOverviewView: View {
     private let engine = PrayerEngine()
 
     private var isScreenshotQA: Bool {
+#if DEBUG
         ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
+#else
+        false
+#endif
     }
 
     private var referenceDate: Date {
