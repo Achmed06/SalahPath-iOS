@@ -1521,11 +1521,7 @@ private struct WuduInstructionVisual: View {
                 )
                 .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 16, y: 8)
 
-            Image(key)
-                .renderingMode(.original)
-                .resizable()
-                .interpolation(.high)
-                .scaledToFit()
+            instructionArtwork
                 .padding(.horizontal, 10)
                 .padding(.vertical, 8)
 
@@ -1555,6 +1551,179 @@ private struct WuduInstructionVisual: View {
                 )
         }
         .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private var instructionArtwork: some View {
+        switch stepNumber {
+        case 4, 5, 6, 9, 10, 11:
+            WuduBareHeadVisual(stepNumber: stepNumber)
+        default:
+            Image(key)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+        }
+    }
+}
+
+private struct WuduBareHeadVisual: View {
+    let stepNumber: Int
+
+    private let skin = Color(red: 0.82, green: 0.62, blue: 0.45)
+    private let hair = SalahTheme.deepTeal
+
+    var body: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            let h = proxy.size.height
+            let cx = w * 0.50
+            let cy = h * 0.48
+
+            ZStack {
+                Circle()
+                    .fill(SalahTheme.softTeal.opacity(0.34))
+                    .frame(width: min(w, h) * 0.86, height: min(w, h) * 0.86)
+
+                RoundedRectangle(cornerRadius: 36, style: .continuous)
+                    .fill(Color.white.opacity(0.96))
+                    .frame(width: w * 0.46, height: h * 0.40)
+                    .offset(y: h * 0.30)
+
+                Ellipse()
+                    .fill(skin)
+                    .frame(width: w * 0.34, height: h * 0.48)
+                    .position(x: cx, y: cy)
+
+                Ellipse()
+                    .fill(hair)
+                    .frame(width: w * 0.33, height: h * 0.18)
+                    .position(x: cx, y: cy - h * 0.18)
+
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(hair)
+                    .frame(width: w * 0.27, height: h * 0.11)
+                    .position(x: cx, y: cy + h * 0.15)
+
+                HStack(spacing: w * 0.08) {
+                    Capsule().fill(hair).frame(width: 17, height: 4)
+                    Capsule().fill(hair).frame(width: 17, height: 4)
+                }
+                .position(x: cx, y: cy - h * 0.035)
+
+                Capsule()
+                    .fill(hair.opacity(0.72))
+                    .frame(width: 4, height: 18)
+                    .position(x: cx, y: cy + h * 0.035)
+
+                faceAction(in: proxy.size)
+            }
+        }
+        .aspectRatio(1.45, contentMode: .fit)
+    }
+
+    @ViewBuilder
+    private func faceAction(in size: CGSize) -> some View {
+        let w = size.width
+        let h = size.height
+
+        switch stepNumber {
+        case 4:
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: min(w, h) * 0.24))
+                .foregroundStyle(skin)
+                .rotationEffect(.degrees(-52))
+                .offset(x: w * 0.13, y: h * 0.10)
+                .overlay {
+                    Image(systemName: "drop.fill")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(Color.cyan.opacity(0.78))
+                        .offset(x: w * 0.08, y: h * 0.02)
+                }
+
+        case 5:
+            Image(systemName: "hand.raised.fill")
+                .font(.system(size: min(w, h) * 0.23))
+                .foregroundStyle(skin)
+                .rotationEffect(.degrees(-58))
+                .offset(x: w * 0.12, y: h * 0.02)
+                .overlay {
+                    HStack(spacing: 4) {
+                        Image(systemName: "drop.fill")
+                        Image(systemName: "drop.fill")
+                    }
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(Color.cyan.opacity(0.78))
+                    .offset(x: w * 0.07, y: -h * 0.02)
+                }
+
+        case 6:
+            HStack(spacing: w * 0.12) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(-20))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(20))
+            }
+            .font(.system(size: min(w, h) * 0.20))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.02)
+            .overlay {
+                VStack(spacing: 2) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.76))
+                .offset(y: h * 0.12)
+            }
+
+        case 9:
+            HStack(spacing: w * 0.09) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(18))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(-18))
+            }
+            .font(.system(size: min(w, h) * 0.20))
+            .foregroundStyle(skin)
+            .offset(y: -h * 0.20)
+            .overlay {
+                HStack(spacing: 8) {
+                    Image(systemName: "drop.fill")
+                    Image(systemName: "drop.fill")
+                }
+                .font(.system(size: 11, weight: .bold))
+                .foregroundStyle(Color.cyan.opacity(0.74))
+                .offset(y: -h * 0.12)
+            }
+
+        case 10:
+            HStack(spacing: w * 0.28) {
+                Image(systemName: "hand.point.up.left.fill")
+                Image(systemName: "hand.point.up.right.fill")
+            }
+            .font(.system(size: min(w, h) * 0.13))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.01)
+
+        case 11:
+            HStack(spacing: w * 0.12) {
+                Image(systemName: "hand.raised.fill")
+                    .rotationEffect(.degrees(82))
+                Image(systemName: "hand.raised.fill")
+                    .scaleEffect(x: -1, y: 1)
+                    .rotationEffect(.degrees(-82))
+            }
+            .font(.system(size: min(w, h) * 0.15))
+            .foregroundStyle(skin)
+            .offset(y: h * 0.24)
+
+        default:
+            EmptyView()
+        }
     }
 }
 
