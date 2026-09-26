@@ -4,7 +4,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-rm -rf build Payload SalahPath-unsigned.ipa
+# Keep DerivedData between CI runs so xcodebuild can reuse unchanged compilation
+# products. The workflow cache restores build/DerivedData on a fresh runner.
+rm -rf Payload SalahPath-unsigned.ipa
 
 xcodebuild \
   -project SalahZeit.xcodeproj \
