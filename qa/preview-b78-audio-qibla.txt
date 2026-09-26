@@ -1,2 +1,2 @@
-Verify restored B78 visuals, one-time Bismillah intro, and refined Qibla needle/Kaaba alignment.
-run=2026-09-26T10:06+02:00
+Verify old B78 visuals with one-time full Bismillah audio and corrected Qibla needle target.
+run=2026-09-26T09:48+02:00
