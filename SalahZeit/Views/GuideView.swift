@@ -1293,31 +1293,76 @@ private struct PrayerRecitationView: View {
     @State private var showMeaning = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
-                .font(.caption.bold())
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 9) {
+            HStack {
+                Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
+                    .font(.system(size: 10, weight: .black))
+                    .tracking(0.4)
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                Spacer()
+
+                Image(systemName: "waveform")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(SalahTheme.gold)
+            }
+
             Text(recitation.arabic)
-                .font(.title3)
+                .font(.system(size: 22, weight: .medium))
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundStyle(SalahTheme.ink)
+                .padding(.vertical, 3)
+
             Text(recitation.transliteration)
-                .font(.subheadline.weight(.semibold))
-            Button(showMeaning ? settings.t("Bedeutung ausblenden", "Anlamı gizle") : settings.t("Bedeutung anzeigen", "Anlamı göster")) {
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            Button {
                 withAnimation(.easeInOut(duration: 0.2)) { showMeaning.toggle() }
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: showMeaning ? "eye.slash.fill" : "eye.fill")
+                    Text(showMeaning ? settings.t("Bedeutung ausblenden", "Anlamı gizle") : settings.t("Bedeutung anzeigen", "Anlamı göster"))
+                }
+                .font(.system(size: 9.5, weight: .bold))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(SalahTheme.gold.opacity(0.12), in: Capsule())
             }
-            .font(.caption)
+            .buttonStyle(.plain)
+
             if showMeaning {
                 Text(settings.language == .german ? recitation.deMeaning : recitation.trMeaning)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.top, 2)
             }
+
             if let note = settings.language == .german ? recitation.deNote : recitation.trNote {
-                Text(note).font(.caption2).foregroundStyle(.tertiary)
+                Text(note)
+                    .font(.caption2)
+                    .foregroundStyle(SalahTheme.mutedInk.opacity(0.82))
             }
         }
-        .padding(10)
-        .background(SalahTheme.gold.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+        .padding(12)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.82),
+                    SalahTheme.gold.opacity(0.055),
+                    SalahTheme.softTeal.opacity(0.16)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 1)
+        }
     }
 }
 
