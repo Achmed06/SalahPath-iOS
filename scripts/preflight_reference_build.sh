@@ -122,8 +122,9 @@ grep -q 'NSPrivacyAccessedAPICategoryUserDefaults' "SalahZeit/PrivacyInfo.xcpriv
 grep -q 'CA92.1' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'NSPrivacyAccessedAPICategoryFileTimestamp' "SalahZeit/PrivacyInfo.xcprivacy"
 grep -q 'C617.1' "SalahZeit/PrivacyInfo.xcprivacy"
-grep -q 'NSPrivacyCollectedDataTypeDeviceID' "SalahZeit/PrivacyInfo.xcprivacy"
-grep -q 'NSPrivacyCollectedDataTypePurposeAppFunctionality' "SalahZeit/PrivacyInfo.xcprivacy"
+if grep -q 'NSPrivacyCollectedDataTypeDeviceID' "SalahZeit/PrivacyInfo.xcprivacy"; then
+  fail "Privacy manifest must not claim Device ID collection without matching app behavior"
+fi
 grep -q 'PRIVACY.md' "SalahZeit/Views/SettingsView.swift"
 grep -q 'SalahPath-iOS/issues' "SalahZeit/Views/SettingsView.swift"
 
