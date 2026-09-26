@@ -55,28 +55,30 @@ struct QiblaView: View {
                                 .foregroundStyle(SalahTheme.teal)
                                 .offset(y: -103)
 
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color.black.opacity(0.90))
-                                    .frame(width: 45, height: 39)
-                                Rectangle()
-                                    .fill(SalahTheme.gold)
-                                    .frame(width: 45, height: 4)
-                                    .offset(y: -7)
-                            }
-                            .offset(y: 27)
-
                             if let rotation {
-                                Image(systemName: "location.north.fill")
-                                    .font(.system(size: 88, weight: .medium))
-                                    .foregroundStyle(SalahTheme.teal.opacity(0.92))
-                                    .rotationEffect(.degrees(rotation))
-                                    .offset(y: -25)
-                                    .animation(.easeOut(duration: 0.18), value: rotation)
+                                ZStack {
+                                    Image(systemName: "location.north.fill")
+                                        .font(.system(size: 82, weight: .medium))
+                                        .foregroundStyle(SalahTheme.teal.opacity(0.92))
+                                        .offset(y: -18)
+
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .fill(Color.black.opacity(0.92))
+                                            .frame(width: 42, height: 36)
+                                        Rectangle()
+                                            .fill(SalahTheme.gold)
+                                            .frame(width: 42, height: 4)
+                                            .offset(y: -7)
+                                    }
+                                    .offset(y: -105)
+                                }
+                                .rotationEffect(.degrees(rotation))
+                                .animation(.easeOut(duration: 0.18), value: rotation)
                             } else {
                                 ProgressView()
                                     .tint(SalahTheme.teal)
-                                    .offset(y: -25)
+                                    .offset(y: -18)
                             }
                         }
                         .accessibilityElement(children: .ignore)
