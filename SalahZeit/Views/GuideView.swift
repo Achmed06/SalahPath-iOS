@@ -4400,6 +4400,8 @@ final class RemoteAudioPlayer: ObservableObject {
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
     private var playbackFallbackAttempted = false
+    private var remoteRetryAttempted = false
+    private var stallRecoveryTask: Task<Void, Never>?
     private(set) var queueSessionID = 0
 
     private lazy var nowPlayingArtwork: MPMediaItemArtwork? = {
@@ -4561,8 +4563,10 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     func pause() {
+        stallRecoveryTask?.cancel()
         player?.pause()
         isPlaying = false
+        isLoading = false
         updateNowPlaying()
     }
 
@@ -4573,8 +4577,10 @@ final class RemoteAudioPlayer: ObservableObject {
             return
         }
         lastError = nil
-        player.playImmediately(atRate: playbackRate)
-        isPlaying = true
+        stallRecoveryTask?.cancel()
+        isLoading = true
+        player.defaultRate = playbackRate
+        player.play()
         updateNowPlaying()
     }
 
@@ -4642,6 +4648,7 @@ final class RemoteAudioPlayer: ObservableObject {
         let sourceURL = queueURLs[queueIndex]
         let expectedIndex = queueIndex
         playbackFallbackAttempted = false
+        remoteRetryAttempted = false
         activeURL = sourceURL
         updateNowPlaying()
 
@@ -4667,7 +4674,9 @@ final class RemoteAudioPlayer: ObservableObject {
 
     private func startPlayback(_ url: URL) {
         let item = AVPlayerItem(url: url)
+        item.preferredForwardBufferDuration = 4
         let newPlayer = AVPlayer(playerItem: item)
+        newPlayer.automaticallyWaitsToMinimizeStalling = true
         newPlayer.defaultRate = playbackRate
         player = newPlayer
 
@@ -4704,10 +4713,9 @@ final class RemoteAudioPlayer: ObservableObject {
                     if self.retryPlaybackIfPossible(after: url) {
                         return
                     }
-                    self.isLoading = false
-                    self.isPlaying = false
-                    self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
-                    self.updateNowPlaying()
+                    self.failCurrentAndContinue(
+                        item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                    )
                 default:
                     self.isLoading = true
                 }
@@ -4720,8 +4728,10 @@ final class RemoteAudioPlayer: ObservableObject {
                 self.isPlaying = player.timeControlStatus == .playing
                 if player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
                     self.isLoading = true
+                    self.scheduleStallRecovery()
                 }
                 if player.timeControlStatus == .playing {
+                    self.stallRecoveryTask?.cancel()
                     self.isLoading = false
                 }
                 self.updateNowPlaying()
@@ -4761,15 +4771,13 @@ final class RemoteAudioPlayer: ObservableObject {
                 if self.retryPlaybackIfPossible(after: url) {
                     return
                 }
-                self.isLoading = false
-                self.isPlaying = false
-                self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
-                self.updateNowPlaying()
+                self.failCurrentAndContinue(
+                    errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                )
             }
         }
 
-        newPlayer.playImmediately(atRate: playbackRate)
-        isPlaying = true
+        newPlayer.play()
         updateNowPlaying()
     }
 
@@ -4787,25 +4795,98 @@ final class RemoteAudioPlayer: ObservableObject {
             return true
         }
 
-        guard !playbackFallbackAttempted,
-              failedURL.scheme?.lowercased() == "https",
-              failedURL.host?.lowercased() == "cdn.islamic.network",
-              var components = URLComponents(url: failedURL, resolvingAgainstBaseURL: false) else {
+        if !playbackFallbackAttempted,
+           failedURL.scheme?.lowercased() == "https",
+           failedURL.host?.lowercased() == "cdn.islamic.network",
+           var components = URLComponents(url: failedURL, resolvingAgainstBaseURL: false) {
+            components.host = "cdn.alislam.ru"
+            if let mirrorURL = components.url {
+                playbackFallbackAttempted = true
+                removeObservers()
+                player?.pause()
+                player = nil
+                isLoading = true
+                isPlaying = false
+                lastError = nil
+                startPlayback(mirrorURL)
+                return true
+            }
+        }
+
+        guard !remoteRetryAttempted,
+              let remote = activeURL,
+              remote.scheme?.lowercased() == "https" else {
             return false
         }
 
-        components.host = "cdn.alislam.ru"
-        guard let mirrorURL = components.url else { return false }
-
-        playbackFallbackAttempted = true
+        remoteRetryAttempted = true
         removeObservers()
         player?.pause()
         player = nil
         isLoading = true
         isPlaying = false
         lastError = nil
-        startPlayback(mirrorURL)
+        startPlayback(remote)
         return true
+    }
+
+    private func scheduleStallRecovery() {
+        stallRecoveryTask?.cancel()
+        let expectedRevision = playbackRevision
+        let expectedIndex = queueIndex
+        let expectedURL = activeURL
+
+        stallRecoveryTask = Task { @MainActor [weak self] in
+            do {
+                try await Task.sleep(for: .seconds(12))
+            } catch {
+                return
+            }
+
+            guard let self,
+                  self.playbackRevision == expectedRevision,
+                  self.queueIndex == expectedIndex,
+                  self.activeURL == expectedURL,
+                  self.player?.timeControlStatus == .waitingToPlayAtSpecifiedRate else { return }
+
+            if !self.remoteRetryAttempted,
+               let remote = self.activeURL,
+               remote.scheme?.lowercased() == "https" {
+                self.remoteRetryAttempted = true
+                self.removeObservers()
+                self.player?.pause()
+                self.player = nil
+                self.isLoading = true
+                self.isPlaying = false
+                self.lastError = nil
+                self.startPlayback(remote)
+                return
+            }
+
+            self.failCurrentAndContinue(
+                "Audio lädt zu lange. Der nächste Abschnitt wird versucht / Ses çok uzun yükleniyor. Sonraki bölüm deneniyor."
+            )
+        }
+    }
+
+    private func failCurrentAndContinue(_ message: String) {
+        stallRecoveryTask?.cancel()
+        player?.pause()
+        isLoading = false
+        isPlaying = false
+
+        if hasNext {
+            next()
+            return
+        }
+
+        if queueContinuationDelegate != nil {
+            requestContinuationIfAvailable()
+            return
+        }
+
+        lastError = message
+        updateNowPlaying()
     }
 
     private func seek(to seconds: Double) {
@@ -4948,6 +5029,8 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     private func removeObservers() {
+        stallRecoveryTask?.cancel()
+        stallRecoveryTask = nil
         statusObservation = nil
         timeControlObservation = nil
         if let periodicTimeObserver, let player {
@@ -5059,7 +5142,7 @@ enum QuranAudioResolver {
     }
 
     static func bismillahURL(reciter: QuranReciter) -> URL? {
-        URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
+        URL(string: "https://cdn.islamic.network/quran/audio/\(reciter.bitrate)/\(reciter.edition)/1.mp3")
     }
 
     static func playbackQueue(
