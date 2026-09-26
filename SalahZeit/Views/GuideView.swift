@@ -1505,33 +1505,46 @@ private struct WuduInstructionVisual: View {
     let key: String
     let stepNumber: Int
 
+    private var zoom: CGFloat {
+        switch key {
+        case "wudu_mouth", "wudu_nose": return 1.58
+        case "wudu_face": return 1.56
+        case "wudu_rightarm", "wudu_leftarm": return 1.18
+        case "wudu_neck": return 1.38
+        default: return 1.05
+        }
+    }
+
+    private var verticalOffset: CGFloat {
+        switch key {
+        case "wudu_mouth", "wudu_nose": return -39
+        case "wudu_face": return -38
+        case "wudu_rightarm", "wudu_leftarm": return -10
+        case "wudu_neck": return -42
+        default: return 0
+        }
+    }
+
+    private var isMirrored: Bool {
+        key == "wudu_leftfoot"
+    }
+
     var body: some View {
-        Image(key)
-            .renderingMode(.original)
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .frame(maxWidth: .infinity)
-            .frame(height: 188)
-            .background(
-                LinearGradient(
-                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 26, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
-            }
-            .accessibilityHidden(true)
+        GeometryReader { proxy in
+            Image(key)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFill()
+                .scaleEffect(x: isMirrored ? -zoom : zoom, y: zoom)
+                .offset(y: verticalOffset)
+                .frame(width: proxy.size.width, height: proxy.size.height)
+                .clipped()
+        }
+        .background(Color.white.opacity(0.90))
+        .accessibilityHidden(true)
     }
 }
-
 struct WuduGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
@@ -1566,235 +1579,340 @@ struct WuduGuideView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 14) {
-                    Color.clear.frame(height: 1).id("wudu-step-top")
+                LazyVStack(spacing: 16) {
+                    wuduHero
 
-                    VStack(alignment: .leading, spacing: 9) {
-                        Label(settings.t("Wudu ganz von vorne", "Abdesti en baştan öğren"), systemImage: "drop.fill")
-                            .font(.title3.bold())
-                            .foregroundStyle(SalahTheme.deepTeal)
-
-                        Text(settings.t(
-                            "Männer und Frauen machen Wudu grundsätzlich gleich. Du siehst immer nur einen Schritt. Mach ihn in Ruhe fertig und gehe dann weiter.",
-                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Her seferinde yalnız bir adım görürsün. Adımı sakin şekilde tamamla, sonra devam et."
-                        ))
-                        .font(.subheadline)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                        Divider()
-
-                        Text(settings.t(
-                            "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: 1) Gesicht waschen, 2) Arme mit Ellenbogen waschen, 3) mindestens ein Viertel des Kopfes mit nasser Hand wischen, 4) Füße mit Knöcheln waschen.",
-                            "Hanefî/Diyanet anlatımında abdestin 4 farzı: 1) yüzü yıkamak, 2) kolları dirseklerle yıkamak, 3) başın en az dörtte birini mesh etmek, 4) ayakları aşık kemikleriyle yıkamaktır."
-                        ))
-                        .font(.footnote.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
-
-                        Text(settings.t(
-                            "Bei den Farz-Waschschritten reicht für die Gültigkeit eine vollständige Waschung; dreimaliges Waschen ist die Sunnah-Praxis. Kopf-Masah wird einmal gezeigt.",
-                            "Farz olan yıkama bölümlerinde geçerlilik için bir kez tam yıkamak yeterlidir; üç kez yıkamak sünnettir. Baş meshi bir kez gösterilir."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    }
-                    .cardStyle(material: true)
-
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
-                                .foregroundStyle(SalahTheme.deepTeal)
-                            Spacer()
-                            Text(steps[safeCurrentStepIndex].hanafiFard ? settings.t("FARZ · PFLICHT", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
-                                .padding(.vertical, 5)
-                                .background(
-                                    (steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal),
-                                    in: Capsule()
-                                )
-                                .foregroundStyle(SalahTheme.deepTeal)
-                        }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
-                    }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
-
-                    wuduStepCard(steps[safeCurrentStepIndex])
-                        .id("wudu-step-card-\(currentStepIndex)")
-
-                    if currentStepIndex < steps.count - 1 {
-                        HStack(spacing: 7) {
-                            Image(systemName: "chevron.down")
-                            Text(settings.t("Weiter wischen", "Devam etmek için kaydır"))
-                        }
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
-                        .onAppear { wuduNextTriggerVisible = true }
-                        .onDisappear { wuduNextTriggerVisible = false }
+                    HStack(spacing: 9) {
+                        introChip(step: steps[0], symbol: "heart.fill")
+                        introChip(step: steps[1], symbol: "sparkles")
                     }
 
-                    if currentStepIndex == steps.count - 1 {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
-                                .font(.headline)
-                            Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
-                                .font(.title3)
-                                .multilineTextAlignment(.trailing)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
-                                .font(.subheadline.weight(.semibold))
-                            Text(settings.t(
-                                "Ich bezeuge, dass es keinen Gott außer Allah gibt, ohne Teilhaber, und dass Muhammad Sein Diener und Gesandter ist.",
-                                "Allah'tan başka ilâh olmadığına, O'nun ortağı bulunmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim."
-                            ))
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                        }
-                        .cardStyle()
-                    }
-
-                    if currentStepIndex == steps.count - 1 {
-                        VStack(alignment: .leading, spacing: 9) {
-                                                Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
-                                                    .font(.headline.bold())
-                                                    .foregroundStyle(SalahTheme.deepTeal)
-                        
-                                                NavigationLink { GhuslGuideView() } label: {
-                                                    Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
-                                                        .font(.headline)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                }
-                                                .buttonStyle(.plain)
-                        
-                                                Divider()
-                        
-                                                NavigationLink { TayammumGuideView() } label: {
-                                                    Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
-                                                        .font(.headline)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                }
-                                                .buttonStyle(.plain)
-                                            }
-                                            .cardStyle()
-                        
-                                            VStack(alignment: .leading, spacing: 7) {
-                                                Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
-                                                    .font(.headline)
-                                                Text(settings.t(
-                                                    "Diyanet Namaz İlmihali und Din İşleri Yüksek Kurulu. Die vier Farz-Bestandteile und die vollständige hanafitische Lernreihenfolge werden direkt in SalahPath erklärt. Nacken/Ense ist hier als Sunnah dargestellt, nicht als Farz.",
-                                                    "Diyanet Namaz İlmihali ve Din İşleri Yüksek Kurulu. Abdestin dört farzı ve tam Hanefî öğrenme sırası doğrudan SalahPath içinde açıklanır. Boyun/ense burada sünnet olarak gösterilir, farz değildir."
-                                                ))
-                                                .font(.footnote)
-                                                .foregroundStyle(.secondary)
-                                            }
-                                            .cardStyle(material: true)
-                    }
-                }
-                .padding()
-            }
-            .background(SalahTheme.page)
-            .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
-            .navigationBarTitleDisplayMode(.inline)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 18)
-                    .onEnded { value in
-                        guard currentStepIndex < steps.count - 1,
-                              wuduNextTriggerVisible,
-                              value.translation.height < -30 else { return }
-                        let target = currentStepIndex + 1
-                        wuduNextTriggerVisible = false
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            currentStepIndex = target
-                        }
-                        Task { @MainActor in
-                            await Task.yield()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: 10),
+                            GridItem(.flexible(), spacing: 10)
+                        ],
+                        spacing: 10
+                    ) {
+                        ForEach(Array(steps.dropFirst(2).enumerated()), id: \.element.id) { offset, step in
+                            Button {
+                                currentStepIndex = offset + 2
+                                withAnimation(.easeInOut(duration: 0.24)) {
+                                    proxy.scrollTo("wudu-selected-detail", anchor: .top)
+                                }
+                            } label: {
+                                wuduGridCard(step)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
-            )
-            .onAppear {
-                guard currentStepIndex > 0 else { return }
-                Task { @MainActor in
-                    await Task.yield()
-                    proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
+
+                    selectedStepDetail(steps[safeCurrentStepIndex])
+                        .id("wudu-selected-detail")
+
+                    fardSummaryCard
+                    completionDuaCard
+                    purificationLinks
+                    sourceCard
                 }
+                .padding(.horizontal, 14)
+                .padding(.top, 8)
+                .padding(.bottom, 28)
             }
+            .scrollIndicators(.hidden)
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.30, green: 0.35, blue: 0.42).opacity(0.96),
+                        Color(red: 0.91, green: 0.78, blue: 0.68).opacity(0.72),
+                        SalahTheme.page,
+                        SalahTheme.page
+                    ],
+                    startPoint: .top,
+                    endPoint: .center
+                )
+                .ignoresSafeArea()
+            )
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 
-    @ViewBuilder
-    private func wuduStepCard(_ step: WuduTutorialStep) -> some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Text("\(step.number)")
-                    .font(.title3.bold())
-                    .frame(width: 40, height: 40)
-                    .background(SalahTheme.gold.opacity(0.95), in: Circle())
-                    .foregroundStyle(SalahTheme.deepTeal)
-
-                Text(settings.language == .german ? step.deTitle : step.trTitle)
-                    .font(.title3.bold())
+    private var wuduHero: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(settings.t("Abdest", "Abdest"))
+                    .font(.system(size: 30, weight: .semibold, design: .serif))
                     .foregroundStyle(.white)
-                    .fixedSize(horizontal: false, vertical: true)
+                Text(settings.t("Schritt für Schritt", "Adım adım"))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.white.opacity(0.88))
+            }
 
-                Spacer(minLength: 6)
+            Spacer()
 
-                Text(repeatLabel(for: step))
-                    .font(.caption.bold())
-                    .multilineTextAlignment(.trailing)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 5)
-                    .background(Color.white.opacity(0.92), in: Capsule())
+            ZStack {
+                Circle()
+                    .fill(Color.white.opacity(0.90))
+                    .frame(width: 42, height: 42)
+                    .shadow(color: Color.black.opacity(0.10), radius: 8, y: 3)
+
+                Image(systemName: "drop.fill")
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(SalahTheme.deepTeal)
             }
-            .padding(14)
-            .background(SalahTheme.navigationTeal)
+        }
+        .padding(.top, 6)
+        .padding(.bottom, 4)
+    }
 
-            VStack(alignment: .leading, spacing: 14) {
+    private func introChip(step: WuduTutorialStep, symbol: String) -> some View {
+        Button {
+            currentStepIndex = step.number - 1
+        } label: {
+            HStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(SalahTheme.deepTeal)
+                        .frame(width: 29, height: 29)
+                    Image(systemName: symbol)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(SalahTheme.gold)
+                }
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("\(step.number). " + (settings.language == .german ? step.deTitle : step.trTitle))
+                        .font(.system(size: 10.5, weight: .bold))
+                        .foregroundStyle(SalahTheme.ink)
+                        .lineLimit(1)
+                    Text(settings.t("Vor dem Waschen", "Yıkamadan önce"))
+                        .font(.system(size: 8, weight: .medium))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 9)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .background(
+                Color.white.opacity(0.88),
+                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color.white.opacity(0.76), lineWidth: 1)
+            }
+            .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func wuduGridCard(_ step: WuduTutorialStep) -> some View {
+        VStack(spacing: 0) {
+            ZStack(alignment: .bottomLeading) {
                 if let image = step.image {
                     WuduInstructionVisual(key: image, stepNumber: step.number)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(accessibilityDescription(for: step))
+                        .frame(height: 122)
                 }
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Label(settings.t("SO MACHST DU ES", "BÖYLE YAP"), systemImage: "hand.point.right.fill")
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.teal)
-                    Text(settings.language == .german ? step.deAction : step.trAction)
-                        .font(.body)
-                        .foregroundStyle(SalahTheme.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                LinearGradient(
+                    colors: [.clear, Color.black.opacity(0.18)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
+                .allowsHitTesting(false)
 
-                DisclosureGroup(isExpanded: $showExactDetail) {
-                    Text(exactDetail(for: step.number))
-                        .font(.subheadline)
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 5)
-                } label: {
-                    Label(settings.t("Ganz genau", "Ayrıntılı anlatım"), systemImage: "magnifyingglass")
-                        .font(.subheadline.bold())
+                Text("\(step.number)")
+                    .font(.system(size: 10, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(width: 25, height: 25)
+                    .background(SalahTheme.deepTeal, in: Circle())
+                    .overlay {
+                        Circle().stroke(Color.white.opacity(0.88), lineWidth: 1)
+                    }
+                    .padding(8)
+            }
+            .frame(height: 122)
+            .clipped()
+
+            HStack(alignment: .center, spacing: 5) {
+                Text(settings.language == .german ? step.deTitle : step.trTitle)
+                    .font(.system(size: 10.5, weight: .bold))
+                    .foregroundStyle(SalahTheme.ink)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+
+                Spacer(minLength: 2)
+
+                if let repeatText = step.repeatText {
+                    Text(repeatText)
+                        .font(.system(size: 8, weight: .black))
                         .foregroundStyle(SalahTheme.deepTeal)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 3)
+                        .background(SalahTheme.gold.opacity(0.24), in: Capsule())
                 }
             }
-            .padding(16)
-            .background(SalahTheme.cream)
+            .padding(.horizontal, 9)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+            .background(Color.white.opacity(0.94))
         }
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .background(Color.white.opacity(0.94))
+        .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(Color.white.opacity(0.85), lineWidth: 1)
         }
+        .shadow(color: Color.black.opacity(0.09), radius: 7, y: 4)
+    }
+
+    private func selectedStepDetail(_ step: WuduTutorialStep) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 9) {
+                Text("\(step.number)")
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: 30, height: 30)
+                    .background(SalahTheme.deepTeal, in: Circle())
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(settings.language == .german ? step.deTitle : step.trTitle)
+                        .font(.system(size: 15, weight: .bold, design: .serif))
+                        .foregroundStyle(SalahTheme.ink)
+                    Text(repeatLabel(for: step))
+                        .font(.system(size: 8.5, weight: .bold))
+                        .foregroundStyle(SalahTheme.teal)
+                }
+
+                Spacer()
+
+                if step.hanafiFard {
+                    Text(settings.t("FARZ", "FARZ"))
+                        .font(.system(size: 8, weight: .black))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                        .padding(.horizontal, 7)
+                        .padding(.vertical, 4)
+                        .background(SalahTheme.gold.opacity(0.28), in: Capsule())
+                }
+            }
+
+            Text(settings.language == .german ? step.deAction : step.trAction)
+                .font(.system(size: 11.5, weight: .medium))
+                .foregroundStyle(SalahTheme.ink)
+                .fixedSize(horizontal: false, vertical: true)
+
+            DisclosureGroup(isExpanded: $showExactDetail) {
+                Text(exactDetail(for: step.number))
+                    .font(.system(size: 10.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 5)
+            } label: {
+                Label(settings.t("Ganz genau", "Ayrıntılı anlatım"), systemImage: "info.circle.fill")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(SalahTheme.deepTeal)
+            }
+        }
+        .padding(14)
+        .background(
+            Color.white.opacity(0.92),
+            in: RoundedRectangle(cornerRadius: 17, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 17, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 1)
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.06), radius: 7, y: 3)
+    }
+
+    private var fardSummaryCard: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(settings.t("Die 4 Farz-Bestandteile", "Abdestin 4 farzı"))
+                .font(.system(size: 13, weight: .bold, design: .serif))
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            Text(settings.t(
+                "Gesicht waschen · Arme mit Ellenbogen waschen · mindestens ein Viertel des Kopfes mit nasser Hand wischen · Füße mit Knöcheln waschen.",
+                "Yüzü yıkamak · kolları dirseklerle yıkamak · başın en az dörtte birini mesh etmek · ayakları aşık kemikleriyle yıkamak."
+            ))
+            .font(.system(size: 10.5, weight: .medium))
+            .foregroundStyle(SalahTheme.mutedInk)
+            .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(13)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(SalahTheme.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+    }
+
+    private var completionDuaCard: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
+                .font(.system(size: 13, weight: .bold, design: .serif))
+                .foregroundStyle(SalahTheme.deepTeal)
+            Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
+                .font(.system(size: 17, weight: .medium))
+                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
+                .font(.system(size: 9.5, weight: .semibold))
+                .foregroundStyle(SalahTheme.ink)
+        }
+        .padding(13)
+        .background(Color.white.opacity(0.90), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+    }
+
+    private var purificationLinks: some View {
+        VStack(spacing: 0) {
+            NavigationLink { GhuslGuideView() } label: {
+                compactLinkRow(
+                    title: settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"),
+                    symbol: "shower.fill"
+                )
+            }
+
+            Divider().padding(.leading, 48)
+
+            NavigationLink { TayammumGuideView() } label: {
+                compactLinkRow(
+                    title: settings.t("Tayammum · ohne nutzbares Wasser", "Teyemmüm · su kullanılamadığında"),
+                    symbol: "hand.raised.fill"
+                )
+            }
+        }
+        .buttonStyle(.plain)
+        .background(Color.white.opacity(0.90), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+    }
+
+    private func compactLinkRow(title: String, symbol: String) -> some View {
+        HStack(spacing: 9) {
+            Image(systemName: symbol)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(width: 30, height: 30)
+                .background(SalahTheme.softTeal.opacity(0.75), in: Circle())
+            Text(title)
+                .font(.system(size: 10.5, weight: .bold))
+                .foregroundStyle(SalahTheme.ink)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(SalahTheme.mutedInk)
+        }
+        .padding(.horizontal, 11)
+        .padding(.vertical, 10)
+    }
+
+    private var sourceCard: some View {
+        Text(settings.t(
+            "Diyanet Namaz İlmihali / Din İşleri Yüksek Kurulu · Nacken/Ense ist hier Sunnah, nicht Farz.",
+            "Diyanet Namaz İlmihali / Din İşleri Yüksek Kurulu · Boyun/ense burada sünnettir, farz değildir."
+        ))
+        .font(.system(size: 8.5, weight: .medium))
+        .foregroundStyle(SalahTheme.mutedInk)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 3)
     }
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
