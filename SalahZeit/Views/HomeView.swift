@@ -968,25 +968,47 @@ struct HomeView: View {
             Color(red: 0.985, green: 0.972, blue: 0.944)
                 .ignoresSafeArea()
 
-            Image("home_reference_mosque")
-                .resizable()
-                .interpolation(.high)
-                .scaledToFill()
-                .frame(maxWidth: .infinity)
-                .frame(height: 336)
-                .clipped()
-                .overlay {
-                    LinearGradient(
-                        colors: [
-                            Color.black.opacity(0.22),
-                            Color.clear,
-                            SalahTheme.deepTeal.opacity(0.12)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                }
-                .ignoresSafeArea(edges: .top)
+            ZStack(alignment: .bottom) {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.20, green: 0.29, blue: 0.37),
+                        Color(red: 0.54, green: 0.49, blue: 0.47),
+                        Color(red: 0.95, green: 0.66, blue: 0.36),
+                        Color(red: 0.98, green: 0.84, blue: 0.63)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                RadialGradient(
+                    colors: [SalahTheme.gold.opacity(0.72), Color.clear],
+                    center: UnitPoint(x: 0.52, y: 0.68),
+                    startRadius: 4,
+                    endRadius: 180
+                )
+
+                Image("home_reference_mosque")
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, -10)
+                    .offset(y: 15)
+
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(0.16),
+                        Color.clear,
+                        SalahTheme.deepTeal.opacity(0.08)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 336)
+            .clipped()
+            .ignoresSafeArea(edges: .top)
 
             ScrollView {
                 VStack(spacing: 0) {
