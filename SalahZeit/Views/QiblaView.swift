@@ -56,53 +56,62 @@ struct QiblaView: View {
                                 .offset(y: -103)
 
                             if let rotation {
+                                let radians = rotation * .pi / 180
+                                let targetRadius: CGFloat = 102
+                                let targetX = sin(radians) * targetRadius
+                                let targetY = -cos(radians) * targetRadius
+
                                 ZStack {
                                     Circle()
-                                        .fill(SalahTheme.teal.opacity(0.045))
+                                        .fill(SalahTheme.teal.opacity(abs(rotation) <= 4 ? 0.085 : 0.045))
                                         .frame(width: 170, height: 170)
 
-                                    Capsule()
-                                        .fill(SalahTheme.gold.opacity(0.35))
-                                        .frame(width: 11, height: 66)
-                                        .offset(y: -31)
+                                    ZStack {
+                                        Capsule()
+                                            .fill(SalahTheme.gold.opacity(0.34))
+                                            .frame(width: 12, height: 72)
+                                            .offset(y: -34)
 
-                                    Capsule()
-                                        .fill(SalahTheme.teal)
-                                        .frame(width: 6, height: 66)
-                                        .offset(y: -31)
+                                        Capsule()
+                                            .fill(SalahTheme.teal)
+                                            .frame(width: 6, height: 72)
+                                            .offset(y: -34)
 
-                                    Image(systemName: "arrowtriangle.up.fill")
-                                        .font(.system(size: 34, weight: .black))
-                                        .foregroundStyle(SalahTheme.teal)
-                                        .offset(y: -67)
+                                        Image(systemName: "arrowtriangle.up.fill")
+                                            .font(.system(size: 35, weight: .black))
+                                            .foregroundStyle(SalahTheme.teal)
+                                            .offset(y: -76)
 
-                                    Circle()
-                                        .fill(SalahTheme.deepTeal)
-                                        .frame(width: 20, height: 20)
-                                        .overlay {
-                                            Circle()
-                                                .stroke(SalahTheme.gold, lineWidth: 3)
-                                                .frame(width: 10, height: 10)
-                                        }
+                                        Circle()
+                                            .fill(SalahTheme.deepTeal)
+                                            .frame(width: 20, height: 20)
+                                            .overlay {
+                                                Circle()
+                                                    .stroke(SalahTheme.gold, lineWidth: 3)
+                                                    .frame(width: 10, height: 10)
+                                            }
+                                    }
+                                    .frame(width: 226, height: 226)
+                                    .rotationEffect(.degrees(rotation))
 
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 5, style: .continuous)
-                                            .fill(Color.black.opacity(0.95))
+                                            .fill(Color.black.opacity(0.96))
                                             .frame(width: 44, height: 38)
                                         Rectangle()
                                             .fill(SalahTheme.gold)
                                             .frame(width: 44, height: 4)
                                             .offset(y: -7)
                                         RoundedRectangle(cornerRadius: 2)
-                                            .stroke(SalahTheme.gold.opacity(0.78), lineWidth: 1)
+                                            .stroke(SalahTheme.gold.opacity(0.80), lineWidth: 1)
                                             .frame(width: 30, height: 20)
                                             .offset(y: 5)
                                     }
-                                    .offset(y: -96)
+                                    .shadow(color: SalahTheme.gold.opacity(abs(rotation) <= 4 ? 0.48 : 0.16), radius: abs(rotation) <= 4 ? 8 : 3)
+                                    .offset(x: targetX, y: targetY)
                                 }
                                 .frame(width: 226, height: 226)
-                                .rotationEffect(.degrees(rotation))
-                                .animation(.easeOut(duration: 0.18), value: rotation)
+                                .animation(.easeOut(duration: 0.16), value: rotation)
                             } else {
                                 ProgressView()
                                     .tint(SalahTheme.teal)
@@ -117,8 +126,8 @@ struct QiblaView: View {
                             )
                         )
                         .accessibilityHint(settings.t(
-                            "Die Pfeilspitze zeigt direkt zur Qibla. Drehe das iPhone, bis Pfeil und Kaaba oben liegen.",
-                            "Okun ucu doğrudan kıbleyi gösterir. Ok ve Kâbe yukarıda olana kadar iPhone'u çevir."
+                            "Die Pfeilspitze zeigt immer direkt zur Kaaba. Drehe das iPhone, bis die Kaaba oben auf 12 Uhr steht.",
+                            "Okun ucu her zaman doğrudan Kâbe'yi gösterir. Kâbe saat 12 yönünde üstte olana kadar iPhone'u çevir."
                         ))
 
                         HStack(spacing: 8) {
