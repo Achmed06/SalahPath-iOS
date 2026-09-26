@@ -665,12 +665,12 @@ private struct DailyDuaDetailView: View {
 
     private var isThisDuaPlaying: Bool {
         guard let resolvedURL else { return false }
-        return audio.activeURL == resolvedURL && audio.isPlaying
+        return audio.isCurrentRequest(resolvedURL) && audio.isPlaying
     }
 
     @MainActor
     private func toggleAudio() async {
-        if let resolvedURL, audio.activeURL == resolvedURL {
+        if let resolvedURL, audio.isCurrentRequest(resolvedURL) {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
@@ -1376,7 +1376,7 @@ struct HomeView: View {
         let dua = DailyDuaStore.item(for: now)
         let identity = dailyDuaAudioIdentity(for: dua)
         let isPlayingDua = dailyDuaAudioIdentity == identity
-            && dailyDuaAudioURL == audio.activeURL
+            && dailyDuaAudioURL.map { audio.isCurrentRequest($0) } == true
             && audio.isPlaying
 
         return ZStack(alignment: .topTrailing) {
@@ -1498,7 +1498,7 @@ struct HomeView: View {
 
         if dailyDuaAudioIdentity == identity,
            let dailyDuaAudioURL,
-           audio.activeURL == dailyDuaAudioURL {
+           audio.isCurrentRequest(dailyDuaAudioURL) {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
@@ -1532,7 +1532,8 @@ struct HomeView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: dua.source,
+                introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter)
             )
         } catch {
             guard revision == dailyDuaAudioRequestRevision else { return }
