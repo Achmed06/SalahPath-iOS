@@ -203,12 +203,16 @@ struct SalahPathApp: App {
             NavigationStack { WuduGuideView() }
         case "wudu-arm":
             NavigationStack { WuduGuideView(initialStepIndex: 6) }
+        case "wudu-left-arm":
+            NavigationStack { WuduGuideView(initialStepIndex: 7) }
         case "wudu-head":
             NavigationStack { WuduGuideView(initialStepIndex: 8) }
         case "wudu-ears":
             NavigationStack { WuduGuideView(initialStepIndex: 9) }
         case "wudu-foot":
             NavigationStack { WuduGuideView(initialStepIndex: 11) }
+        case "wudu-left-foot":
+            NavigationStack { WuduGuideView(initialStepIndex: 12) }
         case "ghusl":
             NavigationStack { GhuslGuideView() }
         case "tasbih":
