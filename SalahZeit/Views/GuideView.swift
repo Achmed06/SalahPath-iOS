@@ -469,9 +469,13 @@ private struct PrayerPoseArtwork: View {
     private func drawFace(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
         let turn: CGFloat
         if pose == "salam_right" {
-            turn = -0.22
+            // Front-facing artwork: the worshipper's own right shoulder is
+            // on the viewer's left. Keep the torso facing Qibla and make only
+            // the facial/head direction clearly readable.
+            turn = -0.44
         } else if pose == "salam_left" {
-            turn = 0.22
+            // Worshipper's own left shoulder appears on the viewer's right.
+            turn = 0.44
         } else {
             turn = 0
         }
@@ -670,7 +674,15 @@ private struct PrayerPoseArtwork: View {
         let shoulder = point(0.48, 0.40, in: size)
         // Keep the whole body and head centered. For Salam only the facial
         // features indicate the head turn; the torso never appears to rotate.
-        let headCenter = point(0.48, 0.27, in: size)
+        let headTurnOffset: CGFloat
+        if pose == "salam_right" {
+            headTurnOffset = -0.015
+        } else if pose == "salam_left" {
+            headTurnOffset = 0.015
+        } else {
+            headTurnOffset = 0
+        }
+        let headCenter = point(0.48 + headTurnOffset, 0.27, in: size)
 
         torso(&context, shoulder: shoulder, hip: hip, width: female ? 37 : 31)
         head(&context, center: headCenter, radius: min(size.width, size.height) * 0.068)
