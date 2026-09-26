@@ -54,7 +54,6 @@ struct SettingsView: View {
                             Button(appearance.title(settings.language)) {
                                 settings.appearance = appearance
                             }
-                            await refreshNotificationDiagnostics()
                         }
                     } label: {
                         profileRow(
