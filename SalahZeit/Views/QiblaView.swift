@@ -355,7 +355,7 @@ private struct QiblaHeroScene: View {
                 .resizable()
                 .scaledToFill()
                 .frame(maxWidth: .infinity)
-                .frame(height: 420)
+                .frame(height: 480)
                 .clipped()
 
             LinearGradient(
@@ -411,8 +411,8 @@ private struct QiblaHeroScene: View {
                 Spacer(minLength: 0)
 
                 QiblaCompassVisual(rotation: rotation)
-                    .scaleEffect(0.88)
-                    .frame(height: 275)
+                    .scaleEffect(0.66)
+                    .frame(height: 200)
 
                 HStack(spacing: 7) {
                     Image(systemName: "location.fill")
@@ -432,7 +432,7 @@ private struct QiblaHeroScene: View {
                 .padding(.bottom, 14)
             }
         }
-        .frame(height: 420)
+        .frame(height: 480)
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
@@ -466,28 +466,32 @@ private struct QiblaCompassVisual: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            Color.white.opacity(0.98),
-                            SalahTheme.cream,
-                            SalahTheme.softTeal.opacity(0.24)
-                        ],
-                        center: .topLeading,
-                        startRadius: 10,
-                        endRadius: 155
-                    )
-                )
+                .fill(.ultraThinMaterial)
                 .frame(width: 286, height: 286)
+                .overlay {
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    Color.white.opacity(0.54),
+                                    SalahTheme.cream.opacity(0.34),
+                                    SalahTheme.softTeal.opacity(0.10)
+                                ],
+                                center: .topLeading,
+                                startRadius: 8,
+                                endRadius: 155
+                            )
+                        )
+                }
                 .overlay {
                     Circle()
                         .stroke(
                             LinearGradient(
                                 colors: [
-                                    SalahTheme.gold.opacity(0.95),
-                                    SalahTheme.gold.opacity(0.32),
-                                    SalahTheme.teal.opacity(0.32),
-                                    SalahTheme.gold.opacity(0.82)
+                                    Color.white.opacity(0.92),
+                                    SalahTheme.gold.opacity(0.92),
+                                    SalahTheme.teal.opacity(0.26),
+                                    SalahTheme.gold.opacity(0.72)
                                 ],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -495,8 +499,8 @@ private struct QiblaCompassVisual: View {
                             lineWidth: 2.2
                         )
                 }
-                .shadow(color: SalahTheme.deepTeal.opacity(0.12), radius: 18, y: 9)
-                .shadow(color: SalahTheme.gold.opacity(0.12), radius: 2, y: -1)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 18, y: 9)
+                .shadow(color: SalahTheme.gold.opacity(0.20), radius: 3, y: -1)
 
             Circle()
                 .stroke(SalahTheme.teal.opacity(0.09), lineWidth: 18)
