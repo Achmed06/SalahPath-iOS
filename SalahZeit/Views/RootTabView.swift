@@ -366,10 +366,22 @@ private final class NearbyMosqueStore: ObservableObject {
 
         let region = MKCoordinateRegion(
             center: location.coordinate,
-            latitudinalMeters: 20_000,
-            longitudinalMeters: 20_000
+            latitudinalMeters: 50_000,
+            longitudinalMeters: 50_000
         )
-        let queries = ["Moschee", "Mosque", "Cami"]
+        let maximumDistance: CLLocationDistance = 25_000
+        let queries = [
+            "Moschee",
+            "Mosque",
+            "Masjid",
+            "Cami",
+            "Camii",
+            "Islamisches Zentrum",
+            "Islamic Center",
+            "DITIB",
+            "VIKZ",
+            "IGMG"
+        ]
 
         var combined: [MKMapItem] = []
         var lastSearchError: Error?
@@ -405,7 +417,9 @@ private final class NearbyMosqueStore: ObservableObject {
                       coordinate.latitude.isFinite,
                       coordinate.longitude.isFinite,
                       distance.isFinite,
-                      distance >= 0 else { return false }
+                      distance >= 0,
+                      distance <= maximumDistance,
+                      Self.isLikelyMosque(item) else { return false }
 
                 let name = (item.name ?? "").lowercased()
                 let lat = Int((coordinate.latitude * 100_000).rounded())
@@ -423,6 +437,37 @@ private final class NearbyMosqueStore: ObservableObject {
         if mapItems.isEmpty, let lastSearchError {
             errorMessage = lastSearchError.localizedDescription
         }
+    }
+
+    private static func isLikelyMosque(_ item: MKMapItem) -> Bool {
+        let searchable = [
+            item.name,
+            item.placemark.title,
+            item.pointOfInterestCategory?.rawValue
+        ]
+        .compactMap { $0?.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current).lowercased() }
+        .joined(separator: " ")
+
+        let mosqueSignals = [
+            "moschee",
+            "mosque",
+            "masjid",
+            "mescid",
+            "cami",
+            "camii",
+            "islam",
+            "muslim",
+            "ditib",
+            "d.i.t.i.b",
+            "vikz",
+            "igmg",
+            "milli gorus",
+            "islamisches zentrum",
+            "islamic center",
+            "islamic centre"
+        ]
+
+        return mosqueSignals.contains { searchable.contains($0) }
     }
 }
 
