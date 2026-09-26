@@ -268,11 +268,9 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture wudu SalahPath-v3.63-B79-DE-Wudu.png
             capture wudu-arm SalahPath-v3.63-B79-DE-WuduArm.png
-            capture wudu-left-arm SalahPath-v3.63-B79-DE-WuduLeftArm.png
             capture wudu-head SalahPath-v3.63-B79-DE-WuduHead.png
             capture wudu-ears SalahPath-v3.63-B79-DE-WuduEars.png
             capture wudu-foot SalahPath-v3.63-B79-DE-WuduFoot.png
-            capture wudu-left-foot SalahPath-v3.63-B79-DE-WuduLeftFoot.png
           elif [ "$CAPTURE_MODE" = "quran" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture quran SalahPath-v3.63-B79-DE-Quran.png
