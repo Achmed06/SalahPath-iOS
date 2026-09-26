@@ -317,7 +317,11 @@ struct QiblaView: View {
     }
 
     private var isScreenshotQA: Bool {
+#if DEBUG
         ProcessInfo.processInfo.environment["SALAH_QA_SCREENSHOT"] == "1"
+#else
+        false
+#endif
     }
 
     private var effectiveLocation: CLLocation? {
