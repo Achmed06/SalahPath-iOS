@@ -964,45 +964,331 @@ struct HomeView: View {
 
     @ViewBuilder
     private func prayerContent(location: CLLocation, today: PrayerDay) -> some View {
-        ScrollView {
-            LazyVStack(spacing: 5) {
-                brandHeader(today: today)
+        ZStack(alignment: .top) {
+            Color(red: 0.985, green: 0.972, blue: 0.944)
+                .ignoresSafeArea()
 
-                if let next = engine.nextPrayer(
-                    now: now,
-                    location: location,
-                    settings: settings,
-                    timeZone: effectiveTimeZone
-                ) {
-                    nextPrayerHero(next)
+            Image("home_reference_mosque")
+                .resizable()
+                .interpolation(.high)
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 336)
+                .clipped()
+                .overlay {
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.22),
+                            Color.clear,
+                            SalahTheme.deepTeal.opacity(0.12)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 }
+                .ignoresSafeArea(edges: .top)
 
-                todayPrayersCard(today, location: location)
+            ScrollView {
+                VStack(spacing: 0) {
+                    referenceHomeHeader
+                        .frame(height: 246, alignment: .top)
 
-                quickActionStrip
+                    VStack(spacing: 10) {
+                        referenceHomeDateCard
 
-                dailyDuaCard
-                NavigationLink { PrayerTrackerOverviewView() } label: { streakCard }
-                    .buttonStyle(.plain)
-                    .accessibilityHint(settings.t("Gebets-Tracking öffnen", "Namaz takibini aç"))
-                dashboardGrid
-                referenceQuoteStrip
+                        if let next = engine.nextPrayer(
+                            now: now,
+                            location: location,
+                            settings: settings,
+                            timeZone: effectiveTimeZone
+                        ) {
+                            referenceNextPrayerCard(next)
+                        }
+
+                        referenceHomeFeatureGrid
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.top, 12)
+                    .padding(.bottom, 16)
+                    .background(
+                        Color(red: 0.985, green: 0.972, blue: 0.944)
+                            .shadow(.inner(color: Color.white.opacity(0.85), radius: 1, y: 1)),
+                        in: RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    )
+                    .overlay(alignment: .top) {
+                        RoundedRectangle(cornerRadius: 26, style: .continuous)
+                            .stroke(Color.white.opacity(0.92), lineWidth: 1)
+                    }
+                    .shadow(color: Color.black.opacity(0.10), radius: 18, y: -2)
+                    .padding(.horizontal, 7)
+                    .offset(y: -22)
+                }
+                .padding(.bottom, 0)
             }
-            .padding(.horizontal, 7)
-            .padding(.top, 3)
-            .padding(.bottom, 4)
+            .scrollIndicators(.hidden)
+            .refreshable {
+                locationManager.refresh()
+                if settings.notificationsEnabled {
+                    await NotificationManager.shared.scheduleNextSevenDays(
+                        location: location,
+                        settings: settings,
+                        timeZone: effectiveTimeZone
+                    )
+                }
+            }
         }
-        .scrollIndicators(.hidden)
-        .refreshable {
-            locationManager.refresh()
-            if settings.notificationsEnabled {
-                await NotificationManager.shared.scheduleNextSevenDays(
-                    location: location,
-                    settings: settings,
-                    timeZone: effectiveTimeZone
+    }
+
+    private var referenceHomeHeader: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("SalahPath")
+                    .font(.system(size: 30, weight: .semibold, design: .serif))
+                    .foregroundStyle(.white)
+                    .shadow(color: Color.black.opacity(0.20), radius: 4, y: 1)
+
+                Text(settings.t("Dein täglicher Begleiter", "Günlük yol arkadaşın") + " 💛")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.94))
+                    .shadow(color: Color.black.opacity(0.18), radius: 3, y: 1)
+            }
+
+            Spacer()
+
+            NavigationLink { SettingsView() } label: {
+                ZStack {
+                    Circle()
+                        .fill(Color(red: 0.985, green: 0.972, blue: 0.944).opacity(0.96))
+                        .frame(width: 42, height: 42)
+                        .shadow(color: Color.black.opacity(0.13), radius: 9, y: 4)
+
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(settings.t("Einstellungen", "Ayarlar"))
+        }
+        .padding(.horizontal, 18)
+        .padding(.top, 16)
+    }
+
+    private var referenceHomeDateCard: some View {
+        HStack(spacing: 11) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.62))
+                    .frame(width: 38, height: 48)
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(SalahTheme.mutedInk.opacity(0.55))
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(referenceGregorianDate(now))
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(SalahTheme.ink)
+                Text(referenceHijriDate(now))
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            Color.white.opacity(0.76),
+            in: RoundedRectangle(cornerRadius: 17, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 17, style: .continuous)
+                .stroke(Color.white.opacity(0.95), lineWidth: 1)
+        }
+    }
+
+    private func referenceNextPrayerCard(_ prayer: PrayerOccurrence) -> some View {
+        HStack(spacing: 11) {
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 1.0, green: 0.74, blue: 0.27),
+                                Color(red: 0.96, green: 0.53, blue: 0.10)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 43, height: 43)
+                    .shadow(color: Color.orange.opacity(0.28), radius: 8, y: 3)
+
+                Image(systemName: "sun.max.fill")
+                    .font(.system(size: 19, weight: .semibold))
+                    .foregroundStyle(.white)
+            }
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(settings.t("Nächste Gebetszeit", "Sıradaki namaz"))
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                Text(prayer.kind.localizedName(settings.language))
+                    .font(.system(size: 21, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.deepTeal)
+            }
+
+            Spacer()
+
+            Text(countdownString(from: now, to: prayer.date))
+                .font(.system(size: 12, weight: .bold).monospacedDigit())
+                .foregroundStyle(SalahTheme.ink)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(
+                    LinearGradient(
+                        colors: [Color.clear, SalahTheme.gold.opacity(0.22)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ),
+                    in: Capsule()
+                )
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.92),
+                    Color(red: 0.995, green: 0.968, blue: 0.905)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 17, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 17, style: .continuous)
+                .stroke(Color.white.opacity(0.96), lineWidth: 1)
+        }
+        .shadow(color: SalahTheme.gold.opacity(0.16), radius: 10, y: 3)
+    }
+
+    private var referenceHomeFeatureGrid: some View {
+        let columns = [
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8)
+        ]
+
+        return LazyVGrid(columns: columns, spacing: 8) {
+            NavigationLink { PrayerTimesOverviewView() } label: {
+                referenceFeatureTile(
+                    kind: "times",
+                    title: settings.t("Gebetszeiten", "Vakitler"),
+                    background: "home_reference_mosque"
                 )
             }
+
+            NavigationLink { QiblaView() } label: {
+                referenceFeatureTile(kind: "qibla", title: settings.t("Qibla", "Kıble"))
+            }
+
+            NavigationLink { QuranView() } label: {
+                referenceFeatureTile(kind: "quran", title: settings.t("Quran", "Kur'an"))
+            }
+
+            NavigationLink { PrayerHowToView() } label: {
+                referenceFeatureTile(kind: "prayer", title: settings.t("Beten", "Namaz"))
+            }
+
+            NavigationLink { WuduGuideView() } label: {
+                referenceFeatureTile(kind: "wudu", title: settings.t("Abdest", "Abdest"))
+            }
+
+            NavigationLink { MoreView() } label: {
+                referenceFeatureTile(kind: "discover", title: settings.t("Entdecken", "Keşfet"))
+            }
         }
+        .buttonStyle(.plain)
+    }
+
+    private func referenceFeatureTile(kind: String, title: String, background: String? = nil) -> some View {
+        VStack(spacing: 5) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.90),
+                                Color(red: 0.98, green: 0.93, blue: 0.84)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+
+                if let background {
+                    Image(background)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 64)
+                        .clipped()
+                        .opacity(0.96)
+                } else {
+                    Circle()
+                        .fill(Color.white.opacity(0.58))
+                        .frame(width: 58, height: 58)
+
+                    SalahFeatureIcon(kind: kind)
+                        .frame(width: 49, height: 49)
+                        .padding(4)
+                }
+
+                LinearGradient(
+                    colors: [Color.clear, Color.white.opacity(0.16)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+            .frame(height: 64)
+            .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
+
+            Text(title)
+                .font(.system(size: 9.5, weight: .semibold))
+                .foregroundStyle(SalahTheme.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.78)
+        }
+        .padding(5)
+        .frame(maxWidth: .infinity)
+        .background(Color.white.opacity(0.66), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.white.opacity(0.94), lineWidth: 1)
+        }
+        .shadow(color: Color.black.opacity(0.055), radius: 5, y: 2)
+    }
+
+    private func referenceGregorianDate(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        f.timeZone = effectiveTimeZone
+        f.dateFormat = settings.language == .german ? "EEEE, d. MMMM" : "d MMMM EEEE"
+        return f.string(from: date)
+    }
+
+    private func referenceHijriDate(_ date: Date) -> String {
+        var calendar = Calendar(identifier: .islamicUmmAlQura)
+        calendar.timeZone = effectiveTimeZone
+
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.locale = Locale(identifier: settings.language == .german ? "de_DE" : "tr_TR")
+        formatter.timeZone = effectiveTimeZone
+        formatter.dateFormat = "d MMMM y"
+        return formatter.string(from: date)
     }
 
     private func brandHeader(today: PrayerDay? = nil) -> some View {
