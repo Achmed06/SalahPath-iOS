@@ -1566,8 +1566,8 @@ private struct WuduInstructionVisual: View {
                 .interpolation(.high)
                 .scaledToFit()
                 .scaleEffect(x: stepNumber == 8 ? -1 : 1, y: 1)
-                .scaleEffect(1.12)
-                .offset(y: -12)
+                .scaleEffect(1.14)
+                .offset(y: 16)
                 .clipped()
         default:
             Image(key)
