@@ -4885,6 +4885,8 @@ final class RemoteAudioPlayer: ObservableObject {
             return
         }
 
+        removeObservers()
+        player = nil
         lastError = message
         updateNowPlaying()
     }
