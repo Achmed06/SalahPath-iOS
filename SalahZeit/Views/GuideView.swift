@@ -1232,12 +1232,6 @@ private struct PrayerSalamVisual: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            Text("السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ")
-                .font(.title3)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            Text("As-salāmu ʿalaykum wa raḥmatullāh")
-                .font(.subheadline.bold())
-                .foregroundStyle(SalahTheme.ink)
         }
         .padding(11)
         .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 16))
