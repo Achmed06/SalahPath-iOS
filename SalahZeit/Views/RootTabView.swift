@@ -609,8 +609,8 @@ struct NearbyMosquesView: View {
                             settings.t("Keine Treffer gefunden", "Sonuç bulunamadı"),
                             systemImage: "building.columns",
                             description: Text(settings.t(
-                                "Apple Karten hat in der Umgebung keine passenden Moscheen geliefert. Du kannst erneut suchen oder im Profil einen anderen Ort festlegen.",
-                                "Apple Haritalar yakın çevrede uygun cami sonucu döndürmedi. Tekrar arayabilir veya profilde başka bir konum belirleyebilirsin."
+                                "Apple Karten hat rund um deinen aktuellen Gerätestandort keine passenden Moscheen geliefert. Du kannst die Suche erneut ausführen.",
+                                "Apple Haritalar güncel cihaz konumunun çevresinde uygun cami sonucu döndürmedi. Aramayı yeniden çalıştırabilirsin."
                             ))
                         )
 
@@ -624,15 +624,6 @@ struct NearbyMosquesView: View {
                         .buttonStyle(.borderedProminent)
                         .tint(SalahTheme.teal)
 
-                        NavigationLink {
-                            SettingsView()
-                        } label: {
-                            Label(settings.t("Anderen Ort festlegen", "Başka konum belirle"), systemImage: "mappin.and.ellipse")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(SalahTheme.teal)
                     }
                 } else {
                     ForEach(Array(store.mapItems.enumerated()), id: \.offset) { _, item in
