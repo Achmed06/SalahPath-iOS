@@ -5612,9 +5612,9 @@ enum QuranAudioResolver {
     }
 
     static func basmalaIntroURL(reciter: QuranReciter) -> URL? {
-        // One full "Bismillāhir-Raḥmānir-Raḥīm" at the beginning of a
-        // user-started audio session. It is NOT inserted again for repeats,
-        // the next ayah, or automatic continuation into the next surah.
+        // Full "Bismillāhir-Raḥmānir-Raḥīm" used at the beginning of a surah.
+        // Callers deliberately skip it for At-Tawbah (surah 9) and when
+        // playback starts in the middle of a surah.
         URL(string: "https://everyayah.com/data/\(reciter.everyAyahFolder)/001001.mp3")
     }
 }
@@ -5642,8 +5642,11 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         self.reciter = reciter
         nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
 
+        let shouldPrependBasmala = startsAtFirstAyah && currentSurah != 9
         var contentURLs = urls
-        if currentSurah == 1, startsAtFirstAyah, contentURLs.count > 1 {
+        if currentSurah == 1, shouldPrependBasmala, contentURLs.count > 1 {
+            // Al-Fātiha 1:1 already is the Basmala. Use the shared intro once
+            // and start the content queue at ayah 2 to avoid duplication.
             contentURLs.removeFirst()
         }
 
@@ -5653,8 +5656,8 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
             title: title,
             artist: reciter.title,
             context: context,
-            introURL: QuranAudioResolver.basmalaIntroURL(reciter: reciter),
-            prependIntro: true,
+            introURL: shouldPrependBasmala ? QuranAudioResolver.basmalaIntroURL(reciter: reciter) : nil,
+            prependIntro: shouldPrependBasmala,
             continuation: nextSurah == nil ? nil : self
         )
         expectedSessionID = player.queueSessionID
@@ -5677,8 +5680,16 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                       player.queueSessionID == sessionID else { return }
 
                 self.nextSurah = surah < 114 ? surah + 1 : nil
+
+                var continuationURLs = urls
+                if surah != 9,
+                   let basmala = QuranAudioResolver.basmalaIntroURL(reciter: reciter),
+                   continuationURLs.first != basmala {
+                    continuationURLs.insert(basmala, at: 0)
+                }
+
                 player.appendContinuation(
-                    urls,
+                    continuationURLs,
                     expectedSessionID: sessionID,
                     title: "Quran · Sura \(surah)",
                     context: "Quran · automatisch weiter"
