@@ -37,9 +37,9 @@ enum PrayerAudience: String, CaseIterable, Identifiable {
     func title(_ language: AppLanguage) -> String {
         switch (self, language) {
         case (.male, .german): return "Junge / Mann"
-        case (.male, .turkish): return "Erkek / Çocuk"
+        case (.male, .turkish): return "Erkek çocuk / Erkek"
         case (.female, .german): return "Mädchen / Frau"
-        case (.female, .turkish): return "Kız / Kadın"
+        case (.female, .turkish): return "Kız çocuk / Kadın"
         }
     }
 }
@@ -59,10 +59,8 @@ enum QuranReciter: String, CaseIterable, Identifiable {
         case .alafasy: return "ar.alafasy"
         case .husary: return "ar.husary"
         case .minshawi: return "ar.minshawi"
-        // Live AlQuran.cloud audio-edition identifier. The older ar.sudais alias
-        // appears in some CDN documentation but does not currently return ayah audio.
-        case .sudais: return "ar.abdurrahmaansudais"
-        case .shuraim: return "ar.saoodshuraym"
+        case .sudais: return "ar.sudais"
+        case .shuraim: return "ar.shuraim"
         }
     }
 
@@ -76,8 +74,8 @@ enum QuranReciter: String, CaseIterable, Identifiable {
 
     var alternateAudioSource: (edition: String, bitrate: Int)? {
         switch self {
-        case .sudais: return ("ar.sudais", 192)
-        case .shuraim: return ("ar.shuraim", 128)
+        case .sudais: return ("ar.abdurrahmaansudais", 192)
+        case .shuraim: return ("ar.saoodshuraym", 64)
         default: return nil
         }
     }
