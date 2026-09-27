@@ -512,7 +512,7 @@ private enum DailyDuaStore {
             deMeaning: "Mein Herr, mehre mein Wissen.",
             trMeaning: "Rabbim, ilmimi artır.",
             repetition: nil,
-            source: "Quran 20:114 · excerpt",
+            source: "Quran 20:114",
             audioSurah: 20,
             audioAyah: 114
         ),
@@ -524,7 +524,7 @@ private enum DailyDuaStore {
             deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.",
             trMeaning: "Allah bize yeter, O ne güzel vekildir.",
             repetition: nil,
-            source: "Quran 3:173 · excerpt",
+            source: "Quran 3:173",
             audioSurah: 3,
             audioAyah: 173
         ),
