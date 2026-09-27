@@ -131,9 +131,15 @@ struct SalahPathApp: App {
         // iOS notification permission was reset. Ask for authorization before
         // requiring a location so the app cannot remain "enabled" but ungranted.
         let granted = await NotificationManager.shared.requestAuthorization()
-        guard granted else { return }
+        guard granted else {
+            NotificationManager.shared.removePrayerNotifications()
+            return
+        }
 
-        guard let location = locationManager.location else { return }
+        guard let location = locationManager.location else {
+            NotificationManager.shared.removePrayerNotifications()
+            return
+        }
 
         _ = await NotificationManager.shared.scheduleNextSevenDays(
             location: location,
