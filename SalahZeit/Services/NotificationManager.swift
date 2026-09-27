@@ -392,9 +392,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             let destination = soundsDirectory.appendingPathComponent("\(resourceName).caf")
             do {
                 if FileManager.default.fileExists(atPath: destination.path) {
-                    let sourceSize = (try? source.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -1
-                    let destinationSize = (try? destination.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? -2
-                    if sourceSize == destinationSize, sourceSize > 0 {
+                    let sourceData = try Data(contentsOf: source, options: [.mappedIfSafe])
+                    let destinationData = try Data(contentsOf: destination, options: [.mappedIfSafe])
+                    if !sourceData.isEmpty, sourceData == destinationData {
                         continue
                     }
                     try FileManager.default.removeItem(at: destination)
