@@ -238,7 +238,7 @@ struct SettingsView: View {
                                 ? settings.t("Standard-Gebetsruf wird direkt abgespielt.", "Standart ezan doğrudan çalıyor.")
                                 : settings.t("Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Ezan ses dosyası oynatılamadı.")
                         } label: {
-                            Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")
+                            Label(settings.t("Standard-Gebetsruf testen", "Standart ezanı dene"), systemImage: "play.circle.fill")
                                 .font(.system(size: 10.5, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 9)
@@ -251,7 +251,7 @@ struct SettingsView: View {
                                 ? settings.t("Fajr-Gebetsruf wird direkt abgespielt.", "Sabah ezanı doğrudan çalıyor.")
                                 : settings.t("Fajr-Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Sabah ezanı ses dosyası oynatılamadı.")
                         } label: {
-                            Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")
+                            Label(settings.t("Fajr-Gebetsruf testen", "Sabah ezanını dene"), systemImage: "sun.horizon.fill")
                                 .font(.system(size: 10.5, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 9)
@@ -333,8 +333,8 @@ struct SettingsView: View {
                     .padding(.vertical, 7)
 
                     Text(settings.t(
-                        "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
-                        "Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Her ikisi de Internet Archive'daki „Adhan Recordings from Doha, Qatar“ kamu malı koleksiyonundandır. Ön hatırlatmalar normal iOS sesini kullanır."
+                        "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Die Aufnahmen stammen aus der als gemeinfrei gekennzeichneten Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen verwenden den normalen iOS-Ton.",
+                        "Sabah namazında ayrı bir sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Kayıtlar Internet Archive'daki „Adhan Recordings from Doha, Qatar“ adlı kamu malı olarak işaretlenmiş koleksiyondan gelir. Ön hatırlatmalar normal iOS sesini kullanır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
