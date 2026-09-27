@@ -594,8 +594,9 @@ private struct DailyDuaDetailView: View {
                                     .frame(width: 48, height: 48)
 
                                 if isResolvingAudio {
-                                    ProgressView()
-                                        .tint(.white)
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 17, weight: .bold))
+                                        .foregroundStyle(.white)
                                 } else {
                                     Image(
                                         systemName: isThisDuaLoading
@@ -609,7 +610,6 @@ private struct DailyDuaDetailView: View {
                             .contentShape(Circle())
                         }
                         .buttonStyle(.plain)
-                        .disabled(isResolvingAudio)
                         .accessibilityLabel(settings.t(
                             isThisDuaLoading
                                 ? "Dua-Laden abbrechen"
@@ -688,6 +688,12 @@ private struct DailyDuaDetailView: View {
 
     @MainActor
     private func toggleAudio() async {
+        if isResolvingAudio {
+            audioRequestRevision &+= 1
+            isResolvingAudio = false
+            return
+        }
+
         if let resolvedURL, audio.activeURL == resolvedURL {
             if audio.isLoading {
                 audio.stop()
@@ -1514,9 +1520,9 @@ struct HomeView: View {
                         .frame(width: 30, height: 28)
 
                     if dailyDuaAudioLoading {
-                        ProgressView()
-                            .controlSize(.mini)
-                            .tint(.white)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(.white)
                     } else {
                         Image(
                             systemName: isLoadingDua
@@ -1530,7 +1536,6 @@ struct HomeView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .disabled(dailyDuaAudioLoading)
             .padding(.top, 7)
             .padding(.trailing, 7)
             .accessibilityLabel(settings.t(
@@ -1551,6 +1556,12 @@ struct HomeView: View {
     @MainActor
     private func toggleDailyDuaAudio(_ dua: DailyDuaEntry) async {
         let identity = dailyDuaAudioIdentity(for: dua)
+
+        if dailyDuaAudioLoading {
+            dailyDuaAudioRequestRevision &+= 1
+            dailyDuaAudioLoading = false
+            return
+        }
 
         if dailyDuaAudioIdentity == identity,
            let dailyDuaAudioURL,
