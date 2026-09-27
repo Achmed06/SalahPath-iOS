@@ -201,8 +201,9 @@ for token in (
     'number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
-    'imageName: "\\(prefix)_salam_right",\n                arrow: "arrow.right"',
-    'imageName: "\\(prefix)_salam_left",\n                arrow: "arrow.left"',
+    'let isRight = side == .right',
+    'imageName: "\\(prefix)_\\(isRight ? "salam_right" : "salam_left")"',
+    'arrow: isRight ? "arrow.right" : "arrow.left"',
 ):
     if token not in guide:
         fail(f"standalone illustration regression: missing {token}")
