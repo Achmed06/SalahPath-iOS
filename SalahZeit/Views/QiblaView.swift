@@ -192,8 +192,12 @@ struct QiblaView: View {
                         settings.t("Standort benötigt", "Konum gerekli"),
                         systemImage: "location.slash",
                         description: Text(settings.t(
-                            "Die Qibla-Richtung wird aus deinem Standort berechnet. Du kannst den Gerätestandort verwenden oder im Profil einen Ort manuell festlegen.",
-                            "Kıble yönü konumuna göre hesaplanır. Cihaz konumunu kullanabilir veya profilde bir yeri manuel seçebilirsin."
+                            locationManager.usesManualLocation
+                                ? "Für die physische Qibla-Richtung wird zusätzlich der aktuelle Gerätestandort benötigt. Dein manuell gewählter Ort für Gebetszeiten bleibt unverändert."
+                                : "Die Qibla-Richtung wird aus deinem aktuellen Gerätestandort berechnet.",
+                            locationManager.usesManualLocation
+                                ? "Fiziksel kıble yönü için ayrıca güncel cihaz konumu gerekir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
+                                : "Kıble yönü güncel cihaz konumuna göre hesaplanır."
                         ))
                     )
 
@@ -201,6 +205,8 @@ struct QiblaView: View {
                         if locationManager.authorizationStatus == .denied ||
                             locationManager.authorizationStatus == .restricted {
                             openAppSettings()
+                        } else if locationManager.usesManualLocation {
+                            locationManager.requestQiblaDeviceLocationAccess()
                         } else {
                             locationManager.useDeviceLocation()
                         }
@@ -209,10 +215,14 @@ struct QiblaView: View {
                             settings.t(
                                 locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                     ? "iPhone-Einstellungen öffnen"
-                                    : "Aktuellen Standort verwenden",
+                                    : (locationManager.usesManualLocation
+                                        ? "Gerätestandort für Qibla erlauben"
+                                        : "Aktuellen Standort verwenden"),
                                 locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                     ? "iPhone ayarlarını aç"
-                                    : "Mevcut konumu kullan"
+                                    : (locationManager.usesManualLocation
+                                        ? "Kıble için cihaz konumuna izin ver"
+                                        : "Mevcut konumu kullan")
                             ),
                             systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                 ? "gear"
