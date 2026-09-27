@@ -83,8 +83,11 @@ enum PrayerTrackerStore {
     static func streak(upTo date: Date) -> Int {
         let calendar = LocalDay.calendar()
         var day = calendar.startOfDay(for: date)
+        let today = calendar.startOfDay(for: Date())
 
-        if !isPaused(day) && completedCount(on: day) < requiredKinds.count,
+        if calendar.isDate(day, inSameDayAs: today),
+           !isPaused(day),
+           completedCount(on: day) < requiredKinds.count,
            let yesterday = calendar.date(byAdding: .day, value: -1, to: day) {
             day = yesterday
         }
