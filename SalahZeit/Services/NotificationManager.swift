@@ -134,6 +134,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                         scheduledRequestCount += 1
                     }
                     guard revision == schedulingRevision else { return false }
+                }
 
                 if leadMinutes > 0, scheduledRequestCount < maximumPrayerRequests {
                     let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
@@ -164,8 +165,6 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                         }
                         guard revision == schedulingRevision else { return false }
                     }
-                }
-
                 }
             }
         }
