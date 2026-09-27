@@ -294,7 +294,11 @@ private struct GlobalAudioMiniPlayer: View {
                 .opacity(audio.hasPrevious ? 1 : 0.35)
 
                 Button {
-                    audio.isPlaying ? audio.pause() : audio.resume()
+                    if audio.isLoading {
+                        audio.stop()
+                    } else {
+                        audio.isPlaying ? audio.pause() : audio.resume()
+                    }
                 } label: {
                     ZStack {
                         Circle()
@@ -302,9 +306,9 @@ private struct GlobalAudioMiniPlayer: View {
                             .frame(width: 36, height: 36)
 
                         if audio.isLoading {
-                            ProgressView()
-                                .controlSize(.small)
-                                .tint(.white)
+                            Image(systemName: "xmark")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundStyle(.white)
                         } else {
                             Image(systemName: audio.isPlaying ? "pause.fill" : "play.fill")
                                 .font(.system(size: 13, weight: .bold))
@@ -313,7 +317,11 @@ private struct GlobalAudioMiniPlayer: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel(audio.isPlaying ? "Audio pausieren" : "Audio fortsetzen")
+                .accessibilityLabel(
+                    audio.isLoading
+                        ? "Audio-Laden abbrechen"
+                        : (audio.isPlaying ? "Audio pausieren" : "Audio fortsetzen")
+                )
 
                 Button {
                     audio.next()
