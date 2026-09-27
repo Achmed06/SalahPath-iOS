@@ -99,7 +99,7 @@ struct GuideView: View {
                 )
                 referenceLearnFeature(
                     turkish: "Adım adım anlatım",
-                    german: "Schritt-für-Schritt Anleitung"
+                    german: "Schritt-für-Schritt-Anleitung"
                 )
                 referenceLearnFeature(
                     turkish: "Görsel ve okunan metinlerle",
@@ -2404,7 +2404,7 @@ struct PrayerCatalogView: View {
                 trSummary: "Yatsı farzından sonra kılınan iki rekât kuvvetli sünnet.",
                 deSteps: ["Normaler 2-Rakʿah-Sunnah-Ablauf.", "Beide Rakʿah: Fātiha + Sura; danach Schluss-Sitzen und Salām."],
                 trSteps: ["Normal iki rekât sünnet düzeni.", "İki rekâtta da Fâtiha + sûre; ardından son oturuş ve selâm."],
-                deNotes: ["Diyanet erwähnt auch die Möglichkeit von vier Rakʿah; verbreitet sind zwei."],
+                deNotes: ["Diyanet erwähnt auch die Möglichkeit von vier Rakʿāt; verbreitet sind zwei."],
                 trNotes: ["Diyanet dört rekât kılınabileceğini de belirtir; yaygın uygulama ikidir."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
