@@ -10511,8 +10511,12 @@ private struct QuranSurahView: View {
                         Circle()
                             .fill(audioReady ? SalahTheme.teal : Color.secondary.opacity(0.34))
                             .frame(width: 46, height: 46)
-                        if isResolvingAudio || audio.isLoading {
+                        if isResolvingAudio {
                             ProgressView().tint(.white)
+                        } else if audio.isLoading {
+                            Image(systemName: "xmark")
+                                .foregroundStyle(.white)
+                                .font(.system(size: 14, weight: .bold))
                         } else {
                             Image(systemName: audio.isPlaying ? "pause.fill" : (audioReady ? "play.fill" : "speaker.slash.fill"))
                                 .foregroundStyle(.white)
@@ -10521,7 +10525,7 @@ private struct QuranSurahView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .disabled(!audioReady || isResolvingAudio || audio.isLoading)
+                .disabled(!audioReady || isResolvingAudio)
 
                 Button { audio.next() } label: {
                     Image(systemName: "forward.fill")
@@ -10849,6 +10853,13 @@ private struct QuranSurahView: View {
     private func toggleFullSurah() {
         guard audioReady else {
             audio.lastError = settings.t("Audio derzeit nicht verfügbar.", "Ses şu anda mevcut değil.")
+            return
+        }
+
+        if audio.isLoading,
+           let active = audio.activeURL,
+           resolvedAudioURLs.contains(active) {
+            audio.stop()
             return
         }
 
