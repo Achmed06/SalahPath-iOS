@@ -2743,9 +2743,9 @@ struct HajjUmrahGuideView: View {
         ("Mescid-i Haram", "Kâbe'yi çevreleyen kutsal mescid.", "Die heilige Moschee, die die Kaaba umgibt."),
         ("Safa", "Sa'y ibadetinin başladığı nokta.", "Startpunkt des Saʿy."),
         ("Merve", "Sa'y ibadetinin tamamlandığı nokta.", "Endpunkt des Saʿy."),
-        ("Arafat", "Haccın temel rükünlerinden vakfenin yapıldığı bölge.", "Gebiet der Arafat-Wuqūf, eines zentralen Hajj-Ritus."),
+        ("Arafat", "Haccın temel rükünlerinden vakfenin yapıldığı bölge.", "Gebiet der Arafat-Wuqūf, eines zentralen Haddsch-Ritus."),
         ("Müzdelife", "Arafat'tan sonra vakfe ve geceleme bölgesi.", "Station nach Arafat für Wuqūf/Übernachtung."),
-        ("Mina", "Cemrelere taş atma ve hac günlerindeki konaklama bölgesi.", "Bereich für die Jamarat-Riten und Aufenthalt an den Hajj-Tagen.")
+        ("Mina", "Cemrelere taş atma ve hac günlerindeki konaklama bölgesi.", "Bereich für die Jamarat-Riten und den Aufenthalt an den Haddsch-Tagen.")
     ]
 
     private let medinaPlaces = [
@@ -2759,8 +2759,8 @@ struct HajjUmrahGuideView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 Picker("", selection: $section) {
-                    Text("Umrah").tag(0)
-                    Text("Hajj").tag(1)
+                    Text(settings.t("Umra", "Umre")).tag(0)
+                    Text(settings.t("Haddsch", "Hac")).tag(1)
                     Text(settings.t("Orte", "Ziyaret")).tag(2)
                     Text(settings.t("Duas", "Dualar")).tag(3)
                 }
@@ -2786,8 +2786,8 @@ struct HajjUmrahGuideView: View {
                 title: settings.t("Umra Schritt für Schritt", "Umre adım adım"),
                 icon: "figure.walk",
                 lines: settings.language == .german ? [
-                    "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
-                    "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
+                    "Vor dem Überschreiten des Miqāt in den Ihram-Zustand eintreten, die Umra beabsichtigen und die Talbiyah sprechen.",
+                    "In al-Masjid al-Haram den Umra-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, die Kaaba links.",
                     "Nach dem Tawaf ein Tawaf-Gebet mit zwei Rakʿāt an einem geeigneten Ort verrichten.",
                     "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
                     "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
@@ -2804,7 +2804,7 @@ struct HajjUmrahGuideView: View {
                 title: settings.t("Hanafi-Hinweis", "Hanefî notu"),
                 icon: "info.circle.fill",
                 lines: settings.language == .german ? [
-                    "Tawaf ist für die Umrah grundlegend/fard.",
+                    "Der Tawaf gehört zu den grundlegenden Bestandteilen der Umra.",
                     "Saʿy ist im Hanafi-Madhhab wajib und folgt einem gültigen Tawaf.",
                     "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen."
                 ] : [
@@ -2822,9 +2822,9 @@ struct HajjUmrahGuideView: View {
                 title: settings.t("Haddsch-Ablauf · Orientierung", "Hac akışı · genel rehber"),
                 icon: "map.fill",
                 lines: settings.language == .german ? [
-                    "Für Hajj gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
-                    "Zu den zentralen Hajj-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Hajj-Form und Reihenfolge – Saʿy.",
-                    "Für die konkrete Reise soll der Ablauf der eigenen Hajj-Art und die Anleitung der zuständigen Hajj-Gruppe/Religionsbegleitung beachtet werden.",
+                    "Für den Haddsch gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
+                    "Zu den zentralen Haddsch-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Haddsch-Form und Reihenfolge – Saʿy.",
+                    "Für die konkrete Reise sollen der Ablauf der eigenen Haddsch-Art sowie die Anleitung der zuständigen Pilgergruppe bzw. Religionsbegleitung beachtet werden.",
                     "SalahPath verwendet diesen Bereich als Lernübersicht und ersetzt keine individuelle Fatwa bei Fehlern, Krankheit, Menstruation oder ausgelassenen Riten."
                 ] : [
                     "Hac; ifrad, kıran ve temettu çeşitlerine ayrılır. Bu nedenle bazı ihram zamanları ve ayrıntılar değişir.",
@@ -2878,7 +2878,7 @@ struct HajjUmrahGuideView: View {
                 title: settings.t("Tawaf- & Saʿy-Duas", "Tavaf ve Sa'y Duaları"),
                 icon: "hands.sparkles.fill",
                 lines: settings.language == .german ? [
-                    "Diyanets Hajj-Ausbildung stellt Duas für einzelne Shawt bereit, erklärt aber ausdrücklich: Diese Formulierungen sind nicht verpflichtend.",
+                    "Diyanets Haddsch-Ausbildung stellt Duas für einzelne Shawt bereit, erklärt aber ausdrücklich: Diese Formulierungen sind nicht verpflichtend.",
                     "Du darfst Koran-Duas, authentisch überlieferte Duas, Dhikr oder eigene aufrichtige Bitten sprechen.",
                     "Zwischen der jemenitischen Ecke und dem Schwarzen Stein ist „Rabbanā ātinā fi-d-dunyā ḥasanah …“ eine bekannte überlieferte Dua."
                 ] : [
@@ -3927,7 +3927,7 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Quelle & Umfang", "Kaynak & Kapsam")) {
                 Text(settings.t(
-                    "Struktur abgeglichen mit Diyanet İlmihal/Fetva-Hauptbereichen: Glaube, Reinheit, Gebet, Zakat, Fasten, Hajj/Umrah, Kurban, Gelübde/Eide, Koran/Dua, Familie, Erbe, Halal/Haram, soziales, medizinisches und kommerzielles Leben.",
+                    "Struktur abgeglichen mit Diyanet İlmihal/Fetva-Hauptbereichen: Glaube, Reinheit, Gebet, Zakat, Fasten, Haddsch/Umra, Kurban, Gelübde/Eide, Koran/Dua, Familie, Erbe, Halal/Haram, soziales, medizinisches und kommerzielles Leben.",
                     "Yapı Diyanet İlmihal/Fetva ana alanlarıyla eşleştirildi: iman, taharet, namaz, zekât, oruç, hac/umre, kurban, adak/yemin, Kur'an/dua, aile, miras, helal-haram, sosyal, tıbbî ve ticarî hayat."
                 ))
                 .font(.footnote)
@@ -4072,7 +4072,7 @@ struct ThirtyTwoFardView: View {
             .init(
                 deTitle: "5 Säulen / Bedingungen des Islam",
                 trTitle: "İslam’ın 5 şartı",
-                deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Hajj verrichten, wenn die Voraussetzungen erfüllt sind"],
+                deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Haddsch verrichten, wenn die Voraussetzungen erfüllt sind"],
                 trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Hacca gitmek"]
             ),
             .init(
@@ -7221,7 +7221,7 @@ struct IslamLearningHubView: View {
                 "Salah: die fünf täglichen Pflichtgebete.",
                 "Zakat: verpflichtende Abgabe für Berechtigte, wenn die Voraussetzungen erfüllt sind.",
                 "Sawm: Fasten im Ramadan.",
-                "Hajj: Pilgerfahrt nach Mekka einmal im Leben, wenn die Voraussetzungen erfüllt sind."
+                "Haddsch: Pilgerfahrt nach Mekka einmal im Leben, wenn die Voraussetzungen erfüllt sind."
             ],
             trPoints: [
                 "Kelime-i şehadet: iman ikrarı.",
