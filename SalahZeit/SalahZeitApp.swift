@@ -473,14 +473,14 @@ private struct OnboardingFlowView: View {
     private var locationStep: some View {
         setupCard {
             VStack(spacing: 12) {
-                Text(settings.t("Standort für Gebetszeiten & Qibla", "Namaz vakitleri ve kıble için konum"))
+                Text(settings.t("Standort für Gebetszeiten", "Namaz vakitleri için konum"))
                     .font(.title3.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                     .multilineTextAlignment(.center)
 
                 Text(settings.t(
-                    "Du entscheidest. GPS ist nicht nötig, wenn du deinen Ort manuell eingibst. Du kannst diesen Schritt auch überspringen.",
-                    "Karar senin. Şehrini manuel girersen GPS gerekmez. Bu adımı tamamen atlayabilirsin."
+                    "Du entscheidest. Für Gebetszeiten reicht auch ein manuell eingegebener Ort. Die physische Qibla-Kompassrichtung verwendet später den tatsächlichen Gerätestandort, wenn du Standortzugriff erlaubst. Du kannst diesen Schritt auch überspringen.",
+                    "Karar senin. Namaz vakitleri için manuel girdiğin bir konum yeterlidir. Fiziksel kıble pusulası daha sonra, konum izni verirsen, gerçek cihaz konumunu kullanır. Bu adımı tamamen atlayabilirsin."
                 ))
                 .font(.subheadline)
                 .foregroundStyle(SalahTheme.mutedInk)
