@@ -4846,6 +4846,9 @@ final class RemoteAudioPlayer: ObservableObject {
     private var periodicTimeObserver: Any?
     private var endObserver: NSObjectProtocol?
     private var failedObserver: NSObjectProtocol?
+    private var audioInterruptionObserver: NSObjectProtocol?
+    private var mediaServicesResetObserver: NSObjectProtocol?
+    private var wasPlayingBeforeInterruption = false
     private var remoteCommandTargets: [Any] = []
     private weak var queueContinuationDelegate: RemoteAudioPlayerQueueContinuation?
     private var continuationRequestInFlight = false
@@ -4867,6 +4870,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
     private init() {
         configureRemoteCommands()
+        configureAudioSessionObservers()
     }
 
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
@@ -5413,6 +5417,81 @@ final class RemoteAudioPlayer: ObservableObject {
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         MPNowPlayingInfoCenter.default().playbackState = isPlaying ? .playing : .paused
+    }
+
+    private func configureAudioSessionObservers() {
+        audioInterruptionObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance(),
+            queue: .main
+        ) { [weak self] notification in
+            Task { @MainActor in
+                self?.handleAudioInterruption(notification)
+            }
+        }
+
+        mediaServicesResetObserver = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.mediaServicesWereResetNotification,
+            object: AVAudioSession.sharedInstance(),
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.recoverAfterMediaServicesReset()
+            }
+        }
+    }
+
+    private func handleAudioInterruption(_ notification: Notification) {
+        guard let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: rawType) else { return }
+
+        switch type {
+        case .began:
+            wasPlayingBeforeInterruption = isPlaying
+            player?.pause()
+            isPlaying = false
+            isLoading = false
+            updateNowPlaying()
+
+        case .ended:
+            let rawOptions = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+            let options = AVAudioSession.InterruptionOptions(rawValue: rawOptions)
+            let shouldResume = wasPlayingBeforeInterruption && options.contains(.shouldResume)
+            wasPlayingBeforeInterruption = false
+
+            if shouldResume {
+                resume()
+            } else {
+                isPlaying = false
+                isLoading = false
+                updateNowPlaying()
+            }
+
+        @unknown default:
+            wasPlayingBeforeInterruption = false
+        }
+    }
+
+    private func recoverAfterMediaServicesReset() {
+        let shouldResume = isPlaying || wasPlayingBeforeInterruption
+        wasPlayingBeforeInterruption = false
+
+        removeObservers()
+        player?.pause()
+        player = nil
+        isPlaying = false
+        isLoading = false
+
+        guard !queueURLs.isEmpty else {
+            updateNowPlaying()
+            return
+        }
+
+        if shouldResume {
+            loadCurrentAndPlay()
+        } else {
+            updateNowPlaying()
+        }
     }
 
     private func configureRemoteCommands() {
