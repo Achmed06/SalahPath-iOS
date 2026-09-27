@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#103a37"/>
+    <stop offset=".28" stop-color="#2b6d64"/>
+    <stop offset=".58" stop-color="#efc77d"/>
+    <stop offset="1" stop-color="#fbf3e4"/>
+  </linearGradient>
+  <radialGradient id="sun" cx=".22" cy=".34" r=".42">
+    <stop offset="0" stop-color="#fff7d7" stop-opacity=".98"/>
+    <stop offset=".2" stop-color="#f6d58d" stop-opacity=".72"/>
+    <stop offset=".54" stop-color="#f2bf63" stop-opacity=".22"/>
+    <stop offset="1" stop-color="#f2bf63" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f8f3e8"/>
+    <stop offset="1" stop-color="#d8cdbb"/>
+  </linearGradient>
+  <linearGradient id="kaaba" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#151513"/>
+    <stop offset=".55" stop-color="#050505"/>
+    <stop offset="1" stop-color="#25211a"/>
+  </linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#f3d996"/>
+    <stop offset=".5" stop-color="#c59b49"/>
+    <stop offset="1" stop-color="#8e6726"/>
+  </linearGradient>
+  <linearGradient id="arch" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f7ead2"/>
+    <stop offset="1" stop-color="#d9bc88"/>
+  </linearGradient>
+  <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="20"/>
+  </filter>
+  <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+    <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#0b2522" flood-opacity=".32"/>
+  </filter>
+</defs>
+
+<rect width="900" height="1100" fill="url(#sky)"/>
+<rect width="900" height="1100" fill="url(#sun)"/>
+
+<!-- clouds -->
+<g fill="#ffffff" opacity=".14" filter="url(#soft)">
+  <ellipse cx="650" cy="145" rx="210" ry="48"/>
+  <ellipse cx="610" cy="200" rx="160" ry="34"/>
+  <ellipse cx="300" cy="110" rx="130" ry="32"/>
+</g>
+
+<!-- distant city -->
+<g fill="#244d49" opacity=".35">
+  <rect x="10" y="390" width="70" height="170" rx="8"/>
+  <rect x="90" y="350" width="58" height="210" rx="8"/>
+  <rect x="765" y="360" width="54" height="200" rx="8"/>
+  <rect x="825" y="315" width="64" height="245" rx="8"/>
+  <rect x="170" y="420" width="48" height="140" rx="8"/>
+  <rect x="700" y="410" width="46" height="150" rx="8"/>
+</g>
+
+<!-- mosque arcade -->
+<path d="M0 505 H900 V690 H0 Z" fill="#efe2ca"/>
+<path d="M0 525 H900 V552 H0 Z" fill="#d3ad67" opacity=".78"/>
+<g fill="#6d5a3f" opacity=".17">
+  <rect x="0" y="575" width="900" height="15"/>
+  <rect x="0" y="640" width="900" height="12"/>
+</g>
+
+<!-- arches -->
+<g fill="#fff7e9" stroke="#c8a46a" stroke-width="5">
+  <path d="M18 690V604 Q58 556 98 604V690Z"/>
+  <path d="M112 690V604 Q152 556 192 604V690Z"/>
+  <path d="M206 690V604 Q246 556 286 604V690Z"/>
+  <path d="M614 690V604 Q654 556 694 604V690Z"/>
+  <path d="M708 690V604 Q748 556 788 604V690Z"/>
+  <path d="M802 690V604 Q842 556 882 604V690Z"/>
+</g>
+
+<!-- minarets -->
+<g filter="url(#shadow)">
+  <g transform="translate(65 0)">
+    <rect x="0" y="255" width="34" height="300" rx="14" fill="#f7eddc"/>
+    <rect x="-12" y="318" width="58" height="15" rx="7" fill="url(#gold)"/>
+    <rect x="-8" y="382" width="50" height="13" rx="6" fill="url(#gold)"/>
+    <path d="M17 205 L46 258 H-12 Z" fill="#f7eddc"/>
+    <circle cx="17" cy="199" r="6" fill="#c69c4d"/>
+    <path d="M18 176c0 12 11 19 21 15-7-5-10-10-10-16 0-6 3-11 10-16-10-4-21 4-21 17z" fill="#d7b15c"/>
+  </g>
+  <g transform="translate(801 0)">
+    <rect x="0" y="255" width="34" height="300" rx="14" fill="#f7eddc"/>
+    <rect x="-12" y="318" width="58" height="15" rx="7" fill="url(#gold)"/>
+    <rect x="-8" y="382" width="50" height="13" rx="6" fill="url(#gold)"/>
+    <path d="M17 205 L46 258 H-12 Z" fill="#f7eddc"/>
+    <circle cx="17" cy="199" r="6" fill="#c69c4d"/>
+    <path d="M18 176c0 12 11 19 21 15-7-5-10-10-10-16 0-6 3-11 10-16-10-4-21 4-21 17z" fill="#d7b15c"/>
+  </g>
+  <g transform="translate(190 45) scale(.82)">
+    <rect x="0" y="255" width="34" height="300" rx="14" fill="#f7eddc"/>
+    <rect x="-12" y="318" width="58" height="15" rx="7" fill="url(#gold)"/>
+    <path d="M17 205 L46 258 H-12 Z" fill="#f7eddc"/>
+  </g>
+  <g transform="translate(670 45) scale(.82)">
+    <rect x="0" y="255" width="34" height="300" rx="14" fill="#f7eddc"/>
+    <rect x="-12" y="318" width="58" height="15" rx="7" fill="url(#gold)"/>
+    <path d="M17 205 L46 258 H-12 Z" fill="#f7eddc"/>
+  </g>
+</g>
+
+<!-- Kaaba -->
+<g transform="translate(295 430)" filter="url(#shadow)">
+  <polygon points="15,70 310,70 270,30 55,30" fill="#252019"/>
+  <rect x="15" y="70" width="295" height="255" rx="3" fill="url(#kaaba)"/>
+  <polygon points="310,70 354,98 354,305 310,325" fill="#161411"/>
+  <rect x="15" y="104" width="295" height="28" fill="url(#gold)"/>
+  <polygon points="310,104 354,125 354,148 310,132" fill="#9f762d"/>
+  <g fill="#d2a84f" opacity=".95">
+    <rect x="36" y="111" width="52" height="8" rx="3"/>
+    <rect x="103" y="111" width="76" height="8" rx="3"/>
+    <rect x="195" y="111" width="86" height="8" rx="3"/>
+  </g>
+  <rect x="216" y="177" width="60" height="119" rx="3" fill="url(#gold)"/>
+  <rect x="225" y="188" width="42" height="95" rx="2" fill="#1e1912" opacity=".38"/>
+  <circle cx="247" cy="231" r="5" fill="#f1d593"/>
+</g>
+
+<!-- marble foreground -->
+<path d="M0 690 H900 V1100 H0 Z" fill="url(#stone)"/>
+<g stroke="#c6bcae" stroke-width="2" opacity=".33">
+  <path d="M450 690 L40 1100"/>
+  <path d="M450 690 L180 1100"/>
+  <path d="M450 690 L330 1100"/>
+  <path d="M450 690 L570 1100"/>
+  <path d="M450 690 L720 1100"/>
+  <path d="M450 690 L860 1100"/>
+  <path d="M0 790 H900"/>
+  <path d="M0 900 H900"/>
+  <path d="M0 1010 H900"/>
+</g>
+<path d="M0 720 C210 650 690 650 900 720" fill="none" stroke="#f6d889" stroke-width="10" opacity=".35" filter="url(#soft)"/>
+
+<!-- soft crowd silhouettes -->
+<g opacity=".48">
+  <g fill="#f7f3ea">
+    <circle cx="130" cy="680" r="10"/><rect x="121" y="690" width="18" height="40" rx="8"/>
+    <circle cx="175" cy="692" r="9"/><rect x="167" y="700" width="16" height="35" rx="7"/>
+    <circle cx="720" cy="681" r="10"/><rect x="711" y="691" width="18" height="40" rx="8"/>
+    <circle cx="760" cy="694" r="9"/><rect x="752" y="702" width="16" height="34" rx="7"/>
+  </g>
+  <g fill="#1c2927">
+    <circle cx="100" cy="692" r="8"/><rect x="93" y="699" width="14" height="31" rx="6"/>
+    <circle cx="795" cy="689" r="8"/><rect x="788" y="696" width="14" height="31" rx="6"/>
+  </g>
+</g>
+
+<!-- atmospheric vignette -->
+<rect width="900" height="1100" fill="none" stroke="#0e2f2b" stroke-opacity=".18" stroke-width="34"/>
+</svg>
