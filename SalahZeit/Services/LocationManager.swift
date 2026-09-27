@@ -133,6 +133,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     func stopQiblaHeading() {
         manager.stopUpdatingHeading()
         manager.stopUpdatingLocation()
+        heading = nil
     }
 
     func useDeviceLocation() {
