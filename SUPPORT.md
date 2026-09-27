@@ -14,7 +14,7 @@ When reporting a problem, include the iPhone model, iOS version, SalahPath versi
 
 If prayer times or Qibla are unavailable, verify that SalahPath has Location access set to "While Using the App" in iOS Settings.
 
-If prayer reminders are missing, verify notification permission in iOS Settings and use "Benachrichtigungen aktualisieren" / "Bildirimleri güncelle" in SalahPath.
+If prayer reminders are missing, verify notification permission in iOS Settings, then open SalahPath again so the local prayer-notification schedule can refresh.
 
 If Quran audio does not play, verify the internet connection. Previously downloaded recitations may continue to work from the local audio cache. The cache can be cleared from the Profile screen.
 
