@@ -1792,7 +1792,7 @@ struct HomeView: View {
                     .font(.system(size: 10.5, weight: .semibold, design: .serif))
                     .italic()
                     .foregroundStyle(SalahTheme.ink)
-                Text("Kleine Schritte bringen große Veränderungen.")
+                Text(settings.t("Kleine Schritte bringen große Veränderungen.", "Küçük adımlar büyük değişimler getirir."))
                     .font(.system(size: 8.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
             }
