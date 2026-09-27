@@ -267,17 +267,17 @@ struct SettingsView: View {
                             let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
                             notificationStatusText = scheduled
                                 ? settings.t(
-                                    "iOS-Testmitteilung wurde geplant. Sperre den Bildschirm oder verlasse SalahPath kurz, um die Systemzustellung zu prüfen.",
-                                    "iOS test bildirimi planlandı. Sistem teslimini kontrol etmek için ekranı kilitle veya SalahPath'ten kısa süre çık."
+                                    "Benachrichtigung wurde geplant. Sperre den Bildschirm oder verlasse SalahPath kurz, um die Zustellung zu prüfen.",
+                                    "Bildirim planlandı. Teslimi kontrol etmek için ekranı kilitle veya SalahPath'ten kısa süre çık."
                                 )
                                 : settings.t(
-                                    "iOS-Testmitteilung konnte nicht geplant werden. Prüfe die Benachrichtigungsberechtigung.",
-                                    "iOS test bildirimi planlanamadı. Bildirim iznini kontrol et."
+                                    "Benachrichtigung konnte nicht geplant werden. Prüfe die Benachrichtigungsberechtigung.",
+                                    "Bildirim planlanamadı. Bildirim iznini kontrol et."
                                 )
                         }
                     } label: {
                         Label(
-                            settings.t("iOS-Mitteilung testen", "iOS bildirimini test et"),
+                            settings.t("Benachrichtigung prüfen", "Bildirimi kontrol et"),
                             systemImage: "bell.badge.fill"
                         )
                         .font(.system(size: 10.5, weight: .bold))
