@@ -99,7 +99,7 @@ struct GuideView: View {
                 )
                 referenceLearnFeature(
                     turkish: "Adım adım anlatım",
-                    german: "Schritt-für-Schritt Anleitung"
+                    german: "Schritt-für-Schritt-Anleitung"
                 )
                 referenceLearnFeature(
                     turkish: "Görsel ve okunan metinlerle",
