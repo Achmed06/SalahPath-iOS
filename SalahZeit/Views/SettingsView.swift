@@ -882,7 +882,7 @@ struct SettingsView: View {
                 .font(.system(size: 10.5, weight: .bold).monospacedDigit())
                 .foregroundStyle(SalahTheme.teal)
                 .frame(width: 28, alignment: .trailing)
-            Text("Min.")
+            Text(settings.t("Min.", "dk."))
                 .font(.system(size: 9, weight: .semibold))
                 .foregroundStyle(SalahTheme.mutedInk)
         }
