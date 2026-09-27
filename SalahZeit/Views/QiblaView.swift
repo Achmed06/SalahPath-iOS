@@ -175,7 +175,7 @@ struct QiblaView: View {
                             infoRow(
                                 icon: "location.fill",
                                 title: isScreenshotQA
-                                    ? settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
+                                    ? settings.t("Köln", "Köln")
                                     : (locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
                             )
                             infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
