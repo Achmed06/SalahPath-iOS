@@ -329,6 +329,11 @@ private struct OnboardingFlowView: View {
                     HStack(spacing: 10) {
                         if step > 0 {
                             Button {
+                                if step == 2 {
+                                    locationManager.cancelPendingLocationIntent()
+                                    resolvingLocation = false
+                                    locationError = nil
+                                }
                                 withAnimation(.easeInOut(duration: 0.18)) { step -= 1 }
                             } label: {
                                 ZStack {
@@ -516,6 +521,10 @@ private struct OnboardingFlowView: View {
                             resolvingLocation = true
                             locationError = nil
                             let success = await locationManager.setManualLocation(searchText: manualLocation)
+                            guard step == 2 else {
+                                resolvingLocation = false
+                                return
+                            }
                             resolvingLocation = false
                             if success {
                                 withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
@@ -547,6 +556,8 @@ private struct OnboardingFlowView: View {
                 }
 
                 Button {
+                    locationManager.cancelPendingLocationIntent()
+                    resolvingLocation = false
                     locationError = nil
                     withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
                 } label: {
