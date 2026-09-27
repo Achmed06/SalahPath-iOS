@@ -107,6 +107,34 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     ? settings.notificationLeadMinutes
                     : 10
 
+                if settings.notifyAtPrayerTime,
+                   prayer.date > now,
+                   scheduledRequestCount < maximumPrayerRequests {
+                    let content = UNMutableNotificationContent()
+                    content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
+                    if let rakats = prayer.kind.fardRakats {
+                        content.body = settings.t(
+                            "\(rakats) Rakʿāt Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                            "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
+                        )
+                    }
+                    content.sound = prayerTimeSound(for: prayer.kind, settings: settings)
+
+                    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
+                    components.timeZone = timeZone
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                    let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).time"
+                    let added = await add(
+                        UNNotificationRequest(identifier: identifier, content: content, trigger: trigger),
+                        revision: revision
+                    )
+                    allRequestsScheduled = allRequestsScheduled && added
+                    if added {
+                        scheduledIdentifiers.insert(identifier)
+                        scheduledRequestCount += 1
+                    }
+                    guard revision == schedulingRevision else { return false }
+
                 if leadMinutes > 0, scheduledRequestCount < maximumPrayerRequests {
                     let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
                     if reminderDate > now {
@@ -138,33 +166,6 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     }
                 }
 
-                if settings.notifyAtPrayerTime,
-                   prayer.date > now,
-                   scheduledRequestCount < maximumPrayerRequests {
-                    let content = UNMutableNotificationContent()
-                    content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
-                    if let rakats = prayer.kind.fardRakats {
-                        content.body = settings.t(
-                            "\(rakats) Rakʿāt Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
-                            "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
-                        )
-                    }
-                    content.sound = prayerTimeSound(for: prayer.kind, settings: settings)
-
-                    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
-                    components.timeZone = timeZone
-                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                    let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).time"
-                    let added = await add(
-                        UNNotificationRequest(identifier: identifier, content: content, trigger: trigger),
-                        revision: revision
-                    )
-                    allRequestsScheduled = allRequestsScheduled && added
-                    if added {
-                        scheduledIdentifiers.insert(identifier)
-                        scheduledRequestCount += 1
-                    }
-                    guard revision == schedulingRevision else { return false }
                 }
             }
         }
