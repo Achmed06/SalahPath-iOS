@@ -217,6 +217,9 @@ for obsolete in (
     if obsolete in guide:
         fail(f"obsolete generated illustration fallback returned: {obsolete}")
 
+if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' not in guide:
+    fail("Wudu left-foot mirror regression")
+
 for token in (
     'SalahFeatureIcon(kind: kind)',
     'private func guideFeatureKind(for symbol: String) -> String?',
