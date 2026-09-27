@@ -482,7 +482,8 @@ private struct DailyDuaEntry {
     let deMeaning: String
     let trMeaning: String
     let repetition: String?
-    let source: String
+    let deSource: String
+    let trSource: String
     let audioSurah: Int
     let audioAyah: Int
 }
@@ -497,7 +498,8 @@ private enum DailyDuaStore {
             deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
             trMeaning: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru.",
             repetition: nil,
-            source: "Quran 2:201",
+            deSource: "Koran 2:201",
+            trSource: "Kur'an 2:201",
             audioSurah: 2,
             audioAyah: 201
         ),
@@ -509,7 +511,8 @@ private enum DailyDuaStore {
             deMeaning: "Mein Herr, mehre mein Wissen.",
             trMeaning: "Rabbim, ilmimi artır.",
             repetition: nil,
-            source: "Quran 20:114 · excerpt",
+            deSource: "Koran 20:114 · Auszug",
+            trSource: "Kur'an 20:114 · alıntı",
             audioSurah: 20,
             audioAyah: 114
         ),
@@ -521,7 +524,8 @@ private enum DailyDuaStore {
             deMeaning: "Allah genügt uns, und Er ist der beste Sachwalter.",
             trMeaning: "Allah bize yeter, O ne güzel vekildir.",
             repetition: nil,
-            source: "Quran 3:173 · excerpt",
+            deSource: "Koran 3:173 · Auszug",
+            trSource: "Kur'an 3:173 · alıntı",
             audioSurah: 3,
             audioAyah: 173
         ),
@@ -533,7 +537,8 @@ private enum DailyDuaStore {
             deMeaning: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.",
             trMeaning: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle.",
             repetition: nil,
-            source: "Quran 25:74",
+            deSource: "Koran 25:74",
+            trSource: "Kur'an 25:74",
             audioSurah: 25,
             audioAyah: 74
         )
@@ -652,7 +657,7 @@ private struct DailyDuaDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(dua.source, systemImage: "checkmark.seal.fill")
+                Label((settings.language == .german ? dua.deSource : dua.trSource), systemImage: "checkmark.seal.fill")
                     .font(.footnote)
                     .foregroundStyle(SalahTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -705,7 +710,7 @@ private struct DailyDuaDetailView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: (settings.language == .german ? dua.deSource : dua.trSource)
             )
         } catch {
             guard revision == audioRequestRevision else { return }
@@ -1464,7 +1469,7 @@ struct HomeView: View {
 
                         Spacer(minLength: 4)
 
-                        Text(dua.source)
+                        Text((settings.language == .german ? dua.deSource : dua.trSource))
                             .font(.system(size: 7.2, weight: .semibold))
                             .foregroundStyle(SalahTheme.mutedInk)
                             .lineLimit(1)
@@ -1559,7 +1564,7 @@ struct HomeView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: (settings.language == .german ? dua.deSource : dua.trSource)
             )
         } catch {
             guard revision == dailyDuaAudioRequestRevision else { return }
@@ -1701,7 +1706,7 @@ struct HomeView: View {
         let tasks = [
             ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "book.fill"),
             ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "circle.grid.cross.fill"),
-            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "graduationcap.fill")
+            ("learn", settings.t("1 Dua/Sure wiederholen", "1 dua/sûre tekrarla"), "graduationcap.fill")
         ]
         let done = tasks.filter { DailyDeenStore.isDone($0.0, now) }.count
         return VStack(alignment: .leading, spacing: 10) {
@@ -1739,7 +1744,7 @@ struct HomeView: View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 4)
         return LazyVGrid(columns: columns, spacing: 7) {
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Quran", "Kur'an"), subtitle: settings.t("Lesen & hören", "Oku & Dinle"), icon: "quran")
+                DashboardTile(title: settings.t("Quran", "Kur'an"), subtitle: settings.t("Lesen & hören", "Oku ve dinle"), icon: "quran")
             }
             NavigationLink { QuranView() } label: {
                 DashboardTile(title: settings.t("Quran-Audio", "Kur'an Sesi"), subtitle: settings.t("Anhören", "Dinle"), icon: "quran_audio")
@@ -1763,7 +1768,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Täglich", "Günlük"), icon: "dhikr")
             }
             NavigationLink { QiblaView() } label: {
-                DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Qibla"), icon: "qibla")
+                DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Kıble"), icon: "qibla")
             }
             NavigationLink { PrayerTermsView() } label: {
                 DashboardTile(title: settings.t("Islamwissen", "İslami Bilgiler"), subtitle: settings.t("Wissen", "Bilgi"), icon: "info")
@@ -1886,7 +1891,7 @@ struct HomeView: View {
             Label(settings.t("Freitag / Jumuʿah", "Cuma"), systemImage: "person.3.fill")
                 .font(.headline).foregroundStyle(SalahTheme.teal)
             Text(settings.t(
-                "Jumuʿah hat 2 Rakʿah Fard in Gemeinschaft. Die tatsächliche Jumuʿah-Uhrzeit legt die jeweilige Moschee fest.",
+                "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Die tatsächliche Jumuʿah-Uhrzeit legt die jeweilige Moschee fest.",
                 "Cuma namazının cemaatle kılınan farzı 2 rekâttır. Gerçek cuma saatini ilgili cami belirler."
             )).font(.subheadline)
         }
@@ -2317,7 +2322,7 @@ struct PrayerTimesOverviewView: View {
             Text(settings.t("Qibla-Richtung", "Kıble Yönü"))
                 .font(.custom("AvenirNext-DemiBold", size: 10.6))
                 .foregroundStyle(SalahTheme.ink)
-            Text("Qibla")
+            Text(settings.t("Qibla", "Kıble"))
                 .font(.custom("AvenirNext-Medium", size: 8.4))
                 .foregroundStyle(SalahTheme.mutedInk)
 
