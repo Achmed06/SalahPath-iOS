@@ -93,7 +93,7 @@ struct SettingsView: View {
                     referenceToggle(icon: "24.circle.fill", title: settings.t("24-Stunden-Zeit", "24 saat biçimi"), isOn: $settings.use24Hour)
                 }
 
-                referenceSection(settings.t("Quran & Audio", "Kur'an ve Ses")) {
+                referenceSection(settings.t("Koran & Audio", "Kur'an ve Ses")) {
                     Menu {
                         ForEach(QuranReciter.allCases) { reciter in
                             Button(reciter.title) { settings.quranReciter = reciter }
@@ -124,7 +124,7 @@ struct SettingsView: View {
 
                     profileRow(
                         icon: "doc.text.fill",
-                        title: settings.t("Offline-Qurantext", "Çevrimdışı Kur'an metni"),
+                        title: settings.t("Offline-Korantext", "Çevrimdışı Kur'an metni"),
                         value: quranTextCacheText,
                         showsChevron: false
                     )
