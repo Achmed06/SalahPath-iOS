@@ -8861,8 +8861,9 @@ struct QuranView: View {
                                                 .fill(SalahTheme.navigationTeal)
                                                 .frame(width: 54, height: 54)
                                             if isResolvingPreviewAudio || previewAudio.isLoading {
-                                                ProgressView()
-                                                    .tint(.white)
+                                                Image(systemName: "xmark")
+                                                    .font(.system(size: 18, weight: .semibold))
+                                                    .foregroundStyle(.white)
                                             } else {
                                                 Image(systemName: previewAudio.isPlaying ? "pause.fill" : "play.fill")
                                                     .font(.system(size: 18, weight: .semibold))
@@ -8871,7 +8872,6 @@ struct QuranView: View {
                                         }
                                     }
                                     .buttonStyle(.plain)
-                                    .disabled(isResolvingPreviewAudio || previewAudio.isLoading)
 
                                     Button { previewAudio.next() } label: {
                                         Image(systemName: "forward.end.fill")
@@ -8911,7 +8911,9 @@ struct QuranView: View {
                                     Task { await togglePreviewAudio() }
                                 } label: {
                                     quranAction(
-                                        icon: previewAudio.isPlaying ? "pause.circle" : "play.circle",
+                                        icon: isResolvingPreviewAudio || previewAudio.isLoading
+                                            ? "xmark.circle"
+                                            : (previewAudio.isPlaying ? "pause.circle" : "play.circle"),
                                         title: settings.t("Hören", "Dinle")
                                     )
                                 }
@@ -9082,10 +9084,20 @@ struct QuranView: View {
 
     @MainActor
     private func togglePreviewAudio() async {
+        if isResolvingPreviewAudio {
+            previewAudioRequestGeneration &+= 1
+            isResolvingPreviewAudio = false
+            return
+        }
+
         if !previewAudioURLs.isEmpty,
            let active = previewAudio.activeURL,
            previewAudioURLs.contains(active) {
-            previewAudio.isPlaying ? previewAudio.pause() : previewAudio.resume()
+            if previewAudio.isLoading {
+                previewAudio.stop()
+            } else {
+                previewAudio.isPlaying ? previewAudio.pause() : previewAudio.resume()
+            }
             return
         }
 
