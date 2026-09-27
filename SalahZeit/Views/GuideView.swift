@@ -139,15 +139,15 @@ struct GuideView: View {
             NavigationLink { HanafiPrayerPlanView() } label: {
                 referenceRow(
                     icon: "list.number",
-                    title: settings.t("Rakʿat & Gebetsarten", "Rekât ve namaz türleri"),
-                    subtitle: settings.t("2, 3 und 4 Rakʿat richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
+                    title: settings.t("Rakʿāt & Gebetsarten", "Rekât ve namaz türleri"),
+                    subtitle: settings.t("2, 3 und 4 Rakʿāt richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
                 )
             }
 
             NavigationLink { PrayerTextsHubView() } label: {
                 referenceRow(
                     icon: "books.vertical.fill",
-                    title: settings.t("Suren, Duas & Ayat fürs Gebet", "Namaz Sûreleri, Duaları & Ayetler"),
+                    title: settings.t("Suren, Duas und Ayat fürs Gebet", "Namaz Sûreleri, Duaları ve Ayetler"),
                     subtitle: settings.t("Inklusive Yasin und Qunūt", "Yasin ve Kunut dahil")
                 )
             }
@@ -421,14 +421,14 @@ struct RakatOverviewView: View {
 
             Section(settings.t("Freitag / Jumuʿah", "Cuma")) {
                 Text(settings.t(
-                    "Jumuʿah hat 2 Rakʿat Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿat Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
+                    "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿāt Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
                     "Cuma namazının cemaatle kılınan farzı 2 rekâttır. Cumaya katılmayan kişi normal öğle namazının 4 rekât farzını kılar. Cumanın öncesi ve sonrasındaki sünnet rekâtları mezheplere göre farklı anlatılabilir."
                 ))
             }
         }
         .scrollContentBackground(.hidden)
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Rakʿat", "Rekât"))
+        .navigationTitle(settings.t("Rakʿāt", "Rekât"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -478,13 +478,13 @@ private enum PrayerText {
         transliteration: "Sübhâneke Allâhümme ve bi hamdik. Ve tebârekesmük. Ve teâlâ ceddük. Ve lâ ilâhe ğayrük.",
         deMeaning: "Gepriesen bist Du, o Allah, und Dir gebührt Lob. Gesegnet ist Dein Name, erhaben ist Deine Majestät, und es gibt keinen Gott außer Dir.",
         trMeaning: "Allah'ım! Sen eksik sıfatlardan uzaksın. Seni överim. Senin adın mübarektir, şanın yücedir. Senden başka ilâh yoktur.",
-        deNote: "Im ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
+        deNote: "In der ersten Rakʿa nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
 
     static let audhu = PrayerRecitation(
         deLabel: "Eʿūḏu", trLabel: "Eûzü",
         arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", transliteration: "Eʿûzü billâhi mineş-şeytânirracîm",
         deMeaning: "Ich suche Zuflucht bei Allah vor dem verfluchten Satan.", trMeaning: "Kovulmuş şeytandan Allah'a sığınırım.",
-        deNote: "Im ersten Rakʿah vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
+        deNote: "In der ersten Rakʿa vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
 
     static let basmala = PrayerRecitation(
         deLabel: "Basmala", trLabel: "Besmele",
@@ -496,16 +496,16 @@ private enum PrayerText {
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jedem Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
+        deMeaning: "Die eröffnende Sure. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿa rezitiert; nach ihrem Ende sagt man Âmîn.",
         trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsure nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
-        deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
+        deLabel: "Beispiel Zusatzsure: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
         arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
         transliteration: "Kul hüvallâhü ehad. Allâhüssamed. Lem yelid ve lem yûled. Ve lem yekün lehû küfüven ehad.",
         deMeaning: "Sprich: Er ist Allah, der Eine …", trMeaning: "De ki: O Allah birdir …",
-        deNote: "Nur ein Beispiel. Eine andere passende Sura oder Quranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
+        deNote: "Nur ein Beispiel. Eine andere passende Sure oder Quranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
 
     static let ruku = PrayerRecitation(
         deLabel: "Im Rukūʿ", trLabel: "Rükûda",
@@ -614,11 +614,11 @@ struct PrayerHowToView: View {
                 number: "3",
                 pose: .standing,
                 imageKey: "standing",
-                deTitle: "Qiyām – 1. Rakʿah",
+                deTitle: "Qiyām – 1. Rakʿa",
                 trTitle: "Kıyam – 1. rekât",
-                deAction: "Stehe ruhig mit gebundenen Händen und schaue zum Ort der Niederwerfung. Im ersten Rakʿah liest du Sübhaneke, danach Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sura oder passende Verse.",
+                deAction: "Stehe ruhig mit gebundenen Händen und schaue zum Ort der Niederwerfung. In der ersten Rakʿa liest du Sübhaneke, danach Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sure oder passende Verse.",
                 trAction: "Eller bağlı şekilde sakin dur ve secde edeceğin yere bak. İlk rekâtta Sübhâneke, ardından Eûzü, Besmele, Fâtiha, Âmin ve sonra zamm-ı sûre veya uygun ayetler okunur.",
-                deHanafi: (settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.") + " Hinter einem Imam werden Fātiha und Zusatzsura nicht selbst rezitiert.",
+                deHanafi: (settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.") + " Hinter einem Imam werden Fātiha und Zusatzsure nicht selbst rezitiert.",
                 trHanafi: (settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.") + " İmama uyarken Fâtiha ve zamm-ı sûre ayrıca okunmaz.",
                 recitations: [PrayerText.subhanaka, PrayerText.audhu, PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
             ),
@@ -626,7 +626,7 @@ struct PrayerHowToView: View {
                 number: "4",
                 pose: .bowing,
                 imageKey: "bowing",
-                deTitle: "Rukūʿ – 1. Rakʿah",
+                deTitle: "Rukūʿ – 1. Rakʿa",
                 trTitle: "Rükû – 1. rekât",
                 deAction: "Sage beim Hinuntergehen Allāhu akbar. Beuge dich und halte die Position kurz ruhig. Sprich danach den Rukūʿ-Dhikr dreimal.",
                 trAction: "Rükûya giderken Allāhu ekber de. Rükûda kısa bir an sakin dur. Sonra rükû tesbihini üç kez söyle.",
@@ -638,7 +638,7 @@ struct PrayerHowToView: View {
                 number: "5",
                 pose: .upright,
                 imageKey: "upright",
-                deTitle: "Aufrichten – 1. Rakʿah",
+                deTitle: "Aufrichten – 1. Rakʿa",
                 trTitle: "Doğrulma – 1. rekât",
                 deAction: "Richte dich vollständig aus dem Rukūʿ auf. Stehe kurz ganz ruhig, bevor du in die Secde gehst.",
                 trAction: "Rükûdan tamamen doğrul. Secdeye gitmeden önce kısa bir an tamamen dik ve sakin dur.",
@@ -650,7 +650,7 @@ struct PrayerHowToView: View {
                 number: "6",
                 pose: .prostration,
                 imageKey: "sujud",
-                deTitle: "Erste Secde – 1. Rakʿah",
+                deTitle: "Erste Secde – 1. Rakʿa",
                 trTitle: "Birinci secde – 1. rekât",
                 deAction: "Sage Allāhu akbar und gehe in die Niederwerfung. Stirn und Nase liegen auf; die Hände stehen neben dem Kopf. Bleibe ruhig und sprich den Secde-Dhikr dreimal.",
                 trAction: "Allāhu ekber diyerek secdeye git. Alın ve burun yere gelir; eller başın yanında olur. Sakin dur ve secde tesbihini üç kez söyle.",
@@ -674,9 +674,9 @@ struct PrayerHowToView: View {
                 number: "8",
                 pose: .prostration,
                 imageKey: "second_sujud",
-                deTitle: "Zweite Secde – 1. Rakʿah",
+                deTitle: "Zweite Secde – 1. Rakʿa",
                 trTitle: "İkinci secde – 1. rekât",
-                deAction: "Sage Allāhu akbar, gehe erneut in die Secde und sprich den Dhikr dreimal. Damit ist die erste Rakʿah beendet.",
+                deAction: "Sage Allāhu akbar, gehe erneut in die Secde und sprich den Dhikr dreimal. Damit ist die erste Rakʿa beendet.",
                 trAction: "Allāhu ekber diyerek tekrar secdeye git ve tesbihi üç kez söyle. Böylece birinci rekât tamamlanır.",
                 deHanafi: nil,
                 trHanafi: nil,
@@ -686,9 +686,9 @@ struct PrayerHowToView: View {
                 number: "9",
                 pose: .standing,
                 imageKey: "standing",
-                deTitle: "Aufstehen zum 2. Rakʿah",
+                deTitle: "Aufstehen zur 2. Rakʿa",
                 trTitle: "2. rekâta kalkış",
-                deAction: "Nach der zweiten Secde stehst du mit Allāhu akbar zum zweiten Rakʿah auf. Richte dich vollständig auf und binde die Hände wieder wie zuvor.",
+                deAction: "Nach der zweiten Secde stehst du mit Allāhu akbar zur zweiten Rakʿa auf. Richte dich vollständig auf und binde die Hände wieder wie zuvor.",
                 trAction: "İkinci secdeden sonra Allāhu ekber diyerek ikinci rekâta kalk. Tamamen doğrul ve ellerini önceki gibi yeniden bağla.",
                 deHanafi: nil,
                 trHanafi: nil,
@@ -698,9 +698,9 @@ struct PrayerHowToView: View {
                 number: "10",
                 pose: .standing,
                 imageKey: "standing",
-                deTitle: "Qiyām – 2. Rakʿah",
+                deTitle: "Qiyām – 2. Rakʿa",
                 trTitle: "Kıyam – 2. rekât",
-                deAction: "Im zweiten Rakʿah liest du nicht noch einmal Sübhaneke und Eʿūḏu. Beginne mit der Basmala, lies al-Fātiha, sage Âmîn und lies anschließend eine zusätzliche Sura oder passende Verse.",
+                deAction: "In der zweiten Rakʿa liest du nicht noch einmal Sübhaneke und Eʿūḏu. Beginne mit der Basmala, lies al-Fātiha, sage Âmîn und lies anschließend eine zusätzliche Sure oder passende Verse.",
                 trAction: "İkinci rekâtta Sübhâneke ve Eûzü yeniden okunmaz. Besmele ile başla, Fâtiha'yı oku, Âmin de ve ardından zamm-ı sûre veya uygun ayetler oku.",
                 deHanafi: nil,
                 trHanafi: nil,
@@ -710,7 +710,7 @@ struct PrayerHowToView: View {
                 number: "11",
                 pose: .bowing,
                 imageKey: "bowing",
-                deTitle: "Rukūʿ – 2. Rakʿah",
+                deTitle: "Rukūʿ – 2. Rakʿa",
                 trTitle: "Rükû – 2. rekât",
                 deAction: "Sage Allāhu akbar, gehe wieder in den Rukūʿ und bleibe kurz ruhig. Sprich den Rukūʿ-Dhikr dreimal.",
                 trAction: "Allāhu ekber diyerek tekrar rükûya git ve kısa bir an sakin dur. Rükû tesbihini üç kez söyle.",
@@ -722,7 +722,7 @@ struct PrayerHowToView: View {
                 number: "12",
                 pose: .upright,
                 imageKey: "upright",
-                deTitle: "Aufrichten – 2. Rakʿah",
+                deTitle: "Aufrichten – 2. Rakʿa",
                 trTitle: "Doğrulma – 2. rekât",
                 deAction: "Richte dich wieder vollständig aus dem Rukūʿ auf und bleibe kurz ruhig stehen, bevor du zur Secde gehst.",
                 trAction: "Rükûdan yeniden tamamen doğrul ve secdeye gitmeden önce kısa bir an sakin dur.",
@@ -734,7 +734,7 @@ struct PrayerHowToView: View {
                 number: "13",
                 pose: .prostration,
                 imageKey: "sujud",
-                deTitle: "Erste Secde – 2. Rakʿah",
+                deTitle: "Erste Secde – 2. Rakʿa",
                 trTitle: "Birinci secde – 2. rekât",
                 deAction: "Sage Allāhu akbar und gehe wieder in die erste Secde. Bleibe ruhig und sprich den Secde-Dhikr dreimal.",
                 trAction: "Allāhu ekber diyerek yeniden birinci secdeye git. Sakin dur ve secde tesbihini üç kez söyle.",
@@ -746,7 +746,7 @@ struct PrayerHowToView: View {
                 number: "14",
                 pose: .sitting,
                 imageKey: "sitting",
-                deTitle: "Sitzen zwischen den Secden – 2. Rakʿah",
+                deTitle: "Sitzen zwischen den Secden – 2. Rakʿa",
                 trTitle: "İki secde arası – 2. rekât",
                 deAction: "Sage Allāhu akbar und setze dich vollständig auf. Bleibe kurz ruhig sitzen. Danach gehst du in die zweite Secde.",
                 trAction: "Allāhu ekber diyerek tamamen otur. Kısa bir an sakin otur. Ardından ikinci secdeye git.",
@@ -758,9 +758,9 @@ struct PrayerHowToView: View {
                 number: "15",
                 pose: .prostration,
                 imageKey: "second_sujud",
-                deTitle: "Zweite Secde – 2. Rakʿah",
+                deTitle: "Zweite Secde – 2. Rakʿa",
                 trTitle: "İkinci secde – 2. rekât",
-                deAction: "Sage Allāhu akbar und gehe in die zweite Secde. Sprich den Secde-Dhikr dreimal. Danach ist auch die zweite Rakʿah beendet.",
+                deAction: "Sage Allāhu akbar und gehe in die zweite Secde. Sprich den Secde-Dhikr dreimal. Danach ist auch die zweite Rakʿa beendet.",
                 trAction: "Allāhu ekber diyerek ikinci secdeye git. Secde tesbihini üç kez söyle. Böylece ikinci rekât da tamamlanır.",
                 deHanafi: nil,
                 trHanafi: nil,
@@ -770,9 +770,9 @@ struct PrayerHowToView: View {
                 number: "16",
                 pose: .finalSitting,
                 imageKey: "final_sitting",
-                deTitle: "Sitzen nach dem 2. Rakʿah",
+                deTitle: "Sitzen nach der 2. Rakʿa",
                 trTitle: "2. rekâttan sonra oturuş",
-                deAction: "Bleibe nach der zweiten Secde sitzen. Endet dein Gebet nach zwei Rakʿah, ist dies das vollständige Schluss-Sitzen: Ettehiyyâtü, danach Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Bei einem 3-/4-Rakʿah-Fard liest du hier Ettehiyyâtü und stehst anschließend mit Allāhu akbar zur nächsten Rakʿah auf.",
+                deAction: "Bleibe nach der zweiten Secde sitzen. Endet dein Gebet nach zwei Rakʿāt, ist dies das vollständige Schluss-Sitzen: Ettehiyyâtü, danach Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Bei einem Fard-Gebet mit 3 oder 4 Rakʿāt liest du hier Ettehiyyâtü und stehst anschließend mit Allāhu akbar zur nächsten Rakʿa auf.",
                 trAction: "İkinci secdeden sonra oturmaya devam et. Namazın iki rekâtta bitiyorsa bu son oturuştur: Ettehiyyâtü, ardından Allâhümme Salli, Allâhümme Bârik ve Rabbenâ Âtinâ gibi bir dua okunur. 3/4 rekât farz devam ediyorsa burada Ettehiyyâtü okunur ve sonra Allāhu ekber diyerek sonraki rekâta kalkılır.",
                 deHanafi: "Die folgenden Schritte 17 und 18 beenden ein Gebet, das an dieser Stelle endet.",
                 trHanafi: "Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar.",
@@ -1280,7 +1280,7 @@ struct HanafiPrayerPlanView: View {
                     .font(.subheadline)
                     .fixedSize(horizontal: false, vertical: true)
                     Text(settings.t(
-                        "Beim allerersten Rakʿa beginnt das Gebet vorher mit dem Eröffnungstakbir. Danach kommt der folgende Grundablauf.",
+                        "Bei der allerersten Rakʿa beginnt das Gebet vorher mit dem Eröffnungstakbir. Danach kommt der folgende Grundablauf.",
                         "İlk rekâtta bu sıradan önce iftitah tekbiriyle namaza başlanır. Sonra aşağıdaki temel akış gelir."
                     ))
                     .font(.footnote)
@@ -1315,7 +1315,7 @@ struct HanafiPrayerPlanView: View {
                 .cardStyle()
 
                 planCard(
-                    title: settings.t("2 Rakʿa", "2 rekât"),
+                    title: settings.t("2 Rakʿāt", "2 rekât"),
                     subtitle: settings.t("Beispiel: Fajr-Fard und viele 2er-Sunnah-Gebete", "Örnek: Sabah farzı ve birçok 2 rekât sünnet"),
                     lines: settings.language == .german ? [
                         "Rakʿa 1 komplett machen. Nach Sujud 2 wieder aufstehen.",
@@ -1331,13 +1331,13 @@ struct HanafiPrayerPlanView: View {
                 )
 
                 planCard(
-                    title: settings.t("3 Rakʿa Fard", "3 rekât farz"),
+                    title: settings.t("3 Rakʿāt Fard", "3 rekât farz"),
                     subtitle: settings.t("Beispiel: Maghrib-Fard", "Örnek: Akşam farzı"),
                     lines: settings.language == .german ? [
                         "Rakʿa 1 komplett machen und zu Rakʿa 2 aufstehen.",
                         "Rakʿa 2 komplett machen. Danach sitzen und Ettehiyyâtü lesen.",
                         "Nach Ettehiyyâtü mit Allāhu akbar zu Rakʿa 3 aufstehen.",
-                        "Rakʿa 3: Basmala + Al-Fātiha; bei diesem Fard keine Zusatzsura nötig. Dann Rukūʿ, Aufrichten, Sujud 1, Sitzen, Sujud 2.",
+                        "Rakʿa 3: Basmala + Al-Fātiha; bei diesem Fard keine Zusatzsure nötig. Dann Rukūʿ, Aufrichten, Sujud 1, Sitzen, Sujud 2.",
                         "Danach letztes Sitzen vollständig und Salam rechts, dann links."
                     ] : [
                         "1. rekâtı tamamla ve 2. rekâta kalk.",
@@ -1349,7 +1349,7 @@ struct HanafiPrayerPlanView: View {
                 )
 
                 planCard(
-                    title: settings.t("4 Rakʿa Fard", "4 rekât farz"),
+                    title: settings.t("4 Rakʿāt Fard", "4 rekât farz"),
                     subtitle: settings.t("Beispiel: Dhuhr, Asr und Isha-Fard", "Örnek: Öğle, İkindi ve Yatsı farzı"),
                     lines: settings.language == .german ? [
                         "Rakʿa 1 komplett machen und zu Rakʿa 2 aufstehen.",
@@ -1369,13 +1369,13 @@ struct HanafiPrayerPlanView: View {
                 DisclosureGroup(isExpanded: $showSpecialCases) {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(settings.t(
-                            "4-Rakʿa-Sunnah: In allen Rakʿa werden Al-Fātiha und eine Zusatzsura gelesen. Bei der betonten 4er-Sunnah von Dhuhr liest man im ersten Sitzen Ettehiyyâtü und steht auf. Bei den 4 ghayr-mu'akkadah vor Asr/Isha werden im ersten Sitzen zusätzlich Salli/Bârik gelesen; Rakʿa 3 beginnt wieder mit Sübhaneke.",
+                            "4-Rakʿa-Sunnah: In allen Rakʿāt werden Al-Fātiha und eine Zusatzsure gelesen. Bei der betonten 4er-Sunnah von Dhuhr liest man im ersten Sitzen Ettehiyyâtü und steht auf. Bei den 4 ghayr-mu'akkadah vor Asr/Isha werden im ersten Sitzen zusätzlich Salli/Bârik gelesen; Rakʿa 3 beginnt wieder mit Sübhaneke.",
                             "4 rekât sünnet: Her rekâtta Fâtiha ve zamm-ı sûre okunur. Öğlenin kuvvetli 4 rekât sünnetinde ilk oturuşta Ettehiyyâtü okunup kalkılır. İkindi/Yatsı öncesi 4 gayr-i müekkede sünnette ilk oturuşta Salli/Bârik de okunur; 3. rekâta yeniden Sübhâneke ile başlanır."
                         ))
                         .font(.subheadline)
 
                         Text(settings.t(
-                            "Witr (hanafitisch): 3 Rakʿa. In Rakʿa 3 werden nach Fātiha und Zusatzsura vor dem Rukūʿ erneut die Hände gehoben, Allāhu akbar gesagt, die Hände wieder gebunden und die Qunūt-Duas gelesen.",
+                            "Witr (hanafitisch): 3 Rakʿāt. In Rakʿa 3 werden nach Fātiha und Zusatzsure vor dem Rukūʿ erneut die Hände gehoben, Allāhu akbar gesagt, die Hände wieder gebunden und die Qunūt-Duas gelesen.",
                             "Vitir (Hanefî): 3 rekât. 3. rekâtta Fâtiha ve zamm-ı sûreden sonra rükûdan önce eller tekrar kaldırılır, Allāhu ekber denir, eller yeniden bağlanır ve Kunut duaları okunur."
                         ))
                         .font(.subheadline)
@@ -1396,7 +1396,7 @@ struct HanafiPrayerPlanView: View {
                 .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1) }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Wie viele Rakʿa haben die täglichen Gebete?", "Günlük namazlar kaç rekât?"))
+                    Text(settings.t("Wie viele Rakʿāt haben die täglichen Gebete?", "Günlük namazlar kaç rekât?"))
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     ForEach(rows) { row in
@@ -2134,14 +2134,14 @@ struct PrayerTermsView: View {
         ("Fard / Farz", "Pflichtbestandteil oder Pflichtgebet.", "Yapılması kesin olarak gerekli ibadet veya namaz bölümü."),
         ("Sunnah / Sünnet", "Überlieferte und empfohlene Praxis des Propheten ﷺ; juristische Einordnung kann variieren.", "Peygamberimizin ﷺ uyguladığı ve tavsiye edilen amel; fıkhî derecesi değişebilir."),
         ("Wajib / Vacip", "Im hanafitischen Fiqh eine starke Verpflichtungsstufe unter Fard.", "Hanefî fıkhında farzdan sonra gelen güçlü yükümlülük derecesi."),
-        ("Rakʿah / Rekât", "Eine Gebetseinheit aus Stehen, Rukūʿ und zwei Sujūd.", "Kıyam, rükû ve iki secdeden oluşan namaz birimi."),
+        ("Rakʿa / Rekât", "Eine Gebetseinheit aus Stehen, Rukūʿ und zwei Sujūd.", "Kıyam, rükû ve iki secdeden oluşan namaz birimi."),
         ("Rukūʿ / Rükû", "Verbeugung im Gebet.", "Namazdaki eğilme bölümü."),
         ("Sujūd / Secde", "Niederwerfung im Gebet.", "Namazdaki secde bölümü."),
         ("Qibla / Kıble", "Gebetsrichtung zur Kaaba in Mekka.", "Mekke'deki Kâbe yönü."),
         ("Adhān / Ezan", "Gebetsruf zum Beginn der Gebetszeit.", "Namaz vaktini bildiren çağrı."),
         ("Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.", "Cemaat namazından hemen önce okunan çağrı."),
         ("Dhikr / Zikir", "Gedenken Allahs durch Worte, Duʿāʾ und Qurʾān-Rezitation.", "Allah'ı söz, dua ve Kur'an ile anmak."),
-        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿat wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
+        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿāt wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
     ]
 
     var body: some View {
@@ -2189,8 +2189,8 @@ struct PrayerCatalogView: View {
                 deSummary: "Die stark betonte Sunnah unmittelbar vor dem Fajr-Fard.",
                 trSummary: "Sabah farzından önce kılınan kuvvetli sünnet.",
                 deSteps: [
-                    "1. Rakʿah: Niyyah → Takbir → Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sura → Rukūʿ → 2 Sujud.",
-                    "2. Rakʿah: Basmala → Fātiha + Sura → Rukūʿ → 2 Sujud → Schluss-Sitzen.",
+                    "1. Rakʿa: Niyyah → Takbir → Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sure → Rukūʿ → 2 Sujud.",
+                    "2. Rakʿa: Basmala → Fātiha + Sure → Rukūʿ → 2 Sujud → Schluss-Sitzen.",
                     "Im Schluss-Sitzen: Ettehiyyâtü → Salli → Bârik → Abschlussdua → Salām rechts, dann links."
                 ],
                 trSteps: [
@@ -2209,9 +2209,9 @@ struct PrayerCatalogView: View {
                 deSummary: "Das zweirakʿatige Pflichtgebet des Morgens.",
                 trSummary: "Sabah vaktinin iki rekât farz namazı.",
                 deSteps: [
-                    "Beide Rakʿah folgen dem normalen 2-Rakʿah-Ablauf.",
-                    "In beiden Rakʿah werden Fātiha und eine zusätzliche Sura bzw. passende Verse gelesen.",
-                    "Nach der zweiten Rakʿah vollständiges Schluss-Sitzen und Salām."
+                    "Beide Rakʿāt folgen dem normalen 2-Rakʿa-Ablauf.",
+                    "In beiden Rakʿāt werden Fātiha und eine zusätzliche Sure bzw. passende Verse gelesen.",
+                    "Nach der zweiten Rakʿa vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "İki rekât da normal 2 rekât düzenine göre kılınır.",
@@ -2226,19 +2226,19 @@ struct PrayerCatalogView: View {
                 id: "dhuhr_first_sunnah", group: "daily",
                 deTitle: "Dhuhr · 4 erste Sunnah", trTitle: "Öğle · 4 Rekât İlk Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "4",
-                deSummary: "Vier betonte Sunnah-Rakʿah vor dem Dhuhr-Fard.",
+                deSummary: "Vier betonte Sunnah-Rakʿa vor dem Dhuhr-Fard.",
                 trSummary: "Öğle farzından önceki dört rekât kuvvetli sünnet.",
                 deSteps: [
-                    "1.–2. Rakʿah: wie ein normales 2-Rakʿah-Gebet; nach Rakʿah 2 nur Ettehiyyâtü lesen.",
-                    "Zur 3. Rakʿah aufstehen: Basmala → Fātiha + Sura; danach Rukūʿ und 2 Sujud.",
-                    "4. Rakʿah: Basmala → Fātiha + Sura → Rukūʿ → 2 Sujud → vollständiges Schluss-Sitzen → Salām."
+                    "1.–2. Rakʿa: wie ein normales 2-Rakʿa-Gebet; nach Rakʿa 2 nur Ettehiyyâtü lesen.",
+                    "Zur 3. Rakʿa aufstehen: Basmala → Fātiha + Sure; danach Rukūʿ und 2 Sujud.",
+                    "4. Rakʿa: Basmala → Fātiha + Sure → Rukūʿ → 2 Sujud → vollständiges Schluss-Sitzen → Salām."
                 ],
                 trSteps: [
                     "1–2. rekât normal 2 rekât düzenindedir; 2. rekât oturuşunda yalnız Ettehiyyâtü okunur.",
                     "3. rekâta kalkınca Besmele → Fâtiha + sûre; ardından rükû ve 2 secde.",
                     "4. rekât: Besmele → Fâtiha + sûre → rükû → 2 secde → tam son oturuş → selâm."
                 ],
-                deNotes: ["Anders als bei der Asr-/Isha-Vorsunnah wird nach Rakʿah 2 nicht Salli-Bârik gelesen und Rakʿah 3 nicht erneut mit Sübhaneke begonnen."],
+                deNotes: ["Anders als bei der Asr-/Isha-Vorsunnah wird nach Rakʿa 2 nicht Salli-Bârik gelesen und Rakʿa 3 nicht erneut mit Sübhaneke begonnen."],
                 trNotes: ["İkindi/Yatsı ilk sünnetinden farklı olarak 2. rekâtta Salli-Bârik okunmaz; 3. rekâta yeniden Sübhâneke ile başlanmaz."],
                 source: "Diyanet · Namaz İlmihali"
             ),
@@ -2249,9 +2249,9 @@ struct PrayerCatalogView: View {
                 deSummary: "Das vier-rakʿatige Pflichtgebet am Mittag.",
                 trSummary: "Öğle vaktinin dört rekât farz namazı.",
                 deSteps: [
-                    "Rakʿah 1 und 2: Fātiha + zusätzliche Sura/Verse; nach Rakʿah 2 Ettehiyyâtü.",
-                    "Rakʿah 3 und 4: im Hanafi-Gebet genügt jeweils Fātiha; danach die normalen Rukūʿ-/Sujud-Schritte.",
-                    "Nach Rakʿah 4 vollständiges Schluss-Sitzen und Salām."
+                    "Rakʿa 1 und 2: Fātiha + zusätzliche Sure/Verse; nach Rakʿa 2 Ettehiyyâtü.",
+                    "Rakʿa 3 und 4: im Hanafi-Gebet genügt jeweils Fātiha; danach die normalen Rukūʿ-/Sujud-Schritte.",
+                    "Nach Rakʿa 4 vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "1 ve 2. rekât: Fâtiha + zamm-ı sûre/ayet; 2. rekâttan sonra Ettehiyyâtü.",
@@ -2269,15 +2269,15 @@ struct PrayerCatalogView: View {
                 trSummary: "Öğle farzından sonra kılınan yaygın iki rekât sünnet.",
                 deSteps: [
                     "Wie das zweirakʿatige Fajr-Sunnah-Gebet, nur mit entsprechender Niyyah.",
-                    "Beide Rakʿah enthalten Fātiha + zusätzliche Sura/Verse.",
-                    "Nach Rakʿah 2 vollständiges Schluss-Sitzen und Salām."
+                    "Beide Rakʿāt enthalten Fātiha + zusätzliche Sure/Verse.",
+                    "Nach Rakʿa 2 vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "Sabah sünnetinin iki rekât düzeni gibidir; yalnız niyet öğle son sünnetine yapılır.",
                     "Her iki rekâtta Fâtiha + zamm-ı sûre/ayet okunur.",
                     "2. rekâttan sonra tam son oturuş ve selâm."
                 ],
-                deNotes: ["Diyanet weist darauf hin, dass sie auch vier Rakʿah gebetet werden kann; die verbreitete Praxis sind zwei."],
+                deNotes: ["Diyanet weist darauf hin, dass sie auch vier Rakʿāt gebetet werden kann; die verbreitete Praxis sind zwei."],
                 trNotes: ["Diyanet'e göre dört rekât da kılınabilir; yaygın uygulama iki rekâttır."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
@@ -2285,12 +2285,12 @@ struct PrayerCatalogView: View {
                 id: "asr_sunnah", group: "daily",
                 deTitle: "Asr · 4 Sunnah", trTitle: "İkindi · 4 Rekât Sünnet",
                 deRuling: "Sunnah ghayr muʾakkadah", trRuling: "Sünnet-i gayr-i müekkede", rakaLabel: "4",
-                deSummary: "Vier freiwillige Sunnah-Rakʿah vor dem Asr-Fard.",
+                deSummary: "Vier freiwillige Sunnah-Rakʿa vor dem Asr-Fard.",
                 trSummary: "İkindi farzından önceki dört rekât gayr-i müekked sünnet.",
                 deSteps: [
-                    "Rakʿah 1–2: normal; im ersten Sitzen Ettehiyyâtü UND Salli-Bârik lesen.",
-                    "Rakʿah 3: wieder mit Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sura beginnen.",
-                    "Rakʿah 4: Basmala → Fātiha + Sura; anschließend vollständiges Schluss-Sitzen und Salām."
+                    "Rakʿa 1–2: normal; im ersten Sitzen Ettehiyyâtü UND Salli-Bârik lesen.",
+                    "Rakʿa 3: wieder mit Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sure beginnen.",
+                    "Rakʿa 4: Basmala → Fātiha + Sure; anschließend vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "1–2. rekât normaldir; ilk oturuşta Ettehiyyâtü ile birlikte Salli-Bârik okunur.",
@@ -2305,12 +2305,12 @@ struct PrayerCatalogView: View {
                 id: "asr_fard", group: "daily",
                 deTitle: "Asr · 4 Fard", trTitle: "İkindi · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿah am Nachmittag.",
+                deSummary: "Vier Pflicht-Rakʿa am Nachmittag.",
                 trSummary: "İkindi vaktinin dört rekât farz namazı.",
                 deSteps: [
-                    "Wie Dhuhr-Fard: in Rakʿah 1–2 Fātiha + zusätzliche Sura/Verse.",
-                    "Rakʿah 3–4: Fātiha; normale Rukūʿ-/Sujud-Abfolge.",
-                    "Nach Rakʿah 4 vollständiges Schluss-Sitzen und Salām."
+                    "Wie Dhuhr-Fard: in Rakʿa 1–2 Fātiha + zusätzliche Sure/Verse.",
+                    "Rakʿa 3–4: Fātiha; normale Rukūʿ-/Sujud-Abfolge.",
+                    "Nach Rakʿa 4 vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "Öğle farzı gibidir: 1–2. rekâtta Fâtiha + zamm-ı sûre/ayet.",
@@ -2327,9 +2327,9 @@ struct PrayerCatalogView: View {
                 deSummary: "Das dreirakʿatige Pflichtgebet nach Sonnenuntergang.",
                 trSummary: "Akşam vaktinin üç rekât farz namazı.",
                 deSteps: [
-                    "Rakʿah 1–2: Fātiha + zusätzliche Sura/Verse; nach Rakʿah 2 Ettehiyyâtü.",
-                    "Rakʿah 3: Basmala → Fātiha; danach Rukūʿ und 2 Sujud.",
-                    "Nach Rakʿah 3 vollständiges Schluss-Sitzen und Salām."
+                    "Rakʿa 1–2: Fātiha + zusätzliche Sure/Verse; nach Rakʿa 2 Ettehiyyâtü.",
+                    "Rakʿa 3: Basmala → Fātiha; danach Rukūʿ und 2 Sujud.",
+                    "Nach Rakʿa 3 vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
                     "1–2. rekât: Fâtiha + zamm-ı sûre/ayet; 2. rekâttan sonra Ettehiyyâtü.",
@@ -2343,9 +2343,9 @@ struct PrayerCatalogView: View {
                 id: "maghrib_sunnah", group: "daily",
                 deTitle: "Maghrib · 2 Sunnah", trTitle: "Akşam · 2 Rekât Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿah nach dem Maghrib-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿa nach dem Maghrib-Fard.",
                 trSummary: "Akşam farzından sonra kılınan iki rekât kuvvetli sünnet.",
-                deSteps: ["Normaler 2-Rakʿah-Sunnah-Ablauf mit Fātiha + Sura in beiden Rakʿah.", "Nach Rakʿah 2 vollständiges Schluss-Sitzen und Salām."],
+                deSteps: ["Normaler 2-Rakʿa-Sunnah-Ablauf mit Fātiha + Sure in beiden Rakʿāt.", "Nach Rakʿa 2 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["İki rekâtta da Fâtiha + sûre okunan normal 2 rekât sünnet düzeni.", "2. rekâttan sonra tam son oturuş ve selâm."],
                 deNotes: [], trNotes: [],
                 source: "Diyanet · Namaz İlmihali"
@@ -2354,12 +2354,12 @@ struct PrayerCatalogView: View {
                 id: "isha_first_sunnah", group: "daily",
                 deTitle: "Isha · 4 erste Sunnah", trTitle: "Yatsı · 4 Rekât İlk Sünnet",
                 deRuling: "Sunnah ghayr muʾakkadah", trRuling: "Sünnet-i gayr-i müekkede", rakaLabel: "4",
-                deSummary: "Vier Sunnah-Rakʿah vor dem Isha-Fard.",
+                deSummary: "Vier Sunnah-Rakʿa vor dem Isha-Fard.",
                 trSummary: "Yatsı farzından önceki dört rekât gayr-i müekked sünnet.",
                 deSteps: [
                     "Wie die vier Sunnah vor Asr.",
-                    "Im ersten Sitzen nach Rakʿah 2: Ettehiyyâtü + Salli-Bârik.",
-                    "Rakʿah 3 erneut mit Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sura beginnen; Rakʿah 4 ebenso mit Fātiha + Sura."
+                    "Im ersten Sitzen nach Rakʿa 2: Ettehiyyâtü + Salli-Bârik.",
+                    "Rakʿa 3 erneut mit Sübhaneke → Eʿūḏu/Basmala → Fātiha + Sure beginnen; Rakʿa 4 ebenso mit Fātiha + Sure."
                 ],
                 trSteps: [
                     "İkindi sünnetinin dört rekât düzeni gibidir.",
@@ -2373,9 +2373,9 @@ struct PrayerCatalogView: View {
                 id: "isha_fard", group: "daily",
                 deTitle: "Isha · 4 Fard", trTitle: "Yatsı · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿah in der Nacht.",
+                deSummary: "Vier Pflicht-Rakʿa in der Nacht.",
                 trSummary: "Yatsı vaktinin dört rekât farz namazı.",
-                deSteps: ["Wie Dhuhr-/Asr-Fard: Rakʿah 1–2 Fātiha + Sura, Rakʿah 3–4 Fātiha.", "Nach Rakʿah 4 vollständiges Schluss-Sitzen und Salām."],
+                deSteps: ["Wie Dhuhr-/Asr-Fard: Rakʿa 1–2 Fātiha + Sure, Rakʿa 3–4 Fātiha.", "Nach Rakʿa 4 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["Öğle/ikindi farzı gibi: 1–2. rekâtta Fâtiha + sûre, 3–4. rekâtta Fâtiha.", "4. rekâttan sonra tam son oturuş ve selâm."],
                 deNotes: [], trNotes: [],
                 source: "Diyanet · Namaz İlmihali"
@@ -2384,23 +2384,23 @@ struct PrayerCatalogView: View {
                 id: "isha_last_sunnah", group: "daily",
                 deTitle: "Isha · 2 letzte Sunnah", trTitle: "Yatsı · 2 Rekât Son Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿah nach dem Isha-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿa nach dem Isha-Fard.",
                 trSummary: "Yatsı farzından sonra kılınan iki rekât kuvvetli sünnet.",
-                deSteps: ["Normaler 2-Rakʿah-Sunnah-Ablauf.", "Beide Rakʿah: Fātiha + Sura; danach Schluss-Sitzen und Salām."],
+                deSteps: ["Normaler 2-Rakʿa-Sunnah-Ablauf.", "Beide Rakʿāt: Fātiha + Sure; danach Schluss-Sitzen und Salām."],
                 trSteps: ["Normal iki rekât sünnet düzeni.", "İki rekâtta da Fâtiha + sûre; ardından son oturuş ve selâm."],
-                deNotes: ["Diyanet erwähnt auch die Möglichkeit von vier Rakʿah; verbreitet sind zwei."],
+                deNotes: ["Diyanet erwähnt auch die Möglichkeit von vier Rakʿāt; verbreitet sind zwei."],
                 trNotes: ["Diyanet dört rekât kılınabileceğini de belirtir; yaygın uygulama ikidir."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
                 id: "witr", group: "special",
-                deTitle: "Witr · 3 Rakʿah", trTitle: "Vitir · 3 Rekât",
+                deTitle: "Witr · 3 Rakʿāt", trTitle: "Vitir · 3 Rekât",
                 deRuling: "Hanafi: Wajib", trRuling: "Hanefî: Vacip", rakaLabel: "3",
-                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt im dritten Rakʿah.",
+                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt im dritten Rakʿa.",
                 trSummary: "Yatsıdan sonra, üçüncü rekâtta kunut bulunan üç rekât vitir.",
                 deSteps: [
-                    "Rakʿah 1–2: Fātiha + Sura; nach Rakʿah 2 nur Ettehiyyâtü, dann zur dritten aufstehen.",
-                    "Rakʿah 3: Fātiha + Sura lesen. Danach zusätzlich Takbir: Hände heben, wieder binden und die Qunūt-Duas lesen.",
+                    "Rakʿa 1–2: Fātiha + Sure; nach Rakʿa 2 nur Ettehiyyâtü, dann zur dritten aufstehen.",
+                    "Rakʿa 3: Fātiha + Sure lesen. Danach zusätzlich Takbir: Hände heben, wieder binden und die Qunūt-Duas lesen.",
                     "Dann Rukūʿ → 2 Sujud → vollständiges Schluss-Sitzen → Salām."
                 ],
                 trSteps: [
@@ -2416,12 +2416,12 @@ struct PrayerCatalogView: View {
                 id: "eid", group: "special",
                 deTitle: "Eid-Gebet", trTitle: "Bayram Namazı",
                 deRuling: "Hanafi: Wajib · gemeinschaftlich", trRuling: "Hanefî: Vacip · cemaatle", rakaLabel: "2",
-                deSummary: "Zwei Rakʿah mit zusätzlichen Takbiren; danach folgt die Eid-Khutbah.",
+                deSummary: "Zwei Rakʿāt mit zusätzlichen Takbiren; danach folgt die Eid-Khutbah.",
                 trSummary: "İlave tekbirlerle kılınan iki rekât; ardından bayram hutbesi.",
                 deSteps: [
-                    "1. Rakʿah: Eröffnungstakbir und Hände binden → Sübhaneke → drei zusätzliche Takbire. Bei den ersten zwei Händen lösen, beim dritten wieder binden.",
-                    "Imam rezitiert Fātiha + Sura; danach Rukūʿ und 2 Sujud.",
-                    "2. Rakʿah: Imam rezitiert Fātiha + Sura → danach drei zusätzliche Takbire mit Lösen der Hände → mit dem nächsten Takbir direkt in Rukūʿ.",
+                    "1. Rakʿa: Eröffnungstakbir und Hände binden → Sübhaneke → drei zusätzliche Takbire. Bei den ersten zwei Händen lösen, beim dritten wieder binden.",
+                    "Imam rezitiert Fātiha + Sure; danach Rukūʿ und 2 Sujud.",
+                    "2. Rakʿa: Imam rezitiert Fātiha + Sure → danach drei zusätzliche Takbire mit Lösen der Hände → mit dem nächsten Takbir direkt in Rukūʿ.",
                     "Nach 2 Sujud Schluss-Sitzen und Salām. Die Eid-Khutbah folgt nach dem Gebet."
                 ],
                 trSteps: [
@@ -2438,12 +2438,12 @@ struct PrayerCatalogView: View {
                 id: "tarawih", group: "special",
                 deTitle: "Tarawih", trTitle: "Teravih Namazı",
                 deRuling: "Sunnah muʾakkadah im Ramadan", trRuling: "Ramazan'da sünnet-i müekkede", rakaLabel: "20*",
-                deSummary: "Ramadan-Nachtgebet nach dem Isha-Fard. In der türkisch-hanafitischen Praxis sind 20 Rakʿah etabliert.",
+                deSummary: "Ramadan-Nachtgebet nach dem Isha-Fard. In der türkisch-hanafitischen Praxis sind 20 Rakʿāt etabliert.",
                 trSummary: "Yatsı farzından sonra kılınan Ramazan gece namazı. Türkiye Hanefî uygulamasında 20 rekât yerleşmiştir.",
                 deSteps: [
-                    "Am übersichtlichsten jeweils 2 Rakʿah beten und Salām geben; Diyanet bezeichnet dies als vorzugswürdig.",
-                    "Jede 2er-Einheit folgt grundsätzlich dem normalen 2-Rakʿah-Sunnah-Ablauf.",
-                    "Nach jeweils vier Rakʿah kann eine kurze Pause eingelegt werden; daher der Name Tarāwīḥ.",
+                    "Am übersichtlichsten jeweils 2 Rakʿāt beten und Salām geben; Diyanet bezeichnet dies als vorzugswürdig.",
+                    "Jede 2er-Einheit folgt grundsätzlich dem normalen 2-Rakʿa-Sunnah-Ablauf.",
+                    "Nach jeweils vier Rakʿāt kann eine kurze Pause eingelegt werden; daher der Name Tarāwīḥ.",
                     "Witr folgt üblicherweise nach Tarawih."
                 ],
                 trSteps: [
@@ -2452,7 +2452,7 @@ struct PrayerCatalogView: View {
                     "Her dört rekâttan sonra kısa dinlenme verilebilir; Teravih adı buradan gelir.",
                     "Vitir genellikle teravihten sonra kılınır."
                 ],
-                deNotes: ["*Diyanet beschreibt 20 Rakʿah als historisch etablierte Gemeinschaftspraxis, betont aber zugleich, dass Tarawih freiwillig ist und auch eine geringere gerade Zahl gebetet werden kann."],
+                deNotes: ["*Diyanet beschreibt 20 Rakʿāt als historisch etablierte Gemeinschaftspraxis, betont aber zugleich, dass Tarawih freiwillig ist und auch eine geringere gerade Zahl gebetet werden kann."],
                 trNotes: ["*Diyanet 20 rekâtı yerleşmiş cemaat uygulaması olarak açıklar; teravihin nafile olduğunu ve daha az çift rekâtla da kılınabileceğini belirtir."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
@@ -2460,12 +2460,12 @@ struct PrayerCatalogView: View {
                 id: "tasbih_prayer", group: "special",
                 deTitle: "Tasbih-Gebet", trTitle: "Tesbih Namazı",
                 deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "4",
-                deSummary: "Vier Rakʿah mit insgesamt 300 Wiederholungen des bekannten Tasbih.",
+                deSummary: "Vier Rakʿāt mit insgesamt 300 Wiederholungen des bekannten Tasbih.",
                 trSummary: "Toplam 300 tesbih içeren dört rekât nafile namaz.",
                 deSteps: [
                     "Nach Sübhaneke 15×: Subḥānallāhi wa-l-ḥamdu lillāhi wa lā ilāha illallāhu wa-llāhu akbar.",
-                    "Nach Fātiha + Sura 10×; im Rukūʿ 10×; nach dem Aufrichten 10×; in Sujud 1 10×; im Sitzen 10×; in Sujud 2 10×.",
-                    "So entstehen 75 Tasbih pro Rakʿah. Vier Rakʿah ergeben 300."
+                    "Nach Fātiha + Sure 10×; im Rukūʿ 10×; nach dem Aufrichten 10×; in Sujud 1 10×; im Sitzen 10×; in Sujud 2 10×.",
+                    "So entstehen 75 Tasbih pro Rakʿa. Vier Rakʿāt ergeben 300."
                 ],
                 trSteps: [
                     "Sübhâneke'den sonra 15×: Sübhânellâhi ve'l-hamdülillâhi velâ ilâhe illallâhü vallâhü ekber.",
@@ -2484,7 +2484,7 @@ struct PrayerCatalogView: View {
                 trSummary: "Yükümlüler için cuma günü öğle farzı yerine kılınan, hutbeli cemaat namazı.",
                 deSteps: [
                     "Verbreitete hanafitische Praxis: 4 Sunnah vor dem Fard.",
-                    "Khutbah anhören; danach 2 Rakʿah Fard hinter dem Imam.",
+                    "Khutbah anhören; danach 2 Rakʿāt Fard hinter dem Imam.",
                     "Danach nach Abū Ḥanīfa 4 Sunnah; bei den hanafitischen Schülern ist auch eine zusätzliche 2er-Einheit überliefert."
                 ],
                 trSteps: [
@@ -2562,7 +2562,7 @@ struct PrayerCatalogView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Nicht nur ein allgemeiner 2-Rakʿah-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
+                        "Nicht nur ein allgemeiner 2-Rakʿa-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
                         "Yalnız genel bir 2 rekât anlatımı değil: PDF menüsünde ayrı gösterilen vakit namazlarını ve özel namazları burada tek tek bulabilirsin."
                     ))
                     .font(.footnote)
@@ -2788,7 +2788,7 @@ struct HajjUmrahGuideView: View {
                 lines: settings.language == .german ? [
                     "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
                     "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
-                    "Nach dem Tawaf zwei Rakʿah Tawaf-Gebet an einem geeigneten Ort verrichten.",
+                    "Nach dem Tawaf zwei Rakʿāt Tawaf-Gebet an einem geeigneten Ort verrichten.",
                     "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
                     "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
                 ] : [
@@ -2990,7 +2990,7 @@ struct RamadanGuideIndexView: View {
                 )
                 QuranReferenceLink(
                     surah: 97, ayah: 1,
-                    title: settings.t("Laylat al-Qadr · Sura 97", "Kadir Gecesi · Kadir Sûresi")
+                    title: settings.t("Laylat al-Qadr · Sure 97", "Kadir Gecesi · Kadir Sûresi")
                 )
                 NavigationLink { QuranicDuaLibraryView() } label: {
                     Label(settings.t("Duas", "Dualar"), systemImage: "hands.sparkles.fill")
@@ -5235,6 +5235,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
     static let shared = QuranContinuousPlaybackCoordinator()
 
     private var nextSurah: Int?
+    private var activeSurah: Int?
     private var reciter: QuranReciter?
     private var expectedSessionID: Int?
 
@@ -5251,6 +5252,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         guard (1...114).contains(currentSurah), !urls.isEmpty else { return }
 
         self.reciter = reciter
+        activeSurah = currentSurah
         nextSurah = currentSurah < 114 ? currentSurah + 1 : nil
 
         let player = RemoteAudioPlayer.shared
@@ -5286,6 +5288,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 guard self.expectedSessionID == sessionID,
                       player.queueSessionID == sessionID else { return }
 
+                self.activeSurah = surah
                 self.nextSurah = surah < 114 ? surah + 1 : nil
                 let playbackURLs = QuranAudioResolver.playbackQueue(
                     urls: urls,
@@ -5296,8 +5299,8 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 player.appendContinuation(
                     playbackURLs,
                     expectedSessionID: sessionID,
-                    title: "Quran · Sura \(surah)",
-                    context: "Quran · automatisch weiter"
+                    title: "Quran · Sure \(surah)",
+                    context: "Koran · automatisch weiter"
                 )
 
                 if self.nextSurah == nil {
@@ -5308,14 +5311,23 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 guard self.expectedSessionID == sessionID,
                       player.queueSessionID == sessionID else { return }
                 self.nextSurah = nil
+                self.activeSurah = nil
                 self.reciter = nil
                 self.expectedSessionID = nil
                 player.finishContinuation(
                     expectedSessionID: sessionID,
-                    error: "Nächste Sura konnte nicht geladen werden / Sonraki sûre yüklenemedi."
+                    error: "Nächste Sure konnte nicht geladen werden / Sonraki sûre yüklenemedi."
                 )
             }
         }
+    }
+
+    func ownsCurrentSession(surah: Int, reciter: QuranReciter) -> Bool {
+        let player = RemoteAudioPlayer.shared
+        return activeSurah == surah &&
+            self.reciter == reciter &&
+            expectedSessionID == player.queueSessionID &&
+            player.queueCount > 0
     }
 }
 
@@ -5334,13 +5346,13 @@ struct PrayerDuaAudioView: View {
     private let duas: [PrayerDuaLesson] = [
         .init(
             deTitle: "Sübhaneke", trTitle: "Sübhâneke",
-            deDetail: "Einstiegsdua im ersten Rakʿah direkt nach dem Eröffnungstakbir.",
+            deDetail: "Einstiegsdua in der ersten Rakʿa direkt nach dem Eröffnungstakbir.",
             trDetail: "İlk rekâtta iftitah tekbirinden hemen sonra okunan başlangıç duası.",
             recitations: [PrayerText.subhanaka]
         ),
         .init(
             deTitle: "Ettehiyyatü / Tahiyyat", trTitle: "Ettehiyyâtü / Tahiyyat",
-            deDetail: "Wird im ersten Sitzen nach zwei Rakʿah und erneut im letzten Sitzen gelesen.",
+            deDetail: "Wird im ersten Sitzen nach zwei Rakʿāt und erneut im letzten Sitzen gelesen.",
             trDetail: "İki rekâttan sonraki ilk oturuşta ve son oturuşta okunur.",
             recitations: [PrayerText.tahiyyat]
         ),
@@ -5462,10 +5474,10 @@ struct PrayerTextsHubView: View {
             Section("Yasin") {
                 QuranReferenceLink(
                     surah: 36, ayah: 1,
-                    title: settings.t("Sura Yā-Sīn vollständig öffnen", "Yâsîn Sûresi tam metni aç")
+                    title: settings.t("Sure Yā-Sīn vollständig öffnen", "Yâsîn Sûresi tam metni aç")
                 )
                 Text(settings.t(
-                    "Im vollständigen Quran-Reader kannst du Arabisch, türkische/deutsche Bedeutung, Audio, Lesezeichen und Lesefortschritt verwenden.",
+                    "Im vollständigen Koranbereich kannst du Arabisch, die türkische oder deutsche Bedeutung, Audio, Lesezeichen und den Lesefortschritt verwenden.",
                     "Tam Kur'an okuyucusunda Arapça, Türkçe/Almanca meal, ses, yer imi ve okuma ilerlemesini kullanabilirsin."
                 ))
                 .font(.caption)
@@ -5514,11 +5526,11 @@ private struct QuranReferenceJumpView: View {
             if let chapter = store.chapters.first(where: { $0.number == surahNumber }) {
                 QuranSurahView(surah: chapter, initialAyah: ayah)
             } else if store.isLoading {
-                ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
+                ProgressView(settings.t("Koran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
-                        settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
+                        settings.t("Koran konnte nicht geladen werden", "Kur'an yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
                         description: Text(error)
                     )
@@ -5557,15 +5569,15 @@ struct ShortSurahLearningView: View {
     @AppStorage("surahRepeatCount") private var repeatCount = 1
 
     private let surahs: [ShortSurahAudio] = [
-        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
-        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
-        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
-        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
-        .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sura für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
-        .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sura.", trDetail: "Bilinen kısa sûre."),
-        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
+        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿa.", trDetail: "Her rekâtın temel kıraatidir."),
+        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
+        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
+        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
+        .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sure für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
+        .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sure.", trDetail: "Bilinen kısa sûre."),
+        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
         .init(surahNumber: 111, arabicName: "المسد", latinName: "Al-Masad / Tebbet", deDetail: "In der türkischen Lerntradition oft „Tebbet“ genannt.", trDetail: "Türkçe namaz sûreleri eğitiminde genellikle „Tebbet“ diye anılır."),
-        .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sura.", trDetail: "Kısa ve çok bilinen sûre."),
+        .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sure.", trDetail: "Kısa ve çok bilinen sûre."),
         .init(surahNumber: 113, arabicName: "الفلق", latinName: "Al-Falaq", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre."),
         .init(surahNumber: 114, arabicName: "الناس", latinName: "An-Nas", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre.")
     ]
@@ -5593,7 +5605,7 @@ struct ShortSurahLearningView: View {
                 }
                 .pickerStyle(.segmented)
                 Text(settings.t(
-                    "Fürs Auswendiglernen kann die komplette Sura automatisch mehrfach abgespielt werden.",
+                    "Fürs Auswendiglernen kann die komplette Sure automatisch mehrfach abgespielt werden.",
                     "Ezber için tüm sûre otomatik olarak birkaç kez tekrar çalınabilir."
                 ))
                 .font(.caption)
@@ -5674,7 +5686,7 @@ struct ShortSurahLearningView: View {
                 Array(repeating: playbackURLs, count: safeRepeatCount).flatMap { $0 },
                 title: item.latinName,
                 artist: reciter.title,
-                context: settings.t("Quran · Sura \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
+                context: settings.t("Quran · Sure \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
@@ -5758,7 +5770,7 @@ struct MorningEveningAdhkarView: View {
     @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
-        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
+        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
@@ -8439,7 +8451,7 @@ struct QuranJuzQAView: View {
     var body: some View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
-                ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
+                ProgressView(settings.t("Koran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
                 ContentUnavailableView(
                     settings.t("Juz konnten nicht geladen werden", "Cüzler yüklenemedi"),
@@ -8572,11 +8584,11 @@ struct QuranView: View {
     var body: some View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
-                ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
+                ProgressView(settings.t("Koran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
-                        settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
+                        settings.t("Koran konnte nicht geladen werden", "Kur'an yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
                         description: Text(error)
                     )
@@ -8630,7 +8642,7 @@ struct QuranView: View {
                                     .background(SalahTheme.navigationTeal, in: Circle())
 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(settings.t("Vollständiges Quran-Verzeichnis", "Tam Kur'an Dizini"))
+                                    Text(settings.t("Vollständiges Koran-Verzeichnis", "Tam Kur'an Dizini"))
                                         .font(.headline.bold())
                                         .foregroundStyle(SalahTheme.deepTeal)
                                     Text(settings.t(
@@ -8720,7 +8732,7 @@ struct QuranView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(settings.t(
-                                "Quran weiterlesen bei \(chapter.englishName), Vers \(lastRead.ayah)",
+                                "Koran weiterlesen bei \(chapter.englishName), Vers \(lastRead.ayah)",
                                 "Kur'an okumaya \(chapter.englishName), \(lastRead.ayah). ayetten devam et"
                             ))
                         }
@@ -8871,7 +8883,7 @@ struct QuranView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
                                 .foregroundStyle(SalahTheme.teal)
-                            TextField(settings.t("Sura suchen", "Sure ara"), text: $search)
+                            TextField(settings.t("Sure suchen", "Sure ara"), text: $search)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
                         }
@@ -8882,7 +8894,7 @@ struct QuranView: View {
                         if filtered.isEmpty {
                             VStack(spacing: 10) {
                                 ContentUnavailableView(
-                                    settings.t("Keine Sura gefunden", "Sûre bulunamadı"),
+                                    settings.t("Keine Sure gefunden", "Sûre bulunamadı"),
                                     systemImage: "magnifyingglass",
                                     description: Text(settings.t(
                                         "Prüfe den Suchbegriff oder lösche die Suche.",
@@ -9018,7 +9030,7 @@ struct QuranView: View {
                 currentSurah: 1,
                 reciter: settings.quranReciter,
                 title: "Al-Fatiha",
-                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
+                context: settings.t("Koran · automatisch weiter", "Kur'an · otomatik devam")
             )
             return
         }
@@ -9039,7 +9051,7 @@ struct QuranView: View {
                 currentSurah: 1,
                 reciter: reciter,
                 title: "Al-Fatiha",
-                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
+                context: settings.t("Koran · automatisch weiter", "Kur'an · otomatik devam")
             )
         } catch {
             guard generation == previewAudioRequestGeneration else { return }
@@ -9152,7 +9164,7 @@ private final class QuranPageStore: ObservableObject {
         let revision = loadRevision
         guard (1...604).contains(page) else {
             if revision == loadRevision {
-                error = "Invalid Mushaf page."
+                error = language == .german ? "Ungültige Mushaf-Seite." : "Geçersiz Mushaf sayfası."
                 isLoading = false
             }
             return
@@ -9542,7 +9554,7 @@ struct QuranPageReaderView: View {
                                 Image(systemName: "icloud.slash.fill")
                                     .foregroundStyle(SalahTheme.gold)
                                 Text(settings.t(
-                                    "Arabischer Quran ist verfügbar; die gewählte Übersetzung konnte gerade nicht geladen werden.",
+                                    "Der arabische Korantext ist verfügbar; die gewählte Übersetzung konnte gerade nicht geladen werden.",
                                     "Arapça Kur'an kullanılabilir; seçili meal şu anda yüklenemedi."
                                 ))
                                 .font(.caption)
@@ -9561,7 +9573,7 @@ struct QuranPageReaderView: View {
                                 Image(systemName: "icloud.slash.fill")
                                     .foregroundStyle(SalahTheme.gold)
                                 Text(settings.t(
-                                    "Arabischer Quran ist verfügbar; die Umschrift konnte gerade nicht geladen werden.",
+                                    "Der arabische Korantext ist verfügbar; die Umschrift konnte gerade nicht geladen werden.",
                                     "Arapça Kur'an kullanılabilir; Latin harfli okunuş şu anda yüklenemedi."
                                 ))
                                 .font(.caption)
@@ -9706,7 +9718,7 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Der vollständige arabische Uthmani-Text ist im SalahPath-App-Bundle enthalten und steht für alle 604 Mushaf-Seiten offline bereit. Übersetzung und Transliteration werden bei Bedarf über AlQuran.cloud geladen und lokal gecacht. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader.",
+                            "Der vollständige arabische Uthmani-Text ist in SalahPath enthalten und steht für alle 604 Mushaf-Seiten offline bereit. Übersetzung und Umschrift werden bei Bedarf über AlQuran.cloud geladen und lokal zwischengespeichert. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben Koran-Einstellungen wie der Suren-Reader.",
                             "Tam Uthmani Arapça metin SalahPath uygulamasına gömülüdür ve 604 Mushaf sayfasının tamamı çevrimdışı okunabilir. Meal ve Latin harfli okunuş gerektiğinde AlQuran.cloud üzerinden yüklenir ve yerel olarak önbelleğe alınır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır."
                         ))
                         .font(.caption2)
@@ -9916,11 +9928,11 @@ struct QuranDirectoryView: View {
     var body: some View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
-                ProgressView(settings.t("Quran-Verzeichnis wird geladen…", "Kur'an dizini yükleniyor…"))
+                ProgressView(settings.t("Koran-Verzeichnis wird geladen…", "Kur'an dizini yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
-                        settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
+                        settings.t("Koran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
                         description: Text(error)
                     )
@@ -9955,7 +9967,7 @@ struct QuranDirectoryView: View {
                 .background(SalahTheme.page)
             }
         }
-        .navigationTitle(settings.t("Quran-Verzeichnis", "Kur'an Dizini"))
+        .navigationTitle(settings.t("Koran-Verzeichnis", "Kur'an Dizini"))
         .navigationBarTitleDisplayMode(.inline)
         .task { await store.loadChapters() }
     }
@@ -9978,7 +9990,7 @@ struct QuranDirectoryView: View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(SalahTheme.teal)
-            TextField(settings.t("Sura suchen", "Sûre ara"), text: $search)
+            TextField(settings.t("Sure suchen", "Sûre ara"), text: $search)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
         }
@@ -9997,7 +10009,7 @@ struct QuranDirectoryView: View {
         if chapters.isEmpty {
             VStack(spacing: 10) {
                 ContentUnavailableView(
-                    settings.t("Keine Sura gefunden", "Sûre bulunamadı"),
+                    settings.t("Keine Sure gefunden", "Sûre bulunamadı"),
                     systemImage: "magnifyingglass",
                     description: Text(settings.t(
                         "Für diese Suche gibt es keinen Treffer.",
@@ -10078,7 +10090,7 @@ struct QuranDirectoryView: View {
                         .keyboardType(.numberPad)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
-                        .accessibilityLabel(settings.t("Quran-Seitennummer", "Kur'an sayfa numarası"))
+                        .accessibilityLabel(settings.t("Koran-Seitennummer", "Kur'an sayfa numarası"))
 
                     if !pageSearch.isEmpty {
                         Button {
@@ -10134,7 +10146,7 @@ struct QuranDirectoryView: View {
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(settings.t(
-                                "Quran Seite \(page) öffnen",
+                                "Koran-Seite \(page) öffnen",
                                 "Kur'an \(page). sayfayı aç"
                             ))
                         }
@@ -10243,7 +10255,7 @@ private struct QuranJuzLandingView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
+                    Label(settings.t("30 Juz des Korans", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -10299,7 +10311,7 @@ private struct QuranJuzLandingView: View {
 
             Section {
                 Text(settings.t(
-                    "Die Juz-Einteilung ist eine Leseeinteilung des Quran in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
+                    "Die Juz-Einteilung teilt den Koran zum Lesen in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
                     "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sure ve ayet numaralarını değiştirmez."
                 ))
                 .font(.footnote)
@@ -10321,7 +10333,7 @@ struct QuranFavoritesLandingView: View {
     var body: some View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
-                ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
+                ProgressView(settings.t("Koran wird geladen…", "Kur'an yükleniyor…"))
             } else if let error = store.error, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
@@ -10509,8 +10521,12 @@ private struct QuranSurahView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     ProgressView(
-                        value: Double(audio.queueCount > 0 ? audio.queueIndex + 1 : 0),
-                        total: Double(max(audio.queueCount, 1))
+                        value: Double(
+                            audio.activeURL
+                                .flatMap { resolvedAudioURLs.firstIndex(of: $0) }
+                                .map { $0 + 1 } ?? 0
+                        ),
+                        total: Double(max(resolvedAudioURLs.count, 1))
                     )
                     .tint(SalahTheme.teal)
                     Text(settings.quranReciter.title)
@@ -10701,10 +10717,10 @@ private struct QuranSurahView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 14)
                 .stroke(
-                    audio.queueCount == resolvedAudioURLs.count && audio.queueCount > 1 && audio.queueIndex == index && audio.isPlaying
+                    audio.activeURL == audioURL && audio.isPlaying
                         ? SalahTheme.gold
                         : SalahTheme.gold.opacity(0.34),
-                    lineWidth: audio.queueIndex == index && audio.isPlaying ? 1.7 : 1
+                    lineWidth: audio.activeURL == audioURL && audio.isPlaying ? 1.7 : 1
                 )
         }
         .onAppear { QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah) }
@@ -10712,7 +10728,7 @@ private struct QuranSurahView: View {
 
     private var sourceFooter: some View {
         Text(settings.t(
-            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
+            "Koran: lokal gebündelter Uthmani-Text · Quelle: AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
             "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
         ))
         .font(.caption2)
@@ -10747,7 +10763,7 @@ private struct QuranSurahView: View {
             let missingSupplement = result.turkish == nil || result.german == nil || result.transliterated == nil
             if missingSupplement {
                 contentWarning = settings.t(
-                    "Arabischer Quran ist verfügbar. Einige Übersetzungen oder die Transliteration konnten gerade nicht geladen werden; bereits gecachte Inhalte bleiben nutzbar.",
+                    "Der arabische Korantext ist verfügbar. Einige Übersetzungen oder die Umschrift konnten gerade nicht geladen werden; bereits zwischengespeicherte Inhalte bleiben nutzbar.",
                     "Arapça Kur'an kullanılabilir. Bazı mealler veya Latin harfli okunuş şu anda yüklenemedi; daha önce önbelleğe alınan içerikler kullanılmaya devam eder."
                 )
             }
@@ -10830,7 +10846,10 @@ private struct QuranSurahView: View {
             return
         }
 
-        if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
+        if QuranContinuousPlaybackCoordinator.shared.ownsCurrentSession(
+            surah: surah.number,
+            reciter: settings.quranReciter
+        ) {
             audio.isPlaying ? audio.pause() : audio.resume()
         } else {
             QuranContinuousPlaybackCoordinator.shared.play(
@@ -10838,7 +10857,7 @@ private struct QuranSurahView: View {
                 currentSurah: surah.number,
                 reciter: settings.quranReciter,
                 title: surah.englishName,
-                context: settings.t("Quran · automatisch weiter", "Kur'an · otomatik devam")
+                context: settings.t("Koran · automatisch weiter", "Kur'an · otomatik devam")
             )
         }
     }
