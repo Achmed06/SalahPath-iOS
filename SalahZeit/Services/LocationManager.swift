@@ -236,6 +236,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         clearManualLocationStorage()
         location = nil
         locality = nil
+        qiblaDeviceLocation = nil
+        heading = nil
     }
 
     private func clearManualLocationStorage() {
