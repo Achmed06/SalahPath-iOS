@@ -14,6 +14,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
     @Published private(set) var location: CLLocation?
     @Published private(set) var authorizationStatus: CLAuthorizationStatus
     @Published private(set) var heading: HeadingSnapshot?
+    @Published private(set) var qiblaDeviceLocation: CLLocation?
     @Published private(set) var lastError: String?
     @Published private(set) var locality: String?
     @Published private(set) var usesManualLocation = false
@@ -235,6 +236,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         usesManualLocation = false
         prayerTimeZone = .autoupdatingCurrent
         clearManualLocationStorage()
+        qiblaDeviceLocation = newLocation
         location = newLocation
         lastError = nil
         updateLocalityIfNeeded(for: newLocation)
@@ -301,11 +303,16 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             }
 
             if self.usesManualLocation {
-                // The location update was only needed so CLHeading can provide trueHeading.
+                // Keep the manually selected prayer-time location untouched, but
+                // retain the real device coordinate for the physical Qibla compass.
+                // Mixing a manual city with the device heading can point the arrow
+                // in a direction that is impossible at the user's actual position.
+                self.qiblaDeviceLocation = newest
                 self.manager.stopUpdatingLocation()
                 return
             }
 
+            self.qiblaDeviceLocation = newest
             self.location = newest
             self.lastError = nil
             self.updateLocalityIfNeeded(for: newest)
