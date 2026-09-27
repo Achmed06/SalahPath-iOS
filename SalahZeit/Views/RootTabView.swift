@@ -642,7 +642,7 @@ struct NearbyMosquesView: View {
         .task(id: taskID) {
             if usableLocation == nil {
                 if locationManager.usesManualLocation {
-                    locationManager.requestQiblaDeviceLocationAccess()
+                    locationManager.requestDeviceLocationSnapshot()
                 } else {
                     locationManager.requestAccessAndStart()
                 }
@@ -651,7 +651,7 @@ struct NearbyMosquesView: View {
         }
         .refreshable {
             if locationManager.usesManualLocation {
-                locationManager.prepareQiblaHeading()
+                locationManager.requestDeviceLocationSnapshot()
             } else {
                 locationManager.refresh()
             }
