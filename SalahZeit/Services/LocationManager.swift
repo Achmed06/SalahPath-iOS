@@ -89,7 +89,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         case .authorizedWhenInUse, .authorizedAlways:
             startUpdates()
         case .denied, .restricted:
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = localized("Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.", "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.")
         @unknown default:
             break
         }
@@ -111,7 +111,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         case .authorizedWhenInUse, .authorizedAlways:
             prepareQiblaHeading()
         case .denied, .restricted:
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = localized("Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.", "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.")
         @unknown default:
             break
         }
@@ -146,7 +146,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             manager.requestLocation()
         case .denied, .restricted:
             pendingDeviceLocationSwitch = false
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = localized("Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.", "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.")
         @unknown default:
             pendingDeviceLocationSwitch = false
         }
@@ -162,7 +162,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else {
-            lastError = "Bitte Ort, Stadt oder Postleitzahl eingeben."
+            lastError = localized("Bitte Ort, Stadt oder Postleitzahl eingeben.", "Lütfen yer, şehir veya posta kodu gir.")
             return false
         }
 
@@ -172,7 +172,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             guard let placemark = placemarks.first,
                   let resolvedLocation = placemark.location,
                   Self.hasValidCoordinate(resolvedLocation) else {
-                lastError = "Ort wurde nicht gefunden."
+                lastError = localized("Ort wurde nicht gefunden.", "Konum bulunamadı.")
                 return false
             }
 
@@ -206,7 +206,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             return true
         } catch {
             guard revision == locationIntentRevision else { return false }
-            lastError = "Ort konnte nicht gefunden werden. Bitte Eingabe prüfen."
+            lastError = localized("Ort konnte nicht gefunden werden. Bitte Eingabe prüfen.", "Konum bulunamadı. Lütfen girişi kontrol et.")
             return false
         }
     }
@@ -276,7 +276,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 self.startUpdates()
             case .denied, .restricted:
                 self.pendingDeviceLocationSwitch = false
-                self.lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+                self.lastError = localized("Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.", "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.")
             default:
                 break
             }
@@ -329,6 +329,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
+    private func localized(_ de: String, _ tr: String) -> String {
+        let raw = UserDefaults.standard.string(forKey: "appLanguage")
+        let language = AppLanguage(rawValue: raw ?? "") ?? .german
+        return language == .german ? de : tr
+    }
+
     private nonisolated static func hasValidCoordinate(_ location: CLLocation) -> Bool {
         let coordinate = location.coordinate
         return coordinate.latitude.isFinite &&
@@ -375,7 +381,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
             if isLocationUnknown {
                 if wasSwitchingToDeviceLocation {
-                    self.lastError = "Aktueller Standort ist vorübergehend nicht verfügbar. Bitte erneut versuchen."
+                    self.lastError = localized("Aktueller Standort ist vorübergehend nicht verfügbar. Bitte erneut versuchen.", "Mevcut konum geçici olarak kullanılamıyor. Lütfen tekrar dene.")
                 }
                 return
             }
