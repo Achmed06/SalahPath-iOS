@@ -486,7 +486,11 @@ struct NearbyMosquesView: View {
     @StateObject private var store = NearbyMosqueStore()
 
     private var usableLocation: CLLocation? {
-        guard let location = locationManager.location else { return nil }
+        let location = locationManager.usesManualLocation
+            ? locationManager.qiblaDeviceLocation
+            : locationManager.location
+        guard let location else { return nil }
+
         let coordinate = location.coordinate
         guard coordinate.latitude.isFinite,
               coordinate.longitude.isFinite,
@@ -513,8 +517,8 @@ struct NearbyMosquesView: View {
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen oder manuell gewählten Standort. Die Treffer stammen von Apple Maps und werden nicht von SalahPath kuratiert.",
-                        "SalahPath, mevcut veya manuel seçtiğin konum çevresinde Apple Haritalar'da canlı arama yapar. Sonuçlar Apple Maps'ten gelir ve SalahPath tarafından düzenlenmez."
+                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen Gerätestandort. Ein manuell gewählter Ort für Gebetszeiten verändert die Umgebungssuche nicht. Die Treffer stammen von Apple Maps und werden nicht von SalahPath kuratiert.",
+                        "SalahPath, Apple Haritalar'da güncel cihaz konumunun çevresinde canlı arama yapar. Namaz vakitleri için manuel seçilen konum bu çevre aramasını değiştirmez. Sonuçlar Apple Maps'ten gelir ve SalahPath tarafından düzenlenmez."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -637,12 +641,20 @@ struct NearbyMosquesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: taskID) {
             if usableLocation == nil {
-                locationManager.requestAccessAndStart()
+                if locationManager.usesManualLocation {
+                    locationManager.requestQiblaDeviceLocationAccess()
+                } else {
+                    locationManager.requestAccessAndStart()
+                }
             }
             await reload()
         }
         .refreshable {
-            locationManager.refresh()
+            if locationManager.usesManualLocation {
+                locationManager.prepareQiblaHeading()
+            } else {
+                locationManager.refresh()
+            }
             await reload()
         }
     }
@@ -659,7 +671,7 @@ struct NearbyMosquesView: View {
     }
 
     private func mosqueRow(_ item: MKMapItem) -> some View {
-        let origin = locationManager.location
+        let origin = usableLocation
         let distance = origin.flatMap { start in
             item.placemark.location.map { $0.distance(from: start) }
         }
