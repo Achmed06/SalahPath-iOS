@@ -359,11 +359,15 @@ private final class NearbyMosqueStore: ObservableObject {
                 let coordinate = itemLocation.coordinate
                 let distance = itemLocation.distance(from: origin)
 
+                // MKLocalSearch treats the region as a ranking hint and can
+                // return results well outside it. "Nearby" must stay local.
+                let maximumNearbyDistance: CLLocationDistance = 15_000
                 guard CLLocationCoordinate2DIsValid(coordinate),
                       coordinate.latitude.isFinite,
                       coordinate.longitude.isFinite,
                       distance.isFinite,
-                      distance >= 0 else { return false }
+                      distance >= 0,
+                      distance <= maximumNearbyDistance else { return false }
 
                 let name = (item.name ?? "").lowercased()
                 let lat = Int((coordinate.latitude * 100_000).rounded())
