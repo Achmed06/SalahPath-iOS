@@ -2983,7 +2983,7 @@ struct RamadanGuideIndexView: View {
                 }
             }
 
-            Section(settings.t("Quran & Dua", "Kur'an & Dua")) {
+            Section(settings.t("Koran & Dua", "Kur'an ve Dua")) {
                 QuranReferenceLink(
                     surah: 2, ayah: 183,
                     title: settings.t("Fasten-Ayat · Al-Baqara 183 ff.", "Oruç Ayetleri · Bakara 183 vd.")
@@ -5686,7 +5686,7 @@ struct ShortSurahLearningView: View {
                 Array(repeating: playbackURLs, count: safeRepeatCount).flatMap { $0 },
                 title: item.latinName,
                 artist: reciter.title,
-                context: settings.t("Quran · Sure \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
+                context: settings.t("Koran · Sure \(item.surahNumber)", "Kur'an · \(item.surahNumber). sûre")
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
@@ -5771,7 +5771,7 @@ struct MorningEveningAdhkarView: View {
     @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
-        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Koran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
+        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Koran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Koran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
@@ -8956,7 +8956,7 @@ struct QuranView: View {
             }
         }
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Quran", "Kur'an"))
+        .navigationTitle(settings.t("Koran", "Kur'an"))
         .navigationBarTitleDisplayMode(.inline)
         .task { await store.loadChapters() }
         .onAppear {
@@ -9739,7 +9739,7 @@ struct QuranPageReaderView: View {
                 .background(SalahTheme.page)
             }
         }
-        .navigationTitle(settings.t("Quran · Seite \(page)", "Kur'an · \(page). Sayfa"))
+        .navigationTitle(settings.t("Koran · Seite \(page)", "Kur'an · \(page). Sayfa"))
         .navigationBarTitleDisplayMode(.inline)
         .task(id: "\(page)-\(settings.language.rawValue)-\(settings.quranShowTranslation)-\(settings.quranShowTransliteration)") {
             await store.load(
@@ -10445,7 +10445,7 @@ private struct QuranSurahView: View {
             }
             .scrollIndicators(.hidden)
             .background(SalahTheme.page)
-            .navigationTitle(settings.t("Quran", "Kur'an"))
+            .navigationTitle(settings.t("Koran", "Kur'an"))
             .navigationBarTitleDisplayMode(.inline)
             .task(id: settings.quranReciter.rawValue) {
                 await loadContent()
