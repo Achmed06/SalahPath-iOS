@@ -10652,16 +10652,26 @@ private struct QuranSurahView: View {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
                         playFromAyah(index: index, ayahNumber: ar.numberInSurah)
                     } label: {
-                        Image(systemName: isThisAyahActive && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        Image(
+                            systemName: isThisAyahActive && audio.isLoading
+                                ? "xmark.circle.fill"
+                                : (isThisAyahActive && audio.isPlaying
+                                    ? "pause.circle.fill"
+                                    : "play.circle.fill")
+                        )
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(settings.t(
-                        isThisAyahActive && audio.isPlaying
-                            ? "Vers \(ar.numberInSurah) pausieren"
-                            : "Vers \(ar.numberInSurah) abspielen",
-                        isThisAyahActive && audio.isPlaying
-                            ? "\(ar.numberInSurah). ayeti duraklat"
-                            : "\(ar.numberInSurah). ayeti oynat"
+                        isThisAyahActive && audio.isLoading
+                            ? "Laden von Vers \(ar.numberInSurah) abbrechen"
+                            : (isThisAyahActive && audio.isPlaying
+                                ? "Vers \(ar.numberInSurah) pausieren"
+                                : "Vers \(ar.numberInSurah) abspielen"),
+                        isThisAyahActive && audio.isLoading
+                            ? "\(ar.numberInSurah). ayetin yüklenmesini durdur"
+                            : (isThisAyahActive && audio.isPlaying
+                                ? "\(ar.numberInSurah). ayeti duraklat"
+                                : "\(ar.numberInSurah). ayeti oynat")
                     ))
                 } else {
                     Image(systemName: "speaker.slash")
@@ -10872,7 +10882,11 @@ private struct QuranSurahView: View {
             audio.activeURL == QuranAudioResolver.bismillahURL(reciter: settings.quranReciter)
 
         if audio.activeURL == selectedURL || isFirstAyahBasmalahActive {
-            audio.isPlaying ? audio.pause() : audio.resume()
+            if audio.isLoading {
+                audio.stop()
+            } else {
+                audio.isPlaying ? audio.pause() : audio.resume()
+            }
             return
         }
 
