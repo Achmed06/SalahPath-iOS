@@ -199,7 +199,7 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Text(settings.t(
-                        "Bereits geöffnete Quran-Suren und Mushaf-Seiten werden automatisch lokal gespeichert und funktionieren danach offline. Der Text-Cache wird auf etwa 48 MB begrenzt. Bereits gehörte Quran-Audios werden separat gespeichert; der Audio-Cache wird automatisch auf etwa 300 MB begrenzt.",
+                        "Bereits geöffnete Koran-Suren und Mushaf-Seiten werden automatisch lokal gespeichert und funktionieren danach offline. Der Text-Cache wird auf etwa 48 MB begrenzt. Bereits abgespielte Koran-Audios werden separat gespeichert; der Audio-Cache wird automatisch auf etwa 300 MB begrenzt.",
                         "Açtığın Kur'an sûreleri ve Mushaf sayfaları otomatik olarak cihazda saklanır ve daha sonra çevrimdışı çalışır. Metin önbelleği yaklaşık 48 MB ile sınırlandırılır. Dinlediğin Kur'an sesleri ayrı saklanır; ses önbelleği yaklaşık 300 MB ile sınırlandırılır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
@@ -732,11 +732,11 @@ struct SettingsView: View {
             ? settings.t("Ton: AN", "Ses: AÇIK")
             : settings.t("Ton: AUS", "Ses: KAPALI")
         let adhanFiles = diagnostics.standardAdhanInstalled && diagnostics.fajrAdhanInstalled
-            ? settings.t("Adhan-Dateien: OK", "Ezan dosyaları: OK")
-            : settings.t("Adhan-Dateien: FEHLEN", "Ezan dosyaları: EKSİK")
+            ? settings.t("Gebetsruf-Dateien: OK", "Ezan dosyaları: OK")
+            : settings.t("Gebetsruf-Dateien: FEHLEN", "Ezan dosyaları: EKSİK")
         let pending = settings.t(
-            "Gebets-Requests: \(diagnostics.pendingPrayerRequests)",
-            "Namaz istekleri: \(diagnostics.pendingPrayerRequests)"
+            "Geplante Gebetsmitteilungen: \(diagnostics.pendingPrayerRequests)",
+            "Planlanan namaz bildirimleri: \(diagnostics.pendingPrayerRequests)"
         )
 
         notificationSystemStatusText = [permission, alerts, sounds, adhanFiles, pending]
