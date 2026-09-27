@@ -4425,7 +4425,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
-    var canAdvance: Bool { hasNext || queueContinuationDelegate != nil }
+    @Published private(set) var canAdvance = false
 
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -5056,9 +5056,12 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     private func updateRemoteCommandAvailability() {
-        let commands = MPRemoteCommandCenter.shared()
-        commands.nextTrackCommand.isEnabled =
+        let nextAvailable =
             hasNext || (queueContinuationDelegate != nil && !continuationRequestInFlight)
+        canAdvance = nextAvailable
+
+        let commands = MPRemoteCommandCenter.shared()
+        commands.nextTrackCommand.isEnabled = nextAvailable
         commands.previousTrackCommand.isEnabled = hasPrevious
     }
 
