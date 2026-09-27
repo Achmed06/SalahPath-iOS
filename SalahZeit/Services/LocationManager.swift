@@ -167,6 +167,12 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
+    func cancelPendingLocationIntent() {
+        locationIntentRevision &+= 1
+        pendingDeviceLocationSwitch = false
+        searchGeocoder.cancelGeocode()
+    }
+
     @discardableResult
     func setManualLocation(searchText: String) async -> Bool {
         locationIntentRevision &+= 1
