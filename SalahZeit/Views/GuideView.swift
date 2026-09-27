@@ -10744,12 +10744,25 @@ private struct QuranSurahView: View {
         .padding(11)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay {
+            let hasPrefixedBasmalah =
+                surah.number != 1 &&
+                surah.number != 9 &&
+                audio.displayTitle == surah.englishName &&
+                audio.queueCount == resolvedAudioURLs.count + 1
+            let activeAyahIndex = hasPrefixedBasmalah
+                ? audio.queueIndex - 1
+                : audio.queueIndex
+            let isActiveAyah =
+                audio.isPlaying &&
+                activeAyahIndex == index &&
+                activeAyahIndex >= 0 &&
+                (audio.queueCount == resolvedAudioURLs.count ||
+                 audio.queueCount == resolvedAudioURLs.count + 1)
+
             RoundedRectangle(cornerRadius: 14)
                 .stroke(
-                    audio.queueCount == resolvedAudioURLs.count && audio.queueCount > 1 && audio.queueIndex == index && audio.isPlaying
-                        ? SalahTheme.gold
-                        : SalahTheme.gold.opacity(0.34),
-                    lineWidth: audio.queueIndex == index && audio.isPlaying ? 1.7 : 1
+                    isActiveAyah ? SalahTheme.gold : SalahTheme.gold.opacity(0.34),
+                    lineWidth: isActiveAyah ? 1.7 : 1
                 )
         }
         .onAppear { QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah) }
