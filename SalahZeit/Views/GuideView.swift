@@ -9643,6 +9643,16 @@ struct QuranPageReaderView: View {
                                             ayah: ayah.numberInSurah
                                         )
                                         let ayahAudioURL = resolvedAudioURL(for: ayah)
+                                        let isFirstAyahBasmalahActive =
+                                            ayah.numberInSurah == 1 &&
+                                            ayah.surah.number != 1 &&
+                                            ayah.surah.number != 9 &&
+                                            audio.displayTitle == ayah.surah.englishName &&
+                                            audio.activeURL == QuranAudioResolver.bismillahURL(reciter: settings.quranReciter)
+                                        let isThisAyahActive =
+                                            (ayahAudioURL != nil && audio.activeURL == ayahAudioURL) ||
+                                            isFirstAyahBasmalahActive
+                                        let isThisAyahLoading = isThisAyahActive && audio.isLoading
 
                                         Button {
                                             Task { await toggleAudio(for: ayah) }
@@ -9652,12 +9662,12 @@ struct QuranPageReaderView: View {
                                                     ProgressView()
                                                         .controlSize(.small)
                                                 } else {
-                                                    Image(systemName:
-                                                        ayahAudioURL != nil &&
-                                                        audio.activeURL == ayahAudioURL &&
-                                                        audio.isPlaying
-                                                        ? "pause.circle.fill"
-                                                        : "play.circle"
+                                                    Image(
+                                                        systemName: isThisAyahLoading
+                                                            ? "xmark.circle.fill"
+                                                            : (isThisAyahActive && audio.isPlaying
+                                                                ? "pause.circle.fill"
+                                                                : "play.circle")
                                                     )
                                                     .font(.system(size: 17, weight: .semibold))
                                                 }
@@ -9668,12 +9678,16 @@ struct QuranPageReaderView: View {
                                         .buttonStyle(.plain)
                                         .disabled(resolvingAyahNumber != nil && resolvingAyahNumber != ayah.number)
                                         .accessibilityLabel(settings.t(
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
-                                                ? "Vers \(ayah.numberInSurah) pausieren"
-                                                : "Vers \(ayah.numberInSurah) abspielen",
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
-                                                ? "\(ayah.numberInSurah). ayeti duraklat"
-                                                : "\(ayah.numberInSurah). ayeti dinle"
+                                            isThisAyahLoading
+                                                ? "Laden von Vers \(ayah.numberInSurah) abbrechen"
+                                                : (isThisAyahActive && audio.isPlaying
+                                                    ? "Vers \(ayah.numberInSurah) pausieren"
+                                                    : "Vers \(ayah.numberInSurah) abspielen"),
+                                            isThisAyahLoading
+                                                ? "\(ayah.numberInSurah). ayetin yüklenmesini durdur"
+                                                : (isThisAyahActive && audio.isPlaying
+                                                    ? "\(ayah.numberInSurah). ayeti duraklat"
+                                                    : "\(ayah.numberInSurah). ayeti dinle")
                                         ))
 
                                         Button {
@@ -9841,8 +9855,19 @@ struct QuranPageReaderView: View {
         let selectedURL = urls[startIndex]
         QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
 
-        if audio.activeURL == selectedURL {
-            audio.isPlaying ? audio.pause() : audio.resume()
+        let isFirstAyahBasmalahActive =
+            ayah.numberInSurah == 1 &&
+            ayah.surah.number != 1 &&
+            ayah.surah.number != 9 &&
+            audio.displayTitle == ayah.surah.englishName &&
+            audio.activeURL == QuranAudioResolver.bismillahURL(reciter: reciter)
+
+        if audio.activeURL == selectedURL || isFirstAyahBasmalahActive {
+            if audio.isLoading {
+                audio.stop()
+            } else {
+                audio.isPlaying ? audio.pause() : audio.resume()
+            }
             return
         }
 
