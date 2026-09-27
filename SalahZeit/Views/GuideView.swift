@@ -5322,11 +5322,15 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
         }
     }
 
-    func ownsCurrentSession(surah: Int, reciter: QuranReciter) -> Bool {
+    func ownsCurrentPrelude(surah: Int, reciter: QuranReciter) -> Bool {
         let player = RemoteAudioPlayer.shared
+        guard let basmalahURL = QuranAudioResolver.bismillahURL(reciter: reciter) else {
+            return false
+        }
         return activeSurah == surah &&
             self.reciter == reciter &&
             expectedSessionID == player.queueSessionID &&
+            player.activeURL == basmalahURL &&
             player.queueCount > 0
     }
 }
@@ -5771,7 +5775,7 @@ struct MorningEveningAdhkarView: View {
     @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
-        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Koran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Koran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
+        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Koran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Koran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Qur'an 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
@@ -8884,7 +8888,7 @@ struct QuranView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
                                 .foregroundStyle(SalahTheme.teal)
-                            TextField(settings.t("Sure suchen", "Sure ara"), text: $search)
+                            TextField(settings.t("Sure suchen", "Sûre ara"), text: $search)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
                         }
@@ -9629,9 +9633,7 @@ struct QuranPageReaderView: View {
                                                         .controlSize(.small)
                                                 } else {
                                                     Image(systemName:
-                                                        ayahAudioURL != nil &&
-                                                        audio.activeURL == ayahAudioURL &&
-                                                        audio.isPlaying
+                                                        isAyahAudioPlaying(ayah, audioURL: ayahAudioURL)
                                                         ? "pause.circle.fill"
                                                         : "play.circle"
                                                     )
@@ -9644,10 +9646,10 @@ struct QuranPageReaderView: View {
                                         .buttonStyle(.plain)
                                         .disabled(resolvingAyahNumber != nil && resolvingAyahNumber != ayah.number)
                                         .accessibilityLabel(settings.t(
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                            isAyahAudioPlaying(ayah, audioURL: ayahAudioURL)
                                                 ? "Vers \(ayah.numberInSurah) pausieren"
                                                 : "Vers \(ayah.numberInSurah) abspielen",
-                                            ayahAudioURL != nil && audio.activeURL == ayahAudioURL && audio.isPlaying
+                                            isAyahAudioPlaying(ayah, audioURL: ayahAudioURL)
                                                 ? "\(ayah.numberInSurah). ayeti duraklat"
                                                 : "\(ayah.numberInSurah). ayeti dinle"
                                         ))
@@ -9765,6 +9767,18 @@ struct QuranPageReaderView: View {
         "\(reciter.rawValue)-\(surah)"
     }
 
+    private func isAyahAudioPlaying(_ ayah: QuranPageAyah, audioURL: URL?) -> Bool {
+        guard audio.isPlaying else { return false }
+        if let audioURL, audio.activeURL == audioURL {
+            return true
+        }
+        return ayah.numberInSurah == 1 &&
+            QuranContinuousPlaybackCoordinator.shared.ownsCurrentPrelude(
+                surah: ayah.surah.number,
+                reciter: settings.quranReciter
+            )
+    }
+
     private func resolvedAudioURL(for ayah: QuranPageAyah) -> URL? {
         let key = audioKey(surah: ayah.surah.number, reciter: settings.quranReciter)
         guard let urls = audioURLsBySurah[key] else { return nil }
@@ -9817,7 +9831,12 @@ struct QuranPageReaderView: View {
         let selectedURL = urls[startIndex]
         QuranBookmarkStore.setLastRead(surah: ayah.surah.number, ayah: ayah.numberInSurah)
 
-        if audio.activeURL == selectedURL {
+        if audio.activeURL == selectedURL ||
+            (ayah.numberInSurah == 1 &&
+             QuranContinuousPlaybackCoordinator.shared.ownsCurrentPrelude(
+                surah: ayah.surah.number,
+                reciter: reciter
+             )) {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
@@ -10313,7 +10332,7 @@ private struct QuranJuzLandingView: View {
             Section {
                 Text(settings.t(
                     "Die Juz-Einteilung teilt den Koran zum Lesen in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
-                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sure ve ayet numaralarını değiştirmez."
+                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sûre ve ayet numaralarını değiştirmez."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -10608,6 +10627,14 @@ private struct QuranSurahView: View {
     private func ayahCard(ar: AyahData, turkish: AyahData?, german: AyahData?, transliterated: AyahData?, index: Int) -> some View {
         let token = "\(surah.number):\(ar.numberInSurah)"
         let audioURL = resolvedAudioURLs[safe: index]
+        let isPlayingThisAyah = audio.isPlaying && (
+            audio.activeURL == audioURL ||
+            (ar.numberInSurah == 1 &&
+             QuranContinuousPlaybackCoordinator.shared.ownsCurrentPrelude(
+                surah: surah.number,
+                reciter: settings.quranReciter
+             ))
+        )
         let shareText = shareTextFor(ar: ar, turkish: turkish, german: german)
 
         return VStack(alignment: .leading, spacing: 10) {
@@ -10624,14 +10651,14 @@ private struct QuranSurahView: View {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
                         playFromAyah(index: index, ayahNumber: ar.numberInSurah)
                     } label: {
-                        Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        Image(systemName: isPlayingThisAyah ? "pause.circle.fill" : "play.circle.fill")
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(settings.t(
-                        audio.activeURL == audioURL && audio.isPlaying
+                        isPlayingThisAyah
                             ? "Vers \(ar.numberInSurah) pausieren"
                             : "Vers \(ar.numberInSurah) abspielen",
-                        audio.activeURL == audioURL && audio.isPlaying
+                        isPlayingThisAyah
                             ? "\(ar.numberInSurah). ayeti duraklat"
                             : "\(ar.numberInSurah). ayeti oynat"
                     ))
@@ -10847,10 +10874,13 @@ private struct QuranSurahView: View {
             return
         }
 
-        if QuranContinuousPlaybackCoordinator.shared.ownsCurrentSession(
+        let currentAyahBelongsToSurah = audio.activeURL.map(resolvedAudioURLs.contains) ?? false
+        let currentPreludeBelongsToSurah = QuranContinuousPlaybackCoordinator.shared.ownsCurrentPrelude(
             surah: surah.number,
             reciter: settings.quranReciter
-        ) {
+        )
+
+        if currentAyahBelongsToSurah || currentPreludeBelongsToSurah {
             audio.isPlaying ? audio.pause() : audio.resume()
         } else {
             QuranContinuousPlaybackCoordinator.shared.play(
