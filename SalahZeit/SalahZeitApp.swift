@@ -443,9 +443,8 @@ private struct OnboardingFlowView: View {
                 .multilineTextAlignment(.center)
 
                 Button {
-                    locationManager.useDeviceLocation()
                     locationError = nil
-                    withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
+                    locationManager.useDeviceLocation()
                 } label: {
                     Label(settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"), systemImage: "location.fill")
                         .font(.headline.bold())
@@ -513,6 +512,17 @@ private struct OnboardingFlowView: View {
                         .padding(.vertical, 6)
                 }
                 .buttonStyle(.plain)
+            }
+            .onChange(of: locationManager.location) { _, newLocation in
+                guard step == 2,
+                      newLocation != nil,
+                      !locationManager.usesManualLocation else { return }
+                locationError = nil
+                withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
+            }
+            .onChange(of: locationManager.lastError) { _, newError in
+                guard step == 2, let newError, !newError.isEmpty else { return }
+                locationError = newError
             }
         }
     }
