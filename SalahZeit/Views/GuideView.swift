@@ -4425,6 +4425,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
     var hasNext: Bool { queueIndex + 1 < queueURLs.count }
     var hasPrevious: Bool { queueIndex > 0 }
+    var canAdvance: Bool { hasNext || queueContinuationDelegate != nil }
 
     func setPrayerContext(_ text: String?) {
         let trimmed = text?.trimmingCharacters(in: .whitespacesAndNewlines)
