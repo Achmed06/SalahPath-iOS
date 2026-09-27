@@ -574,7 +574,6 @@ struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
-    @State private var prayerStepTransitionLocked = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
@@ -966,30 +965,24 @@ struct PrayerHowToView: View {
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 24)
+                DragGesture(minimumDistance: 18)
                     .onEnded { value in
-                        guard !prayerStepTransitionLocked else { return }
-                        let horizontal = value.translation.width
-                        let vertical = value.translation.height
-                        guard abs(horizontal) > 56,
-                              abs(horizontal) > abs(vertical) * 1.25 else { return }
+                        let horizontal = abs(value.predictedEndTranslation.width) > abs(value.translation.width)
+                            ? value.predictedEndTranslation.width
+                            : value.translation.width
+                        let vertical = abs(value.predictedEndTranslation.height) > abs(value.translation.height)
+                            ? value.predictedEndTranslation.height
+                            : value.translation.height
 
-                        let target: Int
-                        if horizontal < 0 {
-                            guard currentStepIndex < steps.count - 1 else { return }
-                            target = currentStepIndex + 1
-                        } else {
-                            guard currentStepIndex > 0 else { return }
-                            target = currentStepIndex - 1
-                        }
+                        guard abs(horizontal) > 48,
+                              abs(horizontal) > abs(vertical) * 1.20 else { return }
 
-                        prayerStepTransitionLocked = true
-                        withAnimation(.easeInOut(duration: 0.18)) {
+                        let offset = horizontal < 0 ? 1 : -1
+                        let target = min(max(currentStepIndex + offset, 0), steps.count - 1)
+                        guard target != currentStepIndex else { return }
+
+                        withAnimation(.easeOut(duration: 0.16)) {
                             currentStepIndex = target
-                        }
-                        Task { @MainActor in
-                            try? await Task.sleep(for: .milliseconds(220))
-                            prayerStepTransitionLocked = false
                         }
                     }
             )
@@ -1561,7 +1554,6 @@ struct WuduGuideView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
     @State private var showExactDetail = true
-    @State private var wuduStepTransitionLocked = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 12))
@@ -1734,30 +1726,24 @@ struct WuduGuideView: View {
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .simultaneousGesture(
-                DragGesture(minimumDistance: 24)
+                DragGesture(minimumDistance: 18)
                     .onEnded { value in
-                        guard !wuduStepTransitionLocked else { return }
-                        let horizontal = value.translation.width
-                        let vertical = value.translation.height
-                        guard abs(horizontal) > 56,
-                              abs(horizontal) > abs(vertical) * 1.25 else { return }
+                        let horizontal = abs(value.predictedEndTranslation.width) > abs(value.translation.width)
+                            ? value.predictedEndTranslation.width
+                            : value.translation.width
+                        let vertical = abs(value.predictedEndTranslation.height) > abs(value.translation.height)
+                            ? value.predictedEndTranslation.height
+                            : value.translation.height
 
-                        let target: Int
-                        if horizontal < 0 {
-                            guard currentStepIndex < steps.count - 1 else { return }
-                            target = currentStepIndex + 1
-                        } else {
-                            guard currentStepIndex > 0 else { return }
-                            target = currentStepIndex - 1
-                        }
+                        guard abs(horizontal) > 48,
+                              abs(horizontal) > abs(vertical) * 1.20 else { return }
 
-                        wuduStepTransitionLocked = true
-                        withAnimation(.easeInOut(duration: 0.18)) {
+                        let offset = horizontal < 0 ? 1 : -1
+                        let target = min(max(currentStepIndex + offset, 0), steps.count - 1)
+                        guard target != currentStepIndex else { return }
+
+                        withAnimation(.easeOut(duration: 0.16)) {
                             currentStepIndex = target
-                        }
-                        Task { @MainActor in
-                            try? await Task.sleep(for: .milliseconds(220))
-                            wuduStepTransitionLocked = false
                         }
                     }
             )
