@@ -1173,7 +1173,7 @@ private struct PrayerRecitationView: View {
 }
 
 private struct PrayerSalamVisual: View {
-    enum Side {
+    enum Side: Equatable {
         case right
         case left
     }
