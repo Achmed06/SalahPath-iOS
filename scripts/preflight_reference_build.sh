@@ -76,6 +76,34 @@ grep -q 'UNNotificationSound(named:' "SalahZeit/Services/NotificationManager.swi
 [[ "$(git hash-object SalahZeit/Resources/adhan-standard.caf)" == "5af226c758c556e318f0fe667b415a02807a8c2c" ]] || fail "adhan-standard.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/quran-uthmani.json)" == "a1312281de070617f8062f9718a3bf0e69e44f16" ]] || fail "quran-uthmani.json does not match the validated corpus"
 
+# iOS custom notification sounds must stay below the platform's 30-second limit.
+# Validate the actual CAF duration on macOS CI so a future audited-file replacement
+# cannot silently fall back to the default notification sound.
+if command -v afinfo >/dev/null 2>&1; then
+  validate_notification_sound_duration() {
+    local file="$1"
+    local duration
+    duration="$(afinfo "$file" | awk '/estimated duration:/ {print $(NF-1); exit}')"
+    [[ "$duration" =~ ^[0-9]+([.][0-9]+)?$ ]] || fail "unable to read notification sound duration: $file"
+
+    python3 - "$file" "$duration" <<'PY_AUDIO'
+import sys
+
+path, raw_duration = sys.argv[1], sys.argv[2]
+duration = float(raw_duration)
+if not (0.0 < duration < 30.0):
+    raise SystemExit(
+        f"PRECHECK ERROR: iOS notification sound must be shorter than 30 seconds: "
+        f"{path} = {duration:.3f}s"
+    )
+print(f"Notification sound duration: OK ({path}: {duration:.3f}s)")
+PY_AUDIO
+  }
+
+  validate_notification_sound_duration "SalahZeit/Resources/adhan-standard.caf"
+  validate_notification_sound_duration "SalahZeit/Resources/adhan-fajr.caf"
+fi
+
 python3 - <<'PY'
 import json
 from pathlib import Path
