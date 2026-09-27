@@ -328,6 +328,13 @@ struct QiblaView: View {
         if isScreenshotQA {
             return CLLocation(latitude: 50.9375, longitude: 6.9603)
         }
+
+        // A physical compass must use the device's real coordinate whenever
+        // available. The manually selected location remains the source for
+        // prayer times, but must not be mixed with the device heading.
+        if let deviceLocation = locationManager.qiblaDeviceLocation {
+            return deviceLocation
+        }
         return locationManager.location
     }
 
