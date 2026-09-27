@@ -28,7 +28,7 @@ struct PrayerDetailView: View {
                         )
                     )
                     if let fard = prayer.kind.fardRakats {
-                        LabeledContent(settings.t("Pflicht", "Farz"), value: "\(fard) \(settings.t("Rakʿat Fard", "rekât farz"))")
+                        LabeledContent(settings.t("Pflicht", "Farz"), value: "\(fard) \(settings.t("Rakʿāt Fard", "rekât farz"))")
                     }
                     if let window = engine.prayerWindow(for: prayer, day: day, nextDay: nextDay) {
                         LabeledContent(
