@@ -245,6 +245,8 @@ required_features = {
     "feature_settings", "feature_community", "feature_moon",
     "feature_sparkles", "feature_language", "feature_more", "feature_list",
     "feature_home", "feature_discover", "feature_profile",
+    "feature_fajr", "feature_sunrise", "feature_dhuhr", "feature_asr",
+    "feature_maghrib", "feature_isha", "feature_reminder", "feature_mute",
 }
 required = required_wudu | required_prayer | required_features | {
     "salahpath_logo", "home_mosque"
