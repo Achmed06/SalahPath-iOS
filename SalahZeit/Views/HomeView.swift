@@ -1363,7 +1363,7 @@ struct HomeView: View {
             } label: {
                 quickActionPill(
                     icon: "quran",
-                    title: settings.t("Koran", "Kur'an"),
+                    title: settings.t("Quran", "Kur'an"),
                     subtitle: settings.t("Lesen", "Oku")
                 )
             }
