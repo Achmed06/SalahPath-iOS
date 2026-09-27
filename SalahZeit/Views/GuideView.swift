@@ -10856,14 +10856,21 @@ private struct QuranSurahView: View {
             return
         }
 
+        let isCurrentSurahBasmalah =
+            audio.displayTitle == surah.englishName &&
+            surah.number != 1 &&
+            surah.number != 9 &&
+            audio.activeURL == QuranAudioResolver.bismillahURL(reciter: settings.quranReciter)
+
         if audio.isLoading,
            let active = audio.activeURL,
-           resolvedAudioURLs.contains(active) {
+           resolvedAudioURLs.contains(active) || isCurrentSurahBasmalah {
             audio.stop()
             return
         }
 
-        if let active = audio.activeURL, resolvedAudioURLs.contains(active) {
+        if let active = audio.activeURL,
+           resolvedAudioURLs.contains(active) || isCurrentSurahBasmalah {
             audio.isPlaying ? audio.pause() : audio.resume()
         } else {
             QuranContinuousPlaybackCoordinator.shared.play(
