@@ -282,6 +282,7 @@ jobs:
             capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
             capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
             capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
+            capture wudu-leftfoot SalahPath-v3.62-B78-DE-WuduLeftFoot.png
           elif [ "$CAPTURE_MODE" = "quran" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture quran SalahPath-v3.62-B78-DE-Quran.png
