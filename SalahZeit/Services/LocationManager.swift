@@ -211,6 +211,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             usesManualLocation = true
             qiblaDeviceLocation = nil
             heading = nil
+            lastGeocodedLocation = nil
             lastError = nil
 
             let defaults = UserDefaults.standard
@@ -256,6 +257,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         clearManualLocationStorage()
         qiblaDeviceLocation = newLocation
         location = newLocation
+        locality = nil
+        lastGeocodedLocation = nil
         lastError = nil
         updateLocalityIfNeeded(for: newLocation)
     }
