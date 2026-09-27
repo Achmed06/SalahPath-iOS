@@ -1053,7 +1053,7 @@ private struct PrayerTutorialStepCard: View {
 
             VStack(alignment: .leading, spacing: 13) {
                 if step.pose == .salam {
-                    PrayerSalamVisual()
+                    PrayerSalamVisual(side: step.imageKey == "salam_left" ? .left : .right)
                 } else if let imageName {
                     ZStack(alignment: .center) {
                         PrayerPoseArtwork(assetName: imageName)
@@ -1173,34 +1173,33 @@ private struct PrayerRecitationView: View {
 }
 
 private struct PrayerSalamVisual: View {
+    enum Side {
+        case right
+        case left
+    }
+
     @EnvironmentObject private var settings: SettingsStore
+    let side: Side
 
     private var prefix: String { settings.prayerAudience == .male ? "male" : "female" }
 
     var body: some View {
-        VStack(spacing: 14) {
-            salamDirection(
-                number: "1",
-                direction: settings.t("RECHTS", "SAĞA"),
-                imageName: "\(prefix)_salam_right",
-                arrow: "arrow.right",
-                instruction: settings.t(
+        let isRight = side == .right
+        salamDirection(
+            number: isRight ? "1" : "2",
+            direction: isRight ? settings.t("RECHTS", "SAĞA") : settings.t("LINKS", "SOLA"),
+            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")",
+            arrow: isRight ? "arrow.right" : "arrow.left",
+            instruction: isRight
+                ? settings.t(
                     "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
                     "Gövde önde kalır. Başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı söyle."
                 )
-            )
-
-            salamDirection(
-                number: "2",
-                direction: settings.t("LINKS", "SOLA"),
-                imageName: "\(prefix)_salam_left",
-                arrow: "arrow.left",
-                instruction: settings.t(
-                    "Danach über die Mitte zur EIGENEN linken Schulter drehen und denselben Salām erneut sprechen.",
-                    "Sonra ortadan geçerek KENDİ sol omzuna dön ve aynı selâmı tekrar söyle."
+                : settings.t(
+                    "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut.",
+                    "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle."
                 )
-            )
-        }
+        )
         .accessibilityElement(children: .contain)
     }
 
