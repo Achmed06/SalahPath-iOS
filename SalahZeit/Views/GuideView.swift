@@ -5182,10 +5182,9 @@ final class RemoteAudioPlayer: ObservableObject {
                     if self.retryPlaybackIfPossible(after: url) {
                         return
                     }
-                    self.isLoading = false
-                    self.isPlaying = false
-                    self.lastError = item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
-                    self.updateNowPlaying()
+                    self.failCurrentPlayback(
+                        item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                    )
                 default:
                     self.isLoading = true
                 }
@@ -5241,15 +5240,24 @@ final class RemoteAudioPlayer: ObservableObject {
                 if self.retryPlaybackIfPossible(after: url) {
                     return
                 }
-                self.isLoading = false
-                self.isPlaying = false
-                self.lastError = errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
-                self.updateNowPlaying()
+                self.failCurrentPlayback(
+                    errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                )
             }
         }
 
         newPlayer.playImmediately(atRate: playbackRate)
         isPlaying = true
+        updateNowPlaying()
+    }
+
+    private func failCurrentPlayback(_ message: String) {
+        removeObservers()
+        player?.pause()
+        player = nil
+        isLoading = false
+        isPlaying = false
+        lastError = message
         updateNowPlaying()
     }
 
