@@ -448,6 +448,9 @@ private final class NearbyMosqueStore: ObservableObject {
         .compactMap { $0?.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current).lowercased() }
         .joined(separator: " ")
 
+        // Keep this deliberately strict. Broad words such as "islam" or
+        // "muslim" also occur in shops, associations and unrelated POIs and
+        // previously produced false "nearby mosque" matches.
         let mosqueSignals = [
             "moschee",
             "mosque",
@@ -455,16 +458,22 @@ private final class NearbyMosqueStore: ObservableObject {
             "mescid",
             "cami",
             "camii",
-            "islam",
-            "muslim",
             "ditib",
             "d.i.t.i.b",
             "vikz",
             "igmg",
             "milli gorus",
+            "milli görüş",
             "islamisches zentrum",
+            "islamisches kulturzentrum",
+            "islamische gemeinde",
+            "islamische gemeinschaft",
             "islamic center",
-            "islamic centre"
+            "islamic centre",
+            "islamic cultural center",
+            "islamic cultural centre",
+            "muslim community center",
+            "muslim community centre"
         ]
 
         return mosqueSignals.contains { searchable.contains($0) }
