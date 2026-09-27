@@ -171,6 +171,13 @@ if grep -R -nE 'fatalError\(|try!|as!' SalahZeit --include='*.swift'; then
   exit 1
 fi
 
+# Release-hygiene regression gate: sideload/debug-container branding must never
+# leak into shipped app source.
+if grep -R -nEi 'LiveContainer|SideStore|AltStore|TrollStore' SalahZeit --include='*.swift'; then
+  echo "Sideload/debug-container branding found in app Swift source." >&2
+  exit 1
+fi
+
 grep -q 'safeQuranFontSize' "SalahZeit/Models/AppSettings.swift"
 grep -q 'CLLocationCoordinate2DIsValid' "SalahZeit/Services/LocationManager.swift"
 grep -q 'addingReportingOverflow' "SalahZeit/Views/GuideView.swift"
