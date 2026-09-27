@@ -840,7 +840,7 @@ struct MoreView: View {
                 .buttonStyle(.plain)
 
                 discoverSectionTitle(
-                    settings.t("Quran, Dua & Dhikr", "Kur'an, Dua & Zikir"),
+                    settings.t("Koran, Dua & Dhikr", "Kur'an, Dua ve Zikir"),
                     icon: "text.book.closed.fill"
                 )
 
@@ -848,7 +848,7 @@ struct MoreView: View {
                     NavigationLink { QuranDirectoryView() } label: {
                         discoverTile(
                             icon: "books.vertical.fill",
-                            title: settings.t("Quran-Verzeichnis", "Kur'an Dizini"),
+                            title: settings.t("Koran-Verzeichnis", "Kur'an Dizini"),
                             subtitle: settings.t("Suren · Seiten · Juz", "Sûre · sayfa · cüz")
                         )
                     }
@@ -862,7 +862,7 @@ struct MoreView: View {
                         discoverTile(icon: "circle.grid.cross.fill", title: settings.t("Dhikr & Tasbih", "Zikir & Tesbih"), subtitle: settings.t("Zähler", "Sayaç"))
                     }
                     NavigationLink { QuranicDuaLibraryView() } label: {
-                        discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Quranische Duas", "Kur'an duaları"))
+                        discoverTile(icon: "text.book.closed.fill", title: settings.t("Dua-Sammlung", "Dua Koleksiyonu"), subtitle: settings.t("Koranische Duas", "Kur'an duaları"))
                     }
                 }
                 .buttonStyle(.plain)
