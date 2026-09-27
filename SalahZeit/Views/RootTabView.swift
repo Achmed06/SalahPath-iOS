@@ -720,7 +720,7 @@ private struct ReferenceBottomBar: View {
     private var items: [(String, String)] {
         [
             ("home", settings.t("Start", "Ana Sayfa")),
-            ("quran", settings.t("Koran", "Kur'an")),
+            ("quran", settings.t("Quran", "Kur'an")),
             ("prayer", settings.t("Gebet", "Namaz")),
             ("discover", settings.t("Entdecken", "Keşfet")),
             ("profile", settings.t("Profil", "Profil"))
