@@ -597,9 +597,13 @@ private struct DailyDuaDetailView: View {
                                     ProgressView()
                                         .tint(.white)
                                 } else {
-                                    Image(systemName: isThisDuaPlaying ? "pause.fill" : "play.fill")
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundStyle(.white)
+                                    Image(
+                                        systemName: isThisDuaLoading
+                                            ? "xmark"
+                                            : (isThisDuaPlaying ? "pause.fill" : "play.fill")
+                                    )
+                                    .font(.system(size: 17, weight: .bold))
+                                    .foregroundStyle(.white)
                                 }
                             }
                             .contentShape(Circle())
@@ -607,8 +611,12 @@ private struct DailyDuaDetailView: View {
                         .buttonStyle(.plain)
                         .disabled(isResolvingAudio)
                         .accessibilityLabel(settings.t(
-                            isThisDuaPlaying ? "Dua pausieren" : "Dua anhören",
-                            isThisDuaPlaying ? "Duayı duraklat" : "Duayı dinle"
+                            isThisDuaLoading
+                                ? "Dua-Laden abbrechen"
+                                : (isThisDuaPlaying ? "Dua pausieren" : "Dua anhören"),
+                            isThisDuaLoading
+                                ? "Dua yüklemesini durdur"
+                                : (isThisDuaPlaying ? "Duayı duraklat" : "Duayı dinle")
                         ))
                     }
 
@@ -673,10 +681,19 @@ private struct DailyDuaDetailView: View {
         return audio.activeURL == resolvedURL && audio.isPlaying
     }
 
+    private var isThisDuaLoading: Bool {
+        guard let resolvedURL else { return false }
+        return audio.activeURL == resolvedURL && audio.isLoading
+    }
+
     @MainActor
     private func toggleAudio() async {
         if let resolvedURL, audio.activeURL == resolvedURL {
-            audio.isPlaying ? audio.pause() : audio.resume()
+            if audio.isLoading {
+                audio.stop()
+            } else {
+                audio.isPlaying ? audio.pause() : audio.resume()
+            }
             return
         }
 
@@ -1405,9 +1422,10 @@ struct HomeView: View {
     private var dailyDuaCard: some View {
         let dua = DailyDuaStore.item(for: now)
         let identity = dailyDuaAudioIdentity(for: dua)
-        let isPlayingDua = dailyDuaAudioIdentity == identity
+        let isCurrentDua = dailyDuaAudioIdentity == identity
             && dailyDuaAudioURL == audio.activeURL
-            && audio.isPlaying
+        let isPlayingDua = isCurrentDua && audio.isPlaying
+        let isLoadingDua = isCurrentDua && audio.isLoading
 
         return ZStack(alignment: .topTrailing) {
             NavigationLink {
@@ -1500,9 +1518,13 @@ struct HomeView: View {
                             .controlSize(.mini)
                             .tint(.white)
                     } else {
-                        Image(systemName: isPlayingDua ? "pause.fill" : "speaker.wave.2.fill")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(.white)
+                        Image(
+                            systemName: isLoadingDua
+                                ? "xmark"
+                                : (isPlayingDua ? "pause.fill" : "speaker.wave.2.fill")
+                        )
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white)
                     }
                 }
                 .contentShape(Rectangle())
@@ -1512,8 +1534,12 @@ struct HomeView: View {
             .padding(.top, 7)
             .padding(.trailing, 7)
             .accessibilityLabel(settings.t(
-                isPlayingDua ? "Dua pausieren" : "Dua anhören",
-                isPlayingDua ? "Duayı duraklat" : "Duayı dinle"
+                isLoadingDua
+                    ? "Dua-Laden abbrechen"
+                    : (isPlayingDua ? "Dua pausieren" : "Dua anhören"),
+                isLoadingDua
+                    ? "Dua yüklemesini durdur"
+                    : (isPlayingDua ? "Duayı duraklat" : "Duayı dinle")
             ))
         }
     }
@@ -1529,7 +1555,11 @@ struct HomeView: View {
         if dailyDuaAudioIdentity == identity,
            let dailyDuaAudioURL,
            audio.activeURL == dailyDuaAudioURL {
-            audio.isPlaying ? audio.pause() : audio.resume()
+            if audio.isLoading {
+                audio.stop()
+            } else {
+                audio.isPlaying ? audio.pause() : audio.resume()
+            }
             return
         }
 
