@@ -145,7 +145,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
                     if let rakats = prayer.kind.fardRakats {
                         content.body = settings.t(
-                            "\(rakats) Rakʿat Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                            "\(rakats) Rakʿāt Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
                             "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
                         )
                     }
@@ -215,7 +215,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
         let content = UNMutableNotificationContent()
         content.title = settings.t(
-            fajr ? "Fajr Gebetsruf · Test" : "Gebetsruf · Test",
+            fajr ? "Fajr-Gebetsruf · Test" : "Gebetsruf · Test",
             fajr ? "Sabah ezanı · Test" : "Ezan · Test"
         )
         content.body = settings.t(
@@ -247,7 +247,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         center.removePendingNotificationRequests(withIdentifiers: [notificationPreviewIdentifier])
 
         let content = UNMutableNotificationContent()
-        content.title = settings.t("SalahPath Test", "SalahPath Test")
+        content.title = settings.t("SalahPath-Test", "SalahPath Test")
         content.body = settings.t(
             "Wenn du diese Mitteilung siehst, funktioniert die iOS-Zustellung.",
             "Bu bildirimi görüyorsan iOS teslimatı çalışıyor."
