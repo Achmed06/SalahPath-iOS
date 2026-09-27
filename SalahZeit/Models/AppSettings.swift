@@ -67,7 +67,7 @@ enum QuranReciter: String, CaseIterable, Identifiable {
     var bitrate: Int {
         switch self {
         case .sudais: return 192
-        case .shuraim: return 64
+        case .shuraim: return 128
         default: return 128
         }
     }
