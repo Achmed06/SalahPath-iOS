@@ -342,6 +342,18 @@ for token in (
 if 'INFOPLIST_KEY_UIBackgroundModes = audio;' not in project:
     fail("background audio mode was removed")
 
+for token in (
+    'static func bismillahURL(reciter: QuranReciter) -> URL?',
+    'static func playbackQueue(',
+    'guard startAyah == 1, surah != 1, surah != 9,',
+    'return [basmalah] + urls',
+):
+    if token not in guide:
+        fail(f"Quran Basmalah playback regression: missing {token}")
+
+if guide.count('isFirstAyahBasmalahActive') < 2:
+    fail("Quran Basmalah playback-toggle regression")
+
 prayer_engine = read("SalahZeit/Services/PrayerEngine.swift")
 for token in (
     'func upcomingPrayers(',
