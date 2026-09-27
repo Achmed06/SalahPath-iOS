@@ -323,10 +323,15 @@ struct QiblaView: View {
         if isScreenshotQA { return 0 }
         guard let heading = locationManager.heading,
               heading.headingAccuracy.isFinite,
-              heading.headingAccuracy >= 0,
-              heading.trueHeading.isFinite,
-              heading.trueHeading >= 0 else { return nil }
-        return heading.trueHeading
+              heading.headingAccuracy >= 0 else { return nil }
+
+        if heading.trueHeading.isFinite, heading.trueHeading >= 0 {
+            return heading.trueHeading
+        }
+
+        guard heading.magneticHeading.isFinite,
+              heading.magneticHeading >= 0 else { return nil }
+        return heading.magneticHeading
     }
 
     private func normalized(_ angle: Double) -> Double {
