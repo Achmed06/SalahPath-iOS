@@ -124,7 +124,7 @@ struct GuideView: View {
                 referenceRow(
                     icon: "rectangle.stack.badge.play.fill",
                     title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
-                    subtitle: settings.t("Fajr bis Jumuah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
+                    subtitle: settings.t("Fajr bis Jumuʿah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
                 )
             }
 
@@ -7439,7 +7439,7 @@ struct IslamLearningHubView: View {
             .foregroundStyle(SalahTheme.deepTeal)
 
             Text(settings.t(
-                "Du musst nicht alles auf einmal verstehen. Beginne oben und arbeite dich Modul für Modul weiter. Gebet, Wudu, Qur'an und Fasten haben zusätzlich eigene ausführliche Bereiche in SalahPath.",
+                "Du musst nicht alles auf einmal verstehen. Beginne oben und arbeite dich Modul für Modul weiter. Gebet, Wudu, Quran und Fasten haben zusätzlich eigene ausführliche Bereiche in SalahPath.",
                 "Her şeyi bir anda öğrenmek zorunda değilsin. Yukarıdan başla ve modül modül ilerle. Namaz, abdest, Kur'an ve oruç için SalahPath'te ayrıca ayrıntılı bölümler var."
             ))
             .font(.subheadline)
