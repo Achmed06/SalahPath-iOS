@@ -4601,6 +4601,7 @@ final class RemoteAudioPlayer: ObservableObject {
 
     func stop() {
         playbackRevision &+= 1
+        playbackItemRevision &+= 1
         queueSessionID &+= 1
         queueContinuationDelegate = nil
         continuationRequestInFlight = false
@@ -4624,6 +4625,7 @@ final class RemoteAudioPlayer: ObservableObject {
         guard queueURLs.indices.contains(queueIndex) else { return }
 
         playbackRevision &+= 1
+        playbackItemRevision &+= 1
         let revision = playbackRevision
         removeObservers()
         player?.pause()
