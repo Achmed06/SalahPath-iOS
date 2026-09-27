@@ -321,27 +321,405 @@ struct GuideView: View {
 private struct PrayerPoseArtwork: View {
     let assetName: String
 
+    private var female: Bool { assetName.hasPrefix("female_") }
+    private var pose: String {
+        if assetName.hasPrefix("female_") {
+            return String(assetName.dropFirst("female_".count))
+        }
+        if assetName.hasPrefix("male_") {
+            return String(assetName.dropFirst("male_".count))
+        }
+        return assetName
+    }
+
+    private var garmentColor: Color {
+        female
+            ? Color(red: 0.60, green: 0.42, blue: 0.50)
+            : Color.white.opacity(0.98)
+    }
+
+    private var garmentOutline: Color {
+        female
+            ? Color(red: 0.34, green: 0.24, blue: 0.29)
+            : SalahTheme.deepTeal.opacity(0.66)
+    }
+
+    private var skinTone: Color {
+        Color(red: 0.86, green: 0.68, blue: 0.52)
+    }
+
     var body: some View {
-        Image(assetName)
-            .renderingMode(.original)
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(4)
-            .background(
-                LinearGradient(
-                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 24, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 0.7)
+        ZStack {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            Canvas { graphics, size in
+                var context = graphics
+
+                let arch = CGRect(
+                    x: size.width * 0.13,
+                    y: size.height * 0.06,
+                    width: size.width * 0.74,
+                    height: size.height * 0.74
+                )
+                context.fill(
+                    Path(roundedRect: arch, cornerRadius: min(size.width, size.height) * 0.32),
+                    with: .color(SalahTheme.softTeal.opacity(0.28))
+                )
+
+                var rug = Path()
+                rug.move(to: point(0.25, 0.82, in: size))
+                rug.addLine(to: point(0.75, 0.82, in: size))
+                rug.addLine(to: point(0.82, 0.95, in: size))
+                rug.addLine(to: point(0.18, 0.95, in: size))
+                rug.closeSubpath()
+                context.fill(rug, with: .color(SalahTheme.teal.opacity(0.90)))
+                context.stroke(rug, with: .color(SalahTheme.gold.opacity(0.86)), lineWidth: 2)
+
+                drawPose(context: &context, size: size)
             }
-            .accessibilityHidden(true)
+            .padding(4)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .accessibilityHidden(true)
+    }
+
+    private func point(_ x: CGFloat, _ y: CGFloat, in size: CGSize) -> CGPoint {
+        CGPoint(x: size.width * x, y: size.height * y)
+    }
+
+    private func line(_ context: inout GraphicsContext, _ a: CGPoint, _ b: CGPoint, width: CGFloat, color: Color = SalahTheme.deepTeal) {
+        var p = Path()
+        p.move(to: a)
+        p.addLine(to: b)
+        context.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round))
+    }
+
+    private func polyline(_ context: inout GraphicsContext, _ points: [CGPoint], width: CGFloat, color: Color = SalahTheme.deepTeal) {
+        guard let first = points.first else { return }
+        var p = Path()
+        p.move(to: first)
+        for point in points.dropFirst() { p.addLine(to: point) }
+        context.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round))
+    }
+
+    private func garmentLine(
+        _ context: inout GraphicsContext,
+        _ a: CGPoint,
+        _ b: CGPoint,
+        width: CGFloat
+    ) {
+        line(&context, a, b, width: width + 4, color: garmentOutline)
+        line(&context, a, b, width: width, color: garmentColor)
+    }
+
+    private func garmentPolyline(
+        _ context: inout GraphicsContext,
+        _ points: [CGPoint],
+        width: CGFloat
+    ) {
+        polyline(&context, points, width: width + 4, color: garmentOutline)
+        polyline(&context, points, width: width, color: garmentColor)
+    }
+
+    private func handDot(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
+        let rect = CGRect(
+            x: center.x - radius,
+            y: center.y - radius,
+            width: radius * 2,
+            height: radius * 2
+        )
+        context.fill(Path(ellipseIn: rect), with: .color(skinTone))
+        context.stroke(Path(ellipseIn: rect), with: .color(SalahTheme.deepTeal.opacity(0.45)), lineWidth: 1.2)
+    }
+
+    private func head(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
+        let rect = CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2)
+        context.fill(Path(ellipseIn: rect), with: .color(skinTone))
+        context.stroke(Path(ellipseIn: rect), with: .color(SalahTheme.deepTeal), lineWidth: 5)
+
+        if female {
+            let hood = CGRect(x: center.x - radius * 1.22, y: center.y - radius * 1.22, width: radius * 2.44, height: radius * 2.62)
+            context.stroke(Path(ellipseIn: hood), with: .color(garmentColor), lineWidth: 8)
+        } else {
+            var hair = Path()
+            hair.addArc(
+                center: CGPoint(x: center.x, y: center.y - radius * 0.10),
+                radius: radius * 0.82,
+                startAngle: .degrees(198),
+                endAngle: .degrees(342),
+                clockwise: false
+            )
+            context.stroke(
+                hair,
+                with: .color(SalahTheme.deepTeal),
+                style: StrokeStyle(lineWidth: max(radius * 0.19, 3), lineCap: .round)
+            )
+        }
+
+        drawFace(&context, center: center, radius: radius)
+    }
+
+    private func drawFace(_ context: inout GraphicsContext, center: CGPoint, radius: CGFloat) {
+        let turn: CGFloat
+        if pose == "salam_right" {
+            // Front-facing artwork: the worshipper's own right shoulder is
+            // on the viewer's left. Keep the torso facing Qibla and make only
+            // the facial/head direction clearly readable.
+            turn = -0.44
+        } else if pose == "salam_left" {
+            // Worshipper's own left shoulder appears on the viewer's right.
+            turn = 0.44
+        } else {
+            turn = 0
+        }
+
+        let downward = pose == "bowing" || pose == "sujud"
+        let featureY = center.y + (downward ? radius * 0.10 : 0)
+        let featureX = center.x + radius * turn
+        let eyeGap = radius * 0.34
+        let eyeWidth = max(radius * 0.22, 3)
+        let ink = SalahTheme.deepTeal
+
+        for direction in [-1.0, 1.0] {
+            let x = featureX + eyeGap * CGFloat(direction)
+            var eye = Path()
+            eye.move(to: CGPoint(x: x - eyeWidth / 2, y: featureY - radius * 0.12))
+            eye.addQuadCurve(
+                to: CGPoint(x: x + eyeWidth / 2, y: featureY - radius * 0.12),
+                control: CGPoint(x: x, y: featureY - radius * (downward ? 0.04 : 0.16))
+            )
+            context.stroke(eye, with: .color(ink), style: StrokeStyle(lineWidth: max(radius * 0.07, 1.4), lineCap: .round))
+        }
+
+        var nose = Path()
+        nose.move(to: CGPoint(x: featureX, y: featureY - radius * 0.02))
+        nose.addLine(to: CGPoint(x: featureX + radius * 0.05 * (turn == 0 ? 1 : turn.sign == .plus ? 1 : -1), y: featureY + radius * 0.16))
+        context.stroke(nose, with: .color(ink.opacity(0.72)), style: StrokeStyle(lineWidth: max(radius * 0.055, 1.1), lineCap: .round))
+
+        var mouth = Path()
+        mouth.move(to: CGPoint(x: featureX - radius * 0.20, y: featureY + radius * 0.31))
+        mouth.addQuadCurve(
+            to: CGPoint(x: featureX + radius * 0.20, y: featureY + radius * 0.31),
+            control: CGPoint(x: featureX, y: featureY + radius * 0.37)
+        )
+        context.stroke(mouth, with: .color(ink), style: StrokeStyle(lineWidth: max(radius * 0.055, 1.1), lineCap: .round))
+
+        if !female {
+            var beard = Path()
+            beard.move(to: CGPoint(x: featureX - radius * 0.50, y: featureY + radius * 0.30))
+            beard.addQuadCurve(
+                to: CGPoint(x: featureX + radius * 0.50, y: featureY + radius * 0.30),
+                control: CGPoint(x: featureX, y: featureY + radius * 0.82)
+            )
+            context.stroke(beard, with: .color(ink.opacity(0.92)), style: StrokeStyle(lineWidth: max(radius * 0.12, 2.0), lineCap: .round))
+        }
+    }
+
+    private func torso(_ context: inout GraphicsContext, shoulder: CGPoint, hip: CGPoint, width: CGFloat) {
+        garmentLine(&context, shoulder, hip, width: width)
+        if female {
+            var skirt = Path()
+            skirt.move(to: CGPoint(x: hip.x - 18, y: hip.y - 2))
+            skirt.addLine(to: CGPoint(x: hip.x - 34, y: hip.y + 70))
+            skirt.addLine(to: CGPoint(x: hip.x + 34, y: hip.y + 70))
+            skirt.addLine(to: CGPoint(x: hip.x + 18, y: hip.y - 2))
+            skirt.closeSubpath()
+            context.fill(skirt, with: .color(garmentColor.opacity(0.97)))
+            context.stroke(skirt, with: .color(garmentOutline), lineWidth: 3)
+        }
+    }
+
+    private func drawPose(context: inout GraphicsContext, size: CGSize) {
+        switch pose {
+        case "bowing": drawBowing(&context, size: size)
+        case "sujud", "second_sujud": drawSujud(&context, size: size)
+        case "sitting", "final_sitting": drawSitting(&context, size: size, turn: 0, showFinger: false)
+        case "finger": drawSitting(&context, size: size, turn: 0, showFinger: true)
+        case "salam_right": drawSitting(&context, size: size, turn: 1, showFinger: false)
+        case "salam_left": drawSitting(&context, size: size, turn: -1, showFinger: false)
+        case "takbir": drawStanding(&context, size: size, mode: .takbir)
+        case "standing": drawStanding(&context, size: size, mode: .bound)
+        case "upright": drawStanding(&context, size: size, mode: .relaxed)
+        default: drawStanding(&context, size: size, mode: .intention)
+        }
+    }
+
+    private enum StandingMode: Equatable { case intention, takbir, bound, relaxed }
+
+    private func drawStanding(_ context: inout GraphicsContext, size: CGSize, mode: StandingMode) {
+        let c: CGFloat = 0.50
+        let headCenter = point(c, 0.20, in: size)
+        let shoulder = point(c, 0.34, in: size)
+        let hip = point(c, 0.66, in: size)
+        let leftShoulder = point(c - 0.10, 0.35, in: size)
+        let rightShoulder = point(c + 0.10, 0.35, in: size)
+        let footSpread: CGFloat = female ? 0.035 : 0.045
+        let leftFoot = point(c - footSpread, 0.91, in: size)
+        let rightFoot = point(c + footSpread, 0.91, in: size)
+
+        torso(&context, shoulder: shoulder, hip: hip, width: female ? 38 : 34)
+
+        if !female {
+            var robe = Path()
+            robe.move(to: point(c - 0.095, 0.34, in: size))
+            robe.addLine(to: point(c + 0.095, 0.34, in: size))
+            robe.addLine(to: point(c + 0.105, 0.89, in: size))
+            robe.addQuadCurve(
+                to: point(c - 0.105, 0.89, in: size),
+                control: point(c, 0.915, in: size)
+            )
+            robe.closeSubpath()
+            context.fill(robe, with: .color(garmentColor.opacity(0.98)))
+            context.stroke(robe, with: .color(garmentOutline), lineWidth: 3)
+        }
+
+        head(&context, center: headCenter, radius: min(size.width, size.height) * 0.072)
+
+        if female {
+            line(&context, point(c - footSpread, 0.67, in: size), leftFoot, width: 14)
+            line(&context, point(c + footSpread, 0.67, in: size), rightFoot, width: 14)
+        } else {
+            let footWidth = max(size.width * 0.048, 8)
+            let footHeight = max(size.height * 0.025, 5)
+            let y = size.height * 0.885
+            let leftRect = CGRect(
+                x: size.width * (c - 0.055) - footWidth / 2,
+                y: y,
+                width: footWidth,
+                height: footHeight
+            )
+            let rightRect = CGRect(
+                x: size.width * (c + 0.055) - footWidth / 2,
+                y: y,
+                width: footWidth,
+                height: footHeight
+            )
+            context.fill(Path(roundedRect: leftRect, cornerRadius: footHeight / 2), with: .color(skinTone))
+            context.fill(Path(roundedRect: rightRect, cornerRadius: footHeight / 2), with: .color(skinTone))
+        }
+
+        switch mode {
+        case .takbir:
+            let handY: CGFloat = female ? 0.29 : 0.22
+            let leftHand = point(c - 0.17, handY, in: size)
+            let rightHand = point(c + 0.17, handY, in: size)
+            garmentPolyline(&context, [leftShoulder, point(c - 0.18, 0.28, in: size), leftHand], width: 11)
+            garmentPolyline(&context, [rightShoulder, point(c + 0.18, 0.28, in: size), rightHand], width: 11)
+            handDot(&context, center: leftHand, radius: 8)
+            handDot(&context, center: rightHand, radius: 8)
+        case .bound:
+            let handY: CGFloat = female ? 0.47 : 0.56
+            let leftHand = point(c + 0.02, handY, in: size)
+            let rightHand = point(c - 0.02, handY, in: size)
+            garmentPolyline(&context, [leftShoulder, point(c - 0.08, 0.48, in: size), leftHand], width: 10)
+            garmentPolyline(&context, [rightShoulder, point(c + 0.08, 0.48, in: size), rightHand], width: 10)
+            let handRect = CGRect(x: size.width * c - 18, y: size.height * handY - 7, width: 36, height: 14)
+            context.fill(Path(roundedRect: handRect, cornerRadius: 7), with: .color(skinTone))
+            context.stroke(Path(roundedRect: handRect, cornerRadius: 7), with: .color(SalahTheme.deepTeal.opacity(0.35)), lineWidth: 1)
+        case .intention, .relaxed:
+            let handY: CGFloat = 0.64
+            let leftHand = point(c - 0.10, handY, in: size)
+            let rightHand = point(c + 0.10, handY, in: size)
+            garmentLine(&context, leftShoulder, leftHand, width: 10)
+            garmentLine(&context, rightShoulder, rightHand, width: 10)
+            handDot(&context, center: leftHand, radius: 6)
+            handDot(&context, center: rightHand, radius: 6)
+        }
+    }
+
+    private func drawBowing(_ context: inout GraphicsContext, size: CGSize) {
+        let hip = point(female ? 0.43 : 0.40, 0.58, in: size)
+        let shoulder = point(female ? 0.61 : 0.66, female ? 0.49 : 0.46, in: size)
+        let headCenter = point(female ? 0.72 : 0.78, female ? 0.47 : 0.45, in: size)
+
+        torso(&context, shoulder: shoulder, hip: hip, width: female ? 36 : 31)
+        head(&context, center: headCenter, radius: min(size.width, size.height) * 0.067)
+        garmentLine(&context, point(0.38, 0.60, in: size), point(0.37, 0.90, in: size), width: 13)
+        garmentLine(&context, point(0.46, 0.60, in: size), point(0.48, 0.90, in: size), width: 13)
+        let leftHand = point(0.48, 0.69, in: size)
+        let rightHand = point(0.49, 0.70, in: size)
+        garmentPolyline(&context, [shoulder, point(0.58, 0.61, in: size), leftHand], width: 10)
+        garmentPolyline(&context, [point(shoulder.x / size.width + 0.02, shoulder.y / size.height + 0.01, in: size), point(0.66, 0.62, in: size), rightHand], width: 10)
+        handDot(&context, center: leftHand, radius: 6)
+        handDot(&context, center: rightHand, radius: 6)
+    }
+
+    private func drawSujud(_ context: inout GraphicsContext, size: CGSize) {
+        let knee = point(female ? 0.41 : 0.35, 0.73, in: size)
+        let hip = point(female ? 0.46 : 0.43, female ? 0.58 : 0.52, in: size)
+        let shoulder = point(female ? 0.61 : 0.62, female ? 0.69 : 0.65, in: size)
+        let headCenter = point(female ? 0.72 : 0.76, 0.75, in: size)
+
+        garmentPolyline(&context, [knee, hip, shoulder], width: female ? 34 : 30)
+        head(&context, center: headCenter, radius: min(size.width, size.height) * 0.062)
+        garmentPolyline(&context, [knee, point(0.30, 0.82, in: size), point(0.24, 0.82, in: size)], width: 13)
+        let leftHand = point(female ? 0.69 : 0.63, 0.83, in: size)
+        let rightHand = point(female ? 0.73 : 0.78, 0.83, in: size)
+        garmentPolyline(&context, [shoulder, point(female ? 0.66 : 0.58, 0.79, in: size), leftHand], width: 10)
+        garmentPolyline(&context, [shoulder, point(female ? 0.70 : 0.72, 0.78, in: size), rightHand], width: 10)
+        handDot(&context, center: leftHand, radius: 6)
+        handDot(&context, center: rightHand, radius: 6)
+        line(&context, point(0.67, 0.84, in: size), point(0.82, 0.84, in: size), width: 5, color: SalahTheme.gold)
+    }
+
+    private func drawSitting(_ context: inout GraphicsContext, size: CGSize, turn: Int, showFinger: Bool) {
+        let hip = point(0.48, 0.62, in: size)
+        let shoulder = point(0.48, 0.40, in: size)
+        // Keep the whole body and head centered. For Salam only the facial
+        // features indicate the head turn; the torso never appears to rotate.
+        let headTurnOffset: CGFloat
+        if pose == "salam_right" {
+            headTurnOffset = -0.015
+        } else if pose == "salam_left" {
+            headTurnOffset = 0.015
+        } else {
+            headTurnOffset = 0
+        }
+        let headCenter = point(0.48 + headTurnOffset, 0.27, in: size)
+
+        torso(&context, shoulder: shoulder, hip: hip, width: female ? 37 : 31)
+        head(&context, center: headCenter, radius: min(size.width, size.height) * 0.068)
+        garmentLine(&context, point(0.39, 0.42, in: size), point(0.39, 0.61, in: size), width: 10)
+        garmentLine(&context, point(0.57, 0.42, in: size), point(0.57, 0.61, in: size), width: 10)
+        line(&context, point(0.39, 0.60, in: size), point(0.53, 0.68, in: size), width: 9, color: skinTone)
+        line(&context, point(0.57, 0.60, in: size), point(0.67, 0.68, in: size), width: 9, color: skinTone)
+
+        if showFinger {
+            // Hanafi tashahhud detail: the worshipper's right index finger.
+            // Front-facing artwork means the worshipper's right is on the viewer's left.
+            line(
+                &context,
+                point(0.39, 0.59, in: size),
+                point(0.36, 0.51, in: size),
+                width: 5,
+                color: skinTone
+            )
+            let tip = CGRect(
+                x: size.width * 0.36 - 4,
+                y: size.height * 0.51 - 4,
+                width: 8,
+                height: 8
+            )
+            context.fill(Path(ellipseIn: tip), with: .color(SalahTheme.gold))
+        }
+
+        if female {
+            garmentPolyline(&context, [hip, point(0.60, 0.70, in: size), point(0.74, 0.80, in: size)], width: 15)
+            garmentPolyline(&context, [point(0.46, 0.65, in: size), point(0.57, 0.77, in: size), point(0.71, 0.84, in: size)], width: 15)
+        } else {
+            garmentPolyline(&context, [hip, point(0.40, 0.76, in: size), point(0.29, 0.84, in: size)], width: 14)
+            garmentPolyline(&context, [point(0.51, 0.65, in: size), point(0.62, 0.78, in: size), point(0.72, 0.84, in: size)], width: 14)
+        }
+
+        // No body-direction arrow here: the worshipper remains facing Qibla.
+        // PrayerPoseArtwork.drawFace shifts only the facial features for Salam.
     }
 }
 
@@ -809,53 +1187,124 @@ struct PrayerHowToView: View {
     }
 
     private var prayerLearningHero: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 14) {
+            HStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 50, height: 50)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 10, y: 5)
+
+                    Image(systemName: "figure.mind.and.body")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.white, SalahTheme.gold.opacity(0.92)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(settings.t("Gebet lernen", "Namaz öğren"))
+                        .font(.system(size: 27, weight: .bold, design: .serif))
+                        .foregroundStyle(SalahTheme.ink)
+                    Text(settings.t("Schritt für Schritt", "Adım adım"))
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                }
+
+                Spacer()
+            }
+
             Picker(settings.t("Lernmodus", "Öğrenme modu"), selection: $settings.prayerAudience) {
                 Text(settings.t("Mann", "Erkek")).tag(PrayerAudience.male)
                 Text(settings.t("Frau", "Kadın")).tag(PrayerAudience.female)
             }
             .pickerStyle(.segmented)
+            .padding(4)
+            .background(Color.white.opacity(0.72), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.28), lineWidth: 1)
+            }
 
             HStack(spacing: 14) {
-                ZStack(alignment: .bottom) {
-                    PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.98),
+                                    SalahTheme.cream,
+                                    SalahTheme.softTeal.opacity(0.28)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+
+                    PrayerPoseArtwork(
+                        assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention"
+                    )
+                    .padding(5)
                 }
-                .frame(width: 118, height: 148)
-                .background(SalahTheme.cream)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .frame(width: 122, height: 154)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                }
+                .shadow(color: SalahTheme.deepTeal.opacity(0.07), radius: 8, y: 4)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(settings.t("Ganz von vorne lernen", "En baştan öğren"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                        .font(.system(size: 17, weight: .bold, design: .serif))
+                        .foregroundStyle(SalahTheme.ink)
+
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe und scrolle bis zum Ende. Wenn du dort weiter nach oben wischst, öffnet sich automatisch der nächste Schritt.",
-                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku ve adımın sonuna kadar kaydır. Orada yukarı doğru kaydırmaya devam edince sonraki adım otomatik açılır."
+                        "Eine Haltung pro Schritt. Lies in Ruhe und wische am Ende weiter zum nächsten Schritt.",
+                        "Her adımda tek duruş. Sakin şekilde oku ve sonunda sonraki adıma geçmek için kaydır."
                     ))
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.ink)
+                    .font(.system(size: 11.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
                     .fixedSize(horizontal: false, vertical: true)
+
+                    HStack(spacing: 6) {
+                        Label("Hanafi", systemImage: "book.closed.fill")
+                        Label(settings.t("18 Schritte", "18 adım"), systemImage: "checkmark.seal.fill")
+                    }
+                    .font(.system(size: 9.3, weight: .bold))
+                    .foregroundStyle(SalahTheme.deepTeal)
                 }
+
                 Spacer(minLength: 0)
             }
-
-            VStack(alignment: .leading, spacing: 7) {
-                learningFeature(settings.t("Eine Haltung pro Schritt", "Her adımda tek duruş"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuş ve anlam"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Mann/Frau getrennt dargestellt", "Erkek/Kadın ayrı gösterilir"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Hanafi/Diyanet-Grunddarstellung", "Hanefî/Diyanet temel anlatımı"), icon: "checkmark.circle.fill")
-            }
         }
-        .padding(13)
+        .padding(15)
         .background(
             LinearGradient(
-                colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.72)],
+                colors: [
+                    Color.white.opacity(0.94),
+                    SalahTheme.cream.opacity(0.98),
+                    SalahTheme.gold.opacity(0.06)
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
-            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+            in: RoundedRectangle(cornerRadius: 22, style: .continuous)
         )
-        .overlay { RoundedRectangle(cornerRadius: 18).stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1) }
+        .overlay {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.36), lineWidth: 1)
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.06), radius: 12, y: 6)
     }
 
     private func learningFeature(_ text: String, icon: String) -> some View {
@@ -906,24 +1355,41 @@ struct PrayerHowToView: View {
                     }
                     .cardStyle()
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 10) {
                         HStack {
                             Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
+                                .font(.system(size: 12, weight: .bold))
                                 .foregroundStyle(SalahTheme.deepTeal)
+
                             Spacer()
-                            Text(settings.prayerAudience.title(settings.language))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
+
+                            Text(settings.prayerAudience.title(settings.language).uppercased())
+                                .font(.system(size: 9.5, weight: .black))
+                                .tracking(0.5)
+                                .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
-                                .background(SalahTheme.softTeal, in: Capsule())
+                                .background(SalahTheme.softTeal.opacity(0.74), in: Capsule())
+                                .foregroundStyle(SalahTheme.deepTeal)
                         }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
+
+                        GeometryReader { proxy in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(SalahTheme.deepTeal.opacity(0.08))
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [SalahTheme.teal, SalahTheme.gold],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: proxy.size.width * CGFloat(currentStepIndex + 1) / CGFloat(steps.count))
+                            }
+                        }
+                        .frame(height: 6)
                     }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+                    .padding(.horizontal, 4)
 
                     PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
                         .id("prayer-step-card-\(currentStepIndex)")
@@ -1016,35 +1482,81 @@ private struct PrayerTutorialStepCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
+            HStack(spacing: 11) {
                 Text(step.number)
-                    .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: 34, height: 34)
-                    .background(SalahTheme.gold.opacity(0.95), in: Circle())
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(.white)
+                    .frame(width: 36, height: 36)
+                    .background(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: Circle()
+                    )
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.16), radius: 5, y: 2)
 
                 Text(settings.language == .german ? step.deTitle : step.trTitle)
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .font(.system(size: 19, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Spacer(minLength: 4)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 11)
-            .background(SalahTheme.teal)
+            .padding(.horizontal, 15)
+            .padding(.top, 15)
+            .padding(.bottom, 10)
 
-            VStack(alignment: .leading, spacing: 13) {
+            VStack(alignment: .leading, spacing: 14) {
                 if step.pose == .salam {
                     PrayerSalamVisual()
+                        .padding(10)
+                        .background(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.98), SalahTheme.cream],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            in: RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                        }
                 } else if let imageName {
                     ZStack(alignment: .center) {
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(0.98),
+                                        SalahTheme.cream,
+                                        SalahTheme.softTeal.opacity(0.18)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+
                         PrayerPoseArtwork(assetName: imageName)
+                            .padding(6)
+
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.20), .clear],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .allowsHitTesting(false)
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: standingStylePose ? 236 : 220)
-                    .padding(.vertical, 6)
-                    .background(SalahTheme.cream)
+                    .frame(height: standingStylePose ? 252 : 232)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                    }
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 12, y: 6)
                 }
 
                 if step.number == "16" {
@@ -1077,17 +1589,31 @@ private struct PrayerTutorialStepCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")
+                    Label(settings.t("SO MACHST DU ES", "BÖYLE YAP"), systemImage: "hand.point.right.fill")
                         .font(.caption.bold())
                         .foregroundStyle(SalahTheme.teal)
                     Text(settings.language == .german ? step.deAction : step.trAction)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(SalahTheme.ink)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(12)
+                .padding(13)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.92),
+                            SalahTheme.softTeal.opacity(0.35)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.20), lineWidth: 1)
+                }
 
                 if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
                     Label(note, systemImage: "info.circle.fill")
@@ -1109,15 +1635,33 @@ private struct PrayerTutorialStepCard: View {
                     }
                 }
             }
-            .padding(14)
-            .background(SalahTheme.cream)
+            .padding(.horizontal, 15)
+            .padding(.bottom, 16)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.97),
+                    SalahTheme.cream,
+                    SalahTheme.gold.opacity(0.05)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        )
         .overlay {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.94), SalahTheme.gold.opacity(0.46)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         }
-        .shadow(color: SalahTheme.deepTeal.opacity(0.05), radius: 7, y: 3)
+        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 14, y: 7)
     }
 }
 
@@ -1127,31 +1671,76 @@ private struct PrayerRecitationView: View {
     @State private var showMeaning = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
-                .font(.caption.bold())
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 9) {
+            HStack {
+                Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
+                    .font(.system(size: 10, weight: .black))
+                    .tracking(0.4)
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                Spacer()
+
+                Image(systemName: "waveform")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(SalahTheme.gold)
+            }
+
             Text(recitation.arabic)
-                .font(.title3)
+                .font(.system(size: 22, weight: .medium))
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: .infinity, alignment: .trailing)
+                .foregroundStyle(SalahTheme.ink)
+                .padding(.vertical, 3)
+
             Text(recitation.transliteration)
-                .font(.subheadline.weight(.semibold))
-            Button(showMeaning ? settings.t("Bedeutung ausblenden", "Anlamı gizle") : settings.t("Bedeutung anzeigen", "Anlamı göster")) {
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(SalahTheme.deepTeal)
+
+            Button {
                 withAnimation(.easeInOut(duration: 0.2)) { showMeaning.toggle() }
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: showMeaning ? "eye.slash.fill" : "eye.fill")
+                    Text(showMeaning ? settings.t("Bedeutung ausblenden", "Anlamı gizle") : settings.t("Bedeutung anzeigen", "Anlamı göster"))
+                }
+                .font(.system(size: 9.5, weight: .bold))
+                .foregroundStyle(SalahTheme.deepTeal)
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(SalahTheme.gold.opacity(0.12), in: Capsule())
             }
-            .font(.caption)
+            .buttonStyle(.plain)
+
             if showMeaning {
                 Text(settings.language == .german ? recitation.deMeaning : recitation.trMeaning)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.top, 2)
             }
+
             if let note = settings.language == .german ? recitation.deNote : recitation.trNote {
-                Text(note).font(.caption2).foregroundStyle(.tertiary)
+                Text(note)
+                    .font(.caption2)
+                    .foregroundStyle(SalahTheme.mutedInk.opacity(0.82))
             }
         }
-        .padding(10)
-        .background(SalahTheme.gold.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+        .padding(12)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.82),
+                    SalahTheme.gold.opacity(0.055),
+                    SalahTheme.softTeal.opacity(0.16)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 1)
+        }
     }
 }
 
@@ -1188,44 +1777,91 @@ private struct PrayerSalamVisual: View {
     }
 
     private func salamDirection(number: String, direction: String, imageName: String, arrow: String, instruction: String) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
                 Text(number)
-                    .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
+                    .font(.system(size: 12, weight: .black))
+                    .foregroundStyle(.white)
                     .frame(width: 32, height: 32)
-                    .background(SalahTheme.gold.opacity(0.82), in: Circle())
+                    .background(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: Circle()
+                    )
+
                 Text(direction)
-                    .font(.title2.bold())
-                    .foregroundStyle(SalahTheme.teal)
+                    .font(.system(size: 18, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.ink)
+
                 Spacer()
-                Image(systemName: arrow)
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(SalahTheme.gold)
+
+                ZStack {
+                    Circle()
+                        .fill(SalahTheme.gold.opacity(0.16))
+                        .frame(width: 38, height: 38)
+                    Image(systemName: arrow)
+                        .font(.system(size: 18, weight: .black))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                }
             }
 
             HStack(alignment: .center, spacing: 14) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 118, height: 150)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.98), SalahTheme.cream],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+
+                    PrayerPoseArtwork(assetName: imageName)
+                        .padding(5)
+                }
+                .frame(width: 122, height: 154)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                }
 
                 Text(instruction)
-                    .font(.subheadline)
+                    .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(SalahTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            Text("السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ")
-                .font(.title3)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            Text("As-salāmu ʿalaykum wa raḥmatullāh")
-                .font(.subheadline.bold())
-                .foregroundStyle(SalahTheme.ink)
+            VStack(alignment: .trailing, spacing: 5) {
+                Text("السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ")
+                    .font(.title3)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                Text("As-salāmu ʿalaykum wa raḥmatullāh")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+            }
+            .padding(10)
+            .background(Color.white.opacity(0.62), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
-        .padding(11)
-        .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 16))
-        .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+        .padding(12)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.95),
+                    SalahTheme.cream,
+                    SalahTheme.gold.opacity(0.05)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+        }
     }
 }
 

@@ -194,7 +194,12 @@ if '.replacingOccurrences(of: "male_", with: "")' in guide:
 
 for token in (
     'Image(key)',
-    'Image(assetName)',
+    'Canvas { graphics, size in',
+    'assetName.hasPrefix("female_")',
+    'String(assetName.dropFirst("female_".count))',
+    'String(assetName.dropFirst("male_".count))',
+    'case "salam_right": drawSitting(&context, size: size, turn: 1, showFinger: false)',
+    'case "salam_left": drawSitting(&context, size: size, turn: -1, showFinger: false)',
     'number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm"',
     'number: 8, image: "wudu_rightarm", deTitle: "Linker Arm"',
     'number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß"',
