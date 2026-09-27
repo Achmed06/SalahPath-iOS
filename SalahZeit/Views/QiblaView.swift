@@ -174,9 +174,7 @@ struct QiblaView: View {
                         VStack(spacing: 0) {
                             infoRow(
                                 icon: "location.fill",
-                                title: isScreenshotQA
-                                    ? settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
-                                    : (locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum"))
+                                title: qiblaLocationLabel
                             )
                             infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
                             infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
@@ -336,6 +334,22 @@ struct QiblaView: View {
             return deviceLocation
         }
         return locationManager.location
+    }
+
+    private var qiblaLocationLabel: String {
+        if isScreenshotQA {
+            return settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
+        }
+
+        if locationManager.usesManualLocation,
+           locationManager.qiblaDeviceLocation != nil {
+            return settings.t(
+                "Gerätestandort für Qibla",
+                "Kıble için cihaz konumu"
+            )
+        }
+
+        return locationManager.locality ?? settings.t("Aktueller Standort", "Mevcut konum")
     }
 
     private var headingAccuracy: Double? {
