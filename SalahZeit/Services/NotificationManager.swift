@@ -205,6 +205,22 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 .filter { $0.hasPrefix(prayerIdentifierPrefix) }
         )
 
+        let anyPrayerEnabled =
+            settings.fajrNotificationEnabled ||
+            settings.dhuhrNotificationEnabled ||
+            settings.asrNotificationEnabled ||
+            settings.maghribNotificationEnabled ||
+            settings.ishaNotificationEnabled
+        let expectsPrayerRequests =
+            anyPrayerEnabled &&
+            (settings.notifyAtPrayerTime || leadMinutes > 0)
+
+        if !expectsPrayerRequests {
+            return allRequestsScheduled &&
+                scheduledIdentifiers.isEmpty &&
+                pendingIDs.isEmpty
+        }
+
         return allRequestsScheduled &&
             !scheduledIdentifiers.isEmpty &&
             scheduledIdentifiers.isSubset(of: pendingIDs)
