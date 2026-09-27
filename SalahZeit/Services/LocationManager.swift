@@ -278,6 +278,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 self.startUpdates()
             case .denied, .restricted:
                 self.pendingDeviceLocationSwitch = false
+                self.qiblaDeviceLocation = nil
+                self.heading = nil
+                self.manager.stopUpdatingHeading()
+                self.manager.stopUpdatingLocation()
                 self.lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
             default:
                 break
