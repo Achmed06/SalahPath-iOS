@@ -139,8 +139,8 @@ struct GuideView: View {
             NavigationLink { HanafiPrayerPlanView() } label: {
                 referenceRow(
                     icon: "list.number",
-                    title: settings.t("Rakʿat & Gebetsarten", "Rekât ve namaz türleri"),
-                    subtitle: settings.t("2, 3 und 4 Rakʿat richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
+                    title: settings.t("Rakʿāt & Gebetsarten", "Rekât ve namaz türleri"),
+                    subtitle: settings.t("2, 3 und 4 Rakʿāt richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
                 )
             }
 
@@ -424,14 +424,14 @@ struct RakatOverviewView: View {
 
             Section(settings.t("Freitag / Jumuʿah", "Cuma")) {
                 Text(settings.t(
-                    "Jumuʿah hat 2 Rakʿat Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿat Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
+                    "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿāt Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
                     "Cuma namazının cemaatle kılınan farzı 2 rekâttır. Cumaya katılmayan kişi normal öğle namazının 4 rekât farzını kılar. Cumanın öncesi ve sonrasındaki sünnet rekâtları mezheplere göre farklı anlatılabilir."
                 ))
             }
         }
         .scrollContentBackground(.hidden)
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Rakʿat", "Rekât"))
+        .navigationTitle(settings.t("Rakʿāt", "Rekât"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -2549,7 +2549,7 @@ struct PrayerTermsView: View {
         ("Adhān / Ezan", "Gebetsruf zum Beginn der Gebetszeit.", "Namaz vaktini bildiren çağrı."),
         ("Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.", "Cemaat namazından hemen önce okunan çağrı."),
         ("Dhikr / Zikir", "Gedenken Allahs durch Worte, Duʿāʾ und Qurʾān-Rezitation.", "Allah'ı söz, dua ve Kur'an ile anmak."),
-        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿat wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
+        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿāt wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
     ]
 
     var body: some View {
