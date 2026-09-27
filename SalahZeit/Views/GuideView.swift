@@ -5425,8 +5425,11 @@ final class RemoteAudioPlayer: ObservableObject {
             object: AVAudioSession.sharedInstance(),
             queue: .main
         ) { [weak self] notification in
+            let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt
+            let rawOptions = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
             Task { @MainActor in
-                self?.handleAudioInterruption(notification)
+                guard let rawType else { return }
+                self?.handleAudioInterruption(typeRawValue: rawType, optionsRawValue: rawOptions)
             }
         }
 
@@ -5441,9 +5444,8 @@ final class RemoteAudioPlayer: ObservableObject {
         }
     }
 
-    private func handleAudioInterruption(_ notification: Notification) {
-        guard let rawType = notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: rawType) else { return }
+    private func handleAudioInterruption(typeRawValue: UInt, optionsRawValue: UInt) {
+        guard let type = AVAudioSession.InterruptionType(rawValue: typeRawValue) else { return }
 
         switch type {
         case .began:
@@ -5454,8 +5456,7 @@ final class RemoteAudioPlayer: ObservableObject {
             updateNowPlaying()
 
         case .ended:
-            let rawOptions = notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
-            let options = AVAudioSession.InterruptionOptions(rawValue: rawOptions)
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsRawValue)
             let shouldResume = wasPlayingBeforeInterruption && options.contains(.shouldResume)
             wasPlayingBeforeInterruption = false
 
