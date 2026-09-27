@@ -161,9 +161,12 @@ if grep -R -nE 'URL\(string:[[:space:]]*"http://' SalahZeit --include='*.swift';
 fi
 
 # Religious-content regression gates for previously corrected release issues.
-grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/HomeView.swift"
-grep -q 'Quran 3:173 · excerpt' "SalahZeit/Views/HomeView.swift"
-grep -q 'Quran 20:114 · excerpt' "SalahZeit/Views/GuideView.swift"
+grep -q 'Koran 20:114 · Auszug' "SalahZeit/Views/HomeView.swift"
+grep -q "Kur'an 20:114 · alıntı" "SalahZeit/Views/HomeView.swift"
+grep -q 'Koran 3:173 · Auszug' "SalahZeit/Views/HomeView.swift"
+grep -q "Kur'an 3:173 · alıntı" "SalahZeit/Views/HomeView.swift"
+grep -q 'Koran 20:114 · Auszug' "SalahZeit/Views/GuideView.swift"
+grep -q "Kur'an 20:114 · alıntı" "SalahZeit/Views/GuideView.swift"
 grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' "SalahZeit/Views/GuideView.swift"
 grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' "SalahZeit/Views/GuideView.swift"
 grep -q 'Angezeigt sind nur die Anfangszeilen' "SalahZeit/Views/GuideView.swift"
