@@ -2226,7 +2226,7 @@ struct PrayerCatalogView: View {
                 id: "dhuhr_first_sunnah", group: "daily",
                 deTitle: "Dhuhr · 4 erste Sunnah", trTitle: "Öğle · 4 Rekât İlk Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "4",
-                deSummary: "Vier betonte Sunnah-Rakʿa vor dem Dhuhr-Fard.",
+                deSummary: "Vier betonte Sunnah-Rakʿāt vor dem Dhuhr-Fard.",
                 trSummary: "Öğle farzından önceki dört rekât kuvvetli sünnet.",
                 deSteps: [
                     "1.–2. Rakʿa: wie ein normales 2-Rakʿa-Gebet; nach Rakʿa 2 nur Ettehiyyâtü lesen.",
@@ -2285,7 +2285,7 @@ struct PrayerCatalogView: View {
                 id: "asr_sunnah", group: "daily",
                 deTitle: "Asr · 4 Sunnah", trTitle: "İkindi · 4 Rekât Sünnet",
                 deRuling: "Sunnah ghayr muʾakkadah", trRuling: "Sünnet-i gayr-i müekkede", rakaLabel: "4",
-                deSummary: "Vier freiwillige Sunnah-Rakʿa vor dem Asr-Fard.",
+                deSummary: "Vier freiwillige Sunnah-Rakʿāt vor dem Asr-Fard.",
                 trSummary: "İkindi farzından önceki dört rekât gayr-i müekked sünnet.",
                 deSteps: [
                     "Rakʿa 1–2: normal; im ersten Sitzen Ettehiyyâtü UND Salli-Bârik lesen.",
@@ -2305,7 +2305,7 @@ struct PrayerCatalogView: View {
                 id: "asr_fard", group: "daily",
                 deTitle: "Asr · 4 Fard", trTitle: "İkindi · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿa am Nachmittag.",
+                deSummary: "Vier Pflicht-Rakʿāt am Nachmittag.",
                 trSummary: "İkindi vaktinin dört rekât farz namazı.",
                 deSteps: [
                     "Wie Dhuhr-Fard: in Rakʿa 1–2 Fātiha + zusätzliche Sure/Verse.",
@@ -2343,7 +2343,7 @@ struct PrayerCatalogView: View {
                 id: "maghrib_sunnah", group: "daily",
                 deTitle: "Maghrib · 2 Sunnah", trTitle: "Akşam · 2 Rekât Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿa nach dem Maghrib-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿāt nach dem Maghrib-Fard.",
                 trSummary: "Akşam farzından sonra kılınan iki rekât kuvvetli sünnet.",
                 deSteps: ["Normaler 2-Rakʿa-Sunnah-Ablauf mit Fātiha + Sure in beiden Rakʿāt.", "Nach Rakʿa 2 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["İki rekâtta da Fâtiha + sûre okunan normal 2 rekât sünnet düzeni.", "2. rekâttan sonra tam son oturuş ve selâm."],
@@ -2354,7 +2354,7 @@ struct PrayerCatalogView: View {
                 id: "isha_first_sunnah", group: "daily",
                 deTitle: "Isha · 4 erste Sunnah", trTitle: "Yatsı · 4 Rekât İlk Sünnet",
                 deRuling: "Sunnah ghayr muʾakkadah", trRuling: "Sünnet-i gayr-i müekkede", rakaLabel: "4",
-                deSummary: "Vier Sunnah-Rakʿa vor dem Isha-Fard.",
+                deSummary: "Vier Sunnah-Rakʿāt vor dem Isha-Fard.",
                 trSummary: "Yatsı farzından önceki dört rekât gayr-i müekked sünnet.",
                 deSteps: [
                     "Wie die vier Sunnah vor Asr.",
@@ -2373,7 +2373,7 @@ struct PrayerCatalogView: View {
                 id: "isha_fard", group: "daily",
                 deTitle: "Isha · 4 Fard", trTitle: "Yatsı · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿa in der Nacht.",
+                deSummary: "Vier Pflicht-Rakʿāt in der Nacht.",
                 trSummary: "Yatsı vaktinin dört rekât farz namazı.",
                 deSteps: ["Wie Dhuhr-/Asr-Fard: Rakʿa 1–2 Fātiha + Sure, Rakʿa 3–4 Fātiha.", "Nach Rakʿa 4 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["Öğle/ikindi farzı gibi: 1–2. rekâtta Fâtiha + sûre, 3–4. rekâtta Fâtiha.", "4. rekâttan sonra tam son oturuş ve selâm."],
@@ -2384,7 +2384,7 @@ struct PrayerCatalogView: View {
                 id: "isha_last_sunnah", group: "daily",
                 deTitle: "Isha · 2 letzte Sunnah", trTitle: "Yatsı · 2 Rekât Son Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿa nach dem Isha-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿāt nach dem Isha-Fard.",
                 trSummary: "Yatsı farzından sonra kılınan iki rekât kuvvetli sünnet.",
                 deSteps: ["Normaler 2-Rakʿa-Sunnah-Ablauf.", "Beide Rakʿāt: Fātiha + Sure; danach Schluss-Sitzen und Salām."],
                 trSteps: ["Normal iki rekât sünnet düzeni.", "İki rekâtta da Fâtiha + sûre; ardından son oturuş ve selâm."],
@@ -2396,7 +2396,7 @@ struct PrayerCatalogView: View {
                 id: "witr", group: "special",
                 deTitle: "Witr · 3 Rakʿāt", trTitle: "Vitir · 3 Rekât",
                 deRuling: "Hanafi: Wajib", trRuling: "Hanefî: Vacip", rakaLabel: "3",
-                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt im dritten Rakʿa.",
+                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt in der dritten Rakʿa.",
                 trSummary: "Yatsıdan sonra, üçüncü rekâtta kunut bulunan üç rekât vitir.",
                 deSteps: [
                     "Rakʿa 1–2: Fātiha + Sure; nach Rakʿa 2 nur Ettehiyyâtü, dann zur dritten aufstehen.",
@@ -2788,7 +2788,7 @@ struct HajjUmrahGuideView: View {
                 lines: settings.language == .german ? [
                     "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
                     "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
-                    "Nach dem Tawaf zwei Rakʿāt Tawaf-Gebet an einem geeigneten Ort verrichten.",
+                    "Nach dem Tawaf ein Tawaf-Gebet mit zwei Rakʿāt an einem geeigneten Ort verrichten.",
                     "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
                     "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
                 ] : [
