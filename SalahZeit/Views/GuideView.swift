@@ -9659,8 +9659,8 @@ struct QuranPageReaderView: View {
                                         } label: {
                                             Group {
                                                 if resolvingAyahNumber == ayah.number {
-                                                    ProgressView()
-                                                        .controlSize(.small)
+                                                    Image(systemName: "xmark.circle.fill")
+                                                        .font(.system(size: 17, weight: .semibold))
                                                 } else {
                                                     Image(
                                                         systemName: isThisAyahLoading
@@ -9678,12 +9678,12 @@ struct QuranPageReaderView: View {
                                         .buttonStyle(.plain)
                                         .disabled(resolvingAyahNumber != nil && resolvingAyahNumber != ayah.number)
                                         .accessibilityLabel(settings.t(
-                                            isThisAyahLoading
+                                            resolvingAyahNumber == ayah.number || isThisAyahLoading
                                                 ? "Laden von Vers \(ayah.numberInSurah) abbrechen"
                                                 : (isThisAyahActive && audio.isPlaying
                                                     ? "Vers \(ayah.numberInSurah) pausieren"
                                                     : "Vers \(ayah.numberInSurah) abspielen"),
-                                            isThisAyahLoading
+                                            resolvingAyahNumber == ayah.number || isThisAyahLoading
                                                 ? "\(ayah.numberInSurah). ayetin yüklenmesini durdur"
                                                 : (isThisAyahActive && audio.isPlaying
                                                     ? "\(ayah.numberInSurah). ayeti duraklat"
@@ -9813,6 +9813,12 @@ struct QuranPageReaderView: View {
     private func toggleAudio(for ayah: QuranPageAyah) async {
         let reciter = settings.quranReciter
         let key = audioKey(surah: ayah.surah.number, reciter: reciter)
+
+        if resolvingAyahNumber == ayah.number {
+            audioRequestGeneration &+= 1
+            resolvingAyahNumber = nil
+            return
+        }
 
         if let urls = audioURLsBySurah[key] {
             playFromAyah(ayah, urls: urls, reciter: reciter)
