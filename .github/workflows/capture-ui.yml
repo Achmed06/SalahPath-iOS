@@ -224,6 +224,7 @@ jobs:
               *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
               *quran*|*Quran*) CAPTURE_MODE="quran" ;;
               *qibla*|*Qibla*) CAPTURE_MODE="qibla" ;;
+              *onboarding*|*Onboarding*|*setup*|*Setup*) CAPTURE_MODE="onboarding" ;;
               *times*|*Times*|*gebetszeit*|*Gebetszeit*|*map*|*Map*) CAPTURE_MODE="times" ;;
               *sitting*|*Sitting*|*sitzt*|*Sitzt*) CAPTURE_MODE="sitting" ;;
               *polish*|*Polish*) CAPTURE_MODE="polish" ;;
@@ -290,6 +291,9 @@ jobs:
           elif [ "$CAPTURE_MODE" = "qibla" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+          elif [ "$CAPTURE_MODE" = "onboarding" ]; then
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            capture onboarding SalahPath-v3.62-B78-DE-Onboarding.png
           elif [ "$CAPTURE_MODE" = "times" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
