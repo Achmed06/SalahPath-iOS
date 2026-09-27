@@ -97,7 +97,7 @@ enum PrayerKind: String, CaseIterable, Identifiable {
             de = "Nach den drei Fard folgen gewöhnlich zwei Sunnah."
             tr = "Üç rekât farzdan sonra iki rekât sünnet kılınır."
         case .isha:
-            de = "Im hanafitischen Madhhab sind drei Rakʿat Witr wajib; andere sunnitische Rechtsschulen stufen Witr anders ein."
+            de = "Im hanafitischen Madhhab sind drei Rakʿāt Witr wajib; andere sunnitische Rechtsschulen stufen Witr anders ein."
             tr = "Hanefî mezhebinde üç rekât vitir vaciptir; diğer Sünnî mezheplerde hükmü farklı değerlendirilir."
         }
         return language == .german ? de : tr
