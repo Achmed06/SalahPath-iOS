@@ -10640,18 +10640,26 @@ private struct QuranSurahView: View {
                 Spacer()
 
                 if let audioURL {
+                    let isFirstAyahBasmalahActive =
+                        index == 0 &&
+                        surah.number != 1 &&
+                        surah.number != 9 &&
+                        audio.displayTitle == surah.englishName &&
+                        audio.activeURL == QuranAudioResolver.bismillahURL(reciter: settings.quranReciter)
+                    let isThisAyahActive = audio.activeURL == audioURL || isFirstAyahBasmalahActive
+
                     Button {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
                         playFromAyah(index: index, ayahNumber: ar.numberInSurah)
                     } label: {
-                        Image(systemName: audio.activeURL == audioURL && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                        Image(systemName: isThisAyahActive && audio.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(settings.t(
-                        audio.activeURL == audioURL && audio.isPlaying
+                        isThisAyahActive && audio.isPlaying
                             ? "Vers \(ar.numberInSurah) pausieren"
                             : "Vers \(ar.numberInSurah) abspielen",
-                        audio.activeURL == audioURL && audio.isPlaying
+                        isThisAyahActive && audio.isPlaying
                             ? "\(ar.numberInSurah). ayeti duraklat"
                             : "\(ar.numberInSurah). ayeti oynat"
                     ))
@@ -10843,7 +10851,14 @@ private struct QuranSurahView: View {
         }
 
         let selectedURL = resolvedAudioURLs[index]
-        if audio.activeURL == selectedURL {
+        let isFirstAyahBasmalahActive =
+            index == 0 &&
+            surah.number != 1 &&
+            surah.number != 9 &&
+            audio.displayTitle == surah.englishName &&
+            audio.activeURL == QuranAudioResolver.bismillahURL(reciter: settings.quranReciter)
+
+        if audio.activeURL == selectedURL || isFirstAyahBasmalahActive {
             audio.isPlaying ? audio.pause() : audio.resume()
             return
         }
