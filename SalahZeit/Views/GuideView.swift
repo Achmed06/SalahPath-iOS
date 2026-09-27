@@ -4393,6 +4393,7 @@ final class RemoteAudioPlayer: ObservableObject {
     private var player: AVPlayer?
     private var queueURLs: [URL] = []
     private var playbackRevision = 0
+    private var playbackItemRevision = 0
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
     private var periodicTimeObserver: Any?
@@ -4693,6 +4694,9 @@ final class RemoteAudioPlayer: ObservableObject {
     }
 
     private func startPlayback(_ url: URL) {
+        playbackItemRevision &+= 1
+        let itemRevision = playbackItemRevision
+
         let item = AVPlayerItem(url: url)
         item.preferredForwardBufferDuration = 4
         let newPlayer = AVPlayer(playerItem: item)
@@ -4705,7 +4709,8 @@ final class RemoteAudioPlayer: ObservableObject {
             queue: .main
         ) { [weak self, weak newPlayer] time in
             Task { @MainActor in
-                guard let self else { return }
+                guard let self,
+                      self.playbackItemRevision == itemRevision else { return }
                 let seconds = time.seconds
                 self.currentTime = seconds.isFinite && seconds >= 0 ? seconds : 0
                 if let itemDuration = newPlayer?.currentItem?.duration.seconds,
@@ -4719,7 +4724,8 @@ final class RemoteAudioPlayer: ObservableObject {
 
         statusObservation = item.observe(\.status, options: [.initial, .new]) { [weak self] item, _ in
             Task { @MainActor in
-                guard let self else { return }
+                guard let self,
+                      self.playbackItemRevision == itemRevision else { return }
                 switch item.status {
                 case .readyToPlay:
                     self.isLoading = false
@@ -4744,7 +4750,8 @@ final class RemoteAudioPlayer: ObservableObject {
 
         timeControlObservation = newPlayer.observe(\.timeControlStatus, options: [.initial, .new]) { [weak self] player, _ in
             Task { @MainActor in
-                guard let self else { return }
+                guard let self,
+                      self.playbackItemRevision == itemRevision else { return }
                 self.isPlaying = player.timeControlStatus == .playing
                 if player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
                     self.isLoading = true
@@ -4764,7 +4771,8 @@ final class RemoteAudioPlayer: ObservableObject {
             queue: .main
         ) { [weak self] _ in
             Task { @MainActor in
-                guard let self else { return }
+                guard let self,
+                      self.playbackItemRevision == itemRevision else { return }
                 if self.hasNext {
                     self.next()
                 } else if self.queueContinuationDelegate != nil {
@@ -4787,7 +4795,8 @@ final class RemoteAudioPlayer: ObservableObject {
             let errorDescription = (note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error)?.localizedDescription
 
             Task { @MainActor in
-                guard let self else { return }
+                guard let self,
+                      self.playbackItemRevision == itemRevision else { return }
                 if self.retryPlaybackIfPossible(after: url) {
                     return
                 }
