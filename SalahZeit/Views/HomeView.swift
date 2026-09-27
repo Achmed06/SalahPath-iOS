@@ -1886,7 +1886,7 @@ struct HomeView: View {
             Label(settings.t("Freitag / Jumuʿah", "Cuma"), systemImage: "person.3.fill")
                 .font(.headline).foregroundStyle(SalahTheme.teal)
             Text(settings.t(
-                "Jumuʿah hat 2 Rakʿah Fard in Gemeinschaft. Die tatsächliche Jumuʿah-Uhrzeit legt die jeweilige Moschee fest.",
+                "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Die tatsächliche Jumuʿah-Uhrzeit legt die jeweilige Moschee fest.",
                 "Cuma namazının cemaatle kılınan farzı 2 rekâttır. Gerçek cuma saatini ilgili cami belirler."
             )).font(.subheadline)
         }
