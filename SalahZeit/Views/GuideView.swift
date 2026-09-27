@@ -4720,7 +4720,7 @@ final class RemoteAudioPlayer: ObservableObject {
                         return
                     }
                     self.failCurrentAndContinue(
-                        item.error?.localizedDescription ?? localized("Audio konnte nicht geladen werden.", "Ses yüklenemedi.")
+                        item.error?.localizedDescription ?? self.localized("Audio konnte nicht geladen werden.", "Ses yüklenemedi.")
                     )
                 default:
                     self.isLoading = true
@@ -4778,7 +4778,7 @@ final class RemoteAudioPlayer: ObservableObject {
                     return
                 }
                 self.failCurrentAndContinue(
-                    errorDescription ?? localized("Audio-Wiedergabe fehlgeschlagen.", "Ses oynatılamadı.")
+                    errorDescription ?? self.localized("Audio-Wiedergabe fehlgeschlagen.", "Ses oynatılamadı.")
                 )
             }
         }
@@ -10661,7 +10661,7 @@ private struct QuranSurahView: View {
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
 
-                if let audioURL {
+                if audioURL != nil {
                     Button {
                         QuranBookmarkStore.setLastRead(surah: surah.number, ayah: ar.numberInSurah)
                         playFromAyah(index: index, ayahNumber: ar.numberInSurah)
