@@ -250,7 +250,7 @@ for token in (
     'return "qibla"',
     'SalahFeatureIcon(kind: item.0)',
     '("home", settings.t("Start", "Ana Sayfa"))',
-    '("quran", settings.t("Koran", "Kur\'an"))',
+    '("quran", settings.t("Quran", "Kur\'an"))',
     '("prayer", settings.t("Gebet", "Namaz"))',
     '("discover", settings.t("Entdecken", "Keşfet"))',
     '("profile", settings.t("Profil", "Profil"))',
