@@ -118,6 +118,19 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
+    func requestDeviceLocationSnapshot() {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            manager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse, .authorizedAlways:
+            manager.requestLocation()
+        case .denied, .restricted:
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+        @unknown default:
+            break
+        }
+    }
+
     func prepareQiblaHeading() {
         updateHeadingOrientation(for: UIDevice.current.orientation)
         startHeadingIfAvailable()
