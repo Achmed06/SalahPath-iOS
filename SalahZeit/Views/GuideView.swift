@@ -498,14 +498,14 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
         deMeaning: "Die eröffnende Sure. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿa rezitiert; nach ihrem Ende sagt man Âmîn.",
         trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsure nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsure nicht selbst. Wortlaut und Audio findest du zusätzlich im Koran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsure: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
         arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
         transliteration: "Kul hüvallâhü ehad. Allâhüssamed. Lem yelid ve lem yûled. Ve lem yekün lehû küfüven ehad.",
         deMeaning: "Sprich: Er ist Allah, der Eine …", trMeaning: "De ki: O Allah birdir …",
-        deNote: "Nur ein Beispiel. Eine andere passende Sure oder Quranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
+        deNote: "Nur ein Beispiel. Eine andere passende Sure oder Koranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
 
     static let ruku = PrayerRecitation(
         deLabel: "Im Rukūʿ", trLabel: "Rükûda",
@@ -561,7 +561,7 @@ private enum PrayerText {
         arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
         transliteration: "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr.",
         deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
-        trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Quran 2:201", trNote: "Kur'an 2:201")
+        trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Koran 2:201", trNote: "Kur'an 2:201")
 
     static let salam = PrayerRecitation(
         deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
@@ -2879,7 +2879,7 @@ struct HajjUmrahGuideView: View {
                 icon: "hands.sparkles.fill",
                 lines: settings.language == .german ? [
                     "Diyanets Hajj-Ausbildung stellt Duas für einzelne Shawt bereit, erklärt aber ausdrücklich: Diese Formulierungen sind nicht verpflichtend.",
-                    "Du darfst Quran-Duas, authentisch überlieferte Duas, Dhikr oder eigene aufrichtige Bitten sprechen.",
+                    "Du darfst Koran-Duas, authentisch überlieferte Duas, Dhikr oder eigene aufrichtige Bitten sprechen.",
                     "Zwischen der jemenitischen Ecke und dem Schwarzen Stein ist „Rabbanā ātinā fi-d-dunyā ḥasanah …“ eine bekannte überlieferte Dua."
                 ] : [
                     "Diyanet Hac Eğitimi her şavt için dua örnekleri verir; ancak bu metinlerin okunmasının zorunlu olmadığını açıkça belirtir.",
@@ -2955,7 +2955,7 @@ struct RamadanGuideIndexView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF führt Ramadan als eigenen Bereich mit Fastenwissen, Tarawih, Tasbih-/Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr. SalahPath verbindet diese Unterpunkte jetzt an einer Stelle.",
+                    "Die PDF führt Ramadan als eigenen Bereich mit Fastenwissen, Tarawih, Tasbih-/Eid-Gebet, Duas, Koranverse und Laylat al-Qadr. SalahPath verbindet diese Unterpunkte jetzt an einer Stelle.",
                     "PDF Ramazan'ı; oruç bilgisi, teravih, tesbih/bayram namazı, dualar, ayetler ve Kadir Gecesi ile ayrı bir bölüm olarak gösteriyor. SalahPath artık bu alt başlıkları tek yerde topluyor."
                 ))
                 .font(.footnote)
@@ -3399,7 +3399,7 @@ struct FourCaliphsView: View {
                 "Begleitete den Propheten bei der Hidschra von Mekka nach Medina.",
                 "Nach dem Tod des Propheten wurde er in Medina zum ersten Kalifen gewählt.",
                 "Während seiner Amtszeit wurden schwere innere Krisen der jungen muslimischen Gemeinschaft bewältigt.",
-                "Nach hohen Verlusten unter Quran-Rezitatoren in der Yamāma-Schlacht unterstützte er die Sammlung des Quran in einem Mushaf; Zayd ibn Thābit leitete die Arbeit."
+                "Nach hohen Verlusten unter Koranrezitatoren in der Yamāma-Schlacht unterstützte er die Sammlung des Korans in einem Mushaf; Zayd ibn Thābit leitete die Arbeit."
             ],
             trPoints: [
                 "Mekke'den Medine'ye hicrette Hz. Peygamber'e yol arkadaşlığı yaptı.",
@@ -3447,7 +3447,7 @@ struct FourCaliphsView: View {
                 "Nahm früh den Islam an und gehörte zu den Muslimen, die nach Abessinien auswanderten.",
                 "War mit Ruqayya und nach deren Tod mit Umm Kulthūm, zwei Töchtern des Propheten, verheiratet; daher ist der Beiname Dhū n-Nūrayn bekannt.",
                 "Wurde nach dem von ʿUmar eingesetzten Schūrā-Verfahren zum dritten Kalifen gewählt.",
-                "Unter seiner Leitung wurde der bereits gesammelte Qurantext durch eine Kommission vervielfältigt und an wichtige Zentren versandt.",
+                "Unter seiner Leitung wurde der bereits gesammelte Korantext durch eine Kommission vervielfältigt und an wichtige Zentren versandt.",
                 "Die letzten Jahre seiner Amtszeit waren von schweren politischen Spannungen geprägt; historische Quellen zu Ursachen und Verantwortlichkeiten enthalten unterschiedliche und teils widersprüchliche Berichte."
             ],
             trPoints: [
@@ -3472,7 +3472,7 @@ struct FourCaliphsView: View {
                 "Wuchs bereits als Kind im Haushalt des Propheten auf und gehörte zu den frühesten Gläubigen.",
                 "Blieb bei der Hidschra zunächst in Mekka, um ihm anvertraute Güter ihren Eigentümern zurückzugeben, und wanderte anschließend nach Medina aus.",
                 "Heiratete Fātima, die Tochter des Propheten; zu ihren Kindern gehörten Hasan und Husayn.",
-                "War für sein Wissen über Quran, Hadith und Fiqh bekannt und wurde auch von früheren Kalifen in Rechtsfragen konsultiert.",
+                "War für sein Wissen über Koran, Hadith und Fiqh bekannt und wurde auch von früheren Kalifen in Rechtsfragen konsultiert.",
                 "Seine Amtszeit fiel in eine Phase schwerer innerer Konflikte. SalahPath behandelt die unterschiedlichen historischen und konfessionellen Deutungen nicht als eine einzige unumstrittene Version."
             ],
             trPoints: [
@@ -3927,7 +3927,7 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Quelle & Umfang", "Kaynak & Kapsam")) {
                 Text(settings.t(
-                    "Struktur abgeglichen mit Diyanet İlmihal/Fetva-Hauptbereichen: Glaube, Reinheit, Gebet, Zakat, Fasten, Hajj/Umrah, Kurban, Gelübde/Eide, Quran/Dua, Familie, Erbe, Halal/Haram, soziales, medizinisches und kommerzielles Leben.",
+                    "Struktur abgeglichen mit Diyanet İlmihal/Fetva-Hauptbereichen: Glaube, Reinheit, Gebet, Zakat, Fasten, Hajj/Umrah, Kurban, Gelübde/Eide, Koran/Dua, Familie, Erbe, Halal/Haram, soziales, medizinisches und kommerzielles Leben.",
                     "Yapı Diyanet İlmihal/Fetva ana alanlarıyla eşleştirildi: iman, taharet, namaz, zekât, oruç, hac/umre, kurban, adak/yemin, Kur'an/dua, aile, miras, helal-haram, sosyal, tıbbî ve ticarî hayat."
                 ))
                 .font(.footnote)
@@ -4102,7 +4102,7 @@ struct ThirtyTwoFardView: View {
             .init(
                 deTitle: "6 innere Bestandteile des Gebets",
                 trTitle: "Namazın içindeki 6 farz",
-                deItems: ["Eröffnungstakbir", "Stehen (Qiyām)", "Qirāʾa / Quran-Rezitation", "Rukūʿ", "Sujud", "Letztes Sitzen"],
+                deItems: ["Eröffnungstakbir", "Stehen (Qiyām)", "Qirāʾa / Koranrezitation", "Rukūʿ", "Sujud", "Letztes Sitzen"],
                 trItems: ["İftitah tekbiri", "Kıyam", "Kıraat", "Rükû", "Secde", "Ka’de-i âhire"]
             )
         ]
@@ -5299,7 +5299,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 player.appendContinuation(
                     playbackURLs,
                     expectedSessionID: sessionID,
-                    title: "Quran · Sure \(surah)",
+                    title: "Koran · Sure \(surah)",
                     context: "Koran · automatisch weiter"
                 )
 
@@ -5427,7 +5427,7 @@ struct PrayerTextsHubView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF teilt den Lernstoff in Gebetssuren, Gebetsduas, besondere Ayat und Yasin. SalahPath bildet diese Unterpunkte jetzt direkt ab und öffnet den vollständigen Quran-Text dort, wo er benötigt wird.",
+                    "Die PDF teilt den Lernstoff in Gebetssuren, Gebetsduas, besondere Verse und Yasin. SalahPath bildet diese Unterpunkte direkt ab und öffnet den vollständigen Korantext dort, wo er benötigt wird.",
                     "PDF öğrenme bölümünü Namaz Sûreleri, Namaz Duaları, özel ayetler ve Yasin olarak ayırıyor. SalahPath artık bu alt başlıkları doğrudan gösteriyor ve gereken yerde tam Kur'an metnini açıyor."
                 ))
                 .font(.footnote)
@@ -5586,7 +5586,7 @@ struct ShortSurahLearningView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Tippe auf Play: SalahPath fragt die aktuelle Audio-URL über die AlQuran.cloud-API ab und spielt danach die Ayat nacheinander. Dadurch sind wir nicht mehr von einem fest eingebauten CDN-Link abhängig.",
+                    "Tippe auf Play: SalahPath fragt die aktuelle Audio-URL über die AlQuran.cloud-API ab und spielt danach die Verse nacheinander. Dadurch sind wir nicht von einem fest eingebauten CDN-Link abhängig.",
                     "Oynat'a dokun: SalahPath güncel ses bağlantılarını AlQuran.cloud API üzerinden alır ve ayetleri sırayla çalar. Böylece sabit bir CDN bağlantısına bağlı kalmaz."
                 ))
                 .font(.footnote)
@@ -5701,7 +5701,8 @@ struct ShortSurahLearningView: View {
 
 private struct QuranicDua: Identifiable {
     let id = UUID()
-    let reference: String
+    let deReference: String
+    let trReference: String
     let arabic: String
     let transliteration: String
     let de: String
@@ -5712,16 +5713,16 @@ struct QuranicDuaLibraryView: View {
     @EnvironmentObject private var settings: SettingsStore
 
     private let items: [QuranicDua] = [
-        .init(reference: "Quran 2:201", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", de: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", tr: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru."),
-        .init(reference: "Quran 20:114 · excerpt", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", de: "Mein Herr, mehre mein Wissen.", tr: "Rabbim, ilmimi artır."),
-        .init(reference: "Quran 25:74", arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.", de: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.", tr: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle."),
-        .init(reference: "Quran 3:8", arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ", transliteration: "Rabbanā lā tuzigh qulūbanā baʿda idh hadaytanā wa hab lanā min ladunka raḥmatan innaka anta-l-Wahhāb", de: "Unser Herr, lass unsere Herzen nicht abweichen, nachdem Du uns rechtgeleitet hast, und schenke uns Barmherzigkeit von Dir. Du bist wahrlich der Schenkende.", tr: "Rabbimiz, bize hidayet verdikten sonra kalplerimizi eğriltme; bize katından rahmet bağışla. Şüphesiz Sen çok bağışta bulunansın.")
+        .init(deReference: "Koran 2:201", trReference: "Kur'an 2:201", arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", transliteration: "Rabbanā ātinā fi-d-dunyā ḥasanah wa fi-l-ākhirati ḥasanah wa qinā ʿadhāba-n-nār", de: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.", tr: "Rabbimiz, bize dünyada da iyilik ver, ahirette de iyilik ver ve bizi ateş azabından koru."),
+        .init(deReference: "Koran 20:114 · Auszug", trReference: "Kur'an 20:114 · alıntı", arabic: "رَبِّ زِدْنِي عِلْمًا", transliteration: "Rabbi zidnī ʿilmā", de: "Mein Herr, mehre mein Wissen.", tr: "Rabbim, ilmimi artır."),
+        .init(deReference: "Koran 25:74", trReference: "Kur'an 25:74", arabic: "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا", transliteration: "Rabbanā hab lanā min azwājinā wa dhurriyyātinā qurrata aʿyunin wajʿalnā lil-muttaqīna imāmā.", de: "Unser Herr, schenke uns an unseren Ehepartnern und Nachkommen Freude und mache uns zu Vorbildern für Gottesbewusste.", tr: "Rabbimiz, eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder eyle."),
+        .init(deReference: "Koran 3:8", trReference: "Kur'an 3:8", arabic: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ", transliteration: "Rabbanā lā tuzigh qulūbanā baʿda idh hadaytanā wa hab lanā min ladunka raḥmatan innaka anta-l-Wahhāb", de: "Unser Herr, lass unsere Herzen nicht abweichen, nachdem Du uns rechtgeleitet hast, und schenke uns Barmherzigkeit von Dir. Du bist wahrlich der Schenkende.", tr: "Rabbimiz, bize hidayet verdikten sonra kalplerimizi eğriltme; bize katından rahmet bağışla. Şüphesiz Sen çok bağışta bulunansın.")
     ]
 
     var body: some View {
         List(items) { item in
             VStack(alignment: .leading, spacing: 8) {
-                Text(item.reference).font(.caption.bold()).foregroundStyle(.secondary)
+                Text(settings.language == .german ? item.deReference : item.trReference).font(.caption.bold()).foregroundStyle(.secondary)
                 Text(item.arabic).font(.title3).frame(maxWidth: .infinity, alignment: .trailing).multilineTextAlignment(.trailing)
                 Text(item.transliteration).font(.subheadline.weight(.semibold))
                 Text(settings.language == .german ? item.de : item.tr).font(.footnote).foregroundStyle(.secondary)
@@ -5770,7 +5771,7 @@ struct MorningEveningAdhkarView: View {
     @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
-        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
+        .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sure al-Baqara im Koran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
@@ -6291,7 +6292,7 @@ struct FastingBasicsView: View {
                 numbered("1", settings.t("Vor Fajr: Suhoor essen und trinken. Nicht bis zur letzten Sekunde hetzen.", "Fecrden önce: Sahur yap, ye ve iç. Son saniyeye bırakma."))
                 numbered("2", settings.t("Absicht im Herzen: Heute faste ich den Ramadan-Tag für Allah.", "Kalben niyet et: Bugünkü Ramazan orucunu Allah için tutuyorum."))
                 numbered("3", settings.t("Ab Fajr: nichts essen oder trinken und die Fastenregeln einhalten.", "Fecrden itibaren: yeme-içmeyi bırak ve oruç hükümlerine uy."))
-                numbered("4", settings.t("Tagsüber: Gebete, Quran, Dhikr, Dua, gute Taten und gutes Verhalten pflegen.", "Gündüz: namaz, Kur'an, zikir, dua, iyi ameller ve güzel ahlâka özen göster."))
+                numbered("4", settings.t("Tagsüber: Gebete, Koran, Dhikr, Dua, gute Taten und gutes Verhalten pflegen.", "Gündüz: namaz, Kur'an, zikir, dua, iyi ameller ve güzel ahlâka özen göster."))
                 numbered("5", settings.t("Bei Sonnenuntergang: Iftar. Danach Maghrib nicht unnötig hinauszögern.", "Güneş batınca: İftar et. Ardından akşam namazını gereksiz yere geciktirme."))
             }
 
@@ -9446,7 +9447,7 @@ struct QuranPageReaderView: View {
         Group {
             if store.isLoading && store.arabic == nil {
                 ProgressView(settings.t(
-                    "Quran-Seite \(page) wird geladen…",
+                    "Koran-Seite \(page) wird geladen…",
                     "Kur'an \(page). sayfa yükleniyor…"
                 ))
             } else if let error = store.error, store.arabic == nil {
@@ -9731,7 +9732,7 @@ struct QuranPageReaderView: View {
                 .background(SalahTheme.page)
             } else {
                 ProgressView(settings.t(
-                    "Quran-Seite \(page) wird geladen…",
+                    "Koran-Seite \(page) wird geladen…",
                     "Kur'an \(page). sayfa yükleniyor…"
                 ))
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -9828,7 +9829,7 @@ struct QuranPageReaderView: View {
             reciter: reciter,
             title: ayah.surah.englishName,
             context: settings.t(
-                "Quran \(ayah.surah.number):\(ayah.numberInSurah) · automatisch weiter",
+                "Koran \(ayah.surah.number):\(ayah.numberInSurah) · automatisch weiter",
                 "Kur'an \(ayah.surah.number):\(ayah.numberInSurah) · otomatik devam"
             )
         )
@@ -10834,7 +10835,7 @@ private struct QuranSurahView: View {
             reciter: settings.quranReciter,
             title: surah.englishName,
             context: settings.t(
-                "Quran \(surah.number):\(ayahNumber) · automatisch weiter",
+                "Koran \(surah.number):\(ayahNumber) · automatisch weiter",
                 "Kur'an \(surah.number):\(ayahNumber) · otomatik devam"
             )
         )
@@ -10868,7 +10869,11 @@ private struct QuranSurahView: View {
             if displayMode == 1, let turkish { parts.append(turkish.text) }
             if displayMode == 2, let german { parts.append(german.text) }
         }
-        parts.append("Quran \(surah.number):\(ar.numberInSurah)")
+        parts.append(
+            settings.language == .german
+                ? "Koran \(surah.number):\(ar.numberInSurah)"
+                : "Kur'an \(surah.number):\(ar.numberInSurah)"
+        )
         return parts.joined(separator: "\n\n")
     }
 
