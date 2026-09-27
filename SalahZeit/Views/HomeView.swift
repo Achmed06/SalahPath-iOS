@@ -1704,7 +1704,7 @@ struct HomeView: View {
 
     private var dailyDeenCard: some View {
         let tasks = [
-            ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "book.fill"),
+            ("quran", settings.t("5 Min. Koran", "5 dk Kur'an"), "book.fill"),
             ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "circle.grid.cross.fill"),
             ("learn", settings.t("1 Dua/Sure wiederholen", "1 dua/sûre tekrarla"), "graduationcap.fill")
         ]
@@ -1744,10 +1744,10 @@ struct HomeView: View {
         let columns = Array(repeating: GridItem(.flexible(), spacing: 7), count: 4)
         return LazyVGrid(columns: columns, spacing: 7) {
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Quran", "Kur'an"), subtitle: settings.t("Lesen & hören", "Oku ve dinle"), icon: "quran")
+                DashboardTile(title: settings.t("Koran", "Kur'an"), subtitle: settings.t("Lesen & hören", "Oku ve dinle"), icon: "quran")
             }
             NavigationLink { QuranView() } label: {
-                DashboardTile(title: settings.t("Quran-Audio", "Kur'an Sesi"), subtitle: settings.t("Anhören", "Dinle"), icon: "quran_audio")
+                DashboardTile(title: settings.t("Koran-Audio", "Kur'an Sesi"), subtitle: settings.t("Anhören", "Dinle"), icon: "quran_audio")
             }
             NavigationLink { QuranFavoritesLandingView() } label: {
                 DashboardTile(title: settings.t("Juz & Favoriten", "Cüz & Favoriler"), subtitle: settings.t("Lesezeichen", "İşaretler"), icon: "fav")
