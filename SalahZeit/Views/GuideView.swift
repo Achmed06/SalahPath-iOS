@@ -966,16 +966,9 @@ struct PrayerHowToView: View {
                         guard currentStepIndex < steps.count - 1,
                               prayerNextTriggerVisible,
                               value.translation.height < -30 else { return }
-                        let target = currentStepIndex + 1
                         prayerNextTriggerVisible = false
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            currentStepIndex = target
-                        }
-                        Task { @MainActor in
-                            await Task.yield()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("prayer-step-card-\(target)", anchor: .top)
-                            }
+                            currentStepIndex += 1
                         }
                     }
             )
@@ -984,6 +977,15 @@ struct PrayerHowToView: View {
                 Task { @MainActor in
                     await Task.yield()
                     proxy.scrollTo("prayer-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
+            .onChange(of: currentStepIndex) { _, newIndex in
+                Task { @MainActor in
+                    await Task.yield()
+                    await Task.yield()
+                    withAnimation(.easeInOut(duration: 0.22)) {
+                        proxy.scrollTo("prayer-step-card-\(newIndex)", anchor: .top)
+                    }
                 }
             }
             .onChange(of: settings.prayerAudience) { _, _ in
@@ -2118,16 +2120,9 @@ struct WuduGuideView: View {
                         guard currentStepIndex < steps.count - 1,
                               wuduNextTriggerVisible,
                               value.translation.height < -30 else { return }
-                        let target = currentStepIndex + 1
                         wuduNextTriggerVisible = false
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            currentStepIndex = target
-                        }
-                        Task { @MainActor in
-                            await Task.yield()
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                proxy.scrollTo("wudu-step-card-\(target)", anchor: .top)
-                            }
+                            currentStepIndex += 1
                         }
                     }
             )
@@ -2136,6 +2131,15 @@ struct WuduGuideView: View {
                 Task { @MainActor in
                     await Task.yield()
                     proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
+                }
+            }
+            .onChange(of: currentStepIndex) { _, newIndex in
+                Task { @MainActor in
+                    await Task.yield()
+                    await Task.yield()
+                    withAnimation(.easeInOut(duration: 0.22)) {
+                        proxy.scrollTo("wudu-step-card-\(newIndex)", anchor: .top)
+                    }
                 }
             }
         }
