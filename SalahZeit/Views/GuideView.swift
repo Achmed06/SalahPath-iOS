@@ -124,7 +124,7 @@ struct GuideView: View {
                 referenceRow(
                     icon: "rectangle.stack.badge.play.fill",
                     title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
-                    subtitle: settings.t("Fajr bis Jumuah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
+                    subtitle: settings.t("Fajr bis Jumuʿah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
                 )
             }
 
@@ -147,7 +147,7 @@ struct GuideView: View {
             NavigationLink { PrayerTextsHubView() } label: {
                 referenceRow(
                     icon: "books.vertical.fill",
-                    title: settings.t("Suren, Duas und Ayat fürs Gebet", "Namaz Sûreleri, Duaları ve Ayetler"),
+                    title: settings.t("Suren, Duas und Ayat für das Gebet", "Namaz sûreleri, duaları ve ayetleri"),
                     subtitle: settings.t("Inklusive Yasin und Qunūt", "Yasin ve Kunut dahil")
                 )
             }
@@ -156,7 +156,7 @@ struct GuideView: View {
                 referenceRow(
                     icon: "text.book.closed.fill",
                     title: settings.t("Gebetsduas", "Namaz duaları"),
-                    subtitle: settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuş ve anlam")
+                    subtitle: settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuşu ve anlamı")
                 )
             }
 
@@ -838,7 +838,7 @@ struct PrayerHowToView: View {
 
             VStack(alignment: .leading, spacing: 7) {
                 learningFeature(settings.t("Eine Haltung pro Schritt", "Her adımda tek duruş"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuş ve anlam"), icon: "checkmark.circle.fill")
+                learningFeature(settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuşu ve anlamı"), icon: "checkmark.circle.fill")
                 learningFeature(settings.t("Mann/Frau getrennt dargestellt", "Erkek/Kadın ayrı gösterilir"), icon: "checkmark.circle.fill")
                 learningFeature(settings.t("Hanafi/Diyanet-Grunddarstellung", "Hanefî/Diyanet temel anlatımı"), icon: "checkmark.circle.fill")
             }
@@ -1316,7 +1316,7 @@ struct HanafiPrayerPlanView: View {
 
                 planCard(
                     title: settings.t("2 Rakʿāt", "2 rekât"),
-                    subtitle: settings.t("Beispiel: Fajr-Fard und viele 2er-Sunnah-Gebete", "Örnek: Sabah farzı ve birçok 2 rekât sünnet"),
+                    subtitle: settings.t("Beispiel: Fajr-Fard und viele Sunnah-Gebete mit 2 Rakʿa", "Örnek: Sabah farzı ve birçok 2 rekât sünnet"),
                     lines: settings.language == .german ? [
                         "Rakʿa 1 komplett machen. Nach Sujud 2 wieder aufstehen.",
                         "Rakʿa 2 komplett machen. Nach Sujud 2 NICHT mehr aufstehen.",
@@ -1387,7 +1387,7 @@ struct HanafiPrayerPlanView: View {
                     }
                     .padding(.top, 8)
                 } label: {
-                    Label(settings.t("Sonderfälle: 4er-Sunnah & Witr", "Özel durumlar: 4 rekât sünnet ve vitir"), systemImage: "chevron.down.circle")
+                    Label(settings.t("Sonderfälle: Sunnah mit 4 Rakʿa und Witr", "Özel durumlar: 4 rekât sünnet ve vitir"), systemImage: "chevron.down.circle")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                 }
@@ -2198,8 +2198,8 @@ struct PrayerCatalogView: View {
                     "2. rekât: Besmele → Fâtiha + sûre → rükû → 2 secde → son oturuş.",
                     "Son oturuşta: Ettehiyyâtü → Salli → Bârik → kapanış duası → önce sağa, sonra sola selâm."
                 ],
-                deNotes: ["Die PDF beginnt genau mit diesem Gebet und zeigt die Schritte einschließlich Tesbihat."],
-                trNotes: ["PDF'deki ayrıntılı namaz anlatımı bu sünnetle başlıyor ve tesbihata kadar ilerliyor."],
+                deNotes: ["Diese Anleitung beginnt mit diesem Gebet und zeigt die Schritte einschließlich Tesbihat."],
+                trNotes: ["Ayrıntılı namaz anlatımı bu sünnetle başlıyor ve tesbihata kadar ilerliyor."],
                 source: "Diyanet · Namaz İlmihali"
             ),
             .init(
@@ -2520,8 +2520,8 @@ struct PrayerCatalogView: View {
                 id: "tesbihat", group: "after",
                 deTitle: "Tesbihat nach dem Gebet", trTitle: "Namaz Sonrası Tesbihat",
                 deRuling: "Dhikr/Dua", trRuling: "Zikir/Dua", rakaLabel: "—",
-                deSummary: "Dhikr und Dua nach dem Pflichtgebet; die PDF zeigt diesen Abschnitt direkt nach dem Fajr-Beispiel.",
-                trSummary: "Farz namazdan sonra zikir ve dua; PDF'de sabah örneğinin hemen ardından gösteriliyor.",
+                deSummary: "Dhikr und Dua nach dem Pflichtgebet; dieser Abschnitt folgt direkt auf das Fajr-Beispiel.",
+                trSummary: "Farz namazdan sonra zikir ve dua; bu bölüm sabah namazı örneğinin hemen ardından gelir.",
                 deSteps: [
                     "Nach dem Gebet Istighfār und die bekannten Abschluss-Duas sprechen.",
                     "Āyat al-Kursī lesen.",
@@ -2534,7 +2534,7 @@ struct PrayerCatalogView: View {
                 ],
                 deNotes: ["SalahPath hat dafür bereits Dhikr- und Dua-Bereiche; dieser Eintrag verbindet sie mit dem Gebetsablauf."],
                 trNotes: ["SalahPath'te zikir ve dua alanları zaten var; bu bölüm onları namaz akışıyla birleştiriyor."],
-                source: "PDF-Referenz + Diyanet · Ezan, Kamet ve Tesbihat"
+                source: "Diyanet · Ezan, Kamet ve Tesbihat"
             )
         ]
     }
@@ -2558,12 +2558,12 @@ struct PrayerCatalogView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Alle Gebete aus der PDF-Struktur", "PDF yapısındaki tüm namazlar"), systemImage: "list.bullet.rectangle.portrait.fill")
+                    Label(settings.t("Alle Gebete im Überblick", "Tüm namazlar bir arada"), systemImage: "list.bullet.rectangle.portrait.fill")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Nicht nur ein allgemeiner 2-Rakʿa-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
-                        "Yalnız genel bir 2 rekât anlatımı değil: PDF menüsünde ayrı gösterilen vakit namazlarını ve özel namazları burada tek tek bulabilirsin."
+                        "Hier findest du nicht nur einen allgemeinen Ablauf, sondern die einzelnen Tagesgebete und wichtige Sondergebete übersichtlich getrennt.",
+                        "Burada yalnız genel bir namaz anlatımı değil, vakit namazlarını ve önemli özel namazları ayrı ayrı bulabilirsin."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -2955,8 +2955,8 @@ struct RamadanGuideIndexView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF führt Ramadan als eigenen Bereich mit Fastenwissen, Tarawih, Tasbih-/Eid-Gebet, Duas, Koranverse und Laylat al-Qadr. SalahPath verbindet diese Unterpunkte jetzt an einer Stelle.",
-                    "PDF Ramazan'ı; oruç bilgisi, teravih, tesbih/bayram namazı, dualar, ayetler ve Kadir Gecesi ile ayrı bir bölüm olarak gösteriyor. SalahPath artık bu alt başlıkları tek yerde topluyor."
+                    "Der Ramadan-Bereich bündelt Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Koranverse sowie Laylat al-Qadr an einer Stelle.",
+                    "Ramazan bölümü; oruç bilgisi, teravih, tesbih ve bayram namazı, dualar, ayetler ile Kadir Gecesi konularını tek yerde toplar."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -3868,8 +3868,8 @@ struct IlmihalDirectoryView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Die PDF zeigt einen tiefen İlmihal-Themenbaum. SalahPath führt vorhandene ausführliche Bereiche hier zusammen und ergänzt fehlende Hauptkapitel als kompakte Lernorientierung.",
-                        "PDF derin bir ilmihal konu ağacı gösteriyor. SalahPath mevcut ayrıntılı bölümleri burada birleştiriyor ve eksik ana başlıkları kısa öğrenme rehberleriyle tamamlıyor."
+                        "Der İlmihal-Bereich führt ausführliche Themen zusammen und ergänzt zentrale Hauptkapitel als kompakte Lernorientierung.",
+                        "İlmihal bölümü ayrıntılı konuları bir araya getirir ve temel başlıkları kısa öğrenme rehberleriyle tamamlar."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -5400,7 +5400,7 @@ struct PrayerDuaAudioView: View {
             Section {
                 Text(settings.t(
                     "Alle Gebetsduas stehen direkt in SalahPath: Arabisch, Umschrift und Bedeutung. Es wird keine externe Webseite geöffnet. Ein Audio-Button wird nur dort angezeigt, wo SalahPath auch wirklich Audio abspielen kann.",
-                    "Namaz dualarının tamamı doğrudan SalahPath içinde yer alır: Arapça, okunuş ve anlam. Harici web sitesi açılmaz. Ses düğmesi yalnız SalahPath gerçekten ses çalabildiğinde gösterilir."
+                    "Namaz dualarının tamamı doğrudan SalahPath içinde yer alır: Arapça, okunuşu ve anlamı. Harici web sitesi açılmaz. Ses düğmesi yalnız SalahPath gerçekten ses çalabildiğinde gösterilir."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -5446,8 +5446,8 @@ struct PrayerTextsHubView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF teilt den Lernstoff in Gebetssuren, Gebetsduas, besondere Verse und Yasin. SalahPath bildet diese Unterpunkte direkt ab und öffnet den vollständigen Korantext dort, wo er benötigt wird.",
-                    "PDF öğrenme bölümünü Namaz Sûreleri, Namaz Duaları, özel ayetler ve Yasin olarak ayırıyor. SalahPath artık bu alt başlıkları doğrudan gösteriyor ve gereken yerde tam Kur'an metnini açıyor."
+                    "Der Lernbereich gliedert sich in Gebetssuren, Gebetsduas, besondere Verse und Yasin. Den vollständigen Korantext kannst du dort öffnen, wo er benötigt wird.",
+                    "Öğrenme bölümü namaz sûreleri, namaz duaları, özel ayetler ve Yasin başlıklarına ayrılır. Gereken yerde tam Kur'an metnini doğrudan açabilirsin."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -5589,12 +5589,12 @@ struct ShortSurahLearningView: View {
 
     private let surahs: [ShortSurahAudio] = [
         .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿa.", trDetail: "Her rekâtın temel kıraatidir."),
-        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
-        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
-        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
+        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenmek için seçilen Fîl sûresi."),
+        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenmek için seçilen Kureyş sûresi."),
+        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenmek için seçilen Mâûn sûresi."),
         .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sure für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
         .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sure.", trDetail: "Bilinen kısa sûre."),
-        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
+        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sure aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenmek için seçilen Nasr sûresi."),
         .init(surahNumber: 111, arabicName: "المسد", latinName: "Al-Masad / Tebbet", deDetail: "In der türkischen Lerntradition oft „Tebbet“ genannt.", trDetail: "Türkçe namaz sûreleri eğitiminde genellikle „Tebbet“ diye anılır."),
         .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sure.", trDetail: "Kısa ve çok bilinen sûre."),
         .init(surahNumber: 113, arabicName: "الفلق", latinName: "Al-Falaq", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre."),
@@ -5605,8 +5605,8 @@ struct ShortSurahLearningView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Tippe auf Play: SalahPath fragt die aktuelle Audio-URL über die AlQuran.cloud-API ab und spielt danach die Verse nacheinander. Dadurch sind wir nicht von einem fest eingebauten CDN-Link abhängig.",
-                    "Oynat'a dokun: SalahPath güncel ses bağlantılarını AlQuran.cloud API üzerinden alır ve ayetleri sırayla çalar. Böylece sabit bir CDN bağlantısına bağlı kalmaz."
+                    "Tippe auf Play: SalahPath lädt die Rezitation online und spielt die Verse nacheinander ab. Bereits gehörte Audios können anschließend aus dem lokalen Cache abgespielt werden.",
+                    "Oynat'a dokun: SalahPath tilaveti çevrimiçi yükler ve ayetleri sırayla çalar. Daha önce dinlenen sesler daha sonra yerel önbellekten oynatılabilir."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
