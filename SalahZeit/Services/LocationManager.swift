@@ -209,6 +209,8 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             locality = resolvedLabel
             prayerTimeZone = resolvedTimeZone
             usesManualLocation = true
+            qiblaDeviceLocation = nil
+            heading = nil
             lastError = nil
 
             let defaults = UserDefaults.standard
