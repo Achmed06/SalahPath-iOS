@@ -876,7 +876,7 @@ struct PrayerHowToView: View {
 
                     NavigationLink { HanafiPrayerPlanView() } label: {
                         HStack {
-                            Label(settings.t("Rak'a einfach verstehen", "Rekâtı kolayca anla"), systemImage: "list.number")
+                            Label(settings.t("Rakʿa einfach verstehen", "Rekâtı kolayca anla"), systemImage: "list.number")
                                 .font(.headline)
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -2776,14 +2776,14 @@ struct HajjUmrahGuideView: View {
             .padding()
         }
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Hajj & Umrah", "Hac & Umre"))
+        .navigationTitle(settings.t("Haddsch & Umra", "Hac & Umre"))
         .navigationBarTitleDisplayMode(.inline)
     }
 
     private var umrahContent: some View {
         VStack(spacing: 12) {
             infoCard(
-                title: settings.t("Umrah Schritt für Schritt", "Umre adım adım"),
+                title: settings.t("Umra Schritt für Schritt", "Umre adım adım"),
                 icon: "figure.walk",
                 lines: settings.language == .german ? [
                     "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
@@ -2819,7 +2819,7 @@ struct HajjUmrahGuideView: View {
     private var hajjContent: some View {
         VStack(spacing: 12) {
             infoCard(
-                title: settings.t("Hajj-Ablauf · Orientierung", "Hac akışı · genel rehber"),
+                title: settings.t("Haddsch-Ablauf · Orientierung", "Hac akışı · genel rehber"),
                 icon: "map.fill",
                 lines: settings.language == .german ? [
                     "Für Hajj gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
@@ -3905,10 +3905,10 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
 
-            Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
+            Section(settings.t("Fasten, Zakat & Haddsch", "Oruç, Zekât & Hac")) {
                 NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
                 NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
-                NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
+                NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Haddsch & Umra", "Hac & Umre"), systemImage: "map.fill") }
                 NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
                 NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
             }
@@ -5631,7 +5631,7 @@ struct ShortSurahLearningView: View {
                 .foregroundStyle(.secondary)
             }
 
-            Section(settings.t("Kurze Suren", "Kısa sureler")) {
+            Section(settings.t("Kurze Suren", "Kısa sûreler")) {
                 ForEach(surahs) { item in
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 3) {
@@ -5660,7 +5660,7 @@ struct ShortSurahLearningView: View {
         }
         .scrollContentBackground(.hidden)
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Suren lernen", "Sureleri öğren"))
+        .navigationTitle(settings.t("Suren lernen", "Sûreleri öğren"))
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: settings.quranReciter) { _, _ in
             audioRequestGeneration &+= 1
@@ -6958,11 +6958,11 @@ struct HijriCalendarView: View {
                 symbol: "mountain.2.fill",
                 deTitle: "Tag von ʿArafah · 9. Dhu l-Hijjah",
                 trTitle: "Arefe günü · 9 Zilhicce",
-                deMeaning: "Der 9. Dhu l-Hijjah ist der Tag von ʿArafah und ein zentraler Tag des Hajj.",
+                deMeaning: "Der 9. Dhu l-Hijjah ist der Tag von ʿArafah und ein zentraler Tag des Haddsch.",
                 trMeaning: "9 Zilhicce Arefe günüdür ve haccın en önemli günlerinden biridir.",
                 deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Dua, Dhikr und gute Taten vermehren."],
                 trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Dua, zikir ve hayırlı amelleri artır."],
-                deCaution: "Pilger auf ʿArafah werden nicht pauschal wie Nicht-Pilger zum Fasten angehalten; Kraft für die Hajj-Handlungen hat Vorrang.",
+                deCaution: "Pilger auf ʿArafah werden nicht pauschal wie Nicht-Pilger zum Fasten angehalten; Kraft für die Haddsch-Handlungen hat Vorrang.",
                 trCaution: "Arafat'taki hacılar, hac dışındaki kişiler gibi genel olarak oruca teşvik edilmez; hac ibadetlerine güç ayırmak önceliklidir."
             )
         }
@@ -6972,7 +6972,7 @@ struct HijriCalendarView: View {
                 symbol: "gift.fill",
                 deTitle: "Eid al-Adha · 10. Dhu l-Hijjah",
                 trTitle: "Kurban Bayramı · 10 Zilhicce",
-                deMeaning: "Eid al-Adha ist das Opferfest und fällt in die Hajj-Zeit.",
+                deMeaning: "Eid al-Adha ist das Opferfest und fällt in die Haddsch-Zeit.",
                 trMeaning: "Kurban Bayramı hac mevsimindeki büyük bayramdır.",
                 deRecommended: ["Eid-Gebet beachten.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
                 trRecommended: ["Bayram namazını değerlendir.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
@@ -7230,7 +7230,7 @@ struct IslamLearningHubView: View {
                 "Oruç: Ramazan orucu.",
                 "Hac: şartları oluşan kişinin ömründe bir kez Mekke'ye hac yapması."
             ],
-            deDetail: "Nicht jede Säule gilt in jeder Lebenssituation identisch. Zakat und Hajj haben z. B. finanzielle und weitere Voraussetzungen. Fasten kennt erlaubte Entschuldigungsgründe. Salah bleibt die tägliche zentrale körperliche Pflicht; Details lernst du in den eigenen SalahPath-Bereichen.",
+            deDetail: "Nicht jede Säule gilt in jeder Lebenssituation identisch. Zakat und Haddsch haben z. B. finanzielle und weitere Voraussetzungen. Fasten kennt erlaubte Entschuldigungsgründe. Salah bleibt die tägliche zentrale körperliche Pflicht; Details lernst du in den eigenen SalahPath-Bereichen.",
             trDetail: "Her şart her durumda aynı şekilde yükümlülük doğurmaz. Örneğin zekât ve hac için malî ve başka şartlar vardır. Oruçta ruhsat sebepleri bulunur. Namaz günlük temel bedenî ibadettir; ayrıntıları SalahPath'in ilgili bölümlerinde öğrenebilirsin."
         ),
         .init(
