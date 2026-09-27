@@ -185,8 +185,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
         let content = UNMutableNotificationContent()
         content.title = settings.t(
-            fajr ? "Fajr Gebetsruf · Test" : "Gebetsruf · Test",
-            fajr ? "Sabah ezanı · Test" : "Ezan · Test"
+            fajr ? "Fajr-Gebetsruf" : "Gebetsruf",
+            fajr ? "Sabah ezanı" : "Ezan"
         )
         content.body = settings.t(
             "So klingt der Gebetsruf bei einer Gebetszeit-Benachrichtigung.",
