@@ -332,6 +332,8 @@ private struct GlobalAudioMiniPlayer: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(SalahTheme.deepTeal)
+                .disabled(!audio.canAdvance)
+                .opacity(audio.canAdvance ? 1 : 0.35)
 
                 Button {
                     audio.stop()
