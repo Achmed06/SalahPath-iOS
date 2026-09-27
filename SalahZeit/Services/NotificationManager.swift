@@ -83,33 +83,30 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         var scheduledIdentifiers = Set<String>()
         var scheduledRequestCount = 0
 
-        for dayOffset in 0..<7 {
-            guard revision == schedulingRevision else { return false }
-            guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
-                  let day = engine.calculateDay(
-                      for: date,
-                      location: location,
-                      settings: settings,
-                      timeZone: timeZone
-                  ) else {
-                allRequestsScheduled = false
-                continue
-            }
-
-            for prayer in day.prayers where prayer.kind != .sunrise {
+        // Phase 1: reserve capacity for every enabled prayer-time alert first.
+        // With 5 prayers over 7 days this is at most 35 requests, so exact
+        // prayer-time notifications cannot be crowded out by advance reminders.
+        if settings.notifyAtPrayerTime {
+            for dayOffset in 0..<7 {
                 guard revision == schedulingRevision else { return false }
-                guard settings.notificationEnabled(for: prayer.kind) else { continue }
+                guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
+                      let day = engine.calculateDay(
+                          for: date,
+                          location: location,
+                          settings: settings,
+                          timeZone: timeZone
+                      ) else {
+                    allRequestsScheduled = false
+                    continue
+                }
 
-                let prayerName = prayer.kind.localizedName(settings.language)
+                for prayer in day.prayers where prayer.kind != .sunrise {
+                    guard revision == schedulingRevision else { return false }
+                    guard settings.notificationEnabled(for: prayer.kind),
+                          prayer.date > now,
+                          scheduledRequestCount < maximumPrayerRequests else { continue }
 
-                let allowedLeadMinutes = [0, 5, 10, 15, 30]
-                let leadMinutes = allowedLeadMinutes.contains(settings.notificationLeadMinutes)
-                    ? settings.notificationLeadMinutes
-                    : 10
-
-                if settings.notifyAtPrayerTime,
-                   prayer.date > now,
-                   scheduledRequestCount < maximumPrayerRequests {
+                    let prayerName = prayer.kind.localizedName(settings.language)
                     let content = UNMutableNotificationContent()
                     content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
                     if let rakats = prayer.kind.fardRakats {
@@ -135,36 +132,65 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     }
                     guard revision == schedulingRevision else { return false }
                 }
+            }
+        }
 
-                if leadMinutes > 0, scheduledRequestCount < maximumPrayerRequests {
+        // Phase 2: spend the remaining request budget on the nearest advance
+        // reminders, after every exact prayer-time alert has been reserved.
+        let allowedLeadMinutes = [0, 5, 10, 15, 30]
+        let leadMinutes = allowedLeadMinutes.contains(settings.notificationLeadMinutes)
+            ? settings.notificationLeadMinutes
+            : 10
+
+        if leadMinutes > 0 {
+            for dayOffset in 0..<7 {
+                guard revision == schedulingRevision else { return false }
+                guard scheduledRequestCount < maximumPrayerRequests else { break }
+                guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
+                      let day = engine.calculateDay(
+                          for: date,
+                          location: location,
+                          settings: settings,
+                          timeZone: timeZone
+                      ) else {
+                    allRequestsScheduled = false
+                    continue
+                }
+
+                for prayer in day.prayers where prayer.kind != .sunrise {
+                    guard revision == schedulingRevision else { return false }
+                    guard scheduledRequestCount < maximumPrayerRequests else { break }
+                    guard settings.notificationEnabled(for: prayer.kind) else { continue }
+
                     let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
-                    if reminderDate > now {
-                        let reminder = UNMutableNotificationContent()
-                        reminder.title = settings.t(
-                            "\(prayerName) in \(leadMinutes) Min.",
-                            "\(prayerName) için \(leadMinutes) dk kaldı"
-                        )
-                        reminder.body = settings.t(
-                            "Gebetszeit: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
-                            "Namaz vakti: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
-                        )
-                        reminder.sound = .default
+                    guard reminderDate > now else { continue }
 
-                        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
-                        components.timeZone = timeZone
-                        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                        let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).pre"
-                        let added = await add(
-                            UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger),
-                            revision: revision
-                        )
-                        allRequestsScheduled = allRequestsScheduled && added
-                        if added {
-                            scheduledIdentifiers.insert(identifier)
-                            scheduledRequestCount += 1
-                        }
-                        guard revision == schedulingRevision else { return false }
+                    let prayerName = prayer.kind.localizedName(settings.language)
+                    let reminder = UNMutableNotificationContent()
+                    reminder.title = settings.t(
+                        "\(prayerName) in \(leadMinutes) Min.",
+                        "\(prayerName) için \(leadMinutes) dk kaldı"
+                    )
+                    reminder.body = settings.t(
+                        "Gebetszeit: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                        "Namaz vakti: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
+                    )
+                    reminder.sound = .default
+
+                    var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
+                    components.timeZone = timeZone
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                    let identifier = "salahzeit.prayer.r\(revision).\(dayOffset).\(prayer.kind.rawValue).pre"
+                    let added = await add(
+                        UNNotificationRequest(identifier: identifier, content: reminder, trigger: trigger),
+                        revision: revision
+                    )
+                    allRequestsScheduled = allRequestsScheduled && added
+                    if added {
+                        scheduledIdentifiers.insert(identifier)
+                        scheduledRequestCount += 1
                     }
+                    guard revision == schedulingRevision else { return false }
                 }
             }
         }
