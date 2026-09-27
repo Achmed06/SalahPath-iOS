@@ -906,7 +906,7 @@ struct MoreView: View {
                     NavigationLink { FarewellSermonView() } label: {
                         discoverTile(
                             icon: "text.quote",
-                            title: settings.t("Veda Hutbesi", "Veda Hutbesi"),
+                            title: settings.t("Abschiedspredigt", "Veda Hutbesi"),
                             subtitle: settings.t("Kernaussagen & Quellen", "Ana mesajlar & kaynaklar")
                         )
                     }
@@ -920,7 +920,7 @@ struct MoreView: View {
                     NavigationLink { HajjUmrahGuideView() } label: {
                         discoverTile(
                             icon: "map.fill",
-                            title: settings.t("Hajj & Umrah", "Hac & Umre"),
+                            title: settings.t("Haddsch & Umra", "Hac & Umre"),
                             subtitle: settings.t("Ablauf · Orte · Duas", "Akış · ziyaret · dualar")
                         )
                     }
@@ -1047,7 +1047,7 @@ struct MoreView: View {
                     Text(settings.t("Entdecken", "Keşfet"))
                         .font(.system(size: 22, weight: .bold, design: .serif))
                         .foregroundStyle(.white)
-                    Text(settings.t("Deine islamische All-in-One Begleitung", "İslami hepsi bir arada rehberin"))
+                    Text(settings.t("Deine islamische All-in-One-Begleitung", "İslami yaşam rehberin"))
                         .font(.system(size: 9.5, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.82))
                     Text(settings.t("Lernen · anwenden · dranbleiben", "Öğren · uygula · istikrar et"))
@@ -1193,7 +1193,7 @@ struct MoreView: View {
         HStack(spacing: 6) {
             featureMini(icon: "drop.fill", title: settings.t("Wudu Schritt für Schritt", "Abdest adım adım"))
             featureMini(icon: "character.book.closed.fill", title: settings.t("Deutsch + Türkisch", "Almanca + Türkçe"))
-            featureMini(icon: "ellipsis.circle.fill", title: settings.t("Und mehr", "Daha Fazlası"))
+            featureMini(icon: "ellipsis.circle.fill", title: settings.t("Und mehr", "Daha fazlası"))
         }
     }
 
