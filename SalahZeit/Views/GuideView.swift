@@ -5,6 +5,17 @@ import AVFoundation
 import MediaPlayer
 import UIKit
 
+private func updateBottomTriggerVisibility(
+    _ frame: CGRect,
+    isVisible: Binding<Bool>
+) {
+    let screenHeight = UIScreen.main.bounds.height
+    let visible = frame.minY >= 0 && frame.maxY <= screenHeight - 24
+    if isVisible.wrappedValue != visible {
+        isVisible.wrappedValue = visible
+    }
+}
+
 // MARK: - Learning hub
 
 struct GuideView: View {
@@ -938,8 +949,23 @@ struct PrayerHowToView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
                         .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
-                        .onAppear { prayerNextTriggerVisible = true }
-                        .onDisappear { prayerNextTriggerVisible = false }
+                        .background {
+                            GeometryReader { geometry in
+                                Color.clear
+                                    .onAppear {
+                                        updateBottomTriggerVisibility(
+                                            geometry.frame(in: .global),
+                                            isVisible: $prayerNextTriggerVisible
+                                        )
+                                    }
+                                    .onChange(of: geometry.frame(in: .global).minY) { _, _ in
+                                        updateBottomTriggerVisibility(
+                                            geometry.frame(in: .global),
+                                            isVisible: $prayerNextTriggerVisible
+                                        )
+                                    }
+                            }
+                        }
                     }
 
                     if currentStepIndex == steps.count - 1 {
@@ -2048,8 +2074,23 @@ struct WuduGuideView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
                         .accessibilityLabel(settings.t("Am Ende weiter wischen für den nächsten Schritt", "Sonraki adım için sonda kaydırmaya devam et"))
-                        .onAppear { wuduNextTriggerVisible = true }
-                        .onDisappear { wuduNextTriggerVisible = false }
+                        .background {
+                            GeometryReader { geometry in
+                                Color.clear
+                                    .onAppear {
+                                        updateBottomTriggerVisibility(
+                                            geometry.frame(in: .global),
+                                            isVisible: $wuduNextTriggerVisible
+                                        )
+                                    }
+                                    .onChange(of: geometry.frame(in: .global).minY) { _, _ in
+                                        updateBottomTriggerVisibility(
+                                            geometry.frame(in: .global),
+                                            isVisible: $wuduNextTriggerVisible
+                                        )
+                                    }
+                            }
+                        }
                     }
 
                     if currentStepIndex == steps.count - 1 {
