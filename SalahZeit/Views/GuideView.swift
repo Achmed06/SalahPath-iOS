@@ -5647,13 +5647,37 @@ struct ShortSurahLearningView: View {
                                 .font(.caption).foregroundStyle(.secondary)
                         }
                         Spacer()
+                        let isCurrentSurah =
+                            audio.displayTitle == item.latinName &&
+                            audio.activeURL != nil
+                        let isCurrentSurahLoading =
+                            isCurrentSurah && audio.isLoading
+
                         Button {
                             Task { await play(item) }
                         } label: {
-                            if loadingSurah == item.surahNumber { ProgressView() }
-                            else { Image(systemName: "play.circle.fill").font(.title2) }
+                            Image(
+                                systemName: loadingSurah == item.surahNumber || isCurrentSurahLoading
+                                    ? "xmark.circle.fill"
+                                    : (isCurrentSurah && audio.isPlaying
+                                        ? "pause.circle.fill"
+                                        : "play.circle.fill")
+                            )
+                            .font(.title2)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(settings.t(
+                            loadingSurah == item.surahNumber || isCurrentSurahLoading
+                                ? "\(item.latinName) Laden abbrechen"
+                                : (isCurrentSurah && audio.isPlaying
+                                    ? "\(item.latinName) pausieren"
+                                    : "\(item.latinName) abspielen"),
+                            loadingSurah == item.surahNumber || isCurrentSurahLoading
+                                ? "\(item.latinName) yüklemesini durdur"
+                                : (isCurrentSurah && audio.isPlaying
+                                    ? "\(item.latinName) duraklat"
+                                    : "\(item.latinName) oynat")
+                        ))
                     }
                     .padding(.vertical, 4)
                 }
@@ -5681,6 +5705,22 @@ struct ShortSurahLearningView: View {
 
     @MainActor
     private func play(_ item: ShortSurahAudio) async {
+        if loadingSurah == item.surahNumber {
+            audioRequestGeneration &+= 1
+            loadingSurah = nil
+            return
+        }
+
+        if audio.displayTitle == item.latinName,
+           audio.activeURL != nil {
+            if audio.isLoading {
+                audio.stop()
+            } else {
+                audio.isPlaying ? audio.pause() : audio.resume()
+            }
+            return
+        }
+
         audioRequestGeneration &+= 1
         let generation = audioRequestGeneration
         let reciter = settings.quranReciter
