@@ -139,8 +139,8 @@ struct GuideView: View {
             NavigationLink { HanafiPrayerPlanView() } label: {
                 referenceRow(
                     icon: "list.number",
-                    title: settings.t("Rakʿat & Gebetsarten", "Rekât ve namaz türleri"),
-                    subtitle: settings.t("2, 3 und 4 Rakʿat richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
+                    title: settings.t("Rakʿāt & Gebetsarten", "Rekât ve namaz türleri"),
+                    subtitle: settings.t("2, 3 und 4 Rakʿāt richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
                 )
             }
 
@@ -421,14 +421,14 @@ struct RakatOverviewView: View {
 
             Section(settings.t("Freitag / Jumuʿah", "Cuma")) {
                 Text(settings.t(
-                    "Jumuʿah hat 2 Rakʿat Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿat Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
+                    "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Wer nicht am Jumuʿah teilnimmt, betet das normale Dhuhr mit 4 Rakʿāt Fard. Die Sunnah-Zahl rund um Jumuʿah wird je nach Rechtsschule unterschiedlich dargestellt.",
                     "Cuma namazının cemaatle kılınan farzı 2 rekâttır. Cumaya katılmayan kişi normal öğle namazının 4 rekât farzını kılar. Cumanın öncesi ve sonrasındaki sünnet rekâtları mezheplere göre farklı anlatılabilir."
                 ))
             }
         }
         .scrollContentBackground(.hidden)
         .background(SalahTheme.page)
-        .navigationTitle(settings.t("Rakʿat", "Rekât"))
+        .navigationTitle(settings.t("Rakʿāt", "Rekât"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -478,13 +478,13 @@ private enum PrayerText {
         transliteration: "Sübhâneke Allâhümme ve bi hamdik. Ve tebârekesmük. Ve teâlâ ceddük. Ve lâ ilâhe ğayrük.",
         deMeaning: "Gepriesen bist Du, o Allah, und Dir gebührt Lob. Gesegnet ist Dein Name, erhaben ist Deine Majestät, und es gibt keinen Gott außer Dir.",
         trMeaning: "Allah'ım! Sen eksik sıfatlardan uzaksın. Seni överim. Senin adın mübarektir, şanın yücedir. Senden başka ilâh yoktur.",
-        deNote: "Im ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
+        deNote: "In der ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
 
     static let audhu = PrayerRecitation(
         deLabel: "Eʿūḏu", trLabel: "Eûzü",
         arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", transliteration: "Eʿûzü billâhi mineş-şeytânirracîm",
         deMeaning: "Ich suche Zuflucht bei Allah vor dem verfluchten Satan.", trMeaning: "Kovulmuş şeytandan Allah'a sığınırım.",
-        deNote: "Im ersten Rakʿah vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
+        deNote: "In der ersten Rakʿah vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
 
     static let basmala = PrayerRecitation(
         deLabel: "Basmala", trLabel: "Besmele",
@@ -496,7 +496,7 @@ private enum PrayerText {
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jedem Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
+        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
         trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
         deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
@@ -2141,7 +2141,7 @@ struct PrayerTermsView: View {
         ("Adhān / Ezan", "Gebetsruf zum Beginn der Gebetszeit.", "Namaz vaktini bildiren çağrı."),
         ("Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.", "Cemaat namazından hemen önce okunan çağrı."),
         ("Dhikr / Zikir", "Gedenken Allahs durch Worte, Duʿāʾ und Qurʾān-Rezitation.", "Allah'ı söz, dua ve Kur'an ile anmak."),
-        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿat wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
+        ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿāt wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
     ]
 
     var body: some View {
@@ -2209,8 +2209,8 @@ struct PrayerCatalogView: View {
                 deSummary: "Das zweirakʿatige Pflichtgebet des Morgens.",
                 trSummary: "Sabah vaktinin iki rekât farz namazı.",
                 deSteps: [
-                    "Beide Rakʿah folgen dem normalen 2-Rakʿah-Ablauf.",
-                    "In beiden Rakʿah werden Fātiha und eine zusätzliche Sura bzw. passende Verse gelesen.",
+                    "Beide Rakʿāt folgen dem normalen 2-Rakʿah-Ablauf.",
+                    "In beiden Rakʿāt werden Fātiha und eine zusätzliche Sura bzw. passende Verse gelesen.",
                     "Nach der zweiten Rakʿah vollständiges Schluss-Sitzen und Salām."
                 ],
                 trSteps: [
@@ -2226,7 +2226,7 @@ struct PrayerCatalogView: View {
                 id: "dhuhr_first_sunnah", group: "daily",
                 deTitle: "Dhuhr · 4 erste Sunnah", trTitle: "Öğle · 4 Rekât İlk Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "4",
-                deSummary: "Vier betonte Sunnah-Rakʿah vor dem Dhuhr-Fard.",
+                deSummary: "Vier betonte Sunnah-Rakʿāt vor dem Dhuhr-Fard.",
                 trSummary: "Öğle farzından önceki dört rekât kuvvetli sünnet.",
                 deSteps: [
                     "1.–2. Rakʿah: wie ein normales 2-Rakʿah-Gebet; nach Rakʿah 2 nur Ettehiyyâtü lesen.",
@@ -2277,7 +2277,7 @@ struct PrayerCatalogView: View {
                     "Her iki rekâtta Fâtiha + zamm-ı sûre/ayet okunur.",
                     "2. rekâttan sonra tam son oturuş ve selâm."
                 ],
-                deNotes: ["Diyanet weist darauf hin, dass sie auch vier Rakʿah gebetet werden kann; die verbreitete Praxis sind zwei."],
+                deNotes: ["Diyanet weist darauf hin, dass sie auch vier Rakʿāt gebetet werden kann; die verbreitete Praxis sind zwei."],
                 trNotes: ["Diyanet'e göre dört rekât da kılınabilir; yaygın uygulama iki rekâttır."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
@@ -2285,7 +2285,7 @@ struct PrayerCatalogView: View {
                 id: "asr_sunnah", group: "daily",
                 deTitle: "Asr · 4 Sunnah", trTitle: "İkindi · 4 Rekât Sünnet",
                 deRuling: "Sunnah ghayr muʾakkadah", trRuling: "Sünnet-i gayr-i müekkede", rakaLabel: "4",
-                deSummary: "Vier freiwillige Sunnah-Rakʿah vor dem Asr-Fard.",
+                deSummary: "Vier freiwillige Sunnah-Rakʿāt vor dem Asr-Fard.",
                 trSummary: "İkindi farzından önceki dört rekât gayr-i müekked sünnet.",
                 deSteps: [
                     "Rakʿah 1–2: normal; im ersten Sitzen Ettehiyyâtü UND Salli-Bârik lesen.",
@@ -2305,7 +2305,7 @@ struct PrayerCatalogView: View {
                 id: "asr_fard", group: "daily",
                 deTitle: "Asr · 4 Fard", trTitle: "İkindi · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿah am Nachmittag.",
+                deSummary: "Vier Pflicht-Rakʿāt am Nachmittag.",
                 trSummary: "İkindi vaktinin dört rekât farz namazı.",
                 deSteps: [
                     "Wie Dhuhr-Fard: in Rakʿah 1–2 Fātiha + zusätzliche Sura/Verse.",
@@ -2343,7 +2343,7 @@ struct PrayerCatalogView: View {
                 id: "maghrib_sunnah", group: "daily",
                 deTitle: "Maghrib · 2 Sunnah", trTitle: "Akşam · 2 Rekât Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿah nach dem Maghrib-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿāt nach dem Maghrib-Fard.",
                 trSummary: "Akşam farzından sonra kılınan iki rekât kuvvetli sünnet.",
                 deSteps: ["Normaler 2-Rakʿah-Sunnah-Ablauf mit Fātiha + Sura in beiden Rakʿah.", "Nach Rakʿah 2 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["İki rekâtta da Fâtiha + sûre okunan normal 2 rekât sünnet düzeni.", "2. rekâttan sonra tam son oturuş ve selâm."],
@@ -2373,7 +2373,7 @@ struct PrayerCatalogView: View {
                 id: "isha_fard", group: "daily",
                 deTitle: "Isha · 4 Fard", trTitle: "Yatsı · 4 Rekât Farz",
                 deRuling: "Fard", trRuling: "Farz", rakaLabel: "4",
-                deSummary: "Vier Pflicht-Rakʿah in der Nacht.",
+                deSummary: "Vier Pflicht-Rakʿāt in der Nacht.",
                 trSummary: "Yatsı vaktinin dört rekât farz namazı.",
                 deSteps: ["Wie Dhuhr-/Asr-Fard: Rakʿah 1–2 Fātiha + Sura, Rakʿah 3–4 Fātiha.", "Nach Rakʿah 4 vollständiges Schluss-Sitzen und Salām."],
                 trSteps: ["Öğle/ikindi farzı gibi: 1–2. rekâtta Fâtiha + sûre, 3–4. rekâtta Fâtiha.", "4. rekâttan sonra tam son oturuş ve selâm."],
@@ -2384,7 +2384,7 @@ struct PrayerCatalogView: View {
                 id: "isha_last_sunnah", group: "daily",
                 deTitle: "Isha · 2 letzte Sunnah", trTitle: "Yatsı · 2 Rekât Son Sünnet",
                 deRuling: "Sunnah muʾakkadah", trRuling: "Sünnet-i müekkede", rakaLabel: "2",
-                deSummary: "Zwei betonte Sunnah-Rakʿah nach dem Isha-Fard.",
+                deSummary: "Zwei betonte Sunnah-Rakʿāt nach dem Isha-Fard.",
                 trSummary: "Yatsı farzından sonra kılınan iki rekât kuvvetli sünnet.",
                 deSteps: ["Normaler 2-Rakʿah-Sunnah-Ablauf.", "Beide Rakʿah: Fātiha + Sura; danach Schluss-Sitzen und Salām."],
                 trSteps: ["Normal iki rekât sünnet düzeni.", "İki rekâtta da Fâtiha + sûre; ardından son oturuş ve selâm."],
@@ -2396,7 +2396,7 @@ struct PrayerCatalogView: View {
                 id: "witr", group: "special",
                 deTitle: "Witr · 3 Rakʿāt", trTitle: "Vitir · 3 Rekât",
                 deRuling: "Hanafi: Wajib", trRuling: "Hanefî: Vacip", rakaLabel: "3",
-                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt im dritten Rakʿah.",
+                deSummary: "Das dreirakʿatige Witr nach Isha mit Qunūt in der dritten Rakʿah.",
                 trSummary: "Yatsıdan sonra, üçüncü rekâtta kunut bulunan üç rekât vitir.",
                 deSteps: [
                     "Rakʿah 1–2: Fātiha + Sura; nach Rakʿah 2 nur Ettehiyyâtü, dann zur dritten aufstehen.",
@@ -2416,7 +2416,7 @@ struct PrayerCatalogView: View {
                 id: "eid", group: "special",
                 deTitle: "Eid-Gebet", trTitle: "Bayram Namazı",
                 deRuling: "Hanafi: Wajib · gemeinschaftlich", trRuling: "Hanefî: Vacip · cemaatle", rakaLabel: "2",
-                deSummary: "Zwei Rakʿah mit zusätzlichen Takbiren; danach folgt die Eid-Khutbah.",
+                deSummary: "Zwei Rakʿāt mit zusätzlichen Takbiren; danach folgt die Eid-Khutbah.",
                 trSummary: "İlave tekbirlerle kılınan iki rekât; ardından bayram hutbesi.",
                 deSteps: [
                     "1. Rakʿah: Eröffnungstakbir und Hände binden → Sübhaneke → drei zusätzliche Takbire. Bei den ersten zwei Händen lösen, beim dritten wieder binden.",
@@ -2438,12 +2438,12 @@ struct PrayerCatalogView: View {
                 id: "tarawih", group: "special",
                 deTitle: "Tarawih", trTitle: "Teravih Namazı",
                 deRuling: "Sunnah muʾakkadah im Ramadan", trRuling: "Ramazan'da sünnet-i müekkede", rakaLabel: "20*",
-                deSummary: "Ramadan-Nachtgebet nach dem Isha-Fard. In der türkisch-hanafitischen Praxis sind 20 Rakʿah etabliert.",
+                deSummary: "Ramadan-Nachtgebet nach dem Isha-Fard. In der türkisch-hanafitischen Praxis sind 20 Rakʿāt etabliert.",
                 trSummary: "Yatsı farzından sonra kılınan Ramazan gece namazı. Türkiye Hanefî uygulamasında 20 rekât yerleşmiştir.",
                 deSteps: [
-                    "Am übersichtlichsten jeweils 2 Rakʿah beten und Salām geben; Diyanet bezeichnet dies als vorzugswürdig.",
-                    "Jede 2er-Einheit folgt grundsätzlich dem normalen 2-Rakʿah-Sunnah-Ablauf.",
-                    "Nach jeweils vier Rakʿah kann eine kurze Pause eingelegt werden; daher der Name Tarāwīḥ.",
+                    "Am übersichtlichsten jeweils 2 Rakʿāt beten und Salām geben; Diyanet bezeichnet dies als vorzugswürdig.",
+                    "Jede 2er-Einheit folgt grundsätzlich dem normalen 2-Rakʿāt-Sunnah-Ablauf.",
+                    "Nach jeweils vier Rakʿāt kann eine kurze Pause eingelegt werden; daher der Name Tarāwīḥ.",
                     "Witr folgt üblicherweise nach Tarawih."
                 ],
                 trSteps: [
@@ -2452,7 +2452,7 @@ struct PrayerCatalogView: View {
                     "Her dört rekâttan sonra kısa dinlenme verilebilir; Teravih adı buradan gelir.",
                     "Vitir genellikle teravihten sonra kılınır."
                 ],
-                deNotes: ["*Diyanet beschreibt 20 Rakʿah als historisch etablierte Gemeinschaftspraxis, betont aber zugleich, dass Tarawih freiwillig ist und auch eine geringere gerade Zahl gebetet werden kann."],
+                deNotes: ["*Diyanet beschreibt 20 Rakʿāt als historisch etablierte Gemeinschaftspraxis, betont aber zugleich, dass Tarawih freiwillig ist und auch eine geringere gerade Zahl gebetet werden kann."],
                 trNotes: ["*Diyanet 20 rekâtı yerleşmiş cemaat uygulaması olarak açıklar; teravihin nafile olduğunu ve daha az çift rekâtla da kılınabileceğini belirtir."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
@@ -2460,12 +2460,12 @@ struct PrayerCatalogView: View {
                 id: "tasbih_prayer", group: "special",
                 deTitle: "Tasbih-Gebet", trTitle: "Tesbih Namazı",
                 deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "4",
-                deSummary: "Vier Rakʿah mit insgesamt 300 Wiederholungen des bekannten Tasbih.",
+                deSummary: "Vier Rakʿāt mit insgesamt 300 Wiederholungen des bekannten Tasbih.",
                 trSummary: "Toplam 300 tesbih içeren dört rekât nafile namaz.",
                 deSteps: [
                     "Nach Sübhaneke 15×: Subḥānallāhi wa-l-ḥamdu lillāhi wa lā ilāha illallāhu wa-llāhu akbar.",
                     "Nach Fātiha + Sura 10×; im Rukūʿ 10×; nach dem Aufrichten 10×; in Sujud 1 10×; im Sitzen 10×; in Sujud 2 10×.",
-                    "So entstehen 75 Tasbih pro Rakʿah. Vier Rakʿah ergeben 300."
+                    "So entstehen 75 Tasbih pro Rakʿah. Vier Rakʿāt ergeben 300."
                 ],
                 trSteps: [
                     "Sübhâneke'den sonra 15×: Sübhânellâhi ve'l-hamdülillâhi velâ ilâhe illallâhü vallâhü ekber.",
@@ -2484,7 +2484,7 @@ struct PrayerCatalogView: View {
                 trSummary: "Yükümlüler için cuma günü öğle farzı yerine kılınan, hutbeli cemaat namazı.",
                 deSteps: [
                     "Verbreitete hanafitische Praxis: 4 Sunnah vor dem Fard.",
-                    "Khutbah anhören; danach 2 Rakʿah Fard hinter dem Imam.",
+                    "Khutbah anhören; danach 2 Rakʿāt Fard hinter dem Imam.",
                     "Danach nach Abū Ḥanīfa 4 Sunnah; bei den hanafitischen Schülern ist auch eine zusätzliche 2er-Einheit überliefert."
                 ],
                 trSteps: [
@@ -2562,7 +2562,7 @@ struct PrayerCatalogView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Nicht nur ein allgemeiner 2-Rakʿah-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
+                        "Nicht nur ein allgemeiner 2-Rakʿāt-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
                         "Yalnız genel bir 2 rekât anlatımı değil: PDF menüsünde ayrı gösterilen vakit namazlarını ve özel namazları burada tek tek bulabilirsin."
                     ))
                     .font(.footnote)
@@ -2788,7 +2788,7 @@ struct HajjUmrahGuideView: View {
                 lines: settings.language == .german ? [
                     "Vor dem Überschreiten des Miqāt in Ihram eintreten und die Umrah beabsichtigen; Talbiyah sprechen.",
                     "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
-                    "Nach dem Tawaf zwei Rakʿah Tawaf-Gebet an einem geeigneten Ort verrichten.",
+                    "Nach dem Tawaf zwei Rakʿāt Tawaf-Gebet an einem geeigneten Ort verrichten.",
                     "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
                     "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
                 ] : [
