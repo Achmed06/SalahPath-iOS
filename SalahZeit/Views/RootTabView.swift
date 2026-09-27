@@ -548,6 +548,8 @@ struct NearbyMosquesView: View {
                             if locationManager.authorizationStatus == .denied ||
                                 locationManager.authorizationStatus == .restricted {
                                 openAppSettings()
+                            } else if locationManager.usesManualLocation {
+                                locationManager.requestDeviceLocationSnapshot()
                             } else {
                                 locationManager.useDeviceLocation()
                             }
@@ -556,10 +558,14 @@ struct NearbyMosquesView: View {
                                 settings.t(
                                     locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                         ? "iPhone-Einstellungen öffnen"
-                                        : "Standort verwenden",
+                                        : (locationManager.usesManualLocation
+                                            ? "Gerätestandort für Suche verwenden"
+                                            : "Standort verwenden"),
                                     locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                         ? "iPhone ayarlarını aç"
-                                        : "Konumu kullan"
+                                        : (locationManager.usesManualLocation
+                                            ? "Arama için cihaz konumunu kullan"
+                                            : "Konumu kullan")
                                 ),
                                 systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                     ? "gear"
