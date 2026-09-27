@@ -377,7 +377,7 @@ for token in (
 
 for token in (
     'Standard-Gebetsruf wird direkt abgespielt.',
-    'iOS-Mitteilung testen',
+    'Benachrichtigung prüfen',
 ):
     if token not in settings_view:
         fail(f"notification test UI regression: missing {token}")
