@@ -124,7 +124,7 @@ enum CalculationPreset: String, CaseIterable, Identifiable {
         case .muslimWorldLeague: return "Muslim World League"
         case .moonsightingCommittee: return "Moonsighting Committee"
         case .turkey:
-            return language == .german ? "Diyanet / Türkei (Annäherung)" : "Diyanet / Türkiye (yaklaşım)"
+            return language == .german ? "Diyanet / Türkei (Annäherung)" : "Diyanet / Türkiye (yaklaşık hesap)"
         case .egyptian: return "Egyptian General Authority"
         case .karachi: return "Karachi"
         case .ummAlQura: return "Umm al-Qura"
