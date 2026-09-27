@@ -321,27 +321,85 @@ struct GuideView: View {
 private struct PrayerPoseArtwork: View {
     let assetName: String
 
+    private var cropZoom: CGFloat {
+        if assetName.contains("_salam_") { return 2.7 }
+        if assetName.contains("_final_sitting") { return 1.55 }
+        if assetName.contains("_intention") {
+            return assetName.hasPrefix("male_") ? 1.72 : 1.14
+        }
+        if assetName.contains("_standing") { return 1.58 }
+        if assetName.contains("_takbir") { return 1.42 }
+        if assetName.contains("_bowing") { return 1.22 }
+        if assetName.contains("_upright") { return 1.24 }
+        if assetName.contains("_sitting") { return 1.14 }
+        if assetName.contains("_sujud") { return 1.12 }
+        if assetName.contains("_finger") { return 1.15 }
+        return 1.0
+    }
+
+    private var cropAnchor: UnitPoint {
+        if assetName.hasPrefix("male_") && (
+            assetName.contains("_intention") ||
+            assetName.contains("_standing") ||
+            assetName.contains("_final_sitting")
+        ) {
+            return .leading
+        }
+        if assetName.contains("_bowing") {
+            return assetName.hasPrefix("female_") ? .bottomLeading : .bottom
+        }
+        if assetName.contains("_sitting") || assetName.contains("_sujud") {
+            return .bottom
+        }
+        return .center
+    }
+
+    private var verticalOffset: CGFloat {
+        if assetName.contains("_sitting") { return 7 }
+        if assetName.contains("_sujud") { return 7 }
+        if assetName.contains("_upright") { return 6 }
+        if assetName.contains("_takbir") { return -3 }
+        return 0
+    }
+
     var body: some View {
-        Image(assetName)
-            .renderingMode(.original)
-            .resizable()
-            .interpolation(.high)
-            .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(4)
-            .background(
-                LinearGradient(
-                    colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.96),
+                    SalahTheme.cream,
+                    SalahTheme.softTeal.opacity(0.18)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
-            .overlay {
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.24), lineWidth: 0.7)
-            }
-            .accessibilityHidden(true)
+
+            Image(assetName)
+                .renderingMode(.original)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFit()
+                .scaleEffect(cropZoom, anchor: cropAnchor)
+                .offset(y: verticalOffset)
+                .padding(4)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.90),
+                            SalahTheme.gold.opacity(0.32)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 0.8
+                )
+        }
+        .accessibilityHidden(true)
     }
 }
 
@@ -809,7 +867,43 @@ struct PrayerHowToView: View {
     }
 
     private var prayerLearningHero: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 14) {
+            HStack(alignment: .center, spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 48, height: 48)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.18), radius: 10, y: 5)
+
+                    Image(systemName: "figure.mind.and.body")
+                        .font(.system(size: 21, weight: .semibold))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [Color.white, SalahTheme.gold.opacity(0.94)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(settings.t("Namaz lernen", "Namaz öğren"))
+                        .font(.system(size: 27, weight: .bold, design: .serif))
+                        .foregroundStyle(SalahTheme.ink)
+                    Text(settings.t("Schritt für Schritt", "Adım adım"))
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                }
+
+                Spacer()
+            }
+
             Picker(settings.t("Lernmodus", "Öğrenme modu"), selection: $settings.prayerAudience) {
                 Text(settings.t("Mann", "Erkek")).tag(PrayerAudience.male)
                 Text(settings.t("Frau", "Kadın")).tag(PrayerAudience.female)
@@ -817,45 +911,63 @@ struct PrayerHowToView: View {
             .pickerStyle(.segmented)
 
             HStack(spacing: 14) {
-                ZStack(alignment: .bottom) {
-                    PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
-                }
-                .frame(width: 118, height: 148)
-                .background(SalahTheme.cream)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                PrayerPoseArtwork(assetName: settings.prayerAudience == .male ? "male_intention" : "female_intention")
+                    .frame(width: 118, height: 148)
+                    .padding(5)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.96), SalahTheme.cream],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.32), lineWidth: 1)
+                    }
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(settings.t("Ganz von vorne lernen", "En baştan öğren"))
-                        .font(.headline.bold())
+                        .font(.system(size: 18, weight: .bold, design: .serif))
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe und scrolle bis zum Ende. Wenn du dort weiter nach oben wischst, öffnet sich automatisch der nächste Schritt.",
-                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku ve adımın sonuna kadar kaydır. Orada yukarı doğru kaydırmaya devam edince sonraki adım otomatik açılır."
+                        "Du siehst immer nur einen Schritt. Lies ihn in Ruhe und wische am Ende weiter.",
+                        "Her seferinde yalnız bir adım görürsün. Sakin şekilde oku ve sonunda kaydırarak devam et."
                     ))
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.ink)
+                    .font(.system(size: 11.5, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
                     .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
             }
 
-            VStack(alignment: .leading, spacing: 7) {
-                learningFeature(settings.t("Eine Haltung pro Schritt", "Her adımda tek duruş"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Arabisch, Umschrift und Bedeutung", "Arapça, okunuş ve anlam"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Mann/Frau getrennt dargestellt", "Erkek/Kadın ayrı gösterilir"), icon: "checkmark.circle.fill")
-                learningFeature(settings.t("Hanafi/Diyanet-Grunddarstellung", "Hanefî/Diyanet temel anlatımı"), icon: "checkmark.circle.fill")
+            HStack(spacing: 7) {
+                Label(settings.t("Hanafi", "Hanefî"), systemImage: "book.closed.fill")
+                Label(settings.t("Mann/Frau", "Erkek/Kadın"), systemImage: "person.2.fill")
+                Label(settings.t("Audio", "Ses"), systemImage: "speaker.wave.2.fill")
             }
+            .font(.system(size: 9.5, weight: .bold))
+            .foregroundStyle(SalahTheme.deepTeal)
         }
-        .padding(13)
+        .padding(15)
         .background(
             LinearGradient(
-                colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.72)],
+                colors: [
+                    Color.white.opacity(0.94),
+                    SalahTheme.cream.opacity(0.98),
+                    SalahTheme.gold.opacity(0.06)
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
-            in: RoundedRectangle(cornerRadius: 18, style: .continuous)
+            in: RoundedRectangle(cornerRadius: 22, style: .continuous)
         )
-        .overlay { RoundedRectangle(cornerRadius: 18).stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1) }
+        .overlay {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+        }
+        .shadow(color: SalahTheme.deepTeal.opacity(0.06), radius: 12, y: 6)
     }
 
     private func learningFeature(_ text: String, icon: String) -> some View {
@@ -906,24 +1018,39 @@ struct PrayerHowToView: View {
                     }
                     .cardStyle()
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 10) {
                         HStack {
                             Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
+                                .font(.system(size: 12, weight: .bold))
                                 .foregroundStyle(SalahTheme.deepTeal)
                             Spacer()
-                            Text(settings.prayerAudience.title(settings.language))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
+                            Text(settings.prayerAudience.title(settings.language).uppercased())
+                                .font(.system(size: 9.5, weight: .black))
+                                .tracking(0.5)
+                                .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
-                                .background(SalahTheme.softTeal, in: Capsule())
+                                .background(SalahTheme.softTeal.opacity(0.74), in: Capsule())
+                                .foregroundStyle(SalahTheme.deepTeal)
                         }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
+
+                        GeometryReader { proxy in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(SalahTheme.deepTeal.opacity(0.08))
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [SalahTheme.teal, SalahTheme.gold],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(width: proxy.size.width * CGFloat(currentStepIndex + 1) / CGFloat(steps.count))
+                            }
+                        }
+                        .frame(height: 6)
                     }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+                    .padding(.horizontal, 4)
 
                     PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
                         .id("prayer-step-card-\(currentStepIndex)")
@@ -1016,35 +1143,57 @@ private struct PrayerTutorialStepCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
+            HStack(spacing: 11) {
                 Text(step.number)
-                    .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
+                    .font(.system(size: 13, weight: .black))
+                    .foregroundStyle(.white)
                     .frame(width: 34, height: 34)
-                    .background(SalahTheme.gold.opacity(0.95), in: Circle())
+                    .background(
+                        LinearGradient(
+                            colors: [SalahTheme.teal, SalahTheme.deepTeal],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        in: Circle()
+                    )
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.16), radius: 5, y: 2)
 
                 Text(settings.language == .german ? step.deTitle : step.trTitle)
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .font(.system(size: 19, weight: .bold, design: .serif))
+                    .foregroundStyle(SalahTheme.ink)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Spacer(minLength: 4)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 11)
-            .background(SalahTheme.teal)
+            .padding(.horizontal, 15)
+            .padding(.top, 15)
+            .padding(.bottom, 10)
 
-            VStack(alignment: .leading, spacing: 13) {
+            VStack(alignment: .leading, spacing: 14) {
                 if step.pose == .salam {
                     PrayerSalamVisual()
                 } else if let imageName {
-                    ZStack(alignment: .center) {
-                        PrayerPoseArtwork(assetName: imageName)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: standingStylePose ? 236 : 220)
-                    .padding(.vertical, 6)
-                    .background(SalahTheme.cream)
+                    PrayerPoseArtwork(assetName: imageName)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: standingStylePose ? 250 : 230)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 8)
+                        .background(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.96),
+                                    SalahTheme.cream,
+                                    SalahTheme.gold.opacity(0.05)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            in: RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        )
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                .stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1)
+                        }
                 }
 
                 if step.number == "16" {
@@ -1053,8 +1202,8 @@ private struct PrayerTutorialStepCard: View {
                             assetName: "\(audience == .male ? "male" : "female")_finger"
                         )
                         .frame(width: 92, height: 120)
-                        .background(SalahTheme.cream)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .padding(4)
+                        .background(Color.white.opacity(0.82), in: RoundedRectangle(cornerRadius: 14))
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(settings.t("Zeigefinger im Tashahhud", "Teşehhüdde işaret parmağı"))
@@ -1062,32 +1211,39 @@ private struct PrayerTutorialStepCard: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                                "Hanefî: Im Schahada-Abschnitt wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
+                                "Hanefî: Şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
                             ))
                             .font(.caption)
                             .foregroundStyle(SalahTheme.mutedInk)
                             .fixedSize(horizontal: false, vertical: true)
                         }
-
                         Spacer(minLength: 0)
                     }
-                    .padding(10)
-                    .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                    .padding(11)
+                    .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")
+                    Label(settings.t("SO MACHST DU ES", "BÖYLE YAP"), systemImage: "figure.walk")
                         .font(.caption.bold())
                         .foregroundStyle(SalahTheme.teal)
+
                     Text(settings.language == .german ? step.deAction : step.trAction)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(SalahTheme.ink)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
+                .background(
+                    LinearGradient(
+                        colors: [SalahTheme.softTeal.opacity(0.56), Color.white.opacity(0.72)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+                )
 
                 if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
                     Label(note, systemImage: "info.circle.fill")
@@ -1095,29 +1251,48 @@ private struct PrayerTutorialStepCard: View {
                         .foregroundStyle(SalahTheme.mutedInk)
                         .padding(11)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13))
+                        .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 14))
                 }
 
                 if !step.recitations.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        Label(settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"), systemImage: "text.bubble.fill")
+                        Label(settings.t("REZITATION", "OKUNUŞ"), systemImage: "text.bubble.fill")
                             .font(.caption.bold())
                             .foregroundStyle(SalahTheme.teal)
+
                         ForEach(step.recitations) { rec in
                             PrayerRecitationView(recitation: rec)
                         }
                     }
                 }
             }
-            .padding(14)
-            .background(SalahTheme.cream)
+            .padding(.horizontal, 15)
+            .padding(.bottom, 16)
         }
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.white.opacity(0.97),
+                    SalahTheme.cream,
+                    SalahTheme.gold.opacity(0.05)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 24, style: .continuous)
+        )
         .overlay {
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.95), SalahTheme.gold.opacity(0.48)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
         }
-        .shadow(color: SalahTheme.deepTeal.opacity(0.05), radius: 7, y: 3)
+        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 14, y: 7)
     }
 }
 
@@ -1127,31 +1302,57 @@ private struct PrayerRecitationView: View {
     @State private var showMeaning = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
-                .font(.caption.bold())
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(settings.language == .german ? recitation.deLabel : recitation.trLabel)
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(SalahTheme.deepTeal)
+                Spacer()
+                Image(systemName: "quote.bubble.fill")
+                    .font(.system(size: 10))
+                    .foregroundStyle(SalahTheme.gold)
+            }
+
             Text(recitation.arabic)
-                .font(.title3)
+                .font(.system(size: 21, weight: .medium))
                 .multilineTextAlignment(.trailing)
                 .frame(maxWidth: .infinity, alignment: .trailing)
+
             Text(recitation.transliteration)
-                .font(.subheadline.weight(.semibold))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(SalahTheme.ink)
+
             Button(showMeaning ? settings.t("Bedeutung ausblenden", "Anlamı gizle") : settings.t("Bedeutung anzeigen", "Anlamı göster")) {
                 withAnimation(.easeInOut(duration: 0.2)) { showMeaning.toggle() }
             }
-            .font(.caption)
+            .font(.system(size: 10.5, weight: .bold))
+            .foregroundStyle(SalahTheme.teal)
+
             if showMeaning {
                 Text(settings.language == .german ? recitation.deMeaning : recitation.trMeaning)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(SalahTheme.mutedInk)
             }
+
             if let note = settings.language == .german ? recitation.deNote : recitation.trNote {
-                Text(note).font(.caption2).foregroundStyle(.tertiary)
+                Text(note)
+                    .font(.caption2)
+                    .foregroundStyle(SalahTheme.mutedInk.opacity(0.82))
             }
         }
-        .padding(10)
-        .background(SalahTheme.gold.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
+        .padding(12)
+        .background(
+            LinearGradient(
+                colors: [Color.white.opacity(0.92), SalahTheme.gold.opacity(0.08)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.25), lineWidth: 1)
+        }
     }
 }
 
