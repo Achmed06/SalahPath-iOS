@@ -124,7 +124,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     content.title = settings.t("\(prayerName) beginnt", "\(prayerName) vakti başladı")
                     if let rakats = prayer.kind.fardRakats {
                         content.body = settings.t(
-                            "\(rakats) Rakʿat Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
+                            "\(rakats) Rakʿāt Fard • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))",
                             "\(rakats) rekât farz • \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
                         )
                     }
