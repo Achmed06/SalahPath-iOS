@@ -779,7 +779,7 @@ struct PrayerHowToView: View {
             ),
             .init(
                 number: "17",
-                pose: .finalSitting,
+                pose: .salam,
                 imageKey: "salam_right",
                 deTitle: "Salām – zuerst rechts",
                 trTitle: "Selâm – önce sağa",
@@ -791,7 +791,7 @@ struct PrayerHowToView: View {
             ),
             .init(
                 number: "18",
-                pose: .finalSitting,
+                pose: .salam,
                 imageKey: "salam_left",
                 deTitle: "Salām – danach links",
                 trTitle: "Selâm – sonra sola",
