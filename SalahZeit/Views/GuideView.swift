@@ -4671,6 +4671,24 @@ final class RemoteAudioPlayer: ObservableObject {
                     _ = await QuranAudioCache.shared.playbackURL(for: sourceURL)
                 }
             }
+
+            // Warm only the next two ayat. This keeps continuous recitation smooth
+            // without turning a single play tap into a large background download.
+            let prefetchURLs = self.queueURLs
+                .dropFirst(expectedIndex + 1)
+                .prefix(2)
+                .filter { $0.scheme?.lowercased() == "https" }
+
+            if !prefetchURLs.isEmpty {
+                Task { [weak self] in
+                    for url in prefetchURLs {
+                        guard let self,
+                              self.playbackRevision == revision,
+                              self.queueIndex == expectedIndex else { return }
+                        _ = await QuranAudioCache.shared.playbackURL(for: url)
+                    }
+                }
+            }
         }
     }
 
