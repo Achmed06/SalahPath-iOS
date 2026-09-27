@@ -5,6 +5,7 @@ import AVFoundation
 import MediaPlayer
 import UIKit
 
+@MainActor
 private func updateBottomTriggerVisibility(
     _ frame: CGRect,
     isVisible: Binding<Bool>
