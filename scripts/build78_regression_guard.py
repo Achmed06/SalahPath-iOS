@@ -302,6 +302,23 @@ for token in (
         fail(f"onboarding hit-target regression: missing {token}")
 
 for token in (
+    'func cancelPendingLocationIntent()',
+    'searchGeocoder.cancelGeocode()',
+):
+    if token not in location_manager:
+        fail(f"onboarding location-cancellation regression: missing {token}")
+
+for token in (
+    'locationManager.cancelPendingLocationIntent()',
+    'guard step == 2 else {',
+):
+    if token not in app:
+        fail(f"onboarding stale-location regression: missing {token}")
+
+if app.count('locationManager.cancelPendingLocationIntent()') < 2:
+    fail("onboarding stale-location regression: back/skip no longer both cancel pending lookup")
+
+for token in (
     'import MediaPlayer',
     'static let shared = RemoteAudioPlayer()',
     'MPNowPlayingInfoCenter.default().nowPlayingInfo',
