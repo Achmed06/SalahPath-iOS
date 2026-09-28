@@ -65,6 +65,12 @@ grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbx
 grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
 grep -q 'CURRENT_PROJECT_VERSION="78"' "scripts/build_unsigned_ipa.sh"
 grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'repositoryURL = "https://github.com/batoulapps/adhan-swift.git";' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'kind = exactVersion;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'version = 1.5.0;' "SalahZeit.xcodeproj/project.pbxproj"
+if grep -A5 'XCRemoteSwiftPackageReference "adhan-swift"' "SalahZeit.xcodeproj/project.pbxproj" | grep -q 'upToNextMajorVersion'; then
+  fail "Adhan dependency must stay pinned to exact 1.5.0 for reproducible release builds"
+fi
 grep -q 'INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'PrivacyInfo.xcprivacy in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'adhan-standard.caf in Resources' "SalahZeit.xcodeproj/project.pbxproj"
