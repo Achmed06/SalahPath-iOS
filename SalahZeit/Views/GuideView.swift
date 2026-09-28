@@ -5528,7 +5528,10 @@ private struct QuranReferenceJumpView: View {
                     ContentUnavailableView(
                         settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
-                        description: Text(error)
+                        description: Text(settings.t(
+                            "Quran-Daten konnten gerade nicht geladen werden. Bitte prüfe deine Verbindung und versuche es erneut.",
+                            "Kur'an verileri şu anda yüklenemedi. Bağlantını kontrol edip tekrar dene."
+                        ))
                     )
 
                     Button {
@@ -5726,7 +5729,10 @@ struct ShortSurahLearningView: View {
             )
         } catch {
             guard generation == audioRequestGeneration else { return }
-            audio.lastError = error.localizedDescription
+            audio.lastError = settings.t(
+                "Quran-Audio konnte nicht geladen werden. Bitte versuche es erneut.",
+                "Kur'an sesi yüklenemedi. Lütfen tekrar dene."
+            )
         }
 
         if generation == audioRequestGeneration {
@@ -9502,7 +9508,10 @@ struct QuranPageReaderView: View {
                     ContentUnavailableView(
                         settings.t("Seite konnte nicht geladen werden", "Sayfa yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
-                        description: Text(error)
+                        description: Text(settings.t(
+                            "Diese Quran-Seite konnte gerade nicht geladen werden. Bitte versuche es erneut.",
+                            "Bu Kur'an sayfası şu anda yüklenemedi. Lütfen tekrar dene."
+                        ))
                     )
 
                     Button {
@@ -10013,7 +10022,10 @@ struct QuranDirectoryView: View {
                     ContentUnavailableView(
                         settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
-                        description: Text(error)
+                        description: Text(settings.t(
+                            "Das Quran-Verzeichnis konnte gerade nicht geladen werden. Bitte versuche es erneut.",
+                            "Kur'an dizini şu anda yüklenemedi. Lütfen tekrar dene."
+                        ))
                     )
 
                     Button {
@@ -10666,7 +10678,10 @@ private struct QuranSurahView: View {
                 ContentUnavailableView(
                     settings.t("Inhalt nicht geladen", "İçerik yüklenemedi"),
                     systemImage: "wifi.exclamationmark",
-                    description: Text(error)
+                    description: Text(settings.t(
+                        "Der Quran-Inhalt konnte gerade nicht geladen werden. Bitte versuche es erneut.",
+                        "Kur'an içeriği şu anda yüklenemedi. Lütfen tekrar dene."
+                    ))
                 )
 
                 Button {
