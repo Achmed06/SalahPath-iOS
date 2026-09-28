@@ -18,6 +18,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Verify source provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          echo "Building exact source commit: $ACTUAL_SHA"
+
       - name: Run release preflight
         run: ./scripts/preflight_reference_build.sh
 
@@ -30,9 +39,24 @@ jobs:
       - name: Build unsigned IPA
         run: ./scripts/build_unsigned_ipa.sh
 
+      - name: Write IPA provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          IPA_SHA256="$(shasum -a 256 SalahPath-unsigned.ipa | awk '{print $1}')"
+          {
+            echo "source_commit=$GITHUB_SHA"
+            echo "ipa_sha256=$IPA_SHA256"
+            echo "marketing_version=3.62"
+            echo "build_number=78"
+          } > SalahPath-unsigned.provenance.txt
+          cat SalahPath-unsigned.provenance.txt
+
       - name: Upload IPA
         uses: actions/upload-artifact@v7
         with:
           name: SalahZeit-unsigned-ipa
-          path: SalahPath-unsigned.ipa
+          path: |
+            SalahPath-unsigned.ipa
+            SalahPath-unsigned.provenance.txt
           if-no-files-found: error
