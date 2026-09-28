@@ -361,6 +361,18 @@ for token in (
     if token not in root_tabs:
         fail(f"audio accessibility localization regression: missing {token}")
 
+# 6c) Denied notification permission must offer a direct iOS Settings path.
+settings_source = read("SalahZeit/Views/SettingsView.swift")
+for token in (
+    '@State private var notificationAuthorizationDenied = false',
+    'notificationAuthorizationDenied = diagnostics.authorizationStatus == .denied',
+    'iPhone-Benachrichtigungseinstellungen öffnen',
+    'iPhone bildirim ayarlarını aç',
+    'UIApplication.openSettingsURLString',
+):
+    if token not in settings_source:
+        fail(f"notification settings recovery regression: missing {token}")
+
 # 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
 project = read("SalahZeit.xcodeproj/project.pbxproj")
 notification_manager = read("SalahZeit/Services/NotificationManager.swift")
