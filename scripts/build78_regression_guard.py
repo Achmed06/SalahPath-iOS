@@ -396,6 +396,9 @@ if 'description: Text(error)' in guide_source:
 if 'audio.lastError = error.localizedDescription' in guide_source:
     fail("Quran raw audio system error leaked into visible UI")
 
+if 'let error = store.error' in guide_source:
+    fail("Quran visible-error regression: unused raw store error binding returned")
+
 # 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
 project = read("SalahZeit.xcodeproj/project.pbxproj")
 notification_manager = read("SalahZeit/Services/NotificationManager.swift")
