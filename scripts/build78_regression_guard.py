@@ -384,6 +384,10 @@ for token in (
     "Kur'an dizini şu anda yüklenemedi.",
     'Der Quran-Inhalt konnte gerade nicht geladen werden.',
     "Kur'an içeriği şu anda yüklenemedi.",
+    'Die Juz-Daten konnten gerade nicht geladen werden. Bitte versuche es erneut.',
+    "Cüz verileri şu anda yüklenemedi. Lütfen tekrar dene.",
+    'Die Quran-Favoriten konnten gerade nicht geladen werden. Bitte versuche es erneut.',
+    "Kur'an favorileri şu anda yüklenemedi. Lütfen tekrar dene.",
     'Quran-Audio konnte nicht geladen werden. Bitte versuche es erneut.',
     "Kur'an sesi yüklenemedi. Lütfen tekrar dene.",
 ):
