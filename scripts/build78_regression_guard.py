@@ -470,4 +470,13 @@ for token in (
     if token not in settings_view:
         fail(f"notification test UI regression: missing {token}")
 
+for token in (
+    'settings.notificationsEnabled = false',
+    'after.authorizationStatus == .denied',
+    'iOS-Benachrichtigungen sind ausgeschaltet.',
+    'iOS bildirimleri kapalı.',
+):
+    if token not in settings_view:
+        fail(f"notification permission-sync regression: missing {token}")
+
 print("Build 78 regression guard: OK")
