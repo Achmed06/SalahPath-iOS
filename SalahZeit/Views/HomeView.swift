@@ -2022,7 +2022,7 @@ struct HomeView: View {
                                     manualLocationError = nil
                                     let success = await locationManager.setManualLocation(searchText: manualLocationText)
                                     isResolvingManualLocation = false
-                                    if !success { manualLocationError = locationManager.lastError }
+                                    if !success { manualLocationError = locationManager.localizedLastError(settings.language) }
                                 }
                             } label: {
                                 Group {
