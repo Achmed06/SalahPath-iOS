@@ -6,6 +6,7 @@ struct SettingsView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @State private var notificationStatusText: String?
     @State private var notificationSystemStatusText = "—"
+    @State private var notificationAuthorizationDenied = false
     @State private var audioCacheText = "—"
     @State private var isClearingAudioCache = false
     @State private var quranTextCacheText = "—"
@@ -331,6 +332,24 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 7)
+
+                    if notificationAuthorizationDenied {
+                        Button {
+                            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                            UIApplication.shared.open(url)
+                        } label: {
+                            Label(
+                                settings.t("iPhone-Benachrichtigungseinstellungen öffnen", "iPhone bildirim ayarlarını aç"),
+                                systemImage: "gear"
+                            )
+                            .font(.system(size: 10.5, weight: .bold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 9)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(SalahTheme.teal)
+                        .padding(.horizontal, 12)
+                    }
 
                     Text(settings.t(
                         "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
@@ -720,6 +739,7 @@ struct SettingsView: View {
     @MainActor
     private func refreshNotificationDiagnostics() async {
         let diagnostics = await NotificationManager.shared.diagnostics()
+        notificationAuthorizationDenied = diagnostics.authorizationStatus == .denied
 
         let permission: String
         switch diagnostics.authorizationStatus {
