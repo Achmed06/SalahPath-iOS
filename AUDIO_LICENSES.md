@@ -4,7 +4,7 @@ Release target: SalahPath 3.62 (78)
 
 ## Doha Adhan notification clips
 
-SalahPath build 77 bundles two short iOS notification sounds derived from the Internet Archive item **“Adhan Recordings from Doha, Qatar”**.
+SalahPath build 78 bundles two short iOS notification sounds derived from the Internet Archive item **“Adhan Recordings from Doha, Qatar”**.
 
 Source item:
 - Internet Archive identifier: `adhan.recordings.from.doha.qatar`

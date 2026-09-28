@@ -30,7 +30,7 @@ When you choose to add an Islamic date to your calendar, SalahPath opens Apple's
 
 ## Quran content and audio
 
-Quran text, translations, and recitation audio are requested directly from AlQuran.cloud and the Islamic Network media CDN when needed. These services necessarily receive normal network request information such as the requesting IP address while serving content. Their current published terms state that the AlQuran API applies rate limits by source IP.
+The validated Arabic Uthmani Quran corpus is bundled with SalahPath and can be read without contacting a Quran-content provider. Optional translation/transliteration data and recitation audio are requested from AlQuran.cloud and the Islamic Network media CDN when needed. These services necessarily receive normal network request information such as the requesting IP address while serving content. Their current published terms state that the AlQuran API applies rate limits by source IP.
 
 SalahPath does not intentionally send your GPS coordinates, manually selected latitude/longitude, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
 
@@ -44,7 +44,7 @@ SalahPath does not use App Tracking Transparency identifiers, advertising identi
 
 ## Retention and deletion
 
-Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. Quran text and audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted. A saved manual location can also be cleared from SalahPath's settings.
+Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. Downloaded Quran translation/transliteration cache data and audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted. A saved manual location can also be cleared from SalahPath's settings.
 
 SalahPath has no user account database from which an account needs to be deleted. Data that may be processed independently by Apple or external Quran-content providers is subject to those providers' retention policies.
 

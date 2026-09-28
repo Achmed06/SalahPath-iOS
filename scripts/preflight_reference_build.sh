@@ -155,6 +155,11 @@ if grep -q 'NSPrivacyCollectedDataTypeDeviceID' "SalahZeit/PrivacyInfo.xcprivacy
 fi
 grep -q 'PRIVACY.md' "SalahZeit/Views/SettingsView.swift"
 grep -q 'SalahPath-iOS/issues' "SalahZeit/Views/SettingsView.swift"
+grep -q 'SalahPath build 78 bundles two short iOS notification sounds' "AUDIO_LICENSES.md"
+grep -q 'validated Arabic Uthmani Quran corpus is bundled with SalahPath' "PRIVACY.md"
+if grep -q 'Quran text, translations, and recitation audio are requested directly' "PRIVACY.md"; then
+  fail "privacy policy regressed to claiming bundled Arabic Quran text is remotely requested"
+fi
 
 if command -v plutil >/dev/null 2>&1; then
   plutil -lint "SalahZeit/PrivacyInfo.xcprivacy" >/dev/null || fail "PrivacyInfo.xcprivacy is not a valid plist"
