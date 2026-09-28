@@ -192,6 +192,19 @@ for forbidden in (
     if forbidden in guide or forbidden in root_tab:
         fail(f"German UI language regression: found {forbidden}")
 
+for token in (
+    'settings.t("Abschiedsrede", "Veda Hutbesi")',
+):
+    if token not in guide and token not in root_tab:
+        fail(f"German farewell-sermon localization regression: missing {token}")
+
+for forbidden in (
+    'settings.t("Veda Hutbesi", "Veda Hutbesi")',
+    'settings.t("Veda Hutbesi · Abschiedsrede", "Veda Hutbesi")',
+):
+    if forbidden in guide or forbidden in root_tab:
+        fail(f"German farewell-sermon localization regression: found {forbidden}")
+
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
     fail("female prayer pose routing regression: male_ substring stripping breaks female_ assets")
