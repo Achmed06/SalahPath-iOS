@@ -928,7 +928,7 @@ struct MoreView: View {
                     NavigationLink { FarewellSermonView() } label: {
                         discoverTile(
                             icon: "text.quote",
-                            title: settings.t("Veda Hutbesi", "Veda Hutbesi"),
+                            title: settings.t("Abschiedsrede", "Veda Hutbesi"),
                             subtitle: settings.t("Kernaussagen & Quellen", "Ana mesajlar & kaynaklar")
                         )
                     }
