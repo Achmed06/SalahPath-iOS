@@ -377,6 +377,7 @@ jobs:
             capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
+            capture namaz-salam-left SalahPath-v3.62-B78-DE-PrayerSalamLeft.png
             capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
             capture wudu-leftarm SalahPath-v3.62-B78-DE-WuduLeftArm.png
             capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
