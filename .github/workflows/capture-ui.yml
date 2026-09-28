@@ -354,6 +354,9 @@ jobs:
             capture qibla SalahPath-v3.62-B78-TR-Qibla.png
             capture settings SalahPath-v3.62-B78-TR-Settings.png
             capture more SalahPath-v3.62-B78-TR-More.png
+            capture mosques SalahPath-v3.62-B78-TR-Mosques.png
+            capture onboarding SalahPath-v3.62-B78-TR-Onboarding.png
+            capture daily-dua SalahPath-v3.62-B78-TR-DailyDua.png
 
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
 
