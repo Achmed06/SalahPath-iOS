@@ -347,6 +347,8 @@ for token in (
     'settings.t("Audio pausieren", "Sesi duraklat")',
     'settings.t("Audio fortsetzen", "Sesi sürdür")',
     'settings.t("Audio stoppen", "Sesi durdur")',
+    'settings.t("Vorheriges Audio", "Önceki ses")',
+    'settings.t("Nächstes Audio", "Sonraki ses")',
 ):
     if token not in root_tabs:
         fail(f"audio accessibility localization regression: missing {token}")
