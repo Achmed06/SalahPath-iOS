@@ -131,6 +131,9 @@ required_captures = [
     "B78-DE-Onboarding.png",
     "B78-DE-Mosques.png",
     "B78-DE-DailyDua.png",
+    "B78-TR-Onboarding.png",
+    "B78-TR-Mosques.png",
+    "B78-TR-DailyDua.png",
 ]
 for name in required_captures:
     if name not in capture:
