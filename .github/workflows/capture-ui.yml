@@ -209,7 +209,10 @@ jobs:
           else
             CAPTURE_MODE="core"
             UI_CHANGED_FILES="$(git diff --name-only HEAD^ HEAD 2>/dev/null || true)"
-            if printf '%s\n' "$UI_CHANGED_FILES" | grep -Eq '^(SalahZeit/Views/GuideView\.swift|scripts/build78_regression_guard\.py)
+            if printf '%s\n' "$UI_CHANGED_FILES" | grep -Eq '^(SalahZeit/Views/GuideView\.swift|scripts/build78_regression_guard\.py)$'; then
+              CAPTURE_MODE="full"
+            fi
+            if [ "$UI_EVENT_NAME" = "pull_request" ]; then
               UI_HINT="$UI_HEAD_REF $UI_PR_TITLE"
             else
               UI_HINT="$UI_COMMIT_MESSAGE"
