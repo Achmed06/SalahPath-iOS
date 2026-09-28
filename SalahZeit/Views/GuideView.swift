@@ -8494,7 +8494,7 @@ struct QuranJuzQAView: View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
-            } else if let error = store.error, store.chapters.isEmpty {
+            } else if store.error != nil, store.chapters.isEmpty {
                 ContentUnavailableView(
                     settings.t("Juz konnten nicht geladen werden", "Cüzler yüklenemedi"),
                     systemImage: "wifi.exclamationmark",
@@ -8627,7 +8627,7 @@ struct QuranView: View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
-            } else if let error = store.error, store.chapters.isEmpty {
+            } else if store.error != nil, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
                         settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
@@ -9503,7 +9503,7 @@ struct QuranPageReaderView: View {
                     "Quran-Seite \(page) wird geladen…",
                     "Kur'an \(page). sayfa yükleniyor…"
                 ))
-            } else if let error = store.error, store.arabic == nil {
+            } else if store.error != nil, store.arabic == nil {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
                         settings.t("Seite konnte nicht geladen werden", "Sayfa yüklenemedi"),
@@ -10017,7 +10017,7 @@ struct QuranDirectoryView: View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran-Verzeichnis wird geladen…", "Kur'an dizini yükleniyor…"))
-            } else if let error = store.error, store.chapters.isEmpty {
+            } else if store.error != nil, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
                         settings.t("Quran-Verzeichnis konnte nicht geladen werden", "Kur'an dizini yüklenemedi"),
@@ -10425,7 +10425,7 @@ struct QuranFavoritesLandingView: View {
         Group {
             if store.isLoading && store.chapters.isEmpty {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
-            } else if let error = store.error, store.chapters.isEmpty {
+            } else if store.error != nil, store.chapters.isEmpty {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
                         settings.t("Favoriten konnten nicht geladen werden", "Favoriler yüklenemedi"),
@@ -10673,7 +10673,7 @@ private struct QuranSurahView: View {
                 )
                 .id(ar.numberInSurah)
             }
-        } else if let error {
+        } else if error != nil {
             VStack(spacing: 12) {
                 ContentUnavailableView(
                     settings.t("Inhalt nicht geladen", "İçerik yüklenemedi"),
