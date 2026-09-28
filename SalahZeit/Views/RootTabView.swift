@@ -460,8 +460,14 @@ private final class NearbyMosqueStore: ObservableObject {
 
         // Keep this deliberately strict. Broad words such as "islam" or
         // "muslim" also occur in shops, associations and unrelated POIs and
-        // previously produced false "nearby mosque" matches.
-        let mosqueSignals = [
+        // previously produced false "nearby mosque" matches. Short signals such
+        // as "cami" must be whole tokens so names like "Camino" cannot pass.
+        let tokens = Set(
+            searchable
+                .components(separatedBy: CharacterSet.alphanumerics.inverted)
+                .filter { !$0.isEmpty }
+        )
+        let tokenSignals: Set<String> = [
             "moschee",
             "mosque",
             "masjid",
@@ -469,11 +475,16 @@ private final class NearbyMosqueStore: ObservableObject {
             "cami",
             "camii",
             "ditib",
-            "d.i.t.i.b",
             "vikz",
-            "igmg",
+            "igmg"
+        ]
+        if !tokens.isDisjoint(with: tokenSignals) {
+            return true
+        }
+
+        let phraseSignals = [
+            "d.i.t.i.b",
             "milli gorus",
-            "milli görüş",
             "islamisches zentrum",
             "islamisches kulturzentrum",
             "islamische gemeinde",
@@ -486,7 +497,7 @@ private final class NearbyMosqueStore: ObservableObject {
             "muslim community centre"
         ]
 
-        return mosqueSignals.contains { searchable.contains($0) }
+        return phraseSignals.contains { searchable.contains($0) }
     }
 }
 
