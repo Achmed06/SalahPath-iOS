@@ -293,6 +293,7 @@ private struct GlobalAudioMiniPlayer: View {
                 .foregroundStyle(SalahTheme.deepTeal)
                 .disabled(!audio.hasPrevious)
                 .opacity(audio.hasPrevious ? 1 : 0.35)
+                .accessibilityLabel(settings.t("Vorheriges Audio", "Önceki ses"))
 
                 Button {
                     if audio.isLoading {
@@ -337,6 +338,7 @@ private struct GlobalAudioMiniPlayer: View {
                 .foregroundStyle(SalahTheme.deepTeal)
                 .disabled(!audio.canAdvance)
                 .opacity(audio.canAdvance ? 1 : 0.35)
+                .accessibilityLabel(settings.t("Nächstes Audio", "Sonraki ses"))
 
                 Button {
                     audio.stop()
