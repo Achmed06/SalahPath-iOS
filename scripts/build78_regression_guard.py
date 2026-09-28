@@ -168,6 +168,14 @@ for token in (
     if token not in app_source:
         fail(f"notification timezone scheduling regression: missing {token}")
 
+for token in (
+    'let diagnostics = await NotificationManager.shared.diagnostics()',
+    'diagnostics.authorizationStatus == .denied',
+    'settings.notificationsEnabled = false',
+):
+    if token not in app_source:
+        fail(f"global notification permission-sync regression: missing {token}")
+
 if notifications.count('components.timeZone = timeZone') < 2:
     fail("notification trigger timezone regression")
 
