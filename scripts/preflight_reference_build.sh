@@ -164,6 +164,10 @@ grep -q 'struct MoreView: View' "SalahZeit/Views/RootTabView.swift"
 grep -q 'NavigationStack { MoreView() }' "SalahZeit/Views/RootTabView.swift"
 
 grep -Eq 'IslamicCalendarEventDetailView|CalendarEventEditor' "SalahZeit/Views/GuideView.swift"
+grep -q 'EKEventEditViewController' "SalahZeit/Views/GuideView.swift"
+if grep -qE 'INFOPLIST_KEY_NSCalendars(WriteOnly|Full)AccessUsageDescription' "SalahZeit.xcodeproj/project.pbxproj"; then
+  fail "calendar permission string returned even though release only uses EKEventEditViewController"
+fi
 
 # Crash-hardening regression gates.
 if grep -R -nE 'fatalError\(|try!|as!' SalahZeit --include='*.swift'; then
