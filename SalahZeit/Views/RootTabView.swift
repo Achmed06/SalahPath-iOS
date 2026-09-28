@@ -360,14 +360,14 @@ private struct GlobalAudioMiniPlayer: View {
 private final class NearbyMosqueStore: ObservableObject {
     @Published var mapItems: [MKMapItem] = []
     @Published var isLoading = false
-    @Published var errorMessage: String?
+    @Published var searchFailed = false
     private var searchRevision = 0
 
     func load(around location: CLLocation) async {
         searchRevision &+= 1
         let revision = searchRevision
         isLoading = true
-        errorMessage = nil
+        searchFailed = false
         defer {
             if revision == searchRevision {
                 isLoading = false
@@ -444,9 +444,7 @@ private final class NearbyMosqueStore: ObservableObject {
             .prefix(30)
             .map { $0 }
 
-        if mapItems.isEmpty, let lastSearchError {
-            errorMessage = lastSearchError.localizedDescription
-        }
+        searchFailed = mapItems.isEmpty && lastSearchError != nil
     }
 
     private static func isLikelyMosque(_ item: MKMapItem) -> Bool {
@@ -604,13 +602,16 @@ struct NearbyMosquesView: View {
                     ProgressView(settings.t("Moscheen werden gesucht …", "Camiler aranıyor …"))
                         .padding(24)
                         .frame(maxWidth: .infinity)
-                } else if let error = store.errorMessage, store.mapItems.isEmpty {
+                } else if store.searchFailed && store.mapItems.isEmpty {
                     VStack(spacing: 10) {
                         Image(systemName: "wifi.exclamationmark")
                             .font(.system(size: 30))
                             .foregroundStyle(SalahTheme.gold)
 
-                        Text(error)
+                        Text(settings.t(
+                            "Apple Karten konnte die Moscheensuche gerade nicht laden. Bitte prüfe deine Verbindung und versuche es erneut.",
+                            "Apple Haritalar cami aramasını şu anda yükleyemedi. Bağlantını kontrol edip tekrar dene."
+                        ))
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
