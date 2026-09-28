@@ -253,6 +253,20 @@ for token in (
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
 
+# 5b) Nearby mosque filtering must reject substring false positives.
+root_tab_source = read("SalahZeit/Views/RootTabView.swift")
+for token in (
+    'components(separatedBy: CharacterSet.alphanumerics.inverted)',
+    'let tokenSignals: Set<String>',
+    'if !tokens.isDisjoint(with: tokenSignals)',
+    'let phraseSignals = [',
+):
+    if token not in root_tab_source:
+        fail(f"nearby mosque token-filter regression: missing {token}")
+
+if 'searchable.contains("cami")' in root_tab_source:
+    fail('nearby mosque substring regression: "cami" must be a whole token')
+
 # 6) Navigation/discovery icons stay in the same standalone SalahPath system.
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
