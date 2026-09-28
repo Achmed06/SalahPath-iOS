@@ -235,6 +235,37 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         }
     }
 
+    func localizedLastError(_ language: AppLanguage) -> String? {
+        guard let lastError, !lastError.isEmpty else { return nil }
+
+        switch lastError {
+        case "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.":
+            return language == .german
+                ? lastError
+                : "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir."
+        case "Bitte Ort, Stadt oder Postleitzahl eingeben.":
+            return language == .german
+                ? lastError
+                : "Lütfen konum, şehir veya posta kodu gir."
+        case "Ort wurde nicht gefunden.":
+            return language == .german
+                ? lastError
+                : "Konum bulunamadı."
+        case "Ort konnte nicht gefunden werden. Bitte Eingabe prüfen.":
+            return language == .german
+                ? lastError
+                : "Konum bulunamadı. Lütfen girişini kontrol et."
+        case "Aktueller Standort ist vorübergehend nicht verfügbar. Bitte erneut versuchen.":
+            return language == .german
+                ? lastError
+                : "Güncel konum geçici olarak kullanılamıyor. Lütfen tekrar dene."
+        default:
+            return language == .german
+                ? "Standort konnte nicht aktualisiert werden. Bitte erneut versuchen."
+                : "Konum güncellenemedi. Lütfen tekrar dene."
+        }
+    }
+
     func clearManualLocation() {
         locationIntentRevision &+= 1
         pendingDeviceLocationSwitch = false
