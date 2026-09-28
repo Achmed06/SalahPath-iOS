@@ -229,10 +229,14 @@ struct SalahPathApp: App {
             NavigationStack { PrayerHowToView(initialStepIndex: 15) }
         case "namaz-salam":
             NavigationStack { PrayerHowToView(initialStepIndex: 16) }
+        case "namaz-salam-left":
+            NavigationStack { PrayerHowToView(initialStepIndex: 17) }
         case "wudu":
             NavigationStack { WuduGuideView() }
         case "wudu-arm":
             NavigationStack { WuduGuideView(initialStepIndex: 6) }
+        case "wudu-leftarm":
+            NavigationStack { WuduGuideView(initialStepIndex: 7) }
         case "wudu-head":
             NavigationStack { WuduGuideView(initialStepIndex: 8) }
         case "wudu-ears":

@@ -101,7 +101,7 @@ if home.count("NotificationCenter.default.post(name: .prayerTrackerDidChange, ob
 
 # 3) QA routes and screenshots must keep covering the user-reported regressions.
 app = read("SalahZeit/SalahZeitApp.swift")
-for route in ('case "quran-page":', 'case "quran-page-mid":', 'case "quran-page-last":', 'case "prayer-tracker":', 'case "wudu-leftfoot":'):
+for route in ('case "quran-page":', 'case "quran-page-mid":', 'case "quran-page-last":', 'case "prayer-tracker":', 'case "wudu-leftfoot":', 'case "wudu-leftarm":', 'case "namaz-salam-left":'):
     if route not in app:
         fail(f"QA route missing: {route}")
 
@@ -116,9 +116,12 @@ required_captures = [
     "B78-DE-PrayerFinger.png",
     "B78-DE-FemalePrayerFinger.png",
     "B78-DE-PrayerSalam.png",
+    "B78-DE-PrayerSalamLeft.png",
     "B78-DE-FemalePrayerSalam.png",
+    "B78-DE-FemalePrayerSalamLeft.png",
     "B78-DE-WuduHead.png",
     "B78-DE-WuduArm.png",
+    "B78-DE-WuduLeftArm.png",
     "B78-DE-WuduFoot.png",
     "B78-DE-WuduLeftFoot.png",
     "B78-DE-Qibla.png",

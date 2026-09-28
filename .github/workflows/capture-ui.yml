@@ -279,6 +279,7 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture wudu SalahPath-v3.62-B78-DE-Wudu.png
             capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+            capture wudu-leftarm SalahPath-v3.62-B78-DE-WuduLeftArm.png
             capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
             capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
             capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
@@ -320,11 +321,13 @@ jobs:
             capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
+            capture namaz-salam-left SalahPath-v3.62-B78-DE-PrayerSalamLeft.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
             capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+            capture namaz-salam-left SalahPath-v3.62-B78-DE-FemalePrayerSalamLeft.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "icons" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
@@ -375,15 +378,18 @@ jobs:
             capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
             capture wudu-arm SalahPath-v3.62-B78-DE-WuduArm.png
+            capture wudu-leftarm SalahPath-v3.62-B78-DE-WuduLeftArm.png
             capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
             capture wudu-ears SalahPath-v3.62-B78-DE-WuduEars.png
             capture wudu-foot SalahPath-v3.62-B78-DE-WuduFoot.png
+            capture wudu-leftfoot SalahPath-v3.62-B78-DE-WuduLeftFoot.png
 
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
             capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
+            capture namaz-salam-left SalahPath-v3.62-B78-DE-FemalePrayerSalamLeft.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           fi
 
