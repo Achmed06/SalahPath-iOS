@@ -8498,7 +8498,10 @@ struct QuranJuzQAView: View {
                 ContentUnavailableView(
                     settings.t("Juz konnten nicht geladen werden", "Cüzler yüklenemedi"),
                     systemImage: "wifi.exclamationmark",
-                    description: Text(error)
+                    description: Text(settings.t(
+                        "Die Juz-Daten konnten gerade nicht geladen werden. Bitte versuche es erneut.",
+                        "Cüz verileri şu anda yüklenemedi. Lütfen tekrar dene."
+                    ))
                 )
             } else {
                 QuranJuzLandingView(chapters: store.chapters)
@@ -8632,7 +8635,10 @@ struct QuranView: View {
                     ContentUnavailableView(
                         settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
-                        description: Text(error)
+                        description: Text(settings.t(
+                            "Quran-Daten konnten gerade nicht geladen werden. Bitte prüfe deine Verbindung und versuche es erneut.",
+                            "Kur'an verileri şu anda yüklenemedi. Bağlantını kontrol edip tekrar dene."
+                        ))
                     )
 
                     Button {
@@ -10430,7 +10436,10 @@ struct QuranFavoritesLandingView: View {
                     ContentUnavailableView(
                         settings.t("Favoriten konnten nicht geladen werden", "Favoriler yüklenemedi"),
                         systemImage: "wifi.exclamationmark",
-                        description: Text(error)
+                        description: Text(settings.t(
+                            "Die Quran-Favoriten konnten gerade nicht geladen werden. Bitte versuche es erneut.",
+                            "Kur'an favorileri şu anda yüklenemedi. Lütfen tekrar dene."
+                        ))
                     )
 
                     Button {
