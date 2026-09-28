@@ -240,6 +240,7 @@ struct RootTabView: View {
 }
 
 private struct GlobalAudioMiniPlayer: View {
+    @EnvironmentObject private var settings: SettingsStore
     @ObservedObject var audio: RemoteAudioPlayer
 
     private var progress: Double {
@@ -319,8 +320,10 @@ private struct GlobalAudioMiniPlayer: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(
                     audio.isLoading
-                        ? "Audio-Laden abbrechen"
-                        : (audio.isPlaying ? "Audio pausieren" : "Audio fortsetzen")
+                        ? settings.t("Audio-Laden abbrechen", "Ses yüklemeyi iptal et")
+                        : (audio.isPlaying
+                            ? settings.t("Audio pausieren", "Sesi duraklat")
+                            : settings.t("Audio fortsetzen", "Sesi sürdür"))
                 )
 
                 Button {
@@ -344,7 +347,7 @@ private struct GlobalAudioMiniPlayer: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(SalahTheme.mutedInk)
-                .accessibilityLabel("Audio stoppen")
+                .accessibilityLabel(settings.t("Audio stoppen", "Sesi durdur"))
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
