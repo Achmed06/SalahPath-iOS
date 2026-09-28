@@ -135,6 +135,9 @@ for name in required_captures:
     if name not in capture:
         fail(f"visual QA coverage missing: {name}")
 
+if capture.count("B78-DE-PrayerSalamLeft.png") < 2:
+    fail("male final Salam must be captured in prayer and full UI modes")
+
 # 3b) Prayer calculations must remain Gregorian and location-time-zone aware.
 location_manager = read("SalahZeit/Services/LocationManager.swift")
 prayer_engine = read("SalahZeit/Services/PrayerEngine.swift")
