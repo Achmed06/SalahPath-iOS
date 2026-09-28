@@ -403,6 +403,29 @@ if 'audio.lastError = error.localizedDescription' in guide_source:
 if 'let error = store.error' in guide_source:
     fail("Quran visible-error regression: unused raw store error binding returned")
 
+# 6e) Visible location errors must follow the selected app language.
+location_source = read("SalahZeit/Services/LocationManager.swift")
+for token in (
+    'func localizedLastError(_ language: AppLanguage) -> String?',
+    'Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.',
+    'Lütfen konum, şehir veya posta kodu gir.',
+    'Konum bulunamadı.',
+    'Konum bulunamadı. Lütfen girişini kontrol et.',
+    'Güncel konum geçici olarak kullanılamıyor. Lütfen tekrar dene.',
+    'Konum güncellenemedi. Lütfen tekrar dene.',
+):
+    if token not in location_source:
+        fail(f"location error localization regression: missing {token}")
+
+for path in (
+    "SalahZeit/SalahZeitApp.swift",
+    "SalahZeit/Views/HomeView.swift",
+    "SalahZeit/Views/SettingsView.swift",
+):
+    source = read(path)
+    if "locationManager.lastError" in source and "localizedLastError" not in source:
+        fail(f"raw location error leaked into visible UI: {path}")
+
 # 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
 project = read("SalahZeit.xcodeproj/project.pbxproj")
 notification_manager = read("SalahZeit/Services/NotificationManager.swift")
