@@ -265,6 +265,8 @@ struct SalahPathApp: App {
             NavigationStack { SettingsView() }
         case "more":
             NavigationStack { MoreView() }
+        case "mosques":
+            NavigationStack { NearbyMosquesView() }
         case "fasting":
             NavigationStack { FastingTrackerView() }
         case "fasting-basics":
