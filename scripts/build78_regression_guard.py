@@ -340,6 +340,17 @@ for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
         fail(f"legacy icon asset reference returned: {legacy_prefix}")
 
+# 6b) Global audio accessibility must follow the selected app language.
+for token in (
+    '@EnvironmentObject private var settings: SettingsStore',
+    'settings.t("Audio-Laden abbrechen", "Ses yüklemeyi iptal et")',
+    'settings.t("Audio pausieren", "Sesi duraklat")',
+    'settings.t("Audio fortsetzen", "Sesi sürdür")',
+    'settings.t("Audio stoppen", "Sesi durdur")',
+):
+    if token not in root_tabs:
+        fail(f"audio accessibility localization regression: missing {token}")
+
 # 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
 project = read("SalahZeit.xcodeproj/project.pbxproj")
 notification_manager = read("SalahZeit/Services/NotificationManager.swift")
