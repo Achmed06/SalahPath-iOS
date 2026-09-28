@@ -361,6 +361,15 @@ for token in (
 if guide.count('isFirstAyahBasmalahActive') < 2:
     fail("Quran Basmalah playback-toggle regression")
 
+settings_model = read("SalahZeit/Models/AppSettings.swift")
+for forbidden in (
+    'everyayah.com',
+    'everyAyahURLs',
+    'everyAyahFolder',
+):
+    if forbidden in guide or forbidden in settings_model:
+        fail(f"unaudited Quran audio provider regression: found {forbidden}")
+
 prayer_engine = read("SalahZeit/Services/PrayerEngine.swift")
 for token in (
     'func upcomingPrayers(',
