@@ -373,6 +373,29 @@ for token in (
     if token not in settings_source:
         fail(f"notification settings recovery regression: missing {token}")
 
+# 6d) Visible Quran load failures must remain localized.
+guide_source = read("SalahZeit/Views/GuideView.swift")
+for token in (
+    'Quran-Daten konnten gerade nicht geladen werden.',
+    "Kur'an verileri şu anda yüklenemedi.",
+    'Diese Quran-Seite konnte gerade nicht geladen werden.',
+    "Bu Kur'an sayfası şu anda yüklenemedi.",
+    'Das Quran-Verzeichnis konnte gerade nicht geladen werden.',
+    "Kur'an dizini şu anda yüklenemedi.",
+    'Der Quran-Inhalt konnte gerade nicht geladen werden.',
+    "Kur'an içeriği şu anda yüklenemedi.",
+    'Quran-Audio konnte nicht geladen werden. Bitte versuche es erneut.',
+    "Kur'an sesi yüklenemedi. Lütfen tekrar dene.",
+):
+    if token not in guide_source:
+        fail(f"Quran visible-error localization regression: missing {token}")
+
+if 'description: Text(error)' in guide_source:
+    fail("Quran raw system error leaked into visible UI")
+
+if 'audio.lastError = error.localizedDescription' in guide_source:
+    fail("Quran raw audio system error leaked into visible UI")
+
 # 7) Onboarding hit targets, persistent audio and Now Playing must stay intact.
 project = read("SalahZeit.xcodeproj/project.pbxproj")
 notification_manager = read("SalahZeit/Services/NotificationManager.swift")
