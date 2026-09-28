@@ -400,7 +400,7 @@ private struct OnboardingFlowView: View {
             guard step == 2,
                   let newError,
                   !newError.isEmpty else { return }
-            locationError = newError
+            locationError = locationManager.localizedLastError(settings.language)
         }
     }
 
@@ -539,7 +539,7 @@ private struct OnboardingFlowView: View {
                             if success {
                                 withAnimation(.easeInOut(duration: 0.18)) { step = 3 }
                             } else {
-                                locationError = locationManager.lastError
+                                locationError = locationManager.localizedLastError(settings.language)
                             }
                         }
                     } label: {
