@@ -106,6 +106,9 @@ for route in ('case "quran-page":', 'case "quran-page-mid":', 'case "quran-page-
         fail(f"QA route missing: {route}")
 
 capture = read(".github/workflows/capture-ui.yml")
+if 'scripts/build78_regression_guard\\.py' not in capture:
+    fail("final guard changes no longer force release UI coverage")
+
 required_captures = [
     "B78-DE-QuranPage1.png",
     "B78-DE-QuranPage302.png",
