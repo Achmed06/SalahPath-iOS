@@ -664,6 +664,7 @@ struct SettingsView: View {
                 Task {
                     let granted = await NotificationManager.shared.requestAuthorization()
                     if !granted {
+                        settings.notificationsEnabled = false
                         notificationStatusText = settings.t(
                             "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
                             "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
@@ -683,6 +684,7 @@ struct SettingsView: View {
         if before.authorizationStatus == .notDetermined {
             let granted = await NotificationManager.shared.requestAuthorization()
             if !granted {
+                settings.notificationsEnabled = false
                 notificationStatusText = settings.t(
                     "iOS hat Benachrichtigungen nicht erlaubt. Bitte in den iPhone-Einstellungen aktivieren.",
                     "iOS bildirimlere izin vermedi. Lütfen iPhone ayarlarından etkinleştir."
@@ -694,7 +696,17 @@ struct SettingsView: View {
         let after = await NotificationManager.shared.diagnostics()
         guard after.authorizationStatus == .authorized ||
                 after.authorizationStatus == .provisional ||
-                after.authorizationStatus == .ephemeral else { return }
+                after.authorizationStatus == .ephemeral else {
+            if after.authorizationStatus == .denied {
+                settings.notificationsEnabled = false
+                NotificationManager.shared.removePrayerNotifications()
+                notificationStatusText = settings.t(
+                    "iOS-Benachrichtigungen sind ausgeschaltet. Aktiviere sie zuerst in den iPhone-Einstellungen.",
+                    "iOS bildirimleri kapalı. Önce iPhone ayarlarından etkinleştir."
+                )
+            }
+            return
+        }
 
         if let location = locationManager.location {
             _ = await NotificationManager.shared.scheduleNextSevenDays(
