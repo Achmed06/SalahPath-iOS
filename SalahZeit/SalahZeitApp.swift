@@ -132,6 +132,10 @@ struct SalahPathApp: App {
         // requiring a location so the app cannot remain "enabled" but ungranted.
         let granted = await NotificationManager.shared.requestAuthorization()
         guard granted else {
+            let diagnostics = await NotificationManager.shared.diagnostics()
+            if diagnostics.authorizationStatus == .denied {
+                settings.notificationsEnabled = false
+            }
             NotificationManager.shared.removePrayerNotifications()
             return
         }
