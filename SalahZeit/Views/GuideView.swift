@@ -5523,7 +5523,7 @@ private struct QuranReferenceJumpView: View {
                 QuranSurahView(surah: chapter, initialAyah: ayah)
             } else if store.isLoading {
                 ProgressView(settings.t("Quran wird geladen…", "Kur'an yükleniyor…"))
-            } else if let error = store.error {
+            } else if store.error != nil {
                 VStack(spacing: 12) {
                     ContentUnavailableView(
                         settings.t("Quran konnte nicht geladen werden", "Kur'an yüklenemedi"),
