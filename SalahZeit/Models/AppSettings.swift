@@ -82,16 +82,6 @@ enum QuranReciter: String, CaseIterable, Identifiable {
         }
     }
 
-    var everyAyahFolder: String {
-        switch self {
-        case .alafasy: return "Alafasy_128kbps"
-        case .husary: return "Husary_128kbps"
-        case .minshawi: return "Minshawy_Murattal_128kbps"
-        case .sudais: return "Abdurrahmaan_As-Sudais_192kbps"
-        case .shuraim: return "Saood_ash-Shuraym_128kbps"
-        }
-    }
-
     var title: String {
         switch self {
         case .alafasy: return "Mishary Rashid Alafasy"
