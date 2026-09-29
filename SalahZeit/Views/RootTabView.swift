@@ -77,17 +77,16 @@ func salahFeatureIndex(for kind: String) -> Int? {
 struct SalahFeatureIcon: View {
     let kind: String
 
-    private var index: Int {
-        salahFeatureIndex(for: kind) ?? 4
-    }
-
     private var standaloneUIImage: UIImage? {
         UIImage(named: "feature_\(kind)")
     }
 
     private var croppedUIImage: UIImage? {
-        guard let source = UIImage(named: "SalahFeatureSheet"),
-              let cgImage = source.cgImage else {
+        guard let index = salahFeatureIndex(for: kind),
+              let source = UIImage(named: "SalahFeatureSheet"),
+              let cgImage = source.cgImage,
+              cgImage.width > 0, cgImage.height > 0,
+              cgImage.width % 10 == 0, cgImage.height % 6 == 0 else {
             return nil
         }
 
@@ -116,13 +115,17 @@ struct SalahFeatureIcon: View {
 
     var body: some View {
         Group {
-            if let standaloneUIImage {
-                Image(uiImage: standaloneUIImage)
+            // Use the approved artwork consistently, including Start and Discover.
+            // Legacy standalone SVGs are only a fallback if the sheet is unavailable.
+            if let croppedUIImage {
+                Image(uiImage: croppedUIImage)
+                    .renderingMode(.original)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
-            } else if let croppedUIImage {
-                Image(uiImage: croppedUIImage)
+            } else if let standaloneUIImage {
+                Image(uiImage: standaloneUIImage)
+                    .renderingMode(.original)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
