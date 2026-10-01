@@ -5,14 +5,14 @@ import UIKit
 // The source contains 60 individual icons in a fixed 10 x 6 grid.
 func salahFeatureIndex(for kind: String) -> Int? {
     switch kind {
-    case "home", "start": return 0
+    case "home", "start": return 52
     case "prayer": return 1
     case "wudu": return 2
     case "quran": return 3
-    case "discover": return 4
+    case "discover": return 42
     case "tracker", "checkmark": return 5
     case "calendar": return 6
-    case "qibla": return 7
+    case "qibla": return 42
     case "settings": return 8
     case "profile": return 9
 
@@ -31,7 +31,7 @@ func salahFeatureIndex(for kind: String) -> Int? {
     case "duas": return 21
     case "dhikr": return 22
     case "hadith": return 23
-    case "islamic_knowledge", "more": return 24
+    case "islamic_knowledge", "more": return 4
     case "info", "knowledge", "sparkles": return 25
     case "favorites": return 26
     case "bookmarks": return 27
@@ -56,7 +56,7 @@ func salahFeatureIndex(for kind: String) -> Int? {
     case "moon", "dark_mode": return 44
     case "light_mode": return 45
     case "font_size": return 46
-    case "notifications": return 47
+    case "notifications": return 17
     case "backup": return 48
     case "sync": return 49
 
@@ -769,13 +769,13 @@ private struct ReferenceBottomBar: View {
     @EnvironmentObject private var settings: SettingsStore
     @Binding var selection: Int
 
-    private var items: [(String, String)] {
+    private var items: [(active: String, inactive: String, title: String)] {
         [
-            ("home", settings.t("Start", "Ana Sayfa")),
-            ("quran", settings.t("Quran", "Kur'an")),
-            ("prayer", settings.t("Gebet", "Namaz")),
-            ("discover", settings.t("Entdecken", "Keşfet")),
-            ("profile", settings.t("Profil", "Profil"))
+            ("home_active", "home_inactive", settings.t("Start", "Ana Sayfa")),
+            ("quran_active", "quran_inactive", settings.t("Quran", "Kur'an")),
+            ("prayer_active", "prayer_inactive", settings.t("Gebet", "Namaz")),
+            ("discover", "discover", settings.t("Entdecken", "Keşfet")),
+            ("profile", "profile", settings.t("Profil", "Profil"))
         ]
     }
 
@@ -794,10 +794,9 @@ private struct ReferenceBottomBar: View {
                                     .fill(SalahTheme.teal.opacity(0.10))
                                     .frame(width: 39, height: 24)
                             }
-                            SalahFeatureIcon(kind: item.0)
+                            SalahFeatureIcon(kind: selection == index ? item.active : item.inactive)
                                 .frame(width: 22, height: 22)
-                                .saturation(selection == index ? 1 : 0.45)
-                                .opacity(selection == index ? 1 : 0.72)
+                                .opacity(selection == index ? 1 : 0.78)
                                 .frame(width: 24, height: 24)
                                 .background(
                                     Circle()
@@ -807,7 +806,7 @@ private struct ReferenceBottomBar: View {
                         }
                         .frame(height: 22)
 
-                        Text(item.1)
+                        Text(item.title)
                             .font(.system(size: 7.7, weight: selection == index ? .bold : .semibold))
                             .foregroundStyle(selection == index ? SalahTheme.teal : SalahTheme.mutedInk)
                             .lineLimit(1)
@@ -1155,13 +1154,15 @@ struct MoreView: View {
 
     private func discoverDashboardGlyphKind(for symbol: String) -> String? {
         switch symbol {
-        case "figure.mind.and.body":
+        case "figure.mind.and.body", "rectangle.stack.badge.play.fill":
             return "prayer"
         case "drop.fill":
             return "wudu"
-        case "text.book.closed.fill", "books.vertical.fill", "book.pages.fill":
+        case "text.book.closed.fill", "books.vertical.fill":
             return "quran"
-        case "play.square.stack.fill", "rectangle.stack.badge.play.fill":
+        case "book.pages.fill":
+            return "islamic_knowledge"
+        case "play.square.stack.fill":
             return "quran_audio"
         case "hands.sparkles.fill", "circle.grid.cross.fill", "sparkles":
             return "dhikr"
@@ -1169,16 +1170,16 @@ struct MoreView: View {
             return "qibla"
         case "calendar":
             return "calendar"
-        case "clock.arrow.circlepath":
-            return "times"
-        case "checklist", "pause.circle.fill":
+        case "clock.arrow.circlepath", "checklist", "pause.circle.fill":
             return "checkmark"
-        case "building.columns.fill", "text.quote":
-            return "info"
+        case "building.columns.fill":
+            return "mosques"
+        case "text.quote":
+            return "hadith"
         case "person.3.sequence.fill":
             return "community"
         case "moon.stars.fill":
-            return "moon"
+            return "islamic_calendar"
         case "character.book.closed.fill":
             return "language"
         case "ellipsis.circle.fill":
