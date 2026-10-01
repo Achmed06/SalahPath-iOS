@@ -28,28 +28,42 @@ struct GuideView: View {
 
     private var learningHero: some View {
         VStack(spacing: 9) {
-            HStack(spacing: 4) {
-                audiencePill(.male, title: settings.t("Mann", "Erkek"))
-                audiencePill(.female, title: settings.t("Frau", "Kadın"))
-
-                Button {
-                    settings.language = settings.language == .german ? .turkish : .german
-                } label: {
-                    Text(settings.language == .german ? "Türkçe" : "Deutsch")
-                        .font(.system(size: 10.4, weight: .bold))
-                        .foregroundStyle(SalahTheme.deepTeal)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 6)
-                        .background(
-                            SalahTheme.gold.opacity(0.18),
-                            in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        )
+            VStack(spacing: 6) {
+                HStack(spacing: 4) {
+                    audiencePill(.male, title: settings.t("Mann", "Erkek"))
+                    audiencePill(.female, title: settings.t("Frau", "Kadın"))
                 }
-                .buttonStyle(.plain)
+                .padding(3)
+                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay { RoundedRectangle(cornerRadius: 8).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 0.7) }
+
+                HStack {
+                    Spacer()
+                    Button {
+                        settings.language = settings.language == .german ? .turkish : .german
+                    } label: {
+                        HStack(spacing: 5) {
+                            Image(systemName: "globe")
+                                .font(.system(size: 10.5, weight: .bold))
+                            Text(settings.language == .german ? "Türkçe" : "Deutsch")
+                                .font(.system(size: 10.4, weight: .bold))
+                        }
+                        .foregroundStyle(SalahTheme.deepTeal)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(
+                            SalahTheme.gold.opacity(0.16),
+                            in: Capsule()
+                        )
+                        .overlay {
+                            Capsule()
+                                .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))
+                }
             }
-            .padding(3)
-            .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .overlay { RoundedRectangle(cornerRadius: 8).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 0.7) }
 
             ZStack(alignment: .trailing) {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
