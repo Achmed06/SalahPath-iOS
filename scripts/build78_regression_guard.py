@@ -354,9 +354,15 @@ for token in (
     'case "discover": return 42',
     'case "qibla": return 42',
     'case "notifications": return 17',
+    'case "play.square.stack.fill":\n            return "videos"',
+    'case "hands.sparkles.fill":\n            return "duas"',
+    'case "circle.grid.cross.fill":\n            return "dhikr"',
+    'case "sparkles":\n            return "info"',
+    'case "location.north.circle.fill":\n            return "qibla"',
+    'case "map.fill":\n            return "map"',
+    'case "clock.arrow.circlepath":\n            return "history"',
     'case "building.columns.fill":\n            return "mosques"',
     'case "text.quote":\n            return "hadith"',
-    'case "clock.arrow.circlepath", "checklist", "pause.circle.fill":\n            return "checkmark"',
 ):
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
@@ -386,7 +392,9 @@ for token in (
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
 for token in (
-    'appAppearance dark',
+    'appAppearance system',
+    'simctl ui "$SIM_UDID" appearance light',
+    'simctl ui "$SIM_UDID" appearance dark',
     'SalahPath-v3.62-B78-DE-Dark-Home.png',
     'SalahPath-v3.62-B78-DE-Dark-More.png',
     'SalahPath-v3.62-B78-DE-Dark-Qibla.png',
