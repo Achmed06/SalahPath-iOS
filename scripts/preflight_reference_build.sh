@@ -229,9 +229,11 @@ fi
 bash scripts/verify_approved_prayer_wudu_assets.sh
 
 # Standalone visual regression gates.
-# Feature/navigation art stays vector. Prayer and Wudu may intentionally use
-# the older approved raster artwork; every imageset must still point to exactly
-# one real standalone file.
+# The generated premium feature/navigation set intentionally uses transparent
+# PNG artwork. Remaining legacy feature icons stay vector until they are
+# individually replaced. Prayer and Wudu may intentionally use the older
+# approved raster artwork; every imageset must still point to exactly one real
+# standalone file.
 python3 - <<'PY'
 from pathlib import Path
 import json
@@ -263,6 +265,14 @@ required_features = {
     "feature_fajr", "feature_sunrise", "feature_dhuhr", "feature_asr",
     "feature_maghrib", "feature_isha", "feature_reminder", "feature_mute",
 }
+premium_png_features = {
+    "feature_home", "feature_prayer", "feature_wudu", "feature_quran",
+    "feature_discover", "feature_profile", "feature_qibla", "feature_times",
+    "feature_dhikr", "feature_reminder", "feature_settings",
+    "feature_quran_audio", "feature_bookmarks", "feature_calendar",
+    "feature_checkmark", "feature_language", "feature_info", "feature_more",
+    "feature_moon", "feature_list",
+}
 required = required_wudu | required_prayer | required_features | {
     "salahpath_logo", "home_mosque"
 }
@@ -292,8 +302,14 @@ for name in sorted(required):
     if visual.suffix.lower() not in {".svg", ".png", ".jpg", ".jpeg"}:
         raise SystemExit(f"PRECHECK ERROR: unsupported standalone visual format: {visual}")
 
-    if name in required_features and visual.suffix.lower() != ".svg":
-        raise SystemExit(f"PRECHECK ERROR: feature/navigation visual must remain SVG: {name}")
+    if name in premium_png_features and visual.suffix.lower() != ".png":
+        raise SystemExit(f"PRECHECK ERROR: generated premium visual must remain PNG: {name}")
+    if (
+        name in required_features
+        and name not in premium_png_features
+        and visual.suffix.lower() != ".svg"
+    ):
+        raise SystemExit(f"PRECHECK ERROR: remaining feature/navigation visual must remain SVG: {name}")
 
 print(
     "Standalone SalahPath visual set: "
