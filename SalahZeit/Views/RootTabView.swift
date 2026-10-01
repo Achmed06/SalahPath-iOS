@@ -138,9 +138,10 @@ import MapKit
 struct RootTabView: View {
     @EnvironmentObject private var settings: SettingsStore
     @ObservedObject private var audio = RemoteAudioPlayer.shared
-    @State private var selection = 0
+    @State private var selection: Int
 
-    init() {
+    init(initialSelection: Int = 0) {
+        _selection = State(initialValue: min(max(initialSelection, 0), 4))
         let navigation = UINavigationBarAppearance()
         navigation.configureWithOpaqueBackground()
         navigation.backgroundColor = UIColor(red: 36/255, green: 79/255, blue: 77/255, alpha: 1)
@@ -772,12 +773,12 @@ private struct ReferenceBottomBar: View {
                                     .frame(width: 39, height: 24)
                             }
                             SalahFeatureIcon(kind: selection == index ? item.active : item.inactive)
-                                .frame(width: 22, height: 22)
-                                .opacity(selection == index ? 1 : 0.78)
-                                .frame(width: 24, height: 24)
-                                .background(
-                                    Circle()
-                                        .fill(selection == index ? SalahTheme.softTeal.opacity(0.72) : Color.clear)
+                                .frame(width: selection == index ? 24 : 22, height: selection == index ? 24 : 22)
+                                .opacity(selection == index ? 1 : 0.72)
+                                .shadow(
+                                    color: selection == index ? SalahTheme.deepTeal.opacity(0.12) : .clear,
+                                    radius: 1.6,
+                                    y: 1
                                 )
                                 .accessibilityHidden(true)
                         }
