@@ -331,15 +331,19 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "icons" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
-            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appAppearance light
+            # Force the app to follow the simulator appearance. Writing only the
+            # appAppearance preference was not sufficient in CI and previously
+            # produced identical "light" and "dark" screenshots.
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appAppearance system
+            xcrun simctl ui "$SIM_UDID" appearance light
             capture home SalahPath-v3.62-B78-DE-Home.png
             capture more SalahPath-v3.62-B78-DE-More.png
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
-            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appAppearance dark
+            xcrun simctl ui "$SIM_UDID" appearance dark
             capture home SalahPath-v3.62-B78-DE-Dark-Home.png
             capture more SalahPath-v3.62-B78-DE-Dark-More.png
             capture qibla SalahPath-v3.62-B78-DE-Dark-Qibla.png
-            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appAppearance system
+            xcrun simctl ui "$SIM_UDID" appearance light
           elif [ "$CAPTURE_MODE" = "core" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture home SalahPath-v3.62-B78-DE-Home.png
