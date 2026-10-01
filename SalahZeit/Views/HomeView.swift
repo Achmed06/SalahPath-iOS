@@ -1081,10 +1081,7 @@ struct HomeView: View {
                         .font(.custom("AvenirNext-Medium", size: 7.0))
                         .foregroundStyle(SalahTheme.gold)
                     NavigationLink { SettingsView() } label: {
-                        SalahFeatureIcon(
-                            kind: settings.notificationsEnabled ? "reminder" : "mute",
-                            prefersTransparentArtwork: true
-                        )
+                        SalahFeatureIcon(kind: settings.notificationsEnabled ? "reminder" : "mute")
                             .frame(width: 24, height: 24)
                             .contentShape(Rectangle())
                     }
