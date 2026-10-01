@@ -229,8 +229,8 @@ jobs:
               *times*|*Times*|*gebetszeit*|*Gebetszeit*|*map*|*Map*) CAPTURE_MODE="times" ;;
               *sitting*|*Sitting*|*sitzt*|*Sitzt*) CAPTURE_MODE="sitting" ;;
               *polish*|*Polish*) CAPTURE_MODE="polish" ;;
-              *namaz*|*Namaz*|*prayer*|*Prayer*) CAPTURE_MODE="prayer" ;;
               *icon*|*Icon*|*discover*|*Discover*|*dark*|*Dark*|*theme*|*Theme*) CAPTURE_MODE="icons" ;;
+              *namaz*|*Namaz*|*prayer*|*Prayer*) CAPTURE_MODE="prayer" ;;
               *) CAPTURE_MODE="core" ;;
             esac
           fi
