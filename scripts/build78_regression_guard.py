@@ -464,7 +464,7 @@ for token in (
     'case "play.square.stack.fill":\n            return "quran_audio"',
     'case "hands.sparkles.fill":\n            return "duas"',
     'case "circle.grid.cross.fill":\n            return "dhikr"',
-    'case "sparkles":\n            return "info"',
+    'case "sparkles":\n            return "sparkles"',
     'case "location.north.circle.fill":\n            return "qibla"',
     'case "map.fill":\n            return "qibla"',
     'case "clock.arrow.circlepath":\n            return "times"',

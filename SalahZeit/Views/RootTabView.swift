@@ -1133,7 +1133,7 @@ struct MoreView: View {
         case "circle.grid.cross.fill":
             return "dhikr"
         case "sparkles":
-            return "info"
+            return "sparkles"
         case "location.north.circle.fill":
             return "qibla"
         case "map.fill":
