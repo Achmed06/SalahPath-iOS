@@ -5753,6 +5753,13 @@ private struct QuranicDua: Identifiable {
     let transliteration: String
     let de: String
     let tr: String
+
+    func localizedReference(_ language: AppLanguage) -> String {
+        reference.replacingOccurrences(
+            of: "Auszug / alıntı",
+            with: language == .german ? "Auszug" : "alıntı"
+        )
+    }
 }
 
 struct QuranicDuaLibraryView: View {
@@ -5768,7 +5775,7 @@ struct QuranicDuaLibraryView: View {
     var body: some View {
         List(items) { item in
             VStack(alignment: .leading, spacing: 8) {
-                Text(item.reference).font(.caption.bold()).foregroundStyle(.secondary)
+                Text(item.localizedReference(settings.language)).font(.caption.bold()).foregroundStyle(.secondary)
                 Text(item.arabic).font(.title3).frame(maxWidth: .infinity, alignment: .trailing).multilineTextAlignment(.trailing)
                 Text(item.transliteration).font(.subheadline.weight(.semibold))
                 Text(settings.language == .german ? item.de : item.tr).font(.footnote).foregroundStyle(.secondary)
@@ -5792,6 +5799,13 @@ private struct AdhkarEntry: Identifiable {
     let trMeaning: String
     let count: Int
     let source: String
+
+    func localizedSource(_ language: AppLanguage) -> String {
+        source.replacingOccurrences(
+            of: "Allgemeines Istighfar / genel istiğfar",
+            with: language == .german ? "Allgemeines Istighfar" : "Genel istiğfar"
+        )
+    }
 }
 
 private enum AdhkarProgressStore {
@@ -5854,7 +5868,7 @@ struct MorningEveningAdhkarView: View {
                                     Text(settings.language == .german ? item.deTitle : item.trTitle)
                                         .font(.system(size: 13, weight: .bold))
                                         .foregroundStyle(SalahTheme.ink)
-                                    Text(item.source)
+                                    Text(item.localizedSource(settings.language))
                                         .font(.system(size: 8.5, weight: .medium))
                                         .foregroundStyle(SalahTheme.mutedInk)
                                         .lineLimit(1)
