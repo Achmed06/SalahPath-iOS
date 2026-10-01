@@ -404,6 +404,8 @@ for token in (
     'appAppearance system',
     'simctl ui "$SIM_UDID" appearance light',
     'simctl ui "$SIM_UDID" appearance dark',
+    'Dark-mode QA failed:',
+    'cmp -s "$LIGHT" "$DARK"',
     'SalahPath-v3.62-B78-DE-Dark-Home.png',
     'SalahPath-v3.62-B78-DE-Dark-More.png',
     'SalahPath-v3.62-B78-DE-Dark-Qibla.png',
