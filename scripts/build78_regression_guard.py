@@ -270,6 +270,16 @@ for token in (
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
 
+# 5a.1) Prayer learning hero keeps audience selection separate from language switching.
+for token in (
+    'HStack(spacing: 4) {\n                    audiencePill(.male',
+    'audiencePill(.female, title: settings.t("Frau", "Kadın"))',
+    'Image(systemName: "globe")',
+    '.accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))',
+):
+    if token not in guide:
+        fail(f"prayer learning selector regression: missing {token}")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
