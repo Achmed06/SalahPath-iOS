@@ -142,6 +142,24 @@ jobs:
 
           mkdir -p ui-preview
 
+          # Keep the historical exact-reference dashboard artwork visible in
+          # the QA artifact so icon regressions can be compared against the
+          # actual generated reference instead of an older fallback set.
+          mkdir -p ui-preview/reference-icons
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, io, tarfile
+          src = Path("v340-patch/reference_dashboard_icons.tgz.b64")
+          if src.exists():
+              payload = base64.b64decode(src.read_text(encoding="utf-8").strip())
+              out = Path("ui-preview/reference-icons")
+              with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tf:
+                  for member in tf.getmembers():
+                      if member.isfile() and member.name.endswith(".png"):
+                          data = tf.extractfile(member).read()
+                          (out / Path(member.name).name).write_bytes(data)
+          PY
+
           cat > /tmp/salahpath-screenshot-check.swift <<'SWIFT'
           import AppKit
           import Foundation
