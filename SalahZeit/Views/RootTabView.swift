@@ -1,140 +1,117 @@
 import SwiftUI
 import UIKit
 
-// Approved green-gold icon sheet from the artwork supplied for SalahPath.
-// The source contains 60 individual icons in a fixed 10 x 6 grid.
-func salahFeatureIndex(for kind: String) -> Int? {
-    switch kind {
-    case "home", "start": return 52
-    case "prayer": return 1
-    case "wudu": return 2
-    case "quran": return 3
-    case "discover": return 42
-    case "tracker", "checkmark": return 5
-    case "calendar": return 6
-    case "qibla": return 42
-    case "settings": return 8
-    case "profile": return 9
-
-    case "fajr": return 10
-    case "sunrise": return 11
-    case "dhuhr": return 12
-    case "asr": return 13
-    case "maghrib": return 14
-    case "isha": return 15
-    case "times", "prayer_schedule", "list": return 16
-    case "reminder": return 17
-    case "mute": return 18
-    case "sound", "quran_audio": return 19
-
-    case "mosques": return 20
-    case "duas": return 21
-    case "dhikr": return 22
-    case "hadith": return 23
-    case "islamic_knowledge", "more": return 4
-    case "info", "knowledge", "sparkles": return 25
-    case "favorites": return 26
-    case "bookmarks": return 27
-    case "history": return 28
-    case "downloads": return 29
-
-    case "articles": return 30
-    case "courses": return 31
-    case "videos": return 32
-    case "backgrounds": return 33
-    case "mindfulness": return 34
-    case "donations": return 35
-    case "community": return 36
-    case "forum": return 37
-    case "language": return 38
-    case "islamic_calendar": return 39
-
-    case "prayer_settings": return 40
-    case "location": return 41
-    case "qibla_calibration": return 42
-    case "map": return 43
-    case "moon", "dark_mode": return 44
-    case "light_mode": return 45
-    case "font_size": return 46
-    case "notifications": return 17
-    case "backup": return 48
-    case "sync": return 49
-
-    case "back": return 50
-    case "forward": return 51
-    case "home_active": return 52
-    case "home_inactive": return 53
-    case "prayer_active": return 54
-    case "prayer_inactive": return 55
-    case "wudu_active": return 56
-    case "wudu_inactive": return 57
-    case "quran_active": return 58
-    case "quran_inactive": return 59
-    default: return nil
-    }
-}
-
+// Standalone SalahPath icons have transparent canvases and are the source of truth.
+// Do not crop icons out of SalahFeatureSheet: that atlas includes its own circular/card
+// artwork and produces visible cut-out backgrounds when used as individual app icons.
 struct SalahFeatureIcon: View {
     let kind: String
 
-    private var standaloneUIImage: UIImage? {
-        UIImage(named: "feature_\(kind)")
+    private var standaloneAssetName: String? {
+        switch kind {
+        case "home", "start", "home_active", "home_inactive":
+            return "feature_home"
+        case "prayer", "prayer_active", "prayer_inactive":
+            return "feature_prayer"
+        case "wudu", "wudu_active", "wudu_inactive":
+            return "feature_wudu"
+        case "quran", "quran_active", "quran_inactive":
+            return "feature_quran"
+        case "discover":
+            return "feature_discover"
+        case "tracker", "checkmark":
+            return "feature_checkmark"
+        case "calendar":
+            return "feature_calendar"
+        case "qibla", "qibla_calibration":
+            return "feature_qibla"
+        case "settings", "prayer_settings":
+            return "feature_settings"
+        case "profile":
+            return "feature_profile"
+        case "fajr":
+            return "feature_fajr"
+        case "sunrise":
+            return "feature_sunrise"
+        case "dhuhr":
+            return "feature_dhuhr"
+        case "asr":
+            return "feature_asr"
+        case "maghrib":
+            return "feature_maghrib"
+        case "isha":
+            return "feature_isha"
+        case "times", "prayer_schedule":
+            return "feature_times"
+        case "list":
+            return "feature_list"
+        case "reminder", "notifications":
+            return "feature_reminder"
+        case "mute":
+            return "feature_mute"
+        case "sound", "quran_audio":
+            return "feature_quran_audio"
+        case "bookmarks", "favorites":
+            return "feature_bookmarks"
+        case "dhikr", "duas":
+            return "feature_dhikr"
+        case "info", "knowledge", "islamic_knowledge":
+            return "feature_info"
+        case "community", "forum":
+            return "feature_community"
+        case "moon", "dark_mode", "islamic_calendar":
+            return "feature_moon"
+        case "language":
+            return "feature_language"
+        case "more":
+            return "feature_more"
+        case "sparkles":
+            return "feature_sparkles"
+        case "mosques":
+            return "home_mosque"
+        default:
+            return nil
+        }
     }
 
-    private var croppedUIImage: UIImage? {
-        guard let index = salahFeatureIndex(for: kind),
-              let source = UIImage(named: "SalahFeatureSheet"),
-              let cgImage = source.cgImage,
-              cgImage.width > 0, cgImage.height > 0,
-              cgImage.width % 10 == 0, cgImage.height % 6 == 0 else {
-            return nil
+    private var systemSymbolName: String {
+        switch kind {
+        case "videos": return "play.rectangle.fill"
+        case "map": return "map.fill"
+        case "history": return "clock.arrow.circlepath"
+        case "hadith": return "text.quote"
+        case "downloads": return "arrow.down.circle.fill"
+        case "articles": return "doc.text.fill"
+        case "courses": return "graduationcap.fill"
+        case "backgrounds": return "photo.fill"
+        case "mindfulness": return "leaf.fill"
+        case "donations": return "heart.fill"
+        case "location": return "location.fill"
+        case "light_mode": return "sun.max.fill"
+        case "font_size": return "textformat.size"
+        case "backup": return "externaldrive.fill.badge.timemachine"
+        case "sync": return "arrow.triangle.2.circlepath"
+        case "back": return "chevron.left"
+        case "forward": return "chevron.right"
+        default: return "square.dashed"
         }
-
-        let column = index % 10
-        let row = index / 10
-        let cellWidth = CGFloat(cgImage.width) / 10
-        let cellHeight = CGFloat(cgImage.height) / 6
-
-        let cropRect = CGRect(
-            x: CGFloat(column) * cellWidth,
-            y: CGFloat(row) * cellHeight,
-            width: cellWidth,
-            height: cellHeight
-        ).integral
-
-        guard let cropped = cgImage.cropping(to: cropRect) else {
-            return nil
-        }
-
-        return UIImage(
-            cgImage: cropped,
-            scale: source.scale,
-            orientation: source.imageOrientation
-        )
     }
 
     var body: some View {
         Group {
-            // One canonical icon set in both appearances. Dark mode must not
-            // silently fall back to the legacy standalone SVG set.
-            if let croppedUIImage {
-                Image(uiImage: croppedUIImage)
-                    .renderingMode(.original)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-            } else if let standaloneUIImage {
-                // Emergency fallback only if the approved sheet is unavailable.
-                Image(uiImage: standaloneUIImage)
+            if let standaloneAssetName, UIImage(named: standaloneAssetName) != nil {
+                Image(standaloneAssetName)
                     .renderingMode(.original)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
             } else {
-                Image(systemName: "square.dashed")
+                Image(systemName: systemSymbolName)
+                    .symbolRenderingMode(.hierarchical)
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(SalahTheme.mutedInk)
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .padding(3)
             }
         }
         .aspectRatio(1, contentMode: .fit)
