@@ -488,6 +488,13 @@ private struct DailyDuaEntry {
     let source: String
     let audioSurah: Int
     let audioAyah: Int
+
+    func localizedSource(_ language: AppLanguage) -> String {
+        source.replacingOccurrences(
+            of: "Auszug / alıntı",
+            with: language == .german ? "Auszug" : "alıntı"
+        )
+    }
 }
 
 private enum DailyDuaStore {
@@ -663,7 +670,7 @@ private struct DailyDuaDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(dua.source, systemImage: "checkmark.seal.fill")
+                Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")
                     .font(.footnote)
                     .foregroundStyle(SalahTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -731,7 +738,7 @@ private struct DailyDuaDetailView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: dua.localizedSource(settings.language)
             )
         } catch {
             guard revision == audioRequestRevision else { return }
@@ -1502,7 +1509,7 @@ struct HomeView: View {
 
                         Spacer(minLength: 4)
 
-                        Text(dua.source)
+                        Text(dua.localizedSource(settings.language))
                             .font(.system(size: 7.2, weight: .semibold))
                             .foregroundStyle(SalahTheme.mutedInk)
                             .lineLimit(1)
@@ -1614,7 +1621,7 @@ struct HomeView: View {
                 url,
                 title: settings.language == .german ? dua.deTitle : dua.trTitle,
                 artist: reciter.title,
-                context: dua.source
+                context: dua.localizedSource(settings.language)
             )
         } catch {
             guard revision == dailyDuaAudioRequestRevision else { return }
