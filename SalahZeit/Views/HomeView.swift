@@ -1247,13 +1247,6 @@ struct HomeView: View {
                         .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 0.7)
                 }
 
-                Text(settings.t("„Das Gebet ist den Gläubigen zu bestimmten Zeiten vorgeschrieben.“ (An-Nisāʾ 4:103)", "„Namaz, müminlere vakitleri belirlenmiş bir farzdır.“ (Nisâ, 103)"))
-                    .font(.custom("Georgia-Italic", size: 6.9))
-                    .italic()
-                    .foregroundStyle(SalahTheme.mutedInk)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
@@ -1264,7 +1257,7 @@ struct HomeView: View {
                 .stroke(SalahTheme.gold.opacity(0.66), lineWidth: 0.8)
         }
         .shadow(color: SalahTheme.deepTeal.opacity(0.025), radius: 2, y: 1)
-        .frame(minHeight: 178)
+        .frame(minHeight: 168)
         .clipped()
     }
 
