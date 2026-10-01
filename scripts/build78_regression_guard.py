@@ -487,6 +487,30 @@ for forbidden in (
     if forbidden in home:
         fail(f"bilingual daily dua source rendering returned: {forbidden}")
 
+# 6a.2) Audio runtime errors must follow the selected app language.
+for token in (
+    'private func salahLocalizedAudioText(_ german: String, _ turkish: String) -> String',
+    'UserDefaults.standard.string(forKey: "appLanguage")',
+    'salahLocalizedAudioText("Audio nicht verfügbar.", "Ses mevcut değil.")',
+    'salahLocalizedAudioText("Audio konnte nicht geladen werden.", "Ses yüklenemedi.")',
+    'salahLocalizedAudioText("Audio-Wiedergabe fehlgeschlagen.", "Ses oynatılamadı.")',
+    'salahLocalizedAudioText("Audio lädt zu lange. Der nächste Abschnitt wird versucht.", "Ses çok uzun yükleniyor. Sonraki bölüm deneniyor.")',
+    'salahLocalizedAudioText("Nächste Sura konnte nicht geladen werden.", "Sonraki sûre yüklenemedi.")',
+    'salahLocalizedAudioText("Quran · automatisch weiter", "Kur\'an · otomatik devam")',
+):
+    if token not in guide:
+        fail(f"audio runtime localization regression: missing {token}")
+
+for forbidden in (
+    'Audio nicht verfügbar / Ses mevcut değil.',
+    'Audio konnte nicht geladen werden / Ses yüklenemedi.',
+    'Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı.',
+    'Audio lädt zu lange. Der nächste Abschnitt wird versucht / Ses çok uzun yükleniyor.',
+    'Nächste Sura konnte nicht geladen werden / Sonraki sûre yüklenemedi.',
+):
+    if forbidden in guide:
+        fail(f"bilingual audio runtime text returned: {forbidden}")
+
 # 6b) Global audio accessibility must follow the selected app language.
 for token in (
     '@EnvironmentObject private var settings: SettingsStore',
