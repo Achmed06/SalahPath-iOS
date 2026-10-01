@@ -489,22 +489,27 @@ for forbidden in (
         fail(f"theme-specific icon artwork regression returned: {forbidden}")
 
 for token in (
-    'Image(systemName: today.map { brandHeaderSymbolName(today: $0) } ?? "sun.and.horizon.fill")',
-    'private func brandHeaderSymbolName(today: PrayerDay) -> String',
-    'return "sunrise.fill"',
-    'return "sun.max.fill"',
-    'return "sunset.fill"',
-    'return "moon.stars.fill"',
+    'SalahFeatureIcon(kind: today.map { brandHeaderFeatureKind(today: $0) } ?? "sunrise")',
+    'private func brandHeaderFeatureKind(today: PrayerDay) -> String',
+    'return "fajr"',
+    'return "sunrise"',
+    'return "dhuhr"',
+    'return "asr"',
+    'return "maghrib"',
+    'return "isha"',
+    'SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))',
 ):
     if token not in home:
-        fail(f"time-aware home header symbol regression: missing {token}")
+        fail(f"time-aware SalahPath prayer artwork regression: missing {token}")
 
 for forbidden in (
+    'Image(systemName: today.map { brandHeaderSymbolName',
+    'private func brandHeaderSymbolName(today: PrayerDay)',
     'SalahFeatureIcon(kind: today.map { brandHeaderIconKind',
     'private func brandHeaderIconKind(today: PrayerDay)',
 ):
     if forbidden in home:
-        fail(f"legacy clipped home header artwork returned: {forbidden}")
+        fail(f"legacy home header artwork returned: {forbidden}")
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
 for token in (
