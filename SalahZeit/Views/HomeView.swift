@@ -1047,9 +1047,11 @@ struct HomeView: View {
                     .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1)
                     .frame(width: 42, height: 42)
 
-                SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")
-                    .frame(width: 34, height: 34)
-                    .clipShape(Circle())
+                Image(systemName: today.map { brandHeaderSymbolName(today: $0) } ?? "sun.and.horizon.fill")
+                    .symbolRenderingMode(.hierarchical)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(SalahTheme.gold)
+                    .frame(width: 32, height: 32)
             }
             .frame(width: 42, height: 42)
             .accessibilityHidden(true)
@@ -1097,28 +1099,28 @@ struct HomeView: View {
         .accessibilityElement(children: .contain)
     }
 
-    private func brandHeaderIconKind(today: PrayerDay) -> String {
+    private func brandHeaderSymbolName(today: PrayerDay) -> String {
         let current = now
 
         if let fajr = today.time(for: .fajr), current < fajr {
-            return "isha"
+            return "moon.stars.fill"
         }
         if let sunrise = today.time(for: .sunrise), current < sunrise {
-            return "fajr"
+            return "sunrise.fill"
         }
         if let dhuhr = today.time(for: .dhuhr), current < dhuhr {
-            return "sunrise"
+            return "sun.and.horizon.fill"
         }
         if let asr = today.time(for: .asr), current < asr {
-            return "dhuhr"
+            return "sun.max.fill"
         }
         if let maghrib = today.time(for: .maghrib), current < maghrib {
-            return "asr"
+            return "sun.haze.fill"
         }
         if let isha = today.time(for: .isha), current < isha {
-            return "maghrib"
+            return "sunset.fill"
         }
-        return "isha"
+        return "moon.stars.fill"
     }
 
     private func nextPrayerHero(_ prayer: PrayerOccurrence) -> some View {
