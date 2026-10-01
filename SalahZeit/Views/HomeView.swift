@@ -1039,9 +1039,20 @@ struct HomeView: View {
 
     private func brandHeader(today: PrayerDay? = nil) -> some View {
         HStack(spacing: 9) {
-            SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")
-                .frame(width: 42, height: 42)
-                .accessibilityHidden(true)
+            ZStack {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.white.opacity(0.07))
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(SalahTheme.gold.opacity(0.62), lineWidth: 0.9)
+
+                Image("salahpath_logo")
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+            }
+            .frame(width: 42, height: 42)
+            .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text("SalahPath")
@@ -1070,9 +1081,10 @@ struct HomeView: View {
                         .font(.custom("AvenirNext-Medium", size: 7.0))
                         .foregroundStyle(SalahTheme.gold)
                     NavigationLink { SettingsView() } label: {
-                        SalahFeatureIcon(kind: settings.notificationsEnabled ? "reminder" : "mute")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.white)
+                        SalahFeatureIcon(
+                            kind: settings.notificationsEnabled ? "reminder" : "mute",
+                            prefersTransparentArtwork: true
+                        )
                             .frame(width: 24, height: 24)
                             .contentShape(Rectangle())
                     }
