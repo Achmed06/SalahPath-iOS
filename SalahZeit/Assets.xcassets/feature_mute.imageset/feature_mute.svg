@@ -1,15 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
 <metadata>SalahPath standalone v2 mute</metadata>
 <defs>
-  <linearGradient id="gold" x1="14" y1="20" x2="56" y2="62" gradientUnits="userSpaceOnUse"><stop stop-color="#F9E49B"/><stop offset=".55" stop-color="#D7AA52"/><stop offset="1" stop-color="#A9721F"/></linearGradient>
-  <linearGradient id="teal" x1="15" y1="19" x2="61" y2="62" gradientUnits="userSpaceOnUse"><stop stop-color="#42A58C"/><stop offset=".55" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient>
+  <linearGradient id="gold" x1="14" y1="20" x2="56" y2="62" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0AF"/><stop offset=".52" stop-color="#D7AA52"/><stop offset="1" stop-color="#9B651B"/></linearGradient>
+  <linearGradient id="teal" x1="15" y1="19" x2="66" y2="62" gradientUnits="userSpaceOnUse"><stop stop-color="#4DB39A"/><stop offset=".55" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient>
 </defs>
 <g stroke-linecap="round" stroke-linejoin="round">
   <path d="M13 34.5h12L41 21v38L25 45.5H13v-11Z" fill="url(#gold)" stroke="#8A5B18" stroke-width="2.2"/>
-  <path d="M47.5 31c3.8 4.2 3.8 13.8 0 18" stroke="url(#teal)" stroke-width="3.4"/>
-  <path d="M56 25.5c7.8 8.2 7.8 20.8 0 29" stroke="#2A816B" stroke-width="3.2" opacity=".78"/>
-  <path d="M49 24 68 56" stroke="#C85C50" stroke-width="5.1"/>
-  <path d="M68 24 49 56" stroke="#C85C50" stroke-width="5.1"/>
-  <path d="M50.5 25.8 66.5 53.7" stroke="#F7D982" stroke-width="1.1" opacity=".7"/>
+  <path d="M47.5 31c3.7 4.2 3.7 13.8 0 18" stroke="url(#teal)" stroke-width="3.3" opacity=".68"/>
+  <path d="M51 21.5 69 57.5" stroke="#0B4037" stroke-width="7"/>
+  <path d="M51 21.5 69 57.5" stroke="url(#gold)" stroke-width="4.1"/>
+  <circle cx="60" cy="39.5" r="2.2" fill="#FFF0AF"/>
 </g>
 </svg>
