@@ -804,11 +804,14 @@ struct SettingsView: View {
         HStack(spacing: 11) {
             ZStack {
                 Circle()
-                    .fill(SalahTheme.gold.opacity(0.18))
+                    .fill(Color.white.opacity(0.08))
                     .frame(width: 58, height: 58)
-                Image(systemName: "person.crop.circle.fill")
-                    .font(.system(size: 38))
-                    .foregroundStyle(SalahTheme.teal)
+                Circle()
+                    .stroke(SalahTheme.gold.opacity(0.55), lineWidth: 1)
+                    .frame(width: 58, height: 58)
+                SalahFeatureIcon(kind: "profile")
+                    .frame(width: 46, height: 46)
+                    .accessibilityHidden(true)
             }
 
             VStack(alignment: .leading, spacing: 3) {
