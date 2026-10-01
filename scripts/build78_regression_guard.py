@@ -511,6 +511,16 @@ for forbidden in (
     if forbidden in guide:
         fail(f"bilingual audio runtime text returned: {forbidden}")
 
+# 6a.3) Quran/adhkar source labels must not mix German and Turkish.
+for token in (
+    'func localizedReference(_ language: AppLanguage) -> String',
+    'Text(item.localizedReference(settings.language))',
+    'func localizedSource(_ language: AppLanguage) -> String',
+    'Text(item.localizedSource(settings.language))',
+):
+    if token not in guide:
+        fail(f"Quran/adhkar source localization regression: missing {token}")
+
 # 6b) Global audio accessibility must follow the selected app language.
 for token in (
     '@EnvironmentObject private var settings: SettingsStore',
