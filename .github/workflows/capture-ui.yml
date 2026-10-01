@@ -339,14 +339,16 @@ jobs:
             capture home SalahPath-v3.62-B78-DE-Home.png
             capture more SalahPath-v3.62-B78-DE-More.png
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
+            capture settings SalahPath-v3.62-B78-DE-Settings.png
             xcrun simctl ui "$SIM_UDID" appearance dark
             capture home SalahPath-v3.62-B78-DE-Dark-Home.png
             capture more SalahPath-v3.62-B78-DE-Dark-More.png
             capture qibla SalahPath-v3.62-B78-DE-Dark-Qibla.png
+            capture settings SalahPath-v3.62-B78-DE-Dark-Settings.png
 
             # A false dark-mode capture is worse than no dark-mode capture:
             # fail if the screenshots are byte-identical to their light pair.
-            for screen in Home More Qibla; do
+            for screen in Home More Qibla Settings; do
               LIGHT="ui-preview/SalahPath-v3.62-B78-DE-${screen}.png"
               DARK="ui-preview/SalahPath-v3.62-B78-DE-Dark-${screen}.png"
               if cmp -s "$LIGHT" "$DARK"; then
