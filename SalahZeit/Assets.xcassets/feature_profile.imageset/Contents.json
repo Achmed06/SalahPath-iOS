@@ -1,15 +1,12 @@
 {
   "images": [
     {
-      "filename": "feature_profile.svg",
+      "filename": "feature_profile.png",
       "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }
