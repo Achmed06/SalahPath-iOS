@@ -175,25 +175,16 @@ struct SalahPathApp: App {
         case "daily-dua":
             NavigationStack { DailyDuaQAView() }
         case "home":
-            NavigationStack {
-                HomeView()
-                    .toolbar { referenceQAToolbar }
-            }
+            RootTabView(initialSelection: 0)
         case "quran":
-            NavigationStack {
-                QuranView()
-                    .toolbar { referenceQAToolbar }
-            }
+            RootTabView(initialSelection: 1)
         case "dhikr":
             NavigationStack {
                 DhikrView()
                     .toolbar { referenceQAToolbar }
             }
         case "namaz":
-            NavigationStack {
-                GuideView()
-                    .toolbar { referenceQAToolbar }
-            }
+            RootTabView(initialSelection: 2)
         case "times":
             NavigationStack {
                 PrayerTimesOverviewView()
@@ -262,9 +253,9 @@ struct SalahPathApp: App {
         case "qibla":
             NavigationStack { QiblaView() }
         case "settings":
-            NavigationStack { SettingsView() }
+            RootTabView(initialSelection: 4)
         case "more":
-            NavigationStack { MoreView() }
+            RootTabView(initialSelection: 3)
         case "mosques":
             NavigationStack { NearbyMosquesView() }
         case "fasting":
