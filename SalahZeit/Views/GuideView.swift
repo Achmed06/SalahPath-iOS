@@ -298,17 +298,20 @@ struct GuideView: View {
         HStack(spacing: 10) {
             Group {
                 if let kind = guideFeatureKind(for: icon) {
+                    // Premium artwork already carries its own visual identity.
                     SalahFeatureIcon(kind: kind)
-                        .padding(4)
+                        .frame(width: 31, height: 31)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.4, y: 1)
                 } else {
                     Image(systemName: icon)
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(SalahTheme.teal)
+                        .frame(width: 29, height: 29)
+                        .background(SalahTheme.softTeal, in: Circle())
+                        .overlay { Circle().stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7) }
                 }
             }
             .frame(width: 31, height: 31)
-            .background(SalahTheme.softTeal, in: Circle())
-            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.7) }
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
