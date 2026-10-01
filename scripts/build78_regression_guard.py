@@ -344,6 +344,9 @@ for token in (
     'return "home_mosque"',
     'private var systemSymbolName: String',
     'case "videos": return "play.rectangle.fill"',
+    'case "mute": return "speaker.slash.fill"',
+    'case "community", "forum": return "person.3.fill"',
+    'case "sparkles": return "sparkles"',
     'case "map": return "map.fill"',
     'case "history": return "clock.arrow.circlepath"',
     'case "hadith": return "text.quote"',
@@ -380,18 +383,28 @@ if '"filename": "home_mosque.png"' not in mosque_contents:
     fail("generated premium mosque icon regression")
 
 for token in (
-    'case "play.square.stack.fill":\n            return "videos"',
+    'case "play.square.stack.fill":\n            return "quran_audio"',
     'case "hands.sparkles.fill":\n            return "duas"',
     'case "circle.grid.cross.fill":\n            return "dhikr"',
     'case "sparkles":\n            return "info"',
     'case "location.north.circle.fill":\n            return "qibla"',
-    'case "map.fill":\n            return "map"',
-    'case "clock.arrow.circlepath":\n            return "history"',
+    'case "map.fill":\n            return "qibla"',
+    'case "clock.arrow.circlepath":\n            return "times"',
     'case "building.columns.fill":\n            return "mosques"',
     'case "text.quote":\n            return "hadith"',
+    'case "moon.stars.fill":\n            return "moon"',
+    'case "slider.horizontal.3":\n            return "settings"',
 ):
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
+
+for forbidden in (
+    'case "mute":\n            return "feature_mute"',
+    'case "community", "forum":\n            return "feature_community"',
+    'case "sparkles":\n            return "feature_sparkles"',
+):
+    if forbidden in root_tabs:
+        fail(f"legacy generated-SVG icon routing returned: {forbidden}")
 
 for forbidden in (
     'prefersTransparentArtwork',
