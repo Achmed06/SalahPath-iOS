@@ -201,7 +201,7 @@ jobs:
           SWIFT
           swiftc /tmp/salahpath-screenshot-check.swift -o /tmp/salahpath-screenshot-check
 
-          # Pull requests use focused visual QA. Pushes to main keep the full
+          # Pull requests and icon-specific pushes use focused visual QA. Pushes to main keep the full
           # release reference capture. This avoids re-rendering 30+ screens
           # for a one-screen fix while preserving full release coverage.
           if [ "$UI_EVENT_NAME" = "workflow_dispatch" ]; then
