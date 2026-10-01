@@ -262,11 +262,17 @@ jobs:
             run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
 
             if ! /tmp/salahpath-screenshot-check "$SCREENSHOT"; then
-              echo "Invalid/blank screenshot for $SCREEN; relaunching once and recapturing."
+              echo "Invalid/blank screenshot for $SCREEN; rebooting simulator before the retry."
+              xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
+              xcrun simctl shutdown "$SIM_UDID" || true
+              run_timeout 45 xcrun simctl boot "$SIM_UDID" || true
+              run_timeout 240 xcrun simctl bootstatus "$SIM_UDID" -b
+              sleep 5
+              xcrun simctl install "$SIM_UDID" "$APP_PATH"
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
-              sleep 5
+              sleep 10
               run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
               /tmp/salahpath-screenshot-check "$SCREENSHOT"
             fi
