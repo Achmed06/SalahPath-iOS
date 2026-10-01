@@ -1009,16 +1009,15 @@ struct MoreView: View {
             Group {
                 if let glyphKind = discoverDashboardGlyphKind(for: icon) {
                     SalahFeatureIcon(kind: glyphKind)
-                        .padding(4)
+                        .frame(width: 23, height: 23)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
                 } else {
                     Image(systemName: icon)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(SalahTheme.gold)
+                        .frame(width: 23, height: 23)
                 }
             }
-            .frame(width: 24, height: 24)
-            .background(SalahTheme.softTeal, in: Circle())
-            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.55), lineWidth: 0.8) }
             .accessibilityHidden(true)
 
             Text(title)
