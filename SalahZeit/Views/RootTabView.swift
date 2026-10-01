@@ -1088,42 +1088,29 @@ struct MoreView: View {
     @ViewBuilder
     private func salahFeatureIcon(_ symbol: String, size: CGFloat) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [SalahTheme.softTeal, SalahTheme.cream],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .frame(width: size, height: size)
-
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .stroke(SalahTheme.gold.opacity(0.52), lineWidth: 1)
-                .frame(width: size, height: size)
-
-            Circle()
-                .fill(SalahTheme.cream.opacity(0.88))
-                .frame(width: size * 0.74, height: size * 0.74)
-
             if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
+                // Premium artwork is already a finished transparent asset.
+                // Do not add another circle, badge or faux background around it.
                 SalahFeatureIcon(kind: glyphKind)
-                    .frame(width: size * 0.52, height: size * 0.52)
+                    .frame(width: size * 0.78, height: size * 0.78)
+                    .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 2.5, y: 1.5)
             } else {
+                // SF Symbols are the fallback only. Give those a restrained
+                // container so they still belong to the same visual system.
+                RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
+                    .fill(SalahTheme.softTeal.opacity(0.72))
+                    .frame(width: size * 0.78, height: size * 0.78)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.8)
+                    }
+
                 Image(systemName: symbol)
                     .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: size * 0.40, weight: .semibold))
+                    .font(.system(size: size * 0.34, weight: .semibold))
                     .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: size * 0.74, height: size * 0.74)
+                    .frame(width: size * 0.58, height: size * 0.58)
             }
-
-            Circle()
-                .fill(SalahTheme.gold)
-                .frame(width: max(5, size * 0.14), height: max(5, size * 0.14))
-                .overlay {
-                    Circle().stroke(SalahTheme.cream.opacity(0.90), lineWidth: 1)
-                }
-                .offset(x: size * 0.31, y: -size * 0.31)
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
