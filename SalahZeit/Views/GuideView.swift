@@ -4368,6 +4368,11 @@ protocol RemoteAudioPlayerQueueContinuation: AnyObject {
     func remoteAudioPlayerNeedsContinuation(_ player: RemoteAudioPlayer, sessionID: Int)
 }
 
+private func salahLocalizedAudioText(_ german: String, _ turkish: String) -> String {
+    let raw = UserDefaults.standard.string(forKey: "appLanguage")
+    return AppLanguage(rawValue: raw ?? "") == .turkish ? turkish : german
+}
+
 @MainActor
 final class RemoteAudioPlayer: ObservableObject {
     static let shared = RemoteAudioPlayer()
@@ -4464,7 +4469,7 @@ final class RemoteAudioPlayer: ObservableObject {
         let cleaned = urls.filter { $0.isFileURL || $0.scheme?.lowercased() == "https" }
         guard !cleaned.isEmpty else {
             stop()
-            lastError = "Audio nicht verfügbar / Ses mevcut değil."
+            lastError = salahLocalizedAudioText("Audio nicht verfügbar.", "Ses mevcut değil.")
             return
         }
 
@@ -4737,7 +4742,7 @@ final class RemoteAudioPlayer: ObservableObject {
                         return
                     }
                     self.failCurrentAndContinue(
-                        item.error?.localizedDescription ?? "Audio konnte nicht geladen werden / Ses yüklenemedi."
+                        salahLocalizedAudioText("Audio konnte nicht geladen werden.", "Ses yüklenemedi.")
                     )
                 default:
                     self.isLoading = true
@@ -4798,7 +4803,7 @@ final class RemoteAudioPlayer: ObservableObject {
                     return
                 }
                 self.failCurrentAndContinue(
-                    errorDescription ?? "Audio-Wiedergabe fehlgeschlagen / Ses oynatılamadı."
+                    salahLocalizedAudioText("Audio-Wiedergabe fehlgeschlagen.", "Ses oynatılamadı.")
                 )
             }
         }
@@ -4890,7 +4895,7 @@ final class RemoteAudioPlayer: ObservableObject {
             }
 
             self.failCurrentAndContinue(
-                "Audio lädt zu lange. Der nächste Abschnitt wird versucht / Ses çok uzun yükleniyor. Sonraki bölüm deneniyor."
+                salahLocalizedAudioText("Audio lädt zu lange. Der nächste Abschnitt wird versucht.", "Ses çok uzun yükleniyor. Sonraki bölüm deneniyor.")
             )
         }
     }
@@ -5305,7 +5310,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                     playbackURLs,
                     expectedSessionID: sessionID,
                     title: "Quran · Sura \(surah)",
-                    context: "Quran · automatisch weiter"
+                    context: salahLocalizedAudioText("Quran · automatisch weiter", "Kur'an · otomatik devam")
                 )
 
                 if self.nextSurah == nil {
@@ -5320,7 +5325,7 @@ final class QuranContinuousPlaybackCoordinator: RemoteAudioPlayerQueueContinuati
                 self.expectedSessionID = nil
                 player.finishContinuation(
                     expectedSessionID: sessionID,
-                    error: "Nächste Sura konnte nicht geladen werden / Sonraki sûre yüklenemedi."
+                    error: salahLocalizedAudioText("Nächste Sura konnte nicht geladen werden.", "Sonraki sûre yüklenemedi.")
                 )
             }
         }
