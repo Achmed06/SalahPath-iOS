@@ -522,6 +522,22 @@ for forbidden in (
         fail(f"legacy home header artwork returned: {forbidden}")
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
+
+# Screenshot QA must use one deterministic clock for both the iOS status bar and HomeView.
+# Otherwise a screenshot can visibly say 09:41 while time-aware prayer artwork renders for
+# the runner's real wall-clock time.
+for token in (
+    'private static var initialNow: Date',
+    'environment["SALAH_QA_NOW"]',
+):
+    if token not in home:
+        fail(f"deterministic home screenshot clock regression: missing {token}")
+for token in (
+    'SIMCTL_CHILD_SALAH_QA_NOW=2026-10-02T06:41:00Z',
+):
+    if token not in capture_workflow:
+        fail(f"deterministic screenshot launch clock regression: missing {token}")
+
 for token in (
     'Invalid/blank screenshot for $SCREEN; rebooting simulator before the retry.',
     'xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true',
