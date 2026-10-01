@@ -4793,9 +4793,7 @@ final class RemoteAudioPlayer: ObservableObject {
             forName: .AVPlayerItemFailedToPlayToEndTime,
             object: item,
             queue: .main
-        ) { [weak self] note in
-            let errorDescription = (note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error)?.localizedDescription
-
+        ) { [weak self] _ in
             Task { @MainActor in
                 guard let self,
                       self.playbackItemRevision == itemRevision else { return }
