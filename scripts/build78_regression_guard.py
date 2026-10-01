@@ -459,6 +459,25 @@ for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
         fail(f"legacy icon asset reference returned: {legacy_prefix}")
 
+# 6a.1) Daily dua source labels must not expose both languages at once.
+for token in (
+    'func localizedSource(_ language: AppLanguage) -> String',
+    'with: language == .german ? "Auszug" : "alıntı"',
+    'Text(dua.localizedSource(settings.language))',
+    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
+    'context: dua.localizedSource(settings.language)',
+):
+    if token not in home:
+        fail(f"daily dua source localization regression: missing {token}")
+
+for forbidden in (
+    'Text(dua.source)',
+    'Label(dua.source, systemImage: "checkmark.seal.fill")',
+    'context: dua.source',
+):
+    if forbidden in home:
+        fail(f"bilingual daily dua source rendering returned: {forbidden}")
+
 # 6b) Global audio accessibility must follow the selected app language.
 for token in (
     '@EnvironmentObject private var settings: SettingsStore',
