@@ -361,6 +361,24 @@ for forbidden in (
     if forbidden in root_tabs:
         fail(f"atlas-cut icon rendering returned: {forbidden}")
 
+premium_png_icons = (
+    "home", "prayer", "wudu", "quran", "discover", "profile", "qibla", "times",
+    "dhikr", "reminder", "settings", "quran_audio", "bookmarks", "calendar",
+    "checkmark", "language", "info", "more", "moon", "list",
+)
+for icon_name in premium_png_icons:
+    contents_path = ROOT / f"SalahZeit/Assets.xcassets/feature_{icon_name}.imageset/Contents.json"
+    contents = contents_path.read_text(encoding="utf-8")
+    required_filename = f'"filename": "feature_{icon_name}.png"'
+    if required_filename not in contents:
+        fail(f"generated premium icon regression: {icon_name} is not routed to its PNG asset")
+    if f'"filename": "feature_{icon_name}.svg"' in contents:
+        fail(f"legacy SVG icon returned as active asset: {icon_name}")
+
+mosque_contents = (ROOT / "SalahZeit/Assets.xcassets/home_mosque.imageset/Contents.json").read_text(encoding="utf-8")
+if '"filename": "home_mosque.png"' not in mosque_contents:
+    fail("generated premium mosque icon regression")
+
 for token in (
     'case "play.square.stack.fill":\n            return "videos"',
     'case "hands.sparkles.fill":\n            return "duas"',
