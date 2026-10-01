@@ -240,6 +240,7 @@ jobs:
             SCREEN="$1"
             NAME="$2"
             if ! SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_NOW=2026-10-02T06:41:00Z \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath; then
               echo "First simulator launch failed for $SCREEN; rebooting simulator and retrying."
@@ -249,6 +250,7 @@ jobs:
               sleep 5
               xcrun simctl install "$SIM_UDID" "$APP_PATH"
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_NOW=2026-10-02T06:41:00Z \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
             fi
@@ -270,6 +272,7 @@ jobs:
               sleep 5
               xcrun simctl install "$SIM_UDID" "$APP_PATH"
               SIMCTL_CHILD_SALAH_QA_SCREENSHOT=1 \
+              SIMCTL_CHILD_SALAH_QA_NOW=2026-10-02T06:41:00Z \
               SIMCTL_CHILD_SALAH_QA_SCREEN="$SCREEN" \
                 run_timeout 120 xcrun simctl launch --terminate-running-process "$SIM_UDID" com.achmed06.salahpath
               sleep 10
