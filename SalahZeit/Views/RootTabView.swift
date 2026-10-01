@@ -1160,14 +1160,22 @@ struct MoreView: View {
         case "book.pages.fill":
             return "islamic_knowledge"
         case "play.square.stack.fill":
-            return "quran_audio"
-        case "hands.sparkles.fill", "circle.grid.cross.fill", "sparkles":
+            return "videos"
+        case "hands.sparkles.fill":
+            return "duas"
+        case "circle.grid.cross.fill":
             return "dhikr"
-        case "location.north.circle.fill", "map.fill":
+        case "sparkles":
+            return "info"
+        case "location.north.circle.fill":
             return "qibla"
+        case "map.fill":
+            return "map"
         case "calendar":
             return "calendar"
-        case "clock.arrow.circlepath", "checklist", "pause.circle.fill":
+        case "clock.arrow.circlepath":
+            return "history"
+        case "checklist", "pause.circle.fill":
             return "checkmark"
         case "building.columns.fill":
             return "mosques"
