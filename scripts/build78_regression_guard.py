@@ -364,6 +364,14 @@ for forbidden in (
     if forbidden in root_tabs:
         fail(f"atlas-cut icon rendering returned: {forbidden}")
 
+for token in (
+    'Premium artwork is already a finished transparent asset.',
+    '.frame(width: size * 0.78, height: size * 0.78)',
+    'SF Symbols are the fallback only.',
+):
+    if token not in root_tabs:
+        fail(f"transparent premium tile rendering regression: missing {token}")
+
 premium_png_icons = (
     "home", "prayer", "wudu", "quran", "discover", "profile", "qibla", "times",
     "dhikr", "reminder", "settings", "quran_audio", "bookmarks", "calendar",
