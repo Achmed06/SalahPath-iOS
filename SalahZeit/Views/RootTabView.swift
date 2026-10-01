@@ -78,12 +78,6 @@ struct SalahFeatureIcon: View {
     @Environment(\.colorScheme) private var colorScheme
 
     let kind: String
-    let prefersTransparentArtwork: Bool
-
-    init(kind: String, prefersTransparentArtwork: Bool = false) {
-        self.kind = kind
-        self.prefersTransparentArtwork = prefersTransparentArtwork
-    }
 
     private var standaloneUIImage: UIImage? {
         UIImage(named: "feature_\(kind)")
@@ -123,23 +117,17 @@ struct SalahFeatureIcon: View {
 
     var body: some View {
         Group {
-            // The approved sheet is tuned for the light card surfaces. In dark
-            // appearance (or on an explicitly dark surface) prefer the
-            // transparent standalone artwork so the sheet's pale badge does
-            // not look like a pasted white disc.
-            if (prefersTransparentArtwork || colorScheme == .dark), let standaloneUIImage {
-                Image(uiImage: standaloneUIImage)
-                    .renderingMode(.original)
-                    .resizable()
-                    .interpolation(.high)
-                    .scaledToFit()
-            } else if let croppedUIImage {
+            // One canonical icon set in both appearances. Dark mode must not
+            // silently fall back to the legacy standalone SVG set.
+            if let croppedUIImage {
                 Image(uiImage: croppedUIImage)
                     .renderingMode(.original)
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
+                    .brightness(colorScheme == .dark ? -0.055 : 0)
             } else if let standaloneUIImage {
+                // Emergency fallback only if the approved sheet is unavailable.
                 Image(uiImage: standaloneUIImage)
                     .renderingMode(.original)
                     .resizable()
@@ -1076,11 +1064,11 @@ struct MoreView: View {
             )
 
             HStack(spacing: 7) {
-                SalahFeatureIcon(kind: "info", prefersTransparentArtwork: true)
+                SalahFeatureIcon(kind: "info")
                     .frame(width: 24, height: 24)
-                SalahFeatureIcon(kind: "moon", prefersTransparentArtwork: true)
+                SalahFeatureIcon(kind: "moon")
                     .frame(width: 21, height: 21)
-                SalahFeatureIcon(kind: "sparkles", prefersTransparentArtwork: true)
+                SalahFeatureIcon(kind: "sparkles")
                     .frame(width: 18, height: 18)
             }
             .opacity(0.42)
@@ -1096,7 +1084,7 @@ struct MoreView: View {
                     RoundedRectangle(cornerRadius: 13, style: .continuous)
                         .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
                         .frame(width: 50, height: 50)
-                    SalahFeatureIcon(kind: "discover", prefersTransparentArtwork: true)
+                    SalahFeatureIcon(kind: "discover")
                         .frame(width: 31, height: 31)
                 }
                 .accessibilityHidden(true)
