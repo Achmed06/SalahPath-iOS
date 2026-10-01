@@ -319,7 +319,7 @@ for token in (
     '("prayer", settings.t("Gebet", "Namaz"))',
     '("discover", settings.t("Entdecken", "Keşfet"))',
     '("profile", settings.t("Profil", "Profil"))',
-    'SalahFeatureIcon(kind: "discover")',
+    'SalahFeatureIcon(kind: "discover", prefersTransparentArtwork: true)',
     'GlobalAudioMiniPlayer(audio: audio)',
     'private struct GlobalAudioMiniPlayer: View',
     'audio.isPlaying ? audio.pause() : audio.resume()',
