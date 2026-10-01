@@ -149,15 +149,19 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import base64, io, tarfile
-          src = Path("v340-patch/reference_dashboard_icons.tgz.b64")
-          if src.exists():
-              payload = base64.b64decode(src.read_text(encoding="utf-8").strip())
-              out = Path("ui-preview/reference-icons")
+          out = Path("ui-preview/reference-icons")
+          for label, source in (
+              ("dashboard", Path("v340-patch/reference_dashboard_icons.tgz.b64")),
+              ("special", Path("v341-patch/reference_special_icons.tgz.b64")),
+          ):
+              if not source.exists():
+                  continue
+              payload = base64.b64decode(source.read_text(encoding="utf-8").strip())
               with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tf:
                   for member in tf.getmembers():
                       if member.isfile() and member.name.endswith(".png"):
                           data = tf.extractfile(member).read()
-                          (out / Path(member.name).name).write_bytes(data)
+                          (out / f"{label}-{Path(member.name).name}").write_bytes(data)
           PY
 
           cat > /tmp/salahpath-screenshot-check.swift <<'SWIFT'
