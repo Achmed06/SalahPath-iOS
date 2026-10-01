@@ -313,12 +313,12 @@ for token in (
     'return "wudu"',
     'return "quran"',
     'return "qibla"',
-    'SalahFeatureIcon(kind: item.0)',
-    '("home", settings.t("Start", "Ana Sayfa"))',
-    '("quran", settings.t("Quran", "Kur\'an"))',
-    '("prayer", settings.t("Gebet", "Namaz"))',
-    '("discover", settings.t("Entdecken", "Keşfet"))',
-    '("profile", settings.t("Profil", "Profil"))',
+    'SalahFeatureIcon(kind: selection == index ? item.active : item.inactive)',
+    '("home_active", "home_inactive", settings.t("Start", "Ana Sayfa"))',
+    '("quran_active", "quran_inactive", settings.t("Quran", "Kur\'an"))',
+    '("prayer_active", "prayer_inactive", settings.t("Gebet", "Namaz"))',
+    '("discover", "discover", settings.t("Entdecken", "Keşfet"))',
+    '("profile", "profile", settings.t("Profil", "Profil"))',
     'SalahFeatureIcon(kind: "discover")',
     'GlobalAudioMiniPlayer(audio: audio)',
     'private struct GlobalAudioMiniPlayer: View',
@@ -332,10 +332,12 @@ for token in (
     'struct SalahFeatureIcon: View',
     'UIImage(named: "feature_\\(kind)")',
     'UIImage(named: "SalahFeatureSheet")',
-    'case "home", "start": return 0',
+    'case "home", "start": return 52',
     'case "prayer": return 1',
     'case "wudu": return 2',
     'case "quran": return 3',
+    'case "discover": return 42',
+    'case "qibla": return 42',
     'case "profile": return 9',
     'case "fajr": return 10',
     'case "maghrib": return 14',
@@ -349,6 +351,17 @@ for token in (
         fail(f"approved icon sheet routing regression: missing {token}")
 
 for token in (
+    'case "discover": return 42',
+    'case "qibla": return 42',
+    'case "notifications": return 17',
+    'case "building.columns.fill":\n            return "mosques"',
+    'case "text.quote":\n            return "hadith"',
+    'case "clock.arrow.circlepath", "checklist", "pause.circle.fill":\n            return "checkmark"',
+):
+    if token not in root_tabs:
+        fail(f"semantic icon routing regression: missing {token}")
+
+for token in (
     '@Environment(\\.colorScheme) private var colorScheme',
     'if let croppedUIImage',
     '.brightness(colorScheme == .dark ? -0.055 : 0)',
@@ -360,8 +373,14 @@ for token in (
 if 'prefersTransparentArtwork' in root_tabs or 'prefersTransparentArtwork' in home:
     fail("legacy dark-mode icon fallback routing returned")
 
-if 'Image("salahpath_logo")' not in home:
-    fail("home brand/header logo regression")
+for token in (
+    'SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")',
+    'private func brandHeaderIconKind(today: PrayerDay) -> String',
+    'return "maghrib"',
+    '.clipShape(Circle())',
+):
+    if token not in home:
+        fail(f"time-aware home header icon regression: missing {token}")
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
 for token in (
