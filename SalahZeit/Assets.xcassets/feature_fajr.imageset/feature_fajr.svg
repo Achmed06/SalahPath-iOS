@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7D982"/><stop offset=".55" stop-color="#D6A64F"/><stop offset="1" stop-color="#A9721F"/></linearGradient><linearGradient id="e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A816B"/><stop offset=".55" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#5BC7E6"/><stop offset="1" stop-color="#2A9BC7"/></linearGradient><linearGradient id="c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFDF5"/><stop offset="1" stop-color="#F1E4C7"/></linearGradient></defs><g stroke-linecap="round" stroke-linejoin="round"><path d="M12 56h56" stroke="#1B6656" stroke-width="4"/><path d="M24 56a16 16 0 0 1 32 0" fill="url(#g)"/><path d="M40 15v10M18 25l7 7M62 25l-7 7M11 40h10M59 40h10" stroke="#D6A64F" stroke-width="4"/><path d="M14 63c10-5 18-5 26 0 8-5 16-5 26 0" stroke="#2A816B" stroke-width="4"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+<metadata>SalahPath standalone v2 fajr</metadata><defs>
+  <linearGradient id="gold" x1="12" y1="10" x2="68" y2="70" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0AF"/><stop offset=".48" stop-color="#D7AA52"/><stop offset="1" stop-color="#9B651B"/></linearGradient>
+  <linearGradient id="teal" x1="12" y1="12" x2="68" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#4DB39A"/><stop offset=".52" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient>
+  <linearGradient id="cream" x1="18" y1="16" x2="62" y2="66" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF5"/><stop offset="1" stop-color="#EEDDBA"/></linearGradient>
+</defs>
+<g stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 57.5h60" stroke="#1B6656" stroke-width="3.5"/>
+  <path d="M24 57.5a16 16 0 0 1 32 0" fill="url(#gold)" stroke="#A9721F" stroke-width="1.5"/>
+  <path d="M40 17v9M18 29l6 5M62 29l-6 5" stroke="#D7AA52" stroke-width="3.6"/>
+  <path d="M13 65c9-4.5 18-4.5 27 0 9-4.5 18-4.5 27 0" stroke="url(#teal)" stroke-width="3.6"/>
+  <path d="M59 13a8 8 0 1 0 7 12.2A6.5 6.5 0 1 1 59 13Z" fill="url(#cream)" stroke="#D7AA52" stroke-width="1.2"/>
+</g></svg>

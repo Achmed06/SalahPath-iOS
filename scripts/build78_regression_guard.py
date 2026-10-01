@@ -476,7 +476,7 @@ for token in (
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
 
-standalone_svg_icons = ("mute", "community", "sparkles")
+standalone_svg_icons = ("fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha", "mute", "community", "sparkles")
 for icon_name in standalone_svg_icons:
     svg_path = ROOT / f"SalahZeit/Assets.xcassets/feature_{icon_name}.imageset/feature_{icon_name}.svg"
     svg = svg_path.read_text(encoding="utf-8")

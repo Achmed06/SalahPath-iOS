@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7D982"/><stop offset=".55" stop-color="#D6A64F"/><stop offset="1" stop-color="#A9721F"/></linearGradient><linearGradient id="e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A816B"/><stop offset=".55" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#5BC7E6"/><stop offset="1" stop-color="#2A9BC7"/></linearGradient><linearGradient id="c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFDF5"/><stop offset="1" stop-color="#F1E4C7"/></linearGradient></defs><g stroke-linecap="round" stroke-linejoin="round"><path d="M10 58h60" stroke="#1B6656" stroke-width="4"/><path d="M22 58a18 18 0 0 1 36 0" fill="#F2B544"/><path d="M40 12v13M16 27l9 7M64 27l-9 7M10 43h12M58 43h12" stroke="url(#g)" stroke-width="4"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+<metadata>SalahPath standalone v2 sunrise</metadata><defs>
+  <linearGradient id="gold" x1="12" y1="10" x2="68" y2="70" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0AF"/><stop offset=".48" stop-color="#D7AA52"/><stop offset="1" stop-color="#9B651B"/></linearGradient>
+  <linearGradient id="teal" x1="12" y1="12" x2="68" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#4DB39A"/><stop offset=".52" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient>
+  <linearGradient id="cream" x1="18" y1="16" x2="62" y2="66" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF5"/><stop offset="1" stop-color="#EEDDBA"/></linearGradient>
+</defs>
+<g stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 58h62" stroke="#0B4037" stroke-width="3.5"/>
+  <path d="M21 58a19 19 0 0 1 38 0" fill="url(#gold)" stroke="#A9721F" stroke-width="1.5"/>
+  <path d="M40 10v12M15 25l9 8M65 25l-9 8M9 42h12M59 42h12" stroke="#D7AA52" stroke-width="3.7"/>
+  <path d="M16 65h48" stroke="url(#teal)" stroke-width="3.2"/>
+</g></svg>

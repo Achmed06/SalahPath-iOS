@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7D982"/><stop offset=".55" stop-color="#D6A64F"/><stop offset="1" stop-color="#A9721F"/></linearGradient><linearGradient id="e" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2A816B"/><stop offset=".55" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BE8F7"/><stop offset=".55" stop-color="#5BC7E6"/><stop offset="1" stop-color="#2A9BC7"/></linearGradient><linearGradient id="c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFDF5"/><stop offset="1" stop-color="#F1E4C7"/></linearGradient></defs><g stroke-linecap="round" stroke-linejoin="round"><circle cx="40" cy="40" r="17" fill="url(#g)" stroke="#A9721F" stroke-width="2"/><path d="M40 7v10M40 63v10M7 40h10M63 40h10M17 17l7 7M56 56l7 7M63 17l-7 7M24 56l-7 7" stroke="#D6A64F" stroke-width="4"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+<metadata>SalahPath standalone v2 dhuhr</metadata><defs>
+  <linearGradient id="gold" x1="12" y1="10" x2="68" y2="70" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0AF"/><stop offset=".48" stop-color="#D7AA52"/><stop offset="1" stop-color="#9B651B"/></linearGradient>
+  <linearGradient id="teal" x1="12" y1="12" x2="68" y2="68" gradientUnits="userSpaceOnUse"><stop stop-color="#4DB39A"/><stop offset=".52" stop-color="#1B6656"/><stop offset="1" stop-color="#0B4037"/></linearGradient>
+  <linearGradient id="cream" x1="18" y1="16" x2="62" y2="66" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFDF5"/><stop offset="1" stop-color="#EEDDBA"/></linearGradient>
+</defs>
+<g stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="40" cy="40" r="15.5" fill="url(#gold)" stroke="#A9721F" stroke-width="1.8"/>
+  <circle cx="40" cy="40" r="20.5" stroke="#D7AA52" stroke-width="1.4" opacity=".45"/>
+  <path d="M40 6.5v9M40 64.5v9M6.5 40h9M64.5 40h9M16.5 16.5l6.5 6.5M57 57l6.5 6.5M63.5 16.5 57 23M23 57l-6.5 6.5" stroke="#D7AA52" stroke-width="3.7"/>
+  <circle cx="34.5" cy="34.5" r="3" fill="#FFF4C7" opacity=".7"/>
+</g></svg>
