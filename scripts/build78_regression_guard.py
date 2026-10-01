@@ -299,6 +299,7 @@ if 'lastSearchError.localizedDescription' in root_tab_source:
 # 6) Navigation/discovery icons stay in the same standalone SalahPath system.
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
+app_source = (ROOT / "SalahZeit/SalahZeitApp.swift").read_text(encoding="utf-8")
 for token in (
     'SalahFeatureIcon(kind: glyphKind)',
     'SalahFeatureIcon(kind: icon)',
@@ -311,6 +312,34 @@ for token in (
 ):
     if token not in home:
         fail(f"standalone dashboard icon regression: missing {token}")
+
+for token in (
+    'init(initialSelection: Int = 0)',
+    '_selection = State(initialValue: min(max(initialSelection, 0), 4))',
+    '.frame(width: selection == index ? 24 : 22, height: selection == index ? 24 : 22)',
+):
+    if token not in root_tabs:
+        fail(f"real tab shell / premium bottom bar regression: missing {token}")
+
+if '.fill(selection == index ? SalahTheme.softTeal.opacity(0.72) : Color.clear)' in root_tabs:
+    fail("redundant circular tab icon badge returned")
+
+for token in (
+    'case "home":\n            RootTabView(initialSelection: 0)',
+    'case "quran":\n            RootTabView(initialSelection: 1)',
+    'case "namaz":\n            RootTabView(initialSelection: 2)',
+    'case "more":\n            RootTabView(initialSelection: 3)',
+    'case "settings":\n            RootTabView(initialSelection: 4)',
+):
+    if token not in app_source:
+        fail(f"core UI QA no longer uses the real tab shell: missing {token}")
+
+for token in (
+    'subtitle: settings.t("Qibla", "Kıble")',
+    'Text(settings.t("Qibla", "Kıble"))',
+):
+    if token not in home:
+        fail(f"Turkish Qibla label regression: missing {token}")
 
 for token in (
     'SalahFeatureIcon(kind: glyphKind)',
