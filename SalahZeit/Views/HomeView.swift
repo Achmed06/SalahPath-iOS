@@ -801,7 +801,7 @@ struct HomeView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.scenePhase) private var scenePhase
 
-    @State private var now = Date()
+    @State private var now = Self.initialNow
     @State private var clockTask: Task<Void, Never>?
     @State private var selectedPrayer: PrayerOccurrence?
     @State private var trackerRefresh = 0
@@ -815,6 +815,18 @@ struct HomeView: View {
     @State private var dailyDuaAudioURL: URL?
     @State private var dailyDuaAudioIdentity: String?
     private let engine = PrayerEngine()
+
+    private static var initialNow: Date {
+#if DEBUG
+        if let raw = ProcessInfo.processInfo.environment["SALAH_QA_NOW"] {
+            let formatter = ISO8601DateFormatter()
+            if let date = formatter.date(from: raw) {
+                return date
+            }
+        }
+#endif
+        return Date()
+    }
 
     private var isScreenshotQA: Bool {
 #if DEBUG
@@ -899,6 +911,7 @@ struct HomeView: View {
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
+            guard !isScreenshotQA else { return }
             now = Date()
             updateNowPlayingPrayerContext()
         }
