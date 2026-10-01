@@ -455,10 +455,15 @@ for icon_name in premium_png_icons:
         fail(f"generated premium icon regression: {icon_name} is not routed to its PNG asset")
     if f'"filename": "feature_{icon_name}.svg"' in contents:
         fail(f"legacy SVG icon returned as active asset: {icon_name}")
+    legacy_svg_path = ROOT / f"SalahZeit/Assets.xcassets/feature_{icon_name}.imageset/feature_{icon_name}.svg"
+    if legacy_svg_path.exists():
+        fail(f"legacy SVG sidecar returned beside premium PNG asset: {icon_name}")
 
 mosque_contents = (ROOT / "SalahZeit/Assets.xcassets/home_mosque.imageset/Contents.json").read_text(encoding="utf-8")
 if '"filename": "home_mosque.png"' not in mosque_contents:
     fail("generated premium mosque icon regression")
+if (ROOT / "SalahZeit/Assets.xcassets/home_mosque.imageset/home_mosque.svg").exists():
+    fail("legacy home_mosque SVG sidecar returned")
 
 for token in (
     'case "play.square.stack.fill":\n            return "quran_audio"',
