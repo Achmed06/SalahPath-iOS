@@ -348,6 +348,31 @@ for token in (
     if token not in root_tabs:
         fail(f"approved icon sheet routing regression: missing {token}")
 
+for token in (
+    '@Environment(\\.colorScheme) private var colorScheme',
+    'let prefersTransparentArtwork: Bool',
+    '(prefersTransparentArtwork || colorScheme == .dark)',
+):
+    if token not in root_tabs:
+        fail(f"dark-mode feature icon routing regression: missing {token}")
+
+for token in (
+    'Image("salahpath_logo")',
+    'prefersTransparentArtwork: true',
+):
+    if token not in home:
+        fail(f"home brand/header icon regression: missing {token}")
+
+capture_workflow = read(".github/workflows/capture-ui.yml")
+for token in (
+    'appAppearance dark',
+    'SalahPath-v3.62-B78-DE-Dark-Home.png',
+    'SalahPath-v3.62-B78-DE-Dark-More.png',
+    'SalahPath-v3.62-B78-DE-Dark-Qibla.png',
+):
+    if token not in capture_workflow:
+        fail(f"dark-mode icon screenshot regression: missing {token}")
+
 for legacy_prefix in ("sp_icon_", "ref_dash_"):
     if legacy_prefix in home or legacy_prefix in root_tabs:
         fail(f"legacy icon asset reference returned: {legacy_prefix}")
