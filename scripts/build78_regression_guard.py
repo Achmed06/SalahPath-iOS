@@ -605,6 +605,15 @@ notification_manager = read("SalahZeit/Services/NotificationManager.swift")
 settings_view = read("SalahZeit/Views/SettingsView.swift")
 
 for token in (
+    'SalahFeatureIcon(kind: "profile")',
+    '.frame(width: 46, height: 46)',
+):
+    if token not in settings_view:
+        fail(f"settings premium profile artwork regression: missing {token}")
+if 'Image(systemName: "person.crop.circle.fill")' in settings_view:
+    fail("legacy settings profile system icon returned")
+
+for token in (
     '.frame(height: 48)',
     '.contentShape(Rectangle())',
     'Text(settings.t("Weiter", "İleri"))',
