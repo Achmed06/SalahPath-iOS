@@ -1040,16 +1040,16 @@ struct HomeView: View {
     private func brandHeader(today: PrayerDay? = nil) -> some View {
         HStack(spacing: 9) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(Color.white.opacity(0.07))
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.62), lineWidth: 0.9)
+                Circle()
+                    .fill(Color.white.opacity(0.08))
+                    .frame(width: 42, height: 42)
+                Circle()
+                    .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1)
+                    .frame(width: 42, height: 42)
 
-                Image("salahpath_logo")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 5)
+                SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")
+                    .frame(width: 34, height: 34)
+                    .clipShape(Circle())
             }
             .frame(width: 42, height: 42)
             .accessibilityHidden(true)
