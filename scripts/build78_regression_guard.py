@@ -280,6 +280,15 @@ for token in (
     if token not in guide:
         fail(f"prayer learning selector regression: missing {token}")
 
+# 5a.2) Premium learning-row icons must stay unbadged; only SF fallbacks get a circle.
+for token in (
+    'Premium artwork already carries its own visual identity.',
+    'SalahFeatureIcon(kind: kind)\n                        .frame(width: 31, height: 31)',
+    'Image(systemName: icon)\n                        .font(.system(size: 15, weight: .semibold))',
+):
+    if token not in guide:
+        fail(f"premium learning-row icon regression: missing {token}")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
