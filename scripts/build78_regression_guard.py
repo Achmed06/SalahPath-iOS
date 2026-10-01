@@ -319,7 +319,7 @@ for token in (
     '("prayer", settings.t("Gebet", "Namaz"))',
     '("discover", settings.t("Entdecken", "Keşfet"))',
     '("profile", settings.t("Profil", "Profil"))',
-    'SalahFeatureIcon(kind: "discover", prefersTransparentArtwork: true)',
+    'SalahFeatureIcon(kind: "discover")',
     'GlobalAudioMiniPlayer(audio: audio)',
     'private struct GlobalAudioMiniPlayer: View',
     'audio.isPlaying ? audio.pause() : audio.resume()',
@@ -350,18 +350,18 @@ for token in (
 
 for token in (
     '@Environment(\\.colorScheme) private var colorScheme',
-    'let prefersTransparentArtwork: Bool',
-    '(prefersTransparentArtwork || colorScheme == .dark)',
+    'if let croppedUIImage',
+    '.brightness(colorScheme == .dark ? -0.055 : 0)',
+    'Emergency fallback only if the approved sheet is unavailable.',
 ):
     if token not in root_tabs:
-        fail(f"dark-mode feature icon routing regression: missing {token}")
+        fail(f"dark-mode canonical icon routing regression: missing {token}")
 
-for token in (
-    'Image("salahpath_logo")',
-    'prefersTransparentArtwork: true',
-):
-    if token not in home:
-        fail(f"home brand/header icon regression: missing {token}")
+if 'prefersTransparentArtwork' in root_tabs or 'prefersTransparentArtwork' in home:
+    fail("legacy dark-mode icon fallback routing returned")
+
+if 'Image("salahpath_logo")' not in home:
+    fail("home brand/header logo regression")
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
 for token in (
