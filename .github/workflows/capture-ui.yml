@@ -343,6 +343,17 @@ jobs:
             capture home SalahPath-v3.62-B78-DE-Dark-Home.png
             capture more SalahPath-v3.62-B78-DE-Dark-More.png
             capture qibla SalahPath-v3.62-B78-DE-Dark-Qibla.png
+
+            # A false dark-mode capture is worse than no dark-mode capture:
+            # fail if the screenshots are byte-identical to their light pair.
+            for screen in Home More Qibla; do
+              LIGHT="ui-preview/SalahPath-v3.62-B78-DE-${screen}.png"
+              DARK="ui-preview/SalahPath-v3.62-B78-DE-Dark-${screen}.png"
+              if cmp -s "$LIGHT" "$DARK"; then
+                echo "Dark-mode QA failed: $screen is identical to light mode." >&2
+                exit 3
+              fi
+            done
             xcrun simctl ui "$SIM_UDID" appearance light
           elif [ "$CAPTURE_MODE" = "core" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
