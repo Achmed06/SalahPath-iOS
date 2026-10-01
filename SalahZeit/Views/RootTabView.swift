@@ -48,7 +48,7 @@ struct SalahFeatureIcon: View {
         case "reminder", "notifications":
             return "feature_reminder"
         case "mute":
-            return "feature_mute"
+            return nil
         case "sound", "quran_audio":
             return "feature_quran_audio"
         case "bookmarks", "favorites":
@@ -58,7 +58,7 @@ struct SalahFeatureIcon: View {
         case "info", "knowledge", "islamic_knowledge":
             return "feature_info"
         case "community", "forum":
-            return "feature_community"
+            return nil
         case "moon", "dark_mode", "islamic_calendar":
             return "feature_moon"
         case "language":
@@ -66,7 +66,7 @@ struct SalahFeatureIcon: View {
         case "more":
             return "feature_more"
         case "sparkles":
-            return "feature_sparkles"
+            return nil
         case "mosques":
             return "home_mosque"
         default:
@@ -77,6 +77,9 @@ struct SalahFeatureIcon: View {
     private var systemSymbolName: String {
         switch kind {
         case "videos": return "play.rectangle.fill"
+        case "mute": return "speaker.slash.fill"
+        case "community", "forum": return "person.3.fill"
+        case "sparkles": return "sparkles"
         case "map": return "map.fill"
         case "history": return "clock.arrow.circlepath"
         case "hadith": return "text.quote"
@@ -1137,7 +1140,7 @@ struct MoreView: View {
         case "book.pages.fill":
             return "islamic_knowledge"
         case "play.square.stack.fill":
-            return "videos"
+            return "quran_audio"
         case "hands.sparkles.fill":
             return "duas"
         case "circle.grid.cross.fill":
@@ -1147,11 +1150,11 @@ struct MoreView: View {
         case "location.north.circle.fill":
             return "qibla"
         case "map.fill":
-            return "map"
+            return "qibla"
         case "calendar":
             return "calendar"
         case "clock.arrow.circlepath":
-            return "history"
+            return "times"
         case "checklist", "pause.circle.fill":
             return "checkmark"
         case "building.columns.fill":
@@ -1161,11 +1164,13 @@ struct MoreView: View {
         case "person.3.sequence.fill":
             return "community"
         case "moon.stars.fill":
-            return "islamic_calendar"
+            return "moon"
         case "character.book.closed.fill":
             return "language"
         case "ellipsis.circle.fill":
             return "more"
+        case "slider.horizontal.3":
+            return "settings"
         default:
             return nil
         }
