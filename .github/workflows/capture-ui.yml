@@ -209,16 +209,17 @@ jobs:
           else
             CAPTURE_MODE="core"
             UI_CHANGED_FILES="$(git diff --name-only HEAD^ HEAD 2>/dev/null || true)"
-            if printf '%s\n' "$UI_CHANGED_FILES" | grep -Eq '^(SalahZeit/Views/GuideView\.swift|scripts/build78_regression_guard\.py)$'; then
-              CAPTURE_MODE="full"
-            fi
             if [ "$UI_EVENT_NAME" = "pull_request" ]; then
               UI_HINT="$UI_HEAD_REF $UI_PR_TITLE"
             else
               UI_HINT="$UI_COMMIT_MESSAGE"
             fi
-            if [ "$CAPTURE_MODE" != "full" ]; then
-              case "$UI_HINT" in
+
+            # GuideView is intentionally broad and contains many independent screens.
+            # Do not force a 40+ screenshot suite for every small audio/text change.
+            # Full visual regression remains explicit for release/full-ui commits,
+            # while normal commits select the smallest relevant capture group below.
+            case "$UI_HINT" in
               *"[full-ui]"*|*"[release-ui]"*) CAPTURE_MODE="full" ;;
               *tracker*|*Tracker*) CAPTURE_MODE="tracker" ;;
               *wudu*|*Wudu*|*abdest*|*Abdest*) CAPTURE_MODE="wudu" ;;
@@ -231,8 +232,7 @@ jobs:
               *namaz*|*Namaz*|*prayer*|*Prayer*) CAPTURE_MODE="prayer" ;;
               *icon*|*Icon*|*discover*|*Discover*|*dark*|*Dark*|*theme*|*Theme*) CAPTURE_MODE="icons" ;;
               *) CAPTURE_MODE="core" ;;
-              esac
-            fi
+            esac
           fi
           echo "UI capture mode: $CAPTURE_MODE"
 
