@@ -441,6 +441,8 @@ for token in (
     'SalahPath-v3.62-B78-DE-Dark-Home.png',
     'SalahPath-v3.62-B78-DE-Dark-More.png',
     'SalahPath-v3.62-B78-DE-Dark-Qibla.png',
+    'SalahPath-v3.62-B78-DE-Settings.png',
+    'SalahPath-v3.62-B78-DE-Dark-Settings.png',
 ):
     if token not in capture_workflow:
         fail(f"dark-mode icon screenshot regression: missing {token}")
