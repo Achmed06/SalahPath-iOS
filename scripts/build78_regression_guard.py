@@ -476,6 +476,7 @@ for token in (
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
 
+# Nine standalone v2 vectors must remain background-free and must never fall back to cropped atlas artwork.
 standalone_svg_icons = ("fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha", "mute", "community", "sparkles")
 for icon_name in standalone_svg_icons:
     svg_path = ROOT / f"SalahZeit/Assets.xcassets/feature_{icon_name}.imageset/feature_{icon_name}.svg"
