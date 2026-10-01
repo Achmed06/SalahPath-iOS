@@ -441,6 +441,15 @@ for forbidden in (
 
 capture_workflow = read(".github/workflows/capture-ui.yml")
 for token in (
+    'Invalid/blank screenshot for $SCREEN; rebooting simulator before the retry.',
+    'xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true',
+    'xcrun simctl shutdown "$SIM_UDID" || true',
+    'run_timeout 240 xcrun simctl bootstatus "$SIM_UDID" -b',
+    'sleep 10',
+):
+    if token not in capture_workflow:
+        fail(f"blank screenshot retry regression: missing {token}")
+for token in (
     'appAppearance system',
     'simctl ui "$SIM_UDID" appearance light',
     'simctl ui "$SIM_UDID" appearance dark',
