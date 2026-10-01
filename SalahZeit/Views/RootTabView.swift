@@ -75,8 +75,6 @@ func salahFeatureIndex(for kind: String) -> Int? {
 }
 
 struct SalahFeatureIcon: View {
-    @Environment(\.colorScheme) private var colorScheme
-
     let kind: String
 
     private var standaloneUIImage: UIImage? {
@@ -125,7 +123,6 @@ struct SalahFeatureIcon: View {
                     .resizable()
                     .interpolation(.high)
                     .scaledToFit()
-                    .brightness(colorScheme == .dark ? -0.055 : 0)
             } else if let standaloneUIImage {
                 // Emergency fallback only if the approved sheet is unavailable.
                 Image(uiImage: standaloneUIImage)
