@@ -362,16 +362,18 @@ for token in (
         fail(f"semantic icon routing regression: missing {token}")
 
 for token in (
-    '@Environment(\\.colorScheme) private var colorScheme',
     'if let croppedUIImage',
-    '.brightness(colorScheme == .dark ? -0.055 : 0)',
     'Emergency fallback only if the approved sheet is unavailable.',
 ):
     if token not in root_tabs:
-        fail(f"dark-mode canonical icon routing regression: missing {token}")
+        fail(f"canonical icon routing regression: missing {token}")
 
-if 'prefersTransparentArtwork' in root_tabs or 'prefersTransparentArtwork' in home:
-    fail("legacy dark-mode icon fallback routing returned")
+for forbidden in (
+    'prefersTransparentArtwork',
+    '.brightness(colorScheme == .dark',
+):
+    if forbidden in root_tabs or forbidden in home:
+        fail(f"theme-specific icon artwork regression returned: {forbidden}")
 
 for token in (
     'SalahFeatureIcon(kind: today.map { brandHeaderIconKind(today: $0) } ?? "prayer")',
