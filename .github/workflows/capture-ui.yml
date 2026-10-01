@@ -145,11 +145,11 @@ jobs:
           # Keep the historical exact-reference dashboard artwork visible in
           # the QA artifact so icon regressions can be compared against the
           # actual generated reference instead of an older fallback set.
-          mkdir -p ui-preview/reference-icons
+          mkdir -p ui-preview
           python3 - <<'PY'
           from pathlib import Path
           import base64, io, tarfile
-          out = Path("ui-preview/reference-icons")
+          out = Path("ui-preview")
           for label, source in (
               ("dashboard", Path("v340-patch/reference_dashboard_icons.tgz.b64")),
               ("special", Path("v341-patch/reference_special_icons.tgz.b64")),
