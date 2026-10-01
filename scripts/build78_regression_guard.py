@@ -373,9 +373,23 @@ for token in (
     'Premium artwork is already a finished transparent asset.',
     '.frame(width: size * 0.78, height: size * 0.78)',
     'SF Symbols are the fallback only.',
+    '.frame(width: 23, height: 23)',
 ):
     if token not in root_tabs:
         fail(f"transparent premium tile rendering regression: missing {token}")
+
+for forbidden in (
+    '.background(SalahTheme.softTeal, in: Circle())\n            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.55), lineWidth: 0.8) }',
+):
+    if forbidden in root_tabs:
+        fail("discover section icon badge returned")
+
+for token in (
+    '.frame(width: 25, height: 25)',
+    'Küçük adımlar büyük değişimler getirir.',
+):
+    if token not in home:
+        fail(f"home premium polish regression: missing {token}")
 
 premium_png_icons = (
     "home", "prayer", "wudu", "quran", "discover", "profile", "qibla", "times",
