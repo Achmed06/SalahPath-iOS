@@ -1414,14 +1414,10 @@ struct HomeView: View {
 
     private func quickActionPill(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 5) {
-            ZStack {
-                Circle()
-                    .fill(SalahTheme.softTeal)
-                    .frame(width: 30, height: 30)
-                SalahFeatureIcon(kind: icon)
-                    .frame(width: 18, height: 18)
-                    .accessibilityHidden(true)
-            }
+            SalahFeatureIcon(kind: icon)
+                .frame(width: 25, height: 25)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
+                .accessibilityHidden(true)
 
             Text(title)
                 .font(.system(size: 9.5, weight: .bold))
@@ -1849,7 +1845,10 @@ struct HomeView: View {
                     .font(.system(size: 10.5, weight: .semibold, design: .serif))
                     .italic()
                     .foregroundStyle(SalahTheme.ink)
-                Text("Kleine Schritte bringen große Veränderungen.")
+                Text(settings.t(
+                    "Kleine Schritte bringen große Veränderungen.",
+                    "Küçük adımlar büyük değişimler getirir."
+                ))
                     .font(.system(size: 8.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
             }
