@@ -1,15 +1,12 @@
 {
   "images": [
     {
-      "filename": "feature_more.svg",
+      "filename": "feature_more.png",
       "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }
