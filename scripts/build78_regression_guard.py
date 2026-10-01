@@ -328,32 +328,40 @@ for token in (
         fail(f"standalone tab/discover icon regression: missing {token}")
 
 for token in (
-    'func salahFeatureIndex(for kind: String) -> Int?',
     'struct SalahFeatureIcon: View',
-    'UIImage(named: "feature_\\(kind)")',
-    'UIImage(named: "SalahFeatureSheet")',
-    'case "home", "start": return 52',
-    'case "prayer": return 1',
-    'case "wudu": return 2',
-    'case "quran": return 3',
-    'case "discover": return 42',
-    'case "qibla": return 42',
-    'case "profile": return 9',
-    'case "fajr": return 10',
-    'case "maghrib": return 14',
-    'case "isha": return 15',
-    'case "home_active": return 52',
-    'case "quran_inactive": return 59',
-    'let column = index % 10',
-    'let row = index / 10',
+    'private var standaloneAssetName: String?',
+    'case "home", "start", "home_active", "home_inactive":',
+    'return "feature_home"',
+    'case "prayer", "prayer_active", "prayer_inactive":',
+    'return "feature_prayer"',
+    'case "wudu", "wudu_active", "wudu_inactive":',
+    'return "feature_wudu"',
+    'case "quran", "quran_active", "quran_inactive":',
+    'return "feature_quran"',
+    'return "feature_discover"',
+    'return "feature_qibla"',
+    'return "feature_profile"',
+    'return "home_mosque"',
+    'private var systemSymbolName: String',
+    'case "videos": return "play.rectangle.fill"',
+    'case "map": return "map.fill"',
+    'case "history": return "clock.arrow.circlepath"',
+    'case "hadith": return "text.quote"',
+    'if let standaloneAssetName, UIImage(named: standaloneAssetName) != nil',
 ):
     if token not in root_tabs:
-        fail(f"approved icon sheet routing regression: missing {token}")
+        fail(f"transparent standalone icon routing regression: missing {token}")
+
+for forbidden in (
+    'UIImage(named: "SalahFeatureSheet")',
+    'cgImage.cropping',
+    'croppedUIImage',
+    'salahFeatureIndex(',
+):
+    if forbidden in root_tabs:
+        fail(f"atlas-cut icon rendering returned: {forbidden}")
 
 for token in (
-    'case "discover": return 42',
-    'case "qibla": return 42',
-    'case "notifications": return 17',
     'case "play.square.stack.fill":\n            return "videos"',
     'case "hands.sparkles.fill":\n            return "duas"',
     'case "circle.grid.cross.fill":\n            return "dhikr"',
@@ -366,13 +374,6 @@ for token in (
 ):
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
-
-for token in (
-    'if let croppedUIImage',
-    'Emergency fallback only if the approved sheet is unavailable.',
-):
-    if token not in root_tabs:
-        fail(f"canonical icon routing regression: missing {token}")
 
 for forbidden in (
     'prefersTransparentArtwork',
