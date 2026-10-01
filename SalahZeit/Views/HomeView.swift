@@ -1046,22 +1046,10 @@ struct HomeView: View {
 
     private func brandHeader(today: PrayerDay? = nil) -> some View {
         HStack(spacing: 9) {
-            ZStack {
-                Circle()
-                    .fill(Color.white.opacity(0.08))
-                    .frame(width: 42, height: 42)
-                Circle()
-                    .stroke(SalahTheme.gold.opacity(0.72), lineWidth: 1)
-                    .frame(width: 42, height: 42)
-
-                Image(systemName: today.map { brandHeaderSymbolName(today: $0) } ?? "sun.and.horizon.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(SalahTheme.gold)
-                    .frame(width: 32, height: 32)
-            }
-            .frame(width: 42, height: 42)
-            .accessibilityHidden(true)
+            SalahFeatureIcon(kind: today.map { brandHeaderFeatureKind(today: $0) } ?? "sunrise")
+                .frame(width: 40, height: 40)
+                .shadow(color: Color.black.opacity(0.10), radius: 2.2, y: 1.2)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 1) {
                 Text("SalahPath")
@@ -1106,28 +1094,28 @@ struct HomeView: View {
         .accessibilityElement(children: .contain)
     }
 
-    private func brandHeaderSymbolName(today: PrayerDay) -> String {
+    private func brandHeaderFeatureKind(today: PrayerDay) -> String {
         let current = now
 
         if let fajr = today.time(for: .fajr), current < fajr {
-            return "moon.stars.fill"
+            return "isha"
         }
         if let sunrise = today.time(for: .sunrise), current < sunrise {
-            return "sunrise.fill"
+            return "fajr"
         }
         if let dhuhr = today.time(for: .dhuhr), current < dhuhr {
-            return "sun.and.horizon.fill"
+            return "sunrise"
         }
         if let asr = today.time(for: .asr), current < asr {
-            return "sun.max.fill"
+            return "dhuhr"
         }
         if let maghrib = today.time(for: .maghrib), current < maghrib {
-            return "sun.haze.fill"
+            return "asr"
         }
         if let isha = today.time(for: .isha), current < isha {
-            return "sunset.fill"
+            return "maghrib"
         }
-        return "moon.stars.fill"
+        return "isha"
     }
 
     private func nextPrayerHero(_ prayer: PrayerOccurrence) -> some View {
@@ -1172,11 +1160,9 @@ struct HomeView: View {
                 }
 
                 HStack(alignment: .center, spacing: 7) {
-                    Image(systemName: prayer.kind.systemImage)
-                        .font(.system(size: 22, weight: .medium))
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(SalahTheme.gold)
-                        .frame(width: 31)
+                    SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                        .frame(width: 31, height: 31)
+                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
 
                     VStack(alignment: .leading, spacing: 0) {
                         Text(prayer.kind.localizedName(settings.language))
@@ -1303,10 +1289,9 @@ struct HomeView: View {
             ForEach(displayedTimes, id: \.id) { prayer in
                 let active = isNext(prayer, location: location)
                 HStack(alignment: .center, spacing: 8) {
-                    Image(systemName: prayer.kind.systemImage)
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(active ? SalahTheme.teal : SalahTheme.mutedInk)
-                        .frame(width: 16)
+                    SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                        .frame(width: 18, height: 18)
+                        .opacity(active ? 1.0 : 0.74)
 
                     Text(prayer.kind.localizedName(settings.language))
                         .font(.system(size: 11, weight: active ? .bold : .semibold))
