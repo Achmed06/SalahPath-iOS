@@ -75,7 +75,15 @@ func salahFeatureIndex(for kind: String) -> Int? {
 }
 
 struct SalahFeatureIcon: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     let kind: String
+    let prefersTransparentArtwork: Bool
+
+    init(kind: String, prefersTransparentArtwork: Bool = false) {
+        self.kind = kind
+        self.prefersTransparentArtwork = prefersTransparentArtwork
+    }
 
     private var standaloneUIImage: UIImage? {
         UIImage(named: "feature_\(kind)")
@@ -115,9 +123,17 @@ struct SalahFeatureIcon: View {
 
     var body: some View {
         Group {
-            // Use the approved artwork consistently, including Start and Discover.
-            // Legacy standalone SVGs are only a fallback if the sheet is unavailable.
-            if let croppedUIImage {
+            // The approved sheet is tuned for the light card surfaces. In dark
+            // appearance (or on an explicitly dark surface) prefer the
+            // transparent standalone artwork so the sheet's pale badge does
+            // not look like a pasted white disc.
+            if (prefersTransparentArtwork || colorScheme == .dark), let standaloneUIImage {
+                Image(uiImage: standaloneUIImage)
+                    .renderingMode(.original)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFit()
+            } else if let croppedUIImage {
                 Image(uiImage: croppedUIImage)
                     .renderingMode(.original)
                     .resizable()
@@ -1060,11 +1076,11 @@ struct MoreView: View {
             )
 
             HStack(spacing: 7) {
-                SalahFeatureIcon(kind: "info")
+                SalahFeatureIcon(kind: "info", prefersTransparentArtwork: true)
                     .frame(width: 24, height: 24)
-                SalahFeatureIcon(kind: "moon")
+                SalahFeatureIcon(kind: "moon", prefersTransparentArtwork: true)
                     .frame(width: 21, height: 21)
-                SalahFeatureIcon(kind: "sparkles")
+                SalahFeatureIcon(kind: "sparkles", prefersTransparentArtwork: true)
                     .frame(width: 18, height: 18)
             }
             .opacity(0.42)
@@ -1080,7 +1096,7 @@ struct MoreView: View {
                     RoundedRectangle(cornerRadius: 13, style: .continuous)
                         .stroke(SalahTheme.gold.opacity(0.65), lineWidth: 1)
                         .frame(width: 50, height: 50)
-                    SalahFeatureIcon(kind: "discover")
+                    SalahFeatureIcon(kind: "discover", prefersTransparentArtwork: true)
                         .frame(width: 31, height: 31)
                 }
                 .accessibilityHidden(true)
