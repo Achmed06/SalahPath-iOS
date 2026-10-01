@@ -48,7 +48,7 @@ struct SalahFeatureIcon: View {
         case "reminder", "notifications":
             return "feature_reminder"
         case "mute":
-            return nil
+            return "feature_mute"
         case "sound", "quran_audio":
             return "feature_quran_audio"
         case "bookmarks", "favorites":
@@ -58,7 +58,7 @@ struct SalahFeatureIcon: View {
         case "info", "knowledge", "islamic_knowledge":
             return "feature_info"
         case "community", "forum":
-            return nil
+            return "feature_community"
         case "moon", "dark_mode", "islamic_calendar":
             return "feature_moon"
         case "language":
@@ -66,7 +66,7 @@ struct SalahFeatureIcon: View {
         case "more":
             return "feature_more"
         case "sparkles":
-            return nil
+            return "feature_sparkles"
         case "mosques":
             return "home_mosque"
         default:

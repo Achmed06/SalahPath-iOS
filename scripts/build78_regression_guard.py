@@ -400,6 +400,9 @@ for token in (
     'case "mute": return "speaker.slash.fill"',
     'case "community", "forum": return "person.3.fill"',
     'case "sparkles": return "sparkles"',
+    'return "feature_mute"',
+    'return "feature_community"',
+    'return "feature_sparkles"',
     'case "map": return "map.fill"',
     'case "history": return "clock.arrow.circlepath"',
     'case "hadith": return "text.quote"',
@@ -473,13 +476,14 @@ for token in (
     if token not in root_tabs:
         fail(f"semantic icon routing regression: missing {token}")
 
-for forbidden in (
-    'case "mute":\n            return "feature_mute"',
-    'case "community", "forum":\n            return "feature_community"',
-    'case "sparkles":\n            return "feature_sparkles"',
-):
-    if forbidden in root_tabs:
-        fail(f"legacy generated-SVG icon routing returned: {forbidden}")
+standalone_svg_icons = ("mute", "community", "sparkles")
+for icon_name in standalone_svg_icons:
+    svg_path = ROOT / f"SalahZeit/Assets.xcassets/feature_{icon_name}.imageset/feature_{icon_name}.svg"
+    svg = svg_path.read_text(encoding="utf-8")
+    if f"SalahPath standalone v2 {icon_name}" not in svg:
+        fail(f"standalone v2 icon regression: {icon_name} marker missing")
+    if "<rect" in svg:
+        fail(f"standalone v2 icon regression: {icon_name} must stay background-free")
 
 for forbidden in (
     'prefersTransparentArtwork',
