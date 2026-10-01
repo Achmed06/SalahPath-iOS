@@ -1821,7 +1821,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Dua & Dhikr", "Dua & Zikir"), subtitle: settings.t("Täglich", "Günlük"), icon: "dhikr")
             }
             NavigationLink { QiblaView() } label: {
-                DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Qibla"), icon: "qibla")
+                DashboardTile(title: settings.t("Qibla-Richtung", "Kıble Yönü"), subtitle: settings.t("Qibla", "Kıble"), icon: "qibla")
             }
             NavigationLink { PrayerTermsView() } label: {
                 DashboardTile(title: settings.t("Islamwissen", "İslami Bilgiler"), subtitle: settings.t("Wissen", "Bilgi"), icon: "info")
@@ -2378,7 +2378,7 @@ struct PrayerTimesOverviewView: View {
             Text(settings.t("Qibla-Richtung", "Kıble Yönü"))
                 .font(.custom("AvenirNext-DemiBold", size: 10.6))
                 .foregroundStyle(SalahTheme.ink)
-            Text("Qibla")
+            Text(settings.t("Qibla", "Kıble"))
                 .font(.custom("AvenirNext-Medium", size: 8.4))
                 .foregroundStyle(SalahTheme.mutedInk)
 
