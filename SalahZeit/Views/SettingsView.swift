@@ -763,6 +763,9 @@ struct SettingsView: View {
         let sounds = diagnostics.soundsEnabled
             ? settings.t("Ton: AN", "Ses: AÇIK")
             : settings.t("Ton: AUS", "Ses: KAPALI")
+        let timeSensitive = diagnostics.timeSensitiveEnabled
+            ? settings.t("Zeitkritisch: AN", "Zamana duyarlı: AÇIK")
+            : settings.t("Zeitkritisch: AUS", "Zamana duyarlı: KAPALI")
         let adhanFiles = diagnostics.standardAdhanInstalled && diagnostics.fajrAdhanInstalled
             ? settings.t("Adhan-Dateien: OK", "Ezan dosyaları: OK")
             : settings.t("Adhan-Dateien: FEHLEN", "Ezan dosyaları: EKSİK")
@@ -771,7 +774,7 @@ struct SettingsView: View {
             "Namaz istekleri: \(diagnostics.pendingPrayerRequests)"
         )
 
-        notificationSystemStatusText = [permission, alerts, sounds, adhanFiles, pending]
+        notificationSystemStatusText = [permission, alerts, sounds, timeSensitive, adhanFiles, pending]
             .joined(separator: " · ")
     }
 
