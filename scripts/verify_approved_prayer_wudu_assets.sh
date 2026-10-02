@@ -58,4 +58,5 @@ if [[ "$fail" -ne 0 ]]; then
   exit 1
 fi
 
-echo "Approved Prayer/Wudu assets: LOCKED and unchanged (74 files)."
+count="$(wc -l < "$tmp_expected" | tr -d '[:space:]')"
+echo "Approved Prayer/Wudu assets: LOCKED and unchanged (${count} files)."
