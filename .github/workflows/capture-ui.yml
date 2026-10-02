@@ -326,13 +326,26 @@ jobs:
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "prayer" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
             capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
-            capture namaz-second-standing SalahPath-v3.62-B78-DE-PrayerStep09.png
-            capture namaz-second-upright SalahPath-v3.62-B78-DE-PrayerStep12.png
-            capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
-            capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
-            capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
-            capture namaz-salam-left SalahPath-v3.62-B78-DE-PrayerSalamLeft.png
+            capture namaz-step-01 SalahPath-v3.62-B78-DE-MalePrayerStep01.png
+            capture namaz-step-02 SalahPath-v3.62-B78-DE-MalePrayerStep02.png
+            capture namaz-step-03 SalahPath-v3.62-B78-DE-MalePrayerStep03.png
+            capture namaz-step-04 SalahPath-v3.62-B78-DE-MalePrayerStep04.png
+            capture namaz-step-05 SalahPath-v3.62-B78-DE-MalePrayerStep05.png
+            capture namaz-step-06 SalahPath-v3.62-B78-DE-MalePrayerStep06.png
+            capture namaz-step-07 SalahPath-v3.62-B78-DE-MalePrayerStep07.png
+            capture namaz-step-08 SalahPath-v3.62-B78-DE-MalePrayerStep08.png
+            capture namaz-step-09 SalahPath-v3.62-B78-DE-MalePrayerStep09.png
+            capture namaz-step-10 SalahPath-v3.62-B78-DE-MalePrayerStep10.png
+            capture namaz-step-11 SalahPath-v3.62-B78-DE-MalePrayerStep11.png
+            capture namaz-step-12 SalahPath-v3.62-B78-DE-MalePrayerStep12.png
+            capture namaz-step-13 SalahPath-v3.62-B78-DE-MalePrayerStep13.png
+            capture namaz-step-14 SalahPath-v3.62-B78-DE-MalePrayerStep14.png
+            capture namaz-step-15 SalahPath-v3.62-B78-DE-MalePrayerStep15.png
+            capture namaz-step-16 SalahPath-v3.62-B78-DE-MalePrayerStep16.png
+            capture namaz-step-17 SalahPath-v3.62-B78-DE-MalePrayerStep17.png
+            capture namaz-step-18 SalahPath-v3.62-B78-DE-MalePrayerStep18.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
             capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
