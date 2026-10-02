@@ -348,6 +348,11 @@ private struct GlobalAudioMiniPlayer: View {
 
 @MainActor
 private final class NearbyMosqueStore: ObservableObject {
+    private struct SearchCandidate {
+        let item: MKMapItem
+        let sourceQuery: String
+    }
+
     @Published var mapItems: [MKMapItem] = []
     @Published var isLoading = false
     @Published var searchFailed = false
@@ -364,26 +369,31 @@ private final class NearbyMosqueStore: ObservableObject {
             }
         }
 
+        // Search a wider region than the final result radius so MapKit can
+        // resolve POIs near the edge reliably. Results are still clipped to
+        // 50 km and sorted by actual straight-line distance from the device.
         let region = MKCoordinateRegion(
             center: location.coordinate,
-            latitudinalMeters: 50_000,
-            longitudinalMeters: 50_000
+            latitudinalMeters: 100_000,
+            longitudinalMeters: 100_000
         )
-        let maximumDistance: CLLocationDistance = 25_000
+        let maximumDistance: CLLocationDistance = 50_000
         let queries = [
             "Moschee",
             "Mosque",
             "Masjid",
             "Cami",
             "Camii",
-            "Islamisches Zentrum",
-            "Islamic Center",
             "DITIB",
             "VIKZ",
-            "IGMG"
+            "IGMG",
+            "Diyanet",
+            "Islamisches Kulturzentrum",
+            "Islamic Center"
         ]
 
-        var combined: [MKMapItem] = []
+        var combined: [SearchCandidate] = []
+        var successfulSearchCount = 0
         var lastSearchError: Error?
 
         for query in queries {
@@ -395,7 +405,10 @@ private final class NearbyMosqueStore: ObservableObject {
             do {
                 let response = try await MKLocalSearch(request: request).start()
                 guard revision == searchRevision else { return }
-                combined.append(contentsOf: response.mapItems)
+                successfulSearchCount += 1
+                combined.append(contentsOf: response.mapItems.map {
+                    SearchCandidate(item: $0, sourceQuery: query)
+                })
             } catch {
                 guard revision == searchRevision else { return }
                 lastSearchError = error
@@ -404,11 +417,12 @@ private final class NearbyMosqueStore: ObservableObject {
 
         guard revision == searchRevision else { return }
         let origin = location
-        var seen = Set<String>()
+        var seenCoordinates = Set<String>()
 
         mapItems = combined
-            .filter { $0.placemark.location != nil }
-            .filter { item in
+            .filter { $0.item.placemark.location != nil }
+            .filter { candidate in
+                let item = candidate.item
                 guard let itemLocation = item.placemark.location else { return false }
                 let coordinate = itemLocation.coordinate
                 let distance = itemLocation.distance(from: origin)
@@ -419,42 +433,47 @@ private final class NearbyMosqueStore: ObservableObject {
                       distance.isFinite,
                       distance >= 0,
                       distance <= maximumDistance,
-                      Self.isLikelyMosque(item) else { return false }
+                      Self.isLikelyMosque(item, sourceQuery: candidate.sourceQuery) else { return false }
 
-                let name = (item.name ?? "").lowercased()
-                let lat = Int((coordinate.latitude * 100_000).rounded())
-                let lon = Int((coordinate.longitude * 100_000).rounded())
-                return seen.insert("\(name)|\(lat)|\(lon)").inserted
+                // The same Apple Maps POI often comes back from several language
+                // queries. Coordinates are a more reliable de-duplication key
+                // than the localized display name.
+                let lat = Int((coordinate.latitude * 10_000).rounded())
+                let lon = Int((coordinate.longitude * 10_000).rounded())
+                return seenCoordinates.insert("\(lat)|\(lon)").inserted
             }
+            .map(\.item)
             .sorted {
                 let lhs = $0.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
                 let rhs = $1.placemark.location?.distance(from: origin) ?? .greatestFiniteMagnitude
                 return lhs < rhs
             }
-            .prefix(30)
+            .prefix(24)
             .map { $0 }
 
-        searchFailed = mapItems.isEmpty && lastSearchError != nil
+        // A single failed synonym query must not turn an otherwise successful
+        // empty search into a misleading network-error screen.
+        searchFailed = mapItems.isEmpty && successfulSearchCount == 0 && lastSearchError != nil
     }
 
-    private static func isLikelyMosque(_ item: MKMapItem) -> Bool {
+    private static func isLikelyMosque(_ item: MKMapItem, sourceQuery: String) -> Bool {
         let searchable = [
             item.name,
             item.placemark.title,
             item.pointOfInterestCategory?.rawValue
         ]
-        .compactMap { $0?.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current).lowercased() }
+        .compactMap {
+            $0?.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+                .lowercased()
+        }
         .joined(separator: " ")
 
-        // Keep this deliberately strict. Broad words such as "islam" or
-        // "muslim" also occur in shops, associations and unrelated POIs and
-        // previously produced false "nearby mosque" matches. Short signals such
-        // as "cami" must be whole tokens so names like "Camino" cannot pass.
         let tokens = Set(
             searchable
                 .components(separatedBy: CharacterSet.alphanumerics.inverted)
                 .filter { !$0.isEmpty }
         )
+
         let tokenSignals: Set<String> = [
             "moschee",
             "mosque",
@@ -464,7 +483,8 @@ private final class NearbyMosqueStore: ObservableObject {
             "camii",
             "ditib",
             "vikz",
-            "igmg"
+            "igmg",
+            "diyanet"
         ]
         if !tokens.isDisjoint(with: tokenSignals) {
             return true
@@ -473,19 +493,54 @@ private final class NearbyMosqueStore: ObservableObject {
         let phraseSignals = [
             "d.i.t.i.b",
             "milli gorus",
+            "milli görüş",
             "islamisches zentrum",
             "islamisches kulturzentrum",
+            "islamischer kulturverein",
             "islamische gemeinde",
             "islamische gemeinschaft",
+            "turkisch islamische",
+            "türkisch islamische",
             "islamic center",
             "islamic centre",
             "islamic cultural center",
             "islamic cultural centre",
+            "islamic community",
             "muslim community center",
-            "muslim community centre"
+            "muslim community centre",
+            "muslim association",
+            "place of worship"
         ]
+        if phraseSignals.contains(where: { searchable.contains($0) }) {
+            return true
+        }
 
-        return phraseSignals.contains { searchable.contains($0) }
+        // Apple Maps already applies semantic ranking to these explicit mosque
+        // searches. Trust their results unless the POI category clearly points
+        // to an unrelated business. This keeps real mosques whose proper name
+        // contains no literal "mosque/cami" from disappearing.
+        let normalizedQuery = sourceQuery
+            .folding(options: [.diacriticInsensitive, .caseInsensitive], locale: .current)
+            .lowercased()
+        let trustedQuery = ["moschee", "mosque", "masjid"].contains(normalizedQuery)
+
+        guard trustedQuery else { return false }
+
+        let obviousNonMosqueCategories = [
+            "restaurant",
+            "cafe",
+            "bakery",
+            "store",
+            "shop",
+            "hotel",
+            "pharmacy",
+            "hospital",
+            "fitness",
+            "school",
+            "university",
+            "market"
+        ]
+        return !obviousNonMosqueCategories.contains(where: { searchable.contains($0) })
     }
 }
 
@@ -493,11 +548,13 @@ struct NearbyMosquesView: View {
     @EnvironmentObject private var settings: SettingsStore
     @EnvironmentObject private var locationManager: LocationManager
     @StateObject private var store = NearbyMosqueStore()
+    @State private var mapPosition: MapCameraPosition = .automatic
 
     private var usableLocation: CLLocation? {
-        let location = locationManager.usesManualLocation
-            ? locationManager.qiblaDeviceLocation
-            : locationManager.location
+        // Nearby search must always use the physical device position. A manual
+        // city selected for prayer times is intentionally kept separate.
+        let location = locationManager.qiblaDeviceLocation ??
+            (locationManager.usesManualLocation ? nil : locationManager.location)
         guard let location else { return nil }
 
         let coordinate = location.coordinate
@@ -512,8 +569,9 @@ struct NearbyMosquesView: View {
         guard let location = usableLocation else {
             return "no-location:\(settings.language.rawValue)"
         }
-        let lat = Int((location.coordinate.latitude * 10_000).rounded())
-        let lon = Int((location.coordinate.longitude * 10_000).rounded())
+        // Do not repeat every network search for tiny GPS jitter.
+        let lat = Int((location.coordinate.latitude * 1_000).rounded())
+        let lon = Int((location.coordinate.longitude * 1_000).rounded())
         return "\(lat):\(lon):\(settings.language.rawValue)"
     }
 
@@ -526,8 +584,8 @@ struct NearbyMosquesView: View {
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen Gerätestandort. Ein manuell gewählter Ort für Gebetszeiten verändert die Umgebungssuche nicht. Die Treffer stammen von Apple Maps und werden nicht von SalahPath kuratiert.",
-                        "SalahPath, Apple Haritalar'da güncel cihaz konumunun çevresinde canlı arama yapar. Namaz vakitleri için manuel seçilen konum bu çevre aramasını değiştirmez. Sonuçlar Apple Maps'ten gelir ve SalahPath tarafından düzenlenmez."
+                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen Gerätestandort. Ein manuell gewählter Ort für Gebetszeiten verändert diese Suche nicht. Die Karte und Entfernungen beziehen sich auf deinen Gerätestandort.",
+                        "SalahPath, Apple Haritalar'da güncel cihaz konumunun çevresinde canlı arama yapar. Namaz vakitleri için elle seçilen konum bu aramayı değiştirmez. Harita ve mesafeler cihaz konumuna göre gösterilir."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -547,8 +605,8 @@ struct NearbyMosquesView: View {
                             .foregroundStyle(SalahTheme.mutedInk)
 
                         Text(settings.t(
-                            "Für die Umgebungssuche wird ein Standort benötigt.",
-                            "Yakındaki camileri aramak için konum gerekiyor."
+                            "Für Moscheen in deiner Nähe braucht SalahPath deinen aktuellen Gerätestandort.",
+                            "Yakındaki camiler için SalahPath'in güncel cihaz konumuna ihtiyacı var."
                         ))
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
@@ -557,24 +615,18 @@ struct NearbyMosquesView: View {
                             if locationManager.authorizationStatus == .denied ||
                                 locationManager.authorizationStatus == .restricted {
                                 openAppSettings()
-                            } else if locationManager.usesManualLocation {
-                                locationManager.requestDeviceLocationSnapshot()
                             } else {
-                                locationManager.useDeviceLocation()
+                                locationManager.requestDeviceLocationSnapshot()
                             }
                         } label: {
                             Label(
                                 settings.t(
                                     locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                         ? "iPhone-Einstellungen öffnen"
-                                        : (locationManager.usesManualLocation
-                                            ? "Gerätestandort für Suche verwenden"
-                                            : "Standort verwenden"),
+                                        : "Gerätestandort verwenden",
                                     locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                         ? "iPhone ayarlarını aç"
-                                        : (locationManager.usesManualLocation
-                                            ? "Arama için cihaz konumunu kullan"
-                                            : "Konumu kullan")
+                                        : "Cihaz konumunu kullan"
                                 ),
                                 systemImage: locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .restricted
                                     ? "gear"
@@ -618,16 +670,19 @@ struct NearbyMosquesView: View {
                 } else if store.mapItems.isEmpty {
                     VStack(spacing: 12) {
                         ContentUnavailableView(
-                            settings.t("Keine Treffer gefunden", "Sonuç bulunamadı"),
+                            settings.t("Keine Moschee gefunden", "Cami bulunamadı"),
                             systemImage: "building.columns",
                             description: Text(settings.t(
-                                "Apple Karten hat rund um deinen aktuellen Gerätestandort keine passenden Moscheen geliefert. Du kannst die Suche erneut ausführen.",
-                                "Apple Haritalar güncel cihaz konumunun çevresinde uygun cami sonucu döndürmedi. Aramayı yeniden çalıştırabilirsin."
+                                "Apple Karten hat im Umkreis von bis zu 50 km keine passenden Moscheen geliefert.",
+                                "Apple Haritalar 50 km'ye kadar olan çevrede uygun cami sonucu döndürmedi."
                             ))
                         )
 
                         Button {
-                            Task { await reload() }
+                            Task {
+                                locationManager.requestDeviceLocationSnapshot()
+                                await reload()
+                            }
                         } label: {
                             Label(settings.t("Erneut suchen", "Tekrar ara"), systemImage: "arrow.clockwise")
                                 .font(.headline)
@@ -635,11 +690,27 @@ struct NearbyMosquesView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(SalahTheme.teal)
-
                     }
                 } else {
-                    ForEach(Array(store.mapItems.enumerated()), id: \.offset) { _, item in
-                        mosqueRow(item)
+                    mosqueMap
+
+                    HStack {
+                        Text(settings.t(
+                            "\(store.mapItems.count) Treffer · nach Entfernung sortiert",
+                            "\(store.mapItems.count) sonuç · mesafeye göre sıralı"
+                        ))
+                        .font(.caption.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                        Spacer()
+                        if store.isLoading {
+                            ProgressView()
+                                .controlSize(.small)
+                        }
+                    }
+                    .padding(.horizontal, 2)
+
+                    ForEach(Array(store.mapItems.enumerated()), id: \.offset) { index, item in
+                        mosqueRow(item, index: index + 1)
                     }
                 }
             }
@@ -650,28 +721,81 @@ struct NearbyMosquesView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: taskID) {
             if usableLocation == nil {
-                if locationManager.usesManualLocation {
-                    locationManager.requestDeviceLocationSnapshot()
-                } else {
-                    locationManager.requestAccessAndStart()
-                }
+                locationManager.requestDeviceLocationSnapshot()
             }
             await reload()
         }
         .refreshable {
-            if locationManager.usesManualLocation {
-                locationManager.requestDeviceLocationSnapshot()
-            } else {
-                locationManager.refresh()
-            }
+            locationManager.requestDeviceLocationSnapshot()
             await reload()
         }
+    }
+
+    private var mosqueMap: some View {
+        Map(position: $mapPosition) {
+            if let origin = usableLocation {
+                Annotation(settings.t("Dein Standort", "Konumun"), coordinate: origin.coordinate) {
+                    Image(systemName: "location.circle.fill")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(SalahTheme.deepTeal)
+                        .background(Color.white, in: Circle())
+                }
+            }
+
+            ForEach(Array(store.mapItems.enumerated()), id: \.offset) { index, item in
+                if let coordinate = item.placemark.location?.coordinate {
+                    Marker(
+                        "\(index + 1). \(item.name ?? settings.t("Moschee", "Cami"))",
+                        coordinate: coordinate
+                    )
+                    .tint(SalahTheme.teal)
+                }
+            }
+        }
+        .frame(height: 230)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1)
+        }
+        .accessibilityLabel(settings.t("Karte der Moscheen in der Nähe", "Yakındaki camilerin haritası"))
     }
 
     @MainActor
     private func reload() async {
         guard let location = usableLocation else { return }
         await store.load(around: location)
+        updateMapPosition(origin: location)
+    }
+
+    @MainActor
+    private func updateMapPosition(origin: CLLocation) {
+        let coordinates = [origin.coordinate] + store.mapItems.compactMap {
+            $0.placemark.location?.coordinate
+        }
+        guard !coordinates.isEmpty else { return }
+
+        let minLatitude = coordinates.map(\.latitude).min() ?? origin.coordinate.latitude
+        let maxLatitude = coordinates.map(\.latitude).max() ?? origin.coordinate.latitude
+        let minLongitude = coordinates.map(\.longitude).min() ?? origin.coordinate.longitude
+        let maxLongitude = coordinates.map(\.longitude).max() ?? origin.coordinate.longitude
+
+        let latitudeDelta = max((maxLatitude - minLatitude) * 1.35, 0.018)
+        let longitudeDelta = max((maxLongitude - minLongitude) * 1.35, 0.018)
+        let center = CLLocationCoordinate2D(
+            latitude: (minLatitude + maxLatitude) / 2,
+            longitude: (minLongitude + maxLongitude) / 2
+        )
+
+        mapPosition = .region(
+            MKCoordinateRegion(
+                center: center,
+                span: MKCoordinateSpan(
+                    latitudeDelta: min(latitudeDelta, 1.2),
+                    longitudeDelta: min(longitudeDelta, 1.2)
+                )
+            )
+        )
     }
 
     private func openAppSettings() {
@@ -679,19 +803,27 @@ struct NearbyMosquesView: View {
         UIApplication.shared.open(url)
     }
 
-    private func mosqueRow(_ item: MKMapItem) -> some View {
+    private func openRoute(to item: MKMapItem) {
+        item.openInMaps(
+            launchOptions: [
+                MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDefault
+            ]
+        )
+    }
+
+    private func mosqueRow(_ item: MKMapItem, index: Int) -> some View {
         let origin = usableLocation
         let distance = origin.flatMap { start in
             item.placemark.location.map { $0.distance(from: start) }
         }
 
-        return VStack(alignment: .leading, spacing: 8) {
+        return VStack(alignment: .leading, spacing: 9) {
             HStack(alignment: .top, spacing: 10) {
-                Image(systemName: "building.columns.fill")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(SalahTheme.teal)
-                    .frame(width: 34, height: 34)
-                    .background(SalahTheme.softTeal, in: Circle())
+                Text("\(index)")
+                    .font(.caption.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .frame(width: 30, height: 30)
+                    .background(SalahTheme.gold.opacity(0.78), in: Circle())
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(item.name ?? settings.t("Moschee", "Cami"))
@@ -715,15 +847,27 @@ struct NearbyMosquesView: View {
                 Spacer(minLength: 0)
             }
 
-            Button {
-                item.openInMaps()
-            } label: {
-                Label(settings.t("In Apple Karten öffnen", "Apple Haritalar'da aç"), systemImage: "map.fill")
-                    .font(.subheadline.bold())
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 8) {
+                Button {
+                    openRoute(to: item)
+                } label: {
+                    Label(settings.t("Route", "Rota"), systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(SalahTheme.teal)
+
+                Button {
+                    item.openInMaps()
+                } label: {
+                    Label(settings.t("Karte", "Harita"), systemImage: "map.fill")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .tint(SalahTheme.teal)
             }
-            .buttonStyle(.bordered)
-            .tint(SalahTheme.teal)
         }
         .padding(12)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
