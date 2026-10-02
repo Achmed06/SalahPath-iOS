@@ -256,6 +256,8 @@ jobs:
             fi
             if [[ "$SCREEN" == quran-page* ]]; then
               sleep 12
+            elif [[ "$SCREEN" == namaz-step-* ]]; then
+              sleep 2
             else
               sleep 8
             fi
@@ -346,12 +348,6 @@ jobs:
             capture namaz-step-16 SalahPath-v3.62-B78-DE-MalePrayerStep16.png
             capture namaz-step-17 SalahPath-v3.62-B78-DE-MalePrayerStep17.png
             capture namaz-step-18 SalahPath-v3.62-B78-DE-MalePrayerStep18.png
-            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
-            capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
-            capture namaz-sitting SalahPath-v3.62-B78-DE-FemalePrayerSitting.png
-            capture namaz-finger SalahPath-v3.62-B78-DE-FemalePrayerFinger.png
-            capture namaz-salam SalahPath-v3.62-B78-DE-FemalePrayerSalam.png
-            capture namaz-salam-left SalahPath-v3.62-B78-DE-FemalePrayerSalamLeft.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
           elif [ "$CAPTURE_MODE" = "icons" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
