@@ -27,109 +27,178 @@ struct GuideView: View {
     }
 
     private var learningHero: some View {
-        VStack(spacing: 9) {
-            VStack(spacing: 6) {
-                HStack(spacing: 4) {
-                    audiencePill(.male, title: settings.t("Mann", "Erkek"))
-                    audiencePill(.female, title: settings.t("Frau", "Kadın"))
-                }
-                .padding(3)
-                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .overlay { RoundedRectangle(cornerRadius: 8).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 0.7) }
-
-                HStack {
-                    Spacer()
-                    Button {
-                        settings.language = settings.language == .german ? .turkish : .german
-                    } label: {
-                        HStack(spacing: 5) {
-                            Image(systemName: "globe")
-                                .font(.system(size: 10.5, weight: .bold))
-                            Text(settings.language == .german ? "Türkçe" : "Deutsch")
-                                .font(.system(size: 10.4, weight: .bold))
-                        }
+        VStack(spacing: 12) {
+            HStack(alignment: .center, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(settings.t("Wähle deine Anleitung", "Rehberini seç"))
+                        .font(.system(size: 15, weight: .bold))
                         .foregroundStyle(SalahTheme.deepTeal)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(
-                            SalahTheme.gold.opacity(0.16),
-                            in: Capsule()
-                        )
-                        .overlay {
-                            Capsule()
-                                .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7)
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))
+                    Text(settings.t("Mann und Frau werden getrennt dargestellt", "Erkek ve kadın ayrı gösterilir"))
+                        .font(.system(size: 9.5, weight: .semibold))
+                        .foregroundStyle(SalahTheme.mutedInk)
                 }
-            }
 
-            ZStack(alignment: .trailing) {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Color(red: 0.96, green: 0.93, blue: 0.84))
+                Spacer(minLength: 6)
 
-                HStack(alignment: .bottom, spacing: 10) {
-                    ReferencePrayerPerson(
-                        imageName: "male_intention",
-                        rugWidth: 120,
-                        rugRotation: -1.5
-                    )
-
-                    ReferencePrayerPerson(
-                        imageName: "female_intention",
-                        rugWidth: 120,
-                        rugRotation: 1.5
-                    )
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 2)
-
-                NavigationLink {
-                    PrayerHowToView()
+                Button {
+                    settings.language = settings.language == .german ? .turkish : .german
                 } label: {
-                    ZStack {
-                        Circle()
-                            .fill(SalahTheme.teal)
-                            .frame(width: 32, height: 32)
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .black))
-                            .foregroundStyle(.white)
+                    HStack(spacing: 5) {
+                        Image(systemName: "globe")
+                            .font(.system(size: 10.5, weight: .bold))
+                        Text(settings.language == .german ? "Türkçe" : "Deutsch")
+                            .font(.system(size: 10.4, weight: .bold))
+                    }
+                    .foregroundStyle(SalahTheme.deepTeal)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(SalahTheme.gold.opacity(0.16), in: Capsule())
+                    .overlay {
+                        Capsule()
+                            .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7)
                     }
                 }
                 .buttonStyle(.plain)
-                .padding(.trailing, 4)
-            }
-            .frame(height: 300)
-            .overlay {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .stroke(SalahTheme.gold.opacity(0.30), lineWidth: 0.7)
+                .accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))
             }
 
-            VStack(alignment: .leading, spacing: 11) {
+            HStack(spacing: 9) {
+                audiencePreviewCard(
+                    .male,
+                    title: settings.t("Mann", "Erkek"),
+                    imageName: "male_intention"
+                )
+
+                audiencePreviewCard(
+                    .female,
+                    title: settings.t("Frau", "Kadın"),
+                    imageName: "female_intention"
+                )
+            }
+
+            NavigationLink {
+                PrayerHowToView()
+            } label: {
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(settings.t("Schritt für Schritt starten", "Adım adım başla"))
+                            .font(.system(size: 13.5, weight: .bold))
+                        Text(
+                            settings.t(
+                                settings.prayerAudience == .male
+                                    ? "Anleitung für Männer · 18 Schritte"
+                                    : "Anleitung für Frauen · 18 Schritte",
+                                settings.prayerAudience == .male
+                                    ? "Erkek rehberi · 18 adım"
+                                    : "Kadın rehberi · 18 adım"
+                            )
+                        )
+                        .font(.system(size: 9.5, weight: .semibold))
+                        .opacity(0.82)
+                    }
+
+                    Spacer(minLength: 8)
+
+                    Image(systemName: "arrow.right.circle.fill")
+                        .font(.system(size: 24, weight: .semibold))
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 13)
+                .padding(.vertical, 11)
+                .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .buttonStyle(.plain)
+
+            VStack(alignment: .leading, spacing: 8) {
                 referenceLearnFeature(
-                    turkish: "Namaz nasıl kılınır?",
-                    german: "Wie betet man?"
+                    turkish: "18 adım ve net görseller",
+                    german: "18 Schritte mit klaren Bildern"
                 )
                 referenceLearnFeature(
-                    turkish: "Adım adım anlatım",
-                    german: "Schritt-für-Schritt-Anleitung"
+                    turkish: "Arapça, okunuş ve anlam",
+                    german: "Arabisch, Umschrift und Bedeutung"
                 )
                 referenceLearnFeature(
-                    turkish: "Görsel ve okunan metinlerle",
-                    german: "Mit Bildern und Rezitationstexten"
-                )
-                referenceLearnFeature(
-                    turkish: "Hanefî mezhebine göre",
-                    german: "Nach hanafitischem Verständnis"
+                    turkish: "Hanefî erkek/kadın anlatımı",
+                    german: "Hanafitische Mann/Frau-Darstellung"
                 )
             }
             .padding(.horizontal, 3)
-
         }
-        .padding(9)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7) }
+        .padding(10)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.8)
+        }
+    }
+
+    private func audiencePreviewCard(
+        _ audience: PrayerAudience,
+        title: String,
+        imageName: String
+    ) -> some View {
+        let selected = settings.prayerAudience == audience
+
+        return Button {
+            withAnimation(.easeOut(duration: 0.16)) {
+                settings.prayerAudience = audience
+            }
+        } label: {
+            VStack(spacing: 7) {
+                ZStack(alignment: .topTrailing) {
+                    RoundedRectangle(cornerRadius: 13, style: .continuous)
+                        .fill(
+                            selected
+                                ? SalahTheme.softTeal.opacity(0.62)
+                                : Color(red: 0.975, green: 0.958, blue: 0.90)
+                        )
+
+                    Image(imageName)
+                        .resizable()
+                        .interpolation(.high)
+                        .scaledToFit()
+                        .scaleEffect(audience == .male ? 1.11 : 0.96)
+                        .padding(audience == .male ? 8 : 4)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .clipped()
+
+                    if selected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(SalahTheme.teal)
+                            .background(Color.white.opacity(0.94), in: Circle())
+                            .padding(7)
+                    }
+                }
+                .frame(height: 190)
+                .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+
+                HStack(spacing: 5) {
+                    Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 11, weight: .bold))
+                    Text(title)
+                        .font(.system(size: 11.5, weight: .bold))
+                }
+                .foregroundStyle(selected ? SalahTheme.deepTeal : SalahTheme.mutedInk)
+                .frame(maxWidth: .infinity)
+            }
+            .padding(5)
+            .background(
+                selected ? SalahTheme.softTeal.opacity(0.28) : Color.clear,
+                in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .stroke(
+                        selected ? SalahTheme.teal : SalahTheme.gold.opacity(0.34),
+                        lineWidth: selected ? 1.8 : 0.8
+                    )
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(title)
+        .accessibilityValue(selected ? settings.t("Ausgewählt", "Seçili") : settings.t("Nicht ausgewählt", "Seçili değil"))
     }
 
     private var quickLearningLinks: some View {
