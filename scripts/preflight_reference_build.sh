@@ -38,6 +38,7 @@ require_file "scripts/build_unsigned_ipa.sh"
 require_file "SalahZeit/Views/RootTabView.swift"
 require_file "SalahZeit/Views/GuideView.swift"
 require_file "SalahZeit/PrivacyInfo.xcprivacy"
+require_file "SalahZeit/SalahZeit.entitlements"
 require_file "PRIVACY.md"
 require_file "SUPPORT.md"
 require_file "CONTENT_RIGHTS_AUDIT.md"
@@ -78,6 +79,10 @@ grep -q 'adhan-fajr.caf in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'quran-uthmani.json in Resources' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'adhanSoundEnabled' "SalahZeit/Models/AppSettings.swift"
 grep -q 'UNNotificationSound(named:' "SalahZeit/Services/NotificationManager.swift"
+grep -q 'interruptionLevel = .timeSensitive' "SalahZeit/Services/NotificationManager.swift"
+grep -q 'maximumPrayerRequests = 60' "SalahZeit/Services/NotificationManager.swift"
+grep -q 'CODE_SIGN_ENTITLEMENTS = SalahZeit/SalahZeit.entitlements;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'com.apple.developer.usernotifications.time-sensitive' "SalahZeit/SalahZeit.entitlements"
 [[ "$(git hash-object SalahZeit/Resources/adhan-fajr.caf)" == "546fee5cde9e0e4e9041ed02c44bc0dc5290eb19" ]] || fail "adhan-fajr.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/adhan-standard.caf)" == "5af226c758c556e318f0fe667b415a02807a8c2c" ]] || fail "adhan-standard.caf does not match the audited Doha derivative"
 [[ "$(git hash-object SalahZeit/Resources/quran-uthmani.json)" == "a1312281de070617f8062f9718a3bf0e69e44f16" ]] || fail "quran-uthmani.json does not match the validated corpus"
@@ -169,6 +174,7 @@ fi
 
 if command -v plutil >/dev/null 2>&1; then
   plutil -lint "SalahZeit/PrivacyInfo.xcprivacy" >/dev/null || fail "PrivacyInfo.xcprivacy is not a valid plist"
+  plutil -lint "SalahZeit/SalahZeit.entitlements" >/dev/null || fail "SalahZeit.entitlements is not a valid plist"
 fi
 
 grep -q 'struct MoreView: View' "SalahZeit/Views/RootTabView.swift"
