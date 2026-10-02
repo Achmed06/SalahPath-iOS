@@ -313,7 +313,7 @@ if 'searchable.contains("cami")' in root_tab_source:
 
 for token in (
     '@Published var searchFailed = false',
-    'searchFailed = mapItems.isEmpty && lastSearchError != nil',
+    'searchFailed = mapItems.isEmpty && successfulSearchCount == 0 && lastSearchError != nil',
     'Apple Karten konnte die Moscheensuche gerade nicht laden.',
     'Apple Haritalar cami aramasını şu anda yükleyemedi.',
 ):
@@ -322,6 +322,16 @@ for token in (
 
 if 'lastSearchError.localizedDescription' in root_tab_source:
     fail("nearby mosque raw system error leaked into localized UI")
+
+for token in (
+    'Map(position: $mapPosition)',
+    'MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDefault',
+    'locationManager.requestDeviceLocationSnapshot()',
+    'maximumDistance: CLLocationDistance = 50_000',
+):
+    if token not in root_tab_source:
+        fail(f"nearby mosque map/route regression: missing {token}")
+
 
 # 6) Navigation/discovery icons stay in the same standalone SalahPath system.
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
