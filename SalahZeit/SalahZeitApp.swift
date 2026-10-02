@@ -319,7 +319,7 @@ struct SalahPathApp: App {
         case "rakats":
             NavigationStack { RakatOverviewView() }
         case "hanafi-plan":
-            NavigationStack { HanafiPrayerPlanView() }
+            NavigationStack { PrayerCatalogView() }
         case "prayer-tracker":
             NavigationStack { PrayerTrackerOverviewView() }
         case "tracker-pause":
