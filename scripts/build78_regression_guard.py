@@ -248,7 +248,7 @@ for token in (
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
     'let isRight = side == .right',
     'imageName: "\\(prefix)_\\(isRight ? "salam_right" : "salam_left")"',
-    'arrow: isRight ? "arrow.right" : "arrow.left"',
+    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
 ):
     if token not in guide:
         fail(f"standalone illustration regression: missing {token}")
@@ -261,6 +261,9 @@ for obsolete in (
 ):
     if obsolete in guide:
         fail(f"obsolete generated illustration fallback returned: {obsolete}")
+
+if 'arrow: isRight ? "arrow.right" : "arrow.left"' in guide or 'Image(systemName: arrow)' in guide:
+    fail("Salam direction arrow regression: approved female steps 17/18 must not show decorative arrows")
 
 if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' not in guide:
     fail("Wudu left-foot mirror regression")
