@@ -1046,7 +1046,7 @@ struct PrayerHowToView: View {
 
 }
 
-// Male tutorial artwork approved by the user on 2026-10-02; female artwork remains unchanged.
+// Male tutorial artwork uses the user-approved generated raster assets; female artwork remains unchanged.
 private struct PrayerTutorialStepCard: View {
     @EnvironmentObject private var settings: SettingsStore
     let step: PrayerTutorialStep
