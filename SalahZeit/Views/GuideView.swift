@@ -81,16 +81,16 @@ struct GuideView: View {
             } label: {
                 HStack(spacing: 10) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(settings.t("Schritt für Schritt starten", "Adım adım başla"))
+                        Text(settings.t("2 Rakʿāt Schritt für Schritt", "2 rekât adım adım"))
                             .font(.system(size: 13.5, weight: .bold))
                         Text(
                             settings.t(
                                 settings.prayerAudience == .male
-                                    ? "Anleitung für Männer · 18 Schritte"
-                                    : "Anleitung für Frauen · 18 Schritte",
+                                    ? "Bildanleitung für Männer · 18 Schritte"
+                                    : "Bildanleitung für Frauen · 18 Schritte",
                                 settings.prayerAudience == .male
-                                    ? "Erkek rehberi · 18 adım"
-                                    : "Kadın rehberi · 18 adım"
+                                    ? "Erkek görsel anlatımı · 18 adım"
+                                    : "Kadın görsel anlatımı · 18 adım"
                             )
                         )
                         .font(.system(size: 9.5, weight: .semibold))
@@ -216,14 +216,6 @@ struct GuideView: View {
                     icon: "drop.fill",
                     title: settings.t("Wudu Schritt für Schritt", "Abdest adım adım"),
                     subtitle: settings.t("Mit Bildern und genauer Erklärung", "Görseller ve ayrıntılı anlatım")
-                )
-            }
-
-            NavigationLink { HanafiPrayerPlanView() } label: {
-                referenceRow(
-                    icon: "list.number",
-                    title: settings.t("Rakʿāt & Gebetsarten", "Rekât ve namaz türleri"),
-                    subtitle: settings.t("2, 3 und 4 Rakʿāt richtig einordnen", "2, 3 ve 4 rekâtı doğru öğren")
                 )
             }
 
@@ -690,8 +682,8 @@ struct PrayerHowToView: View {
                 imageKey: "intention",
                 deTitle: "Niyyah – Absicht",
                 trTitle: "Niyet",
-                deAction: "Stehe sauber bedeckt und zur Qibla. Fasse im Herzen die Absicht für genau das Gebet, das du jetzt betest. Eine bestimmte gesprochene Niyyah-Formel ist nicht erforderlich.",
-                trAction: "Temiz ve örtülü şekilde kıbleye dön. Kılacağın namaza kalben niyet et. Niyeti belirli bir cümleyle sesli söylemek şart değildir.",
+                deAction: "Stehe sauber bedeckt zur Qibla und fasse im Herzen die Absicht für genau dieses Gebet. Beispiel für das Dhuhr-Fard: „Niyet ettim Allah rızası için bugünkü öğle namazının farzını kılmaya.“ Sinngemäß: „Ich beabsichtige, um Allahs Wohlgefallen willen das heutige Dhuhr-Pflichtgebet zu verrichten.“ Entscheidend ist die Absicht im Herzen; dieser Satz ist nur ein Beispiel und keine vorgeschriebene Formel.",
+                trAction: "Temiz ve örtülü şekilde kıbleye dön ve kılacağın namaza kalben niyet et. Öğle farzı için örnek: „Niyet ettim Allah rızası için bugünkü öğle namazının farzını kılmaya.“ Esas olan kalpteki niyettir; bu cümleyi söylemek şart değildir ve sadece bir örnektir.",
                 deHanafi: nil,
                 trHanafi: nil,
                 recitations: []
@@ -971,17 +963,6 @@ struct PrayerHowToView: View {
                 LazyVStack(spacing: 14) {
                     Color.clear.frame(height: 1).id("prayer-step-top")
                     prayerLearningHero
-
-                    NavigationLink { HanafiPrayerPlanView() } label: {
-                        HStack {
-                            Label(settings.t("Rak'a einfach verstehen", "Rekâtı kolayca anla"), systemImage: "list.number")
-                                .font(.headline)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                        .cardStyle()
-                    }
-                    .buttonStyle(.plain)
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -1430,241 +1411,6 @@ private struct PrayerSalamVisual: View {
     }
 }
 
-struct HanafiPrayerPlanView: View {
-    @EnvironmentObject private var settings: SettingsStore
-    @State private var showSpecialCases = false
-
-    private struct PlanRow: Identifiable {
-        let id = UUID()
-        let de: String
-        let tr: String
-        let sequence: String
-        let deNote: String
-        let trNote: String
-    }
-
-    private let rows: [PlanRow] = [
-        .init(de: "Fajr", tr: "Sabah", sequence: "2 Sunnah → 2 Fard", deNote: "Die 2 Sunnah vor Fajr sind Sunnah mu'akkadah.", trNote: "Farzdan önceki 2 rekât sünnet-i müekkededir."),
-        .init(de: "Dhuhr", tr: "Öğle", sequence: "4 Sunnah → 4 Fard → 2 Sunnah", deNote: "Die erste 4er-Sunnah und die 2 Sunnah danach sind besonders betonte Sunnah.", trNote: "Önceki 4 ve sonraki 2 rekât kuvvetli sünnetlerdendir."),
-        .init(de: "Asr", tr: "İkindi", sequence: "4 Sunnah → 4 Fard", deNote: "Die 4 Sunnah davor gelten als ghayr mu'akkadah.", trNote: "Önceki 4 rekât sünnet gayr-i müekkededir."),
-        .init(de: "Maghrib", tr: "Akşam", sequence: "3 Fard → 2 Sunnah", deNote: "Nach den 3 Fard folgen 2 Sunnah.", trNote: "3 rekât farzdan sonra 2 rekât sünnet kılınır."),
-        .init(de: "Isha", tr: "Yatsı", sequence: "4 Sunnah → 4 Fard → 2 Sunnah → 3 Witr", deNote: "Die ersten 4 sind ghayr mu'akkadah; die 2 danach mu'akkadah. Witr ist hanafitisch wajib.", trNote: "İlk 4 gayr-i müekkede, sonraki 2 müekkede sünnettir. Vitir Hanefî fıkhında vaciptir.")
-    ]
-
-    var body: some View {
-        ScrollView {
-            LazyVStack(spacing: 14) {
-                VStack(alignment: .leading, spacing: 9) {
-                    Label(settings.t("Was bedeutet Rakʿa?", "Rekât ne demek?"), systemImage: "1.circle.fill")
-                        .font(.title3.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
-                    Text(settings.t(
-                        "Eine Rakʿa ist EIN kompletter Gebetsdurchgang. Stell dir vor, du gehst immer dieselbe kleine Runde durch. Erst nach dem zweiten Sujud ist diese Runde fertig.",
-                        "Bir rekât, namazın TAM bir bölümüdür. Her rekâtta aynı temel sıra tekrar eder. İkinci secde bittikten sonra bir rekât tamamlanır."
-                    ))
-                    .font(.subheadline)
-                    .fixedSize(horizontal: false, vertical: true)
-                    Text(settings.t(
-                        "Beim allerersten Rakʿa beginnt das Gebet vorher mit dem Eröffnungstakbir. Danach kommt der folgende Grundablauf.",
-                        "İlk rekâtta bu sıradan önce iftitah tekbiriyle namaza başlanır. Sonra aşağıdaki temel akış gelir."
-                    ))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                }
-                .cardStyle(material: true)
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("1 Rakʿa ganz langsam", "1 rekâtı yavaşça öğren"))
-                        .font(.title3.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
-                    flowRow("1", settings.t("Stehen und lesen", "Ayakta dur ve oku"), settings.t("Stehe zur Qibla. Lies die vorgeschriebenen Texte dieser Rakʿa.", "Kıbleye dönük dur. Bu rekâtta okunacak metinleri oku."), "person.fill")
-                    flowRow("2", settings.t("Rukūʿ", "Rükû"), settings.t("Sage Allāhu akbar, beuge dich und bleib kurz ruhig im Rukūʿ.", "Allāhu ekber de, rükûya eğil ve kısa bir an sakin kal."), "arrow.down.forward")
-                    flowRow("3", settings.t("Ganz aufrichten", "Tam doğrul"), settings.t("Komm vollständig hoch und steh kurz ruhig. Nicht direkt in den Sujud gehen.", "Tamamen doğrul ve kısa bir an ayakta sakin kal. Doğrudan secdeye geçme."), "arrow.up")
-                    flowRow("4", settings.t("Sujud 1", "1. secde"), settings.t("Gehe in den ersten Sujud und bleib kurz ruhig.", "Birinci secdeye git ve kısa bir an sakin kal."), "arrow.down")
-                    flowRow("5", settings.t("Sitzen", "Otur"), settings.t("Setze dich vollständig zwischen den beiden Sujud.", "İki secde arasında tamamen otur."), "figure.seated.side")
-                    flowRow("6", settings.t("Sujud 2", "2. secde"), settings.t("Mache den zweiten Sujud genauso ruhig wie den ersten.", "İkinci secdeyi birincisi gibi sakin şekilde yap."), "arrow.down")
-                    HStack(alignment: .top, spacing: 10) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(.green)
-                        Text(settings.t(
-                            "JETZT ist 1 Rakʿa fertig. Erst jetzt entscheidest du: zur nächsten Rakʿa aufstehen oder zum vorgesehenen Sitzen übergehen.",
-                            "ŞİMDİ 1 rekât tamamlandı. Ancak şimdi karar verilir: sonraki rekâta kalk veya gereken oturuşa geç."
-                        ))
-                        .font(.subheadline.bold())
-                        .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .padding(11)
-                    .background(Color.green.opacity(0.09), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-                }
-                .cardStyle()
-
-                planCard(
-                    title: settings.t("2 Rakʿa", "2 rekât"),
-                    subtitle: settings.t("Beispiel: Fajr-Fard und viele 2er-Sunnah-Gebete", "Örnek: Sabah farzı ve birçok 2 rekât sünnet"),
-                    lines: settings.language == .german ? [
-                        "Rakʿa 1 komplett machen. Nach Sujud 2 wieder aufstehen.",
-                        "Rakʿa 2 komplett machen. Nach Sujud 2 NICHT mehr aufstehen.",
-                        "Im letzten Sitzen: Ettehiyyâtü → Salli → Bârik → Abschlussdua.",
-                        "Dann Salam: nur den Kopf nach rechts, danach nur den Kopf nach links. Der Körper bleibt zur Qibla."
-                    ] : [
-                        "1. rekâtı tamamla. 2. secdeden sonra yeniden ayağa kalk.",
-                        "2. rekâtı tamamla. 2. secdeden sonra artık ayağa kalkma.",
-                        "Son oturuşta: Ettehiyyâtü → Salli → Bârik → kapanış duası.",
-                        "Sonra selâm: yalnız baş sağa, ardından yalnız baş sola döner. Gövde kıbleye dönük kalır."
-                    ]
-                )
-
-                planCard(
-                    title: settings.t("3 Rakʿa Fard", "3 rekât farz"),
-                    subtitle: settings.t("Beispiel: Maghrib-Fard", "Örnek: Akşam farzı"),
-                    lines: settings.language == .german ? [
-                        "Rakʿa 1 komplett machen und zu Rakʿa 2 aufstehen.",
-                        "Rakʿa 2 komplett machen. Danach sitzen und Ettehiyyâtü lesen.",
-                        "Nach Ettehiyyâtü mit Allāhu akbar zu Rakʿa 3 aufstehen.",
-                        "Rakʿa 3: Basmala + Al-Fātiha; bei diesem Fard keine Zusatzsura nötig. Dann Rukūʿ, Aufrichten, Sujud 1, Sitzen, Sujud 2.",
-                        "Danach letztes Sitzen vollständig und Salam rechts, dann links."
-                    ] : [
-                        "1. rekâtı tamamla ve 2. rekâta kalk.",
-                        "2. rekâtı tamamla. Sonra otur ve Ettehiyyâtü oku.",
-                        "Ettehiyyâtü'den sonra Allāhu ekber diyerek 3. rekâta kalk.",
-                        "3. rekât: Besmele + Fâtiha; bu farzda zamm-ı sûre gerekmez. Sonra rükû, doğrulma, 1. secde, oturuş, 2. secde.",
-                        "Sonra tam son oturuş ve sağa, ardından sola selâm."
-                    ]
-                )
-
-                planCard(
-                    title: settings.t("4 Rakʿa Fard", "4 rekât farz"),
-                    subtitle: settings.t("Beispiel: Dhuhr, Asr und Isha-Fard", "Örnek: Öğle, İkindi ve Yatsı farzı"),
-                    lines: settings.language == .german ? [
-                        "Rakʿa 1 komplett machen und zu Rakʿa 2 aufstehen.",
-                        "Rakʿa 2 komplett machen. Danach sitzen und Ettehiyyâtü lesen.",
-                        "Zu Rakʿa 3 aufstehen. Dort Basmala + Al-Fātiha lesen, dann die Rakʿa vollständig beenden.",
-                        "Zu Rakʿa 4 aufstehen. Wieder Basmala + Al-Fātiha lesen, dann Rukūʿ, Aufrichten und beide Sujud.",
-                        "Nach Rakʿa 4 letztes Sitzen: Ettehiyyâtü → Salli → Bârik → Abschlussdua → Salam rechts und links."
-                    ] : [
-                        "1. rekâtı tamamla ve 2. rekâta kalk.",
-                        "2. rekâtı tamamla. Sonra otur ve Ettehiyyâtü oku.",
-                        "3. rekâta kalk. Besmele + Fâtiha oku ve rekâtı tamamla.",
-                        "4. rekâta kalk. Yine Besmele + Fâtiha oku; sonra rükû, doğrulma ve iki secdeyi tamamla.",
-                        "4. rekâttan sonra son oturuş: Ettehiyyâtü → Salli → Bârik → kapanış duası → sağa ve sola selâm."
-                    ]
-                )
-
-                DisclosureGroup(isExpanded: $showSpecialCases) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text(settings.t(
-                            "4-Rakʿa-Sunnah: In allen Rakʿa werden Al-Fātiha und eine Zusatzsura gelesen. Bei der betonten 4er-Sunnah von Dhuhr liest man im ersten Sitzen Ettehiyyâtü und steht auf. Bei den 4 ghayr-mu'akkadah vor Asr/Isha werden im ersten Sitzen zusätzlich Salli/Bârik gelesen; Rakʿa 3 beginnt wieder mit Sübhaneke.",
-                            "4 rekât sünnet: Her rekâtta Fâtiha ve zamm-ı sûre okunur. Öğlenin kuvvetli 4 rekât sünnetinde ilk oturuşta Ettehiyyâtü okunup kalkılır. İkindi/Yatsı öncesi 4 gayr-i müekkede sünnette ilk oturuşta Salli/Bârik de okunur; 3. rekâta yeniden Sübhâneke ile başlanır."
-                        ))
-                        .font(.subheadline)
-
-                        Text(settings.t(
-                            "Witr (hanafitisch): 3 Rakʿa. In Rakʿa 3 werden nach Fātiha und Zusatzsura vor dem Rukūʿ erneut die Hände gehoben, Allāhu akbar gesagt, die Hände wieder gebunden und die Qunūt-Duas gelesen.",
-                            "Vitir (Hanefî): 3 rekât. 3. rekâtta Fâtiha ve zamm-ı sûreden sonra rükûdan önce eller tekrar kaldırılır, Allāhu ekber denir, eller yeniden bağlanır ve Kunut duaları okunur."
-                        ))
-                        .font(.subheadline)
-
-                        NavigationLink { QunutDuaView() } label: {
-                            Label(settings.t("Qunūt-Duas vollständig", "Kunut duaları tam metin"), systemImage: "text.book.closed")
-                                .font(.headline)
-                        }
-                    }
-                    .padding(.top, 8)
-                } label: {
-                    Label(settings.t("Sonderfälle: 4er-Sunnah & Witr", "Özel durumlar: 4 rekât sünnet ve vitir"), systemImage: "chevron.down.circle")
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
-                }
-                .padding(14)
-                .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.42), lineWidth: 1) }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Wie viele Rakʿa haben die täglichen Gebete?", "Günlük namazlar kaç rekât?"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
-                    ForEach(rows) { row in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text(settings.language == .german ? row.de : row.tr).font(.headline)
-                                Spacer()
-                                Text(row.sequence).font(.subheadline.bold()).foregroundStyle(SalahTheme.teal)
-                            }
-                            Text(settings.language == .german ? row.deNote : row.trNote)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding(.vertical, 4)
-                        if row.id != rows.last?.id { Divider() }
-                    }
-                }
-                .cardStyle()
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
-                    Text(settings.t(
-                        "Diyanet Namaz İlmihali · hanafitische Grunddarstellung. Andere Rechtsschulen können einzelne Sunnah-Details anders einordnen.",
-                        "Diyanet Namaz İlmihali · Hanefî temel anlatım. Diğer mezhepler bazı sünnet ayrıntılarını farklı değerlendirebilir."
-                    ))
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                }
-                .cardStyle(material: true)
-            }
-            .padding()
-        }
-        .background(SalahTheme.page)
-        .navigationTitle(settings.t("Rakʿa verstehen", "Rekâtı anla"))
-        .navigationBarTitleDisplayMode(.inline)
-    }
-
-    private func flowRow(_ number: String, _ title: String, _ detail: String, _ icon: String) -> some View {
-        HStack(alignment: .top, spacing: 11) {
-            ZStack {
-                Circle().fill(SalahTheme.gold.opacity(0.20)).frame(width: 34, height: 34)
-                Text(number).font(.headline.bold()).foregroundStyle(SalahTheme.deepTeal)
-            }
-            VStack(alignment: .leading, spacing: 3) {
-                Label(title, systemImage: icon)
-                    .font(.headline)
-                    .foregroundStyle(SalahTheme.ink)
-                Text(detail)
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.mutedInk)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 0)
-        }
-    }
-
-    private func planCard(title: String, subtitle: String, lines: [String]) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .font(.title3.bold())
-                .foregroundStyle(SalahTheme.deepTeal)
-            Text(subtitle)
-                .font(.caption.bold())
-                .foregroundStyle(SalahTheme.teal)
-            ForEach(lines.indices, id: \.self) { index in
-                HStack(alignment: .top, spacing: 10) {
-                    Text("\(index + 1)")
-                        .font(.caption.bold())
-                        .foregroundStyle(.white)
-                        .frame(width: 24, height: 24)
-                        .background(SalahTheme.teal, in: Circle())
-                    Text(lines[index])
-                        .font(.subheadline)
-                        .foregroundStyle(SalahTheme.ink)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                }
-            }
-        }
-        .cardStyle()
-    }
-}
-
 private struct QunutDuaView: View {
     @EnvironmentObject private var settings: SettingsStore
     var body: some View {
@@ -1678,7 +1424,7 @@ private struct QunutDuaView: View {
                 Text("Allâhümme iyyâke na'büdü ve leke nusallî ve nescüd. Ve ileyke nes'â ve nahfid. Nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bil-küffâri mülhik.")
             }
             Section {
-                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Für Aussprachetraining sollte eine verlässliche menschliche Aufnahme verwendet werden; SalahPath erzeugt hierfür keine KI-Stimme.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Telaffuz eğitimi için güvenilir insan kaydı kullanılmalıdır; SalahPath bunun için yapay zekâ sesi üretmez."))
+                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Für die Aussprache ist eine verlässliche menschliche Aufnahme am besten geeignet.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Telaffuz çalışırken güvenilir bir insan kaydı kullanmak en uygunudur."))
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
@@ -2385,8 +2131,8 @@ struct PrayerCatalogView: View {
                     "2. rekât: Besmele → Fâtiha + sûre → rükû → 2 secde → son oturuş.",
                     "Son oturuşta: Ettehiyyâtü → Salli → Bârik → kapanış duası → önce sağa, sonra sola selâm."
                 ],
-                deNotes: ["Die PDF beginnt genau mit diesem Gebet und zeigt die Schritte einschließlich Tesbihat."],
-                trNotes: ["PDF'deki ayrıntılı namaz anlatımı bu sünnetle başlıyor ve tesbihata kadar ilerliyor."],
+                deNotes: ["Diese 2-Rakʿāt-Sunnah kann direkt mit der vollständigen Mann/Frau-Bildanleitung geübt werden."],
+                trNotes: ["Bu iki rekât sünnet, erkek/kadın için hazırlanan tam görsel anlatımla doğrudan çalışılabilir."],
                 source: "Diyanet · Namaz İlmihali"
             ),
             .init(
@@ -2707,8 +2453,8 @@ struct PrayerCatalogView: View {
                 id: "tesbihat", group: "after",
                 deTitle: "Tesbihat nach dem Gebet", trTitle: "Namaz Sonrası Tesbihat",
                 deRuling: "Dhikr/Dua", trRuling: "Zikir/Dua", rakaLabel: "—",
-                deSummary: "Dhikr und Dua nach dem Pflichtgebet; die PDF zeigt diesen Abschnitt direkt nach dem Fajr-Beispiel.",
-                trSummary: "Farz namazdan sonra zikir ve dua; PDF'de sabah örneğinin hemen ardından gösteriliyor.",
+                deSummary: "Dhikr und Dua nach dem Pflichtgebet.",
+                trSummary: "Farz namazdan sonra yapılan zikir ve dua.",
                 deSteps: [
                     "Nach dem Gebet Istighfār und die bekannten Abschluss-Duas sprechen.",
                     "Āyat al-Kursī lesen.",
@@ -2721,7 +2467,7 @@ struct PrayerCatalogView: View {
                 ],
                 deNotes: ["SalahPath hat dafür bereits Dhikr- und Dua-Bereiche; dieser Eintrag verbindet sie mit dem Gebetsablauf."],
                 trNotes: ["SalahPath'te zikir ve dua alanları zaten var; bu bölüm onları namaz akışıyla birleştiriyor."],
-                source: "PDF-Referenz + Diyanet · Ezan, Kamet ve Tesbihat"
+                source: "Diyanet · Ezan, Kamet ve Tesbihat"
             )
         ]
     }
@@ -2745,12 +2491,12 @@ struct PrayerCatalogView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Alle Gebete aus der PDF-Struktur", "PDF yapısındaki tüm namazlar"), systemImage: "list.bullet.rectangle.portrait.fill")
+                    Label(settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), systemImage: "list.bullet.rectangle.portrait.fill")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Nicht nur ein allgemeiner 2-Rakʿāt-Ablauf: hier findest du die einzelnen Tagesgebete und die Sondergebete, die im PDF-Menü separat aufgeführt sind.",
-                        "Yalnız genel bir 2 rekât anlatımı değil: PDF menüsünde ayrı gösterilen vakit namazlarını ve özel namazları burada tek tek bulabilirsin."
+                        "Hier findest du die täglichen Gebete und besondere Gebete jeweils einzeln erklärt. Die fertige Bildanleitung ist derzeit für den normalen 2-Rakʿāt-Ablauf verfügbar; weitere Bildanleitungen folgen.",
+                        "Burada vakit namazlarını ve özel namazları ayrı ayrı bulabilirsin. Tam görsel anlatım şu anda normal iki rekât namaz için hazırdır; diğer görsel anlatımlar daha sonra eklenecek."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -2823,8 +2569,203 @@ private struct PrayerCatalogDetailView: View {
     @EnvironmentObject private var settings: SettingsStore
     let item: PrayerCatalogItem
 
-    private var steps: [String] { settings.language == .german ? item.deSteps : item.trSteps }
     private var notes: [String] { settings.language == .german ? item.deNotes : item.trNotes }
+
+    private var hasCompleteIllustratedGuide: Bool {
+        [
+            "fajr_sunnah",
+            "fajr_fard",
+            "dhuhr_last_sunnah",
+            "maghrib_sunnah",
+            "isha_last_sunnah"
+        ].contains(item.id)
+    }
+
+    private var steps: [String] {
+        let fallback = settings.language == .german ? item.deSteps : item.trSteps
+        guard !hasCompleteIllustratedGuide else { return fallback }
+
+        switch item.id {
+        case "dhuhr_first_sunnah":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für die vier Sunnah-Rakʿāt vor Dhuhr. Beginne mit dem Eröffnungstakbir, binde die Hände und lies Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und anschließend eine zusätzliche Sura oder passende Verse.",
+                "Beende die 1. Rakʿah mit Rukūʿ, vollständigem Aufrichten und zwei Sujūd. Nach dem zweiten Sujūd stehst du zur 2. Rakʿah auf.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Danach folgen Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Nach der 2. Rakʿah setzt du dich zum ersten Sitzen. Lies hier Ettehiyyâtü. Bei dieser betonten Dhuhr-Sunnah liest du im ersten Sitzen nicht Salli und Bârik, sondern stehst danach mit Allāhu akbar zur 3. Rakʿah auf.",
+                "In der 3. Rakʿah liest du Basmala, Al-Fātiha und wieder eine zusätzliche Sura oder Verse. Danach Rukūʿ, Aufrichten und zwei Sujūd; anschließend zur 4. Rakʿah aufstehen.",
+                "In der 4. Rakʿah liest du erneut Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Beende die Rakʿah mit Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Nach dem zweiten Sujūd der 4. Rakʿah bleibst du sitzen. Lies Ettehiyyâtü, Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Danach gibst du Salām zuerst nach rechts und anschließend nach links."
+            ] : [
+                "Öğle farzından önceki dört rekât sünnete niyet et. İftitah tekbiriyle başla, ellerini bağla; Sübhâneke, Eûzü, Besmele, Fâtiha ve ardından zamm-ı sûre veya uygun ayetler oku.",
+                "1. rekâtı rükû, tam doğrulma ve iki secde ile tamamla. İkinci secdeden sonra 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku. Ardından rükû, doğrulma ve iki secdeyi yap.",
+                "2. rekâtın sonunda ilk oturuşa geç. Burada Ettehiyyâtü oku. Öğlenin bu kuvvetli sünnetinde ilk oturuşta Salli ve Bârik okunmaz; Allāhu ekber diyerek 3. rekâta kalkılır.",
+                "3. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku. Rükû, doğrulma ve iki secdeden sonra 4. rekâta kalk.",
+                "4. rekâtta yine Besmele, Fâtiha ve zamm-ı sûre/ayet oku; ardından rükû, doğrulma ve iki secdeyi tamamla.",
+                "4. rekâtın ikinci secdesinden sonra son oturuşta kal. Ettehiyyâtü, Allahümme Salli, Allahümme Bârik ve Rabbenâ Âtinâ gibi bir kapanış duası oku. Sonra önce sağa, ardından sola selâm ver."
+            ]
+        case "dhuhr_fard", "asr_fard", "isha_fard":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für das jeweilige vier-rakʿatige Fard-Gebet. Beginne mit dem Eröffnungstakbir, binde die Hände und lies in der 1. Rakʿah Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und eine zusätzliche Sura oder passende Verse.",
+                "Gehe mit Allāhu akbar in den Rukūʿ, richte dich vollständig auf und mache zwei Sujūd. Nach dem zweiten Sujūd stehst du zur 2. Rakʿah auf.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Danach folgen Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Nach der 2. Rakʿah setzt du dich zum ersten Sitzen und liest Ettehiyyâtü. Danach stehst du mit Allāhu akbar zur 3. Rakʿah auf.",
+                "In der 3. Rakʿah liest du Basmala und Al-Fātiha. Beim hanafitischen Fard ist hier keine zusätzliche Sura erforderlich. Danach Rukūʿ, Aufrichten und zwei Sujūd; anschließend zur 4. Rakʿah aufstehen.",
+                "In der 4. Rakʿah liest du wieder Basmala und Al-Fātiha. Danach folgen Rukūʿ, vollständiges Aufrichten und zwei Sujūd.",
+                "Nach der 4. Rakʿah bleibst du zum Schluss-Sitzen sitzen. Lies Ettehiyyâtü, Allahümme Salli, Allahümme Bârik und eine Abschlussdua. Beende das Gebet mit Salām nach rechts und danach nach links."
+            ] : [
+                "Kılacağın dört rekât farz namaza niyet et. İftitah tekbiriyle başla, ellerini bağla; 1. rekâtta Sübhâneke, Eûzü, Besmele, Fâtiha ve zamm-ı sûre veya uygun ayetler oku.",
+                "Allāhu ekber diyerek rükûya git, tamamen doğrul ve iki secde yap. İkinci secdeden sonra 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku. Ardından rükû, doğrulma ve iki secdeyi tamamla.",
+                "2. rekâtın sonunda ilk oturuşa geç ve Ettehiyyâtü oku. Sonra Allāhu ekber diyerek 3. rekâta kalk.",
+                "3. rekâtta Besmele ve Fâtiha oku. Hanefî farz namazında burada zamm-ı sûre gerekli değildir. Rükû, doğrulma ve iki secdeden sonra 4. rekâta kalk.",
+                "4. rekâtta yine Besmele ve Fâtiha oku. Ardından rükû, tam doğrulma ve iki secdeyi tamamla.",
+                "4. rekâtın sonunda son oturuşta kal. Ettehiyyâtü, Allahümme Salli, Allahümme Bârik ve bir kapanış duası oku. Önce sağa, sonra sola selâm vererek namazı bitir."
+            ]
+        case "asr_sunnah", "isha_first_sunnah":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für die vier Sunnah-Rakʿāt. Beginne mit Takbir, Hände binden, Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und einer zusätzlichen Sura oder passenden Versen.",
+                "Beende die 1. Rakʿah mit Rukūʿ, Aufrichten und zwei Sujūd und stehe danach zur 2. Rakʿah auf.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse; danach Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Im ersten Sitzen nach der 2. Rakʿah liest du Ettehiyyâtü sowie Allahümme Salli und Allahümme Bârik. Danach stehst du zur 3. Rakʿah auf.",
+                "Die 3. Rakʿah beginnt bei dieser ghayr-muʾakkadah-Sunnah wieder mit Sübhaneke, danach Eʿūḏu, Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Anschließend Rukūʿ, Aufrichten und zwei Sujūd.",
+                "In der 4. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Danach Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Im letzten Sitzen liest du Ettehiyyâtü, Salli, Bârik und eine Abschlussdua. Danach Salām nach rechts und links."
+            ] : [
+                "Dört rekât sünnete niyet et. Tekbir, elleri bağlama, Sübhâneke, Eûzü, Besmele, Fâtiha ve zamm-ı sûre/uygun ayetlerle başla.",
+                "1. rekâtı rükû, doğrulma ve iki secdeyle tamamla; sonra 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku; ardından rükû, doğrulma ve iki secdeyi yap.",
+                "2. rekâttan sonraki ilk oturuşta Ettehiyyâtü ile birlikte Allahümme Salli ve Allahümme Bârik de okunur. Sonra 3. rekâta kalkılır.",
+                "Bu gayr-i müekkede sünnette 3. rekâta yeniden Sübhâneke ile başlanır; ardından Eûzü, Besmele, Fâtiha ve zamm-ı sûre/ayet okunur. Sonra rükû, doğrulma ve iki secde yapılır.",
+                "4. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku; ardından rükû, doğrulma ve iki secdeyi tamamla.",
+                "Son oturuşta Ettehiyyâtü, Salli, Bârik ve kapanış duasını oku; sonra sağa ve sola selâm ver."
+            ]
+        case "maghrib_fard":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für die drei Fard-Rakʿāt von Maghrib. Beginne mit Takbir, Hände binden, Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und einer zusätzlichen Sura oder passenden Versen.",
+                "Beende die 1. Rakʿah mit Rukūʿ, Aufrichten und zwei Sujūd. Danach stehst du zur 2. Rakʿah auf.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Danach Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Nach der 2. Rakʿah setzt du dich zum ersten Sitzen und liest Ettehiyyâtü. Danach stehst du mit Allāhu akbar zur 3. Rakʿah auf.",
+                "In der 3. Rakʿah liest du Basmala und Al-Fātiha; beim hanafitischen Fard ist keine zusätzliche Sura erforderlich. Danach Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Nach dem zweiten Sujūd bleibst du zum Schluss-Sitzen sitzen. Lies Ettehiyyâtü, Salli, Bârik und eine Abschlussdua. Danach Salām zuerst nach rechts und dann nach links."
+            ] : [
+                "Akşamın üç rekât farzına niyet et. Tekbir, elleri bağlama, Sübhâneke, Eûzü, Besmele, Fâtiha ve zamm-ı sûre/uygun ayetlerle başla.",
+                "1. rekâtı rükû, doğrulma ve iki secdeyle tamamla. Sonra 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku. Ardından rükû, doğrulma ve iki secdeyi yap.",
+                "2. rekâtın sonunda ilk oturuşa geç ve Ettehiyyâtü oku. Sonra Allāhu ekber diyerek 3. rekâta kalk.",
+                "3. rekâtta Besmele ve Fâtiha oku; Hanefî farzında burada zamm-ı sûre gerekli değildir. Ardından rükû, doğrulma ve iki secdeyi tamamla.",
+                "İkinci secdeden sonra son oturuşta kal. Ettehiyyâtü, Salli, Bârik ve bir kapanış duası oku. Önce sağa, sonra sola selâm ver."
+            ]
+        case "witr":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für drei Rakʿāt Witr. Beginne die 1. Rakʿah mit Takbir, Hände binden, Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und einer zusätzlichen Sura oder passenden Versen.",
+                "Beende die 1. Rakʿah mit Rukūʿ, Aufrichten und zwei Sujūd; danach zur 2. Rakʿah aufstehen.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse. Nach Rukūʿ und zwei Sujūd setzt du dich und liest Ettehiyyâtü. Danach stehst du zur 3. Rakʿah auf.",
+                "In der 3. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse.",
+                "Noch vor dem Rukūʿ sagst du einen zusätzlichen Takbir: Hebe die Hände wie beim Eröffnungstakbir, sage Allāhu akbar und binde die Hände wieder.",
+                "Lies nun die Qunūt-Duas. Danach gehst du mit Allāhu akbar in den Rukūʿ, richtest dich auf und machst zwei Sujūd.",
+                "Im letzten Sitzen liest du Ettehiyyâtü, Salli, Bârik und eine Abschlussdua. Danach Salām rechts und links."
+            ] : [
+                "Üç rekât vitir namazına niyet et. 1. rekâta tekbir, elleri bağlama, Sübhâneke, Eûzü, Besmele, Fâtiha ve zamm-ı sûre/uygun ayetlerle başla.",
+                "1. rekâtı rükû, doğrulma ve iki secdeyle tamamla; sonra 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku. Rükû ve iki secdeden sonra oturup Ettehiyyâtü oku; ardından 3. rekâta kalk.",
+                "3. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku.",
+                "Rükûya gitmeden önce kunut tekbiri alınır: Eller iftitah tekbirindeki gibi kaldırılır, Allāhu ekber denir ve yeniden bağlanır.",
+                "Kunut dualarını oku. Sonra Allāhu ekber diyerek rükûya git, doğrul ve iki secde yap.",
+                "Son oturuşta Ettehiyyâtü, Salli, Bârik ve kapanış duasını oku; ardından sağa ve sola selâm ver."
+            ]
+        case "eid":
+            return settings.language == .german ? [
+                "Das Eid-Gebet wird gemeinschaftlich hinter dem Imam gebetet. Fasse die Niyyah für das jeweilige Eid-Gebet und folge dem Imam.",
+                "In der 1. Rakʿah erfolgt der Eröffnungstakbir; danach werden die Hände gebunden und Sübhaneke gelesen.",
+                "Anschließend folgen drei zusätzliche Takbire. Bei den ersten beiden lässt man die Hände nach dem Takbir wieder sinken; nach dem dritten werden die Hände wieder gebunden.",
+                "Der Imam rezitiert Al-Fātiha und eine Sura. Folge anschließend in Rukūʿ, beim Aufrichten und in die beiden Sujūd.",
+                "In der 2. Rakʿah rezitiert der Imam zunächst Al-Fātiha und eine Sura.",
+                "Danach folgen drei zusätzliche Takbire, bei denen die Hände jeweils wieder gelöst werden. Mit dem darauffolgenden Takbir geht man direkt in den Rukūʿ.",
+                "Nach Rukūʿ, Aufrichten und zwei Sujūd folgt das Schluss-Sitzen mit Ettehiyyâtü, Salli, Bârik und Abschlussdua; danach Salām. Die Eid-Khutbah findet nach dem Gebet statt."
+            ] : [
+                "Bayram namazı cemaatle imamın arkasında kılınır. Kılınacak bayram namazına niyet et ve imama uy.",
+                "1. rekâtta iftitah tekbiri alınır, eller bağlanır ve Sübhâneke okunur.",
+                "Ardından üç zevaid tekbiri alınır. İlk iki tekbirden sonra eller salınır; üçüncü tekbirden sonra yeniden bağlanır.",
+                "İmam Fâtiha ve sûre okur. Sonra imamla birlikte rükû, doğrulma ve iki secde yapılır.",
+                "2. rekâtta imam önce Fâtiha ve sûre okur.",
+                "Ardından üç zevaid tekbiri alınır ve her seferinde eller salınır. Sonraki tekbirle doğrudan rükûya gidilir.",
+                "Rükû, doğrulma ve iki secdeden sonra son oturuşta Ettehiyyâtü, Salli, Bârik ve kapanış duası okunur; ardından selâm verilir. Bayram hutbesi namazdan sonradır."
+            ]
+        case "tarawih":
+            return settings.language == .german ? [
+                "Tarawih wird nach dem Isha-Fard in der Ramadan-Nacht gebetet. Fasse die Niyyah für Tarawih.",
+                "Am übersichtlichsten betest du jeweils zwei Rakʿāt und gibst danach Salām. Jede 2er-Einheit beginnt mit Takbir, Hände binden, Sübhaneke, Eʿūḏu, Basmala, Al-Fātiha und einer zusätzlichen Sura oder passenden Versen.",
+                "Beende die 1. Rakʿah der Einheit mit Rukūʿ, Aufrichten und zwei Sujūd und stehe zur 2. Rakʿah auf.",
+                "In der 2. Rakʿah liest du Basmala, Al-Fātiha und eine zusätzliche Sura oder Verse; danach Rukūʿ, Aufrichten und zwei Sujūd.",
+                "Im Schluss-Sitzen liest du Ettehiyyâtü, Salli, Bârik und eine Abschlussdua; danach Salām rechts und links.",
+                "Beginne anschließend die nächste 2-Rakʿāt-Einheit auf dieselbe Weise. In der türkisch-hanafitischen Gemeinschaftspraxis sind 20 Rakʿāt verbreitet.",
+                "Nach jeweils vier Rakʿāt kann eine kurze Pause eingelegt werden. Witr wird üblicherweise nach Tarawih gebetet."
+            ] : [
+                "Teravih, Ramazan gecelerinde yatsı farzından sonra kılınır. Teravih namazına niyet et.",
+                "En anlaşılır uygulama ikişer rekât kılıp her iki rekâttan sonra selâm vermektir. Her iki rekâtlık bölüm tekbir, elleri bağlama, Sübhâneke, Eûzü, Besmele, Fâtiha ve zamm-ı sûre/uygun ayetlerle başlar.",
+                "Bölümün 1. rekâtını rükû, doğrulma ve iki secdeyle tamamlayıp 2. rekâta kalk.",
+                "2. rekâtta Besmele, Fâtiha ve zamm-ı sûre/ayet oku; ardından rükû, doğrulma ve iki secdeyi yap.",
+                "Son oturuşta Ettehiyyâtü, Salli, Bârik ve kapanış duasını oku; sonra sağa ve sola selâm ver.",
+                "Sonraki iki rekâtlık bölüme aynı şekilde yeniden başla. Türkiye'deki Hanefî cemaat uygulamasında 20 rekât yaygındır.",
+                "Her dört rekâttan sonra kısa bir dinlenme verilebilir. Vitir genellikle teravihten sonra kılınır."
+            ]
+        case "tasbih_prayer":
+            return settings.language == .german ? [
+                "Fasse die Niyyah für das vier-rakʿatige Tasbih-Gebet. Der zentrale Tasbih lautet: Subḥānallāhi wa-l-ḥamdu lillāhi wa lā ilāha illallāhu wa-llāhu akbar.",
+                "In jeder Rakʿah wird dieser Tasbih insgesamt 75-mal gesprochen. Nach Sübhaneke sprichst du ihn 15-mal.",
+                "Danach liest du Al-Fātiha und eine zusätzliche Sura oder Verse und sprichst den Tasbih 10-mal im Stehen.",
+                "Gehe in den Rukūʿ. Nach dem üblichen Rukūʿ-Dhikr sprichst du den Tasbih 10-mal. Nach dem vollständigen Aufrichten weitere 10-mal.",
+                "Im ersten Sujūd sprichst du nach dem üblichen Sujūd-Dhikr den Tasbih 10-mal. Im Sitzen zwischen den beiden Sujūd weitere 10-mal.",
+                "Im zweiten Sujūd sprichst du ihn erneut 10-mal. Damit sind in dieser Rakʿah 75 Wiederholungen erreicht.",
+                "Wiederhole dieses Schema in allen vier Rakʿāt. Nach der 2. Rakʿah erfolgt das erste Sitzen; nach der 4. Rakʿah das vollständige Schluss-Sitzen mit Salām. Insgesamt ergeben sich 300 Tasbih."
+            ] : [
+                "Dört rekât tesbih namazına niyet et. Temel tesbih: Sübhânellâhi ve'l-hamdülillâhi velâ ilâhe illallâhü vallâhü ekber.",
+                "Her rekâtta bu tesbih toplam 75 defa söylenir. Sübhâneke'den sonra 15 defa söyle.",
+                "Ardından Fâtiha ve zamm-ı sûre/ayet oku; ayakta 10 defa daha tesbih söyle.",
+                "Rükûya git. Normal rükû tesbihinden sonra 10 defa, tamamen doğrulduktan sonra 10 defa daha söyle.",
+                "Birinci secdede normal secde tesbihinden sonra 10 defa; iki secde arasındaki oturuşta 10 defa daha söyle.",
+                "İkinci secdede yine 10 defa söyle. Böylece bir rekâtta 75 tesbih tamamlanır.",
+                "Aynı düzeni dört rekât boyunca tekrarla. 2. rekâttan sonra ilk oturuş, 4. rekâttan sonra tam son oturuş ve selâm yapılır. Toplam 300 tesbih olur."
+            ]
+        case "jumuah":
+            return settings.language == .german ? [
+                "Das Freitagsgebet wird gemeinschaftlich gebetet. Wer dazu verpflichtet ist und teilnimmt, hört die Khutbah und betet anschließend zwei Rakʿāt Fard hinter dem Imam.",
+                "Vor dem Fard werden in der verbreiteten hanafitischen Praxis vier Sunnah-Rakʿāt gebetet. Diese werden als eigenes Sunnah-Gebet mit entsprechender Niyyah begonnen.",
+                "Während der Khutbah hörst du zu und beschäftigst dich nicht mit einem eigenen Gespräch oder einer parallelen Rezitation.",
+                "Für die zwei Fard-Rakʿāt fasst du die Niyyah, dem Imam im Jumuʿah-Fard zu folgen. Nach dem Eröffnungstakbir folgst du den Bewegungen des Imams.",
+                "Der Imam rezitiert in beiden Fard-Rakʿāt Al-Fātiha und eine Sura laut. Als Mitbetender folgst du nach hanafitischer Darstellung der Rezitation des Imams und sprichst nicht selbst Fātiha und Zusatzsura.",
+                "Nach der 2. Rakʿah folgt das vollständige Schluss-Sitzen und der Salām mit dem Imam.",
+                "Nach dem Fard werden in der hanafitischen Praxis weitere Sunnah-Rakʿāt gebetet; die genaue Zahl wird innerhalb der hanafitischen Überlieferung unterschiedlich angegeben."
+            ] : [
+                "Cuma namazı cemaatle kılınır. Cuma ile yükümlü olup katılan kişi hutbeyi dinler ve ardından imamın arkasında iki rekât farz kılar.",
+                "Farzdan önce yaygın Hanefî uygulamasında dört rekât sünnet kılınır. Bu sünnete ayrıca niyet edilerek başlanır.",
+                "Hutbe sırasında hutbeyi dinle; ayrı konuşma veya başka bir kıraatle meşgul olma.",
+                "İki rekât farz için cuma farzında imama uymaya niyet et. İftitah tekbirinden sonra imamın hareketlerine uy.",
+                "İmam iki farz rekâtında Fâtiha ve sûreyi sesli okur. Hanefî uygulamasında cemaat, imamın kıraatine uyar ve Fâtiha ile zamm-ı sûreyi ayrıca okumaz.",
+                "2. rekâtın sonunda imamla birlikte tam son oturuş ve selâm yapılır.",
+                "Farzdan sonra Hanefî uygulamasında ayrıca sünnet rekâtları kılınır; sayısı Hanefî rivayetlerinde farklı şekillerde aktarılır."
+            ]
+        case "janazah":
+            return settings.language == .german ? [
+                "Das Janazah-Gebet wird vollständig im Stehen gebetet; es gibt keinen Rukūʿ und keinen Sujūd. Richte dich zur Qibla aus und fasse die Niyyah für das Totengebet.",
+                "Mit dem ersten Takbir hebst du die Hände, sagst Allāhu akbar und bindest sie. Danach liest du Sübhaneke; in der verbreiteten hanafitischen Fassung wird dabei „wa jalla thanāʾuk“ ergänzt.",
+                "Beim zweiten Takbir sagst du Allāhu akbar, ohne die Hände erneut zu heben. Danach liest du Allahümme Salli und Allahümme Bârik.",
+                "Beim dritten Takbir sagst du erneut Allāhu akbar. Danach folgt die Janazah-Dua. Wenn du sie noch nicht auswendig kannst, sprich eine passende Dua für den Verstorbenen.",
+                "Beim vierten Takbir sagst du Allāhu akbar. Danach wird das Gebet mit Salām beendet.",
+                "Gib den Salām nach rechts und anschließend nach links. Während des gesamten Gebets bleibt der Körper stehen; Rukūʿ und Sujūd werden nicht ausgeführt."
+            ] : [
+                "Cenaze namazının tamamı ayakta kılınır; rükû ve secde yoktur. Kıbleye dön ve cenaze namazına niyet et.",
+                "Birinci tekbirde ellerini kaldır, Allāhu ekber de ve bağla. Ardından Sübhâneke oku; yaygın Hanefî uygulamasında „ve celle senâük“ ilavesi de okunur.",
+                "İkinci tekbirde elleri yeniden kaldırmadan Allāhu ekber de. Ardından Allahümme Salli ve Allahümme Bârik oku.",
+                "Üçüncü tekbirde yine Allāhu ekber de. Ardından cenaze duası okunur. Duayı henüz bilmiyorsan vefat eden kişi için uygun bir dua et.",
+                "Dördüncü tekbirde Allāhu ekber de. Ardından namaz selâm ile tamamlanır.",
+                "Önce sağa, sonra sola selâm ver. Namaz boyunca ayakta kalınır; rükû ve secde yapılmaz."
+            ]
+        default:
+            return fallback
+        }
+    }
 
     var body: some View {
         ScrollView {
@@ -2893,23 +2834,41 @@ private struct PrayerCatalogDetailView: View {
                     .cardStyle()
                 }
 
-                NavigationLink { PrayerHowToView() } label: {
-                    Label(
-                        settings.t("Körperhaltungen mit Bildern öffnen", "Hareketleri görsellerle aç"),
-                        systemImage: "figure.mind.and.body"
-                    )
-                    .font(.headline.bold())
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
+                if hasCompleteIllustratedGuide {
+                    NavigationLink { PrayerHowToView() } label: {
+                        Label(
+                            settings.t("2-Rakʿāt-Bildanleitung für Mann/Frau öffnen", "Erkek/Kadın 2 rekât görsel anlatımını aç"),
+                            systemImage: "figure.mind.and.body"
+                        )
+                        .font(.headline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(SalahTheme.teal)
 
-                Text(settings.t("Quelle für diese Zusammenfassung: ", "Bu özetin kaynağı: ") + item.source)
+                Text(settings.t("Quelle: ", "Kaynak: ") + item.source)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
+
+                if !hasCompleteIllustratedGuide && item.group != "after" {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")
+                            .font(.headline.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+                        Text(settings.t(
+                            "Die schriftliche Anleitung oben ist bereits nutzbar. Die speziell für dieses Gebet angepassten Schritt-für-Schritt-Bilder ergänzen wir noch.",
+                            "Yukarıdaki yazılı anlatımı şimdiden kullanabilirsin. Bu namaza özel adım adım görseller daha sonra eklenecek."
+                        ))
+                        .font(.footnote)
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .cardStyle(material: true)
+                }
             }
             .padding()
         }
@@ -2918,6 +2877,7 @@ private struct PrayerCatalogDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
 
 // MARK: - Hajj / Umrah and Ramadan hierarchy
 
@@ -3142,8 +3102,8 @@ struct RamadanGuideIndexView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF führt Ramadan als eigenen Bereich mit Fastenwissen, Tarawih, Tasbih-/Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr. SalahPath verbindet diese Unterpunkte jetzt an einer Stelle.",
-                    "PDF Ramazan'ı; oruç bilgisi, teravih, tesbih/bayram namazı, dualar, ayetler ve Kadir Gecesi ile ayrı bir bölüm olarak gösteriyor. SalahPath artık bu alt başlıkları tek yerde topluyor."
+                    "Hier findest du Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr an einer Stelle.",
+                    "Burada oruç bilgisi, teravih, tesbih ve bayram namazı, dualar, ayetler ve Kadir Gecesi ile ilgili bölümleri bir arada bulabilirsin."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -4055,8 +4015,8 @@ struct IlmihalDirectoryView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Die PDF zeigt einen tiefen İlmihal-Themenbaum. SalahPath führt vorhandene ausführliche Bereiche hier zusammen und ergänzt fehlende Hauptkapitel als kompakte Lernorientierung.",
-                        "PDF derin bir ilmihal konu ağacı gösteriyor. SalahPath mevcut ayrıntılı bölümleri burada birleştiriyor ve eksik ana başlıkları kısa öğrenme rehberleriyle tamamlıyor."
+                        "Hier sind die wichtigsten İlmihal-Bereiche übersichtlich zusammengefasst. Ausführliche Kapitel öffnen sich jeweils direkt aus der passenden Rubrik.",
+                        "Burada temel ilmihal konuları düzenli şekilde bir araya getirilmiştir. Ayrıntılı bölümlere ilgili başlıktan doğrudan ulaşabilirsin."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -5617,8 +5577,8 @@ struct PrayerTextsHubView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Die PDF teilt den Lernstoff in Gebetssuren, Gebetsduas, besondere Ayat und Yasin. SalahPath bildet diese Unterpunkte jetzt direkt ab und öffnet den vollständigen Quran-Text dort, wo er benötigt wird.",
-                    "PDF öğrenme bölümünü Namaz Sûreleri, Namaz Duaları, özel ayetler ve Yasin olarak ayırıyor. SalahPath artık bu alt başlıkları doğrudan gösteriyor ve gereken yerde tam Kur'an metnini açıyor."
+                    "Gebetssuren, Gebetsduas, besondere Ayat und Yasin sind hier getrennt zugänglich. Bei Bedarf öffnet sich der vollständige Quran-Text direkt an der passenden Stelle.",
+                    "Namaz sûreleri, namaz duaları, özel ayetler ve Yasin burada ayrı bölümler halinde bulunur. Gerektiğinde tam Kur'an metni ilgili yerden doğrudan açılır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -5763,12 +5723,12 @@ struct ShortSurahLearningView: View {
 
     private let surahs: [ShortSurahAudio] = [
         .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
-        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Fîl sûresi."),
-        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Kureyş sûresi."),
-        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Mâûn sûresi."),
+        .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Fîl sûresi."),
+        .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Kureyş sûresi."),
+        .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Mâûn sûresi."),
         .init(surahNumber: 108, arabicName: "الكوثر", latinName: "Al-Kawthar", deDetail: "Sehr kurze Sura für Lernende.", trDetail: "Öğrenenler için çok kısa sûre."),
         .init(surahNumber: 109, arabicName: "الكافرون", latinName: "Al-Kafirun", deDetail: "Bekannte kurze Sura.", trDetail: "Bilinen kısa sûre."),
-        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "PDF namaz sûreleri listesindeki Nasr sûresi."),
+        .init(surahNumber: 110, arabicName: "النصر", latinName: "An-Nasr", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Nasr sûresi."),
         .init(surahNumber: 111, arabicName: "المسد", latinName: "Al-Masad / Tebbet", deDetail: "In der türkischen Lerntradition oft „Tebbet“ genannt.", trDetail: "Türkçe namaz sûreleri eğitiminde genellikle „Tebbet“ diye anılır."),
         .init(surahNumber: 112, arabicName: "الإخلاص", latinName: "Al-Ikhlas", deDetail: "Kurze und sehr bekannte Sura.", trDetail: "Kısa ve çok bilinen sûre."),
         .init(surahNumber: 113, arabicName: "الفلق", latinName: "Al-Falaq", deDetail: "Schutzsura.", trDetail: "Koruyucu sûre."),
