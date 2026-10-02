@@ -266,6 +266,18 @@ jobs:
             run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
 
             if ! /tmp/salahpath-screenshot-check "$SCREENSHOT"; then
+              # SwiftUI/simulator can briefly expose the white launch surface even
+              # though the app process is already alive. For prayer-step QA, retry
+              # the same live process before doing an expensive simulator reboot.
+              if [[ "$SCREEN" == namaz-step-* ]]; then
+                echo "Blank prayer-step screenshot for $SCREEN; waiting for the live UI before rebooting."
+                sleep 7
+                run_timeout 120 xcrun simctl io "$SIM_UDID" screenshot "$SCREENSHOT"
+                if /tmp/salahpath-screenshot-check "$SCREENSHOT"; then
+                  return 0
+                fi
+              fi
+
               echo "Invalid/blank screenshot for $SCREEN; rebooting simulator before the retry."
               xcrun simctl terminate "$SIM_UDID" com.achmed06.salahpath || true
               xcrun simctl shutdown "$SIM_UDID" || true
