@@ -8,6 +8,7 @@ struct NotificationDiagnostics: Sendable {
     let authorizationStatus: UNAuthorizationStatus
     let alertsEnabled: Bool
     let soundsEnabled: Bool
+    let timeSensitiveEnabled: Bool
     let pendingPrayerRequests: Int
     let pendingTotalRequests: Int
     let standardAdhanInstalled: Bool
@@ -23,7 +24,11 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     private let adhanPreviewIdentifier = "salahzeit.adhan.preview"
     private let standardAdhanSoundFileName = "adhan-standard.caf"
     private let fajrAdhanSoundFileName = "adhan-fajr.caf"
+    // iOS keeps only a limited number of pending local notifications. Keep a
+    // small safety margin for test/preview notifications while using the rest
+    // for the rolling prayer schedule.
     private let maximumPrayerRequests = 60
+    private let maximumSchedulingDays = 60
     private let notificationPreviewIdentifier = "salahzeit.notification.preview"
     private var schedulingRevision = 0
     private var adhanPreviewPlayer: AVAudioPlayer?
@@ -79,16 +84,76 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
         let now = Date()
+
+        let allowedLeadMinutes = [0, 5, 10, 15, 30]
+        let leadMinutes = allowedLeadMinutes.contains(settings.notificationLeadMinutes)
+            ? settings.notificationLeadMinutes
+            : 10
+
+        let enabledPrayerCount = [
+            PrayerKind.fajr,
+            .dhuhr,
+            .asr,
+            .maghrib,
+            .isha
+        ].filter { settings.notificationEnabled(for: $0) }.count
+
+        guard enabledPrayerCount > 0 else {
+            let pending = await center.pendingNotificationRequests()
+            return pending
+                .map(\.identifier)
+                .filter { $0.hasPrefix(prayerIdentifierPrefix) }
+                .isEmpty
+        }
+
+        let exactEnabled = settings.notifyAtPrayerTime
+        let reminderEnabled = leadMinutes > 0
+
+        guard exactEnabled || reminderEnabled else {
+            let pending = await center.pendingNotificationRequests()
+            return pending
+                .map(\.identifier)
+                .filter { $0.hasPrefix(prayerIdentifierPrefix) }
+                .isEmpty
+        }
+
+        // Core prayer-time notifications are more important than advance
+        // reminders. When both are enabled, reserve two thirds of the pending
+        // request budget for the actual prayer start and one third for the
+        // nearest advance reminders. Budgets are rounded to complete prayer
+        // sets, so a later day never receives an arbitrary subset just because
+        // the iOS pending-notification limit was reached.
+        let exactBudget: Int
+        let reminderBudget: Int
+
+        switch (exactEnabled, reminderEnabled) {
+        case (true, true):
+            let preferredExact = (maximumPrayerRequests * 2) / 3
+            exactBudget = (preferredExact / enabledPrayerCount) * enabledPrayerCount
+            let remaining = maximumPrayerRequests - exactBudget
+            reminderBudget = (remaining / enabledPrayerCount) * enabledPrayerCount
+        case (true, false):
+            exactBudget = (maximumPrayerRequests / enabledPrayerCount) * enabledPrayerCount
+            reminderBudget = 0
+        case (false, true):
+            exactBudget = 0
+            reminderBudget = (maximumPrayerRequests / enabledPrayerCount) * enabledPrayerCount
+        case (false, false):
+            exactBudget = 0
+            reminderBudget = 0
+        }
+
         var allRequestsScheduled = true
         var scheduledIdentifiers = Set<String>()
-        var scheduledRequestCount = 0
+        var exactScheduledCount = 0
+        var reminderScheduledCount = 0
 
-        // Phase 1: reserve capacity for every enabled prayer-time alert first.
-        // With 5 prayers over 7 days this is at most 35 requests, so exact
-        // prayer-time notifications cannot be crowded out by advance reminders.
-        if settings.notifyAtPrayerTime {
-            for dayOffset in 0..<7 {
+        // Phase 1: schedule the actual prayer starts first. These are marked
+        // Time Sensitive because they are relevant exactly when they fire.
+        if exactBudget > 0 {
+            for dayOffset in 0..<maximumSchedulingDays {
                 guard revision == schedulingRevision else { return false }
+                guard exactScheduledCount < exactBudget else { break }
                 guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
                       let day = engine.calculateDay(
                           for: date,
@@ -102,9 +167,9 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
                 for prayer in day.prayers where prayer.kind != .sunrise {
                     guard revision == schedulingRevision else { return false }
+                    guard exactScheduledCount < exactBudget else { break }
                     guard settings.notificationEnabled(for: prayer.kind),
-                          prayer.date > now,
-                          scheduledRequestCount < maximumPrayerRequests else { continue }
+                          prayer.date > now else { continue }
 
                     let prayerName = prayer.kind.localizedName(settings.language)
                     let content = UNMutableNotificationContent()
@@ -116,6 +181,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                         )
                     }
                     content.sound = prayerTimeSound(for: prayer.kind, settings: settings)
+                    content.interruptionLevel = .timeSensitive
+                    content.threadIdentifier = "salahpath.prayer-times"
 
                     var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: prayer.date)
                     components.timeZone = timeZone
@@ -128,24 +195,20 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     allRequestsScheduled = allRequestsScheduled && added
                     if added {
                         scheduledIdentifiers.insert(identifier)
-                        scheduledRequestCount += 1
+                        exactScheduledCount += 1
                     }
                     guard revision == schedulingRevision else { return false }
                 }
             }
         }
 
-        // Phase 2: spend the remaining request budget on the nearest advance
-        // reminders, after every exact prayer-time alert has been reserved.
-        let allowedLeadMinutes = [0, 5, 10, 15, 30]
-        let leadMinutes = allowedLeadMinutes.contains(settings.notificationLeadMinutes)
-            ? settings.notificationLeadMinutes
-            : 10
-
-        if leadMinutes > 0 {
-            for dayOffset in 0..<7 {
+        // Phase 2: use the reserved reminder budget for the nearest advance
+        // reminders. These remain normal active notifications so only the actual
+        // prayer start is allowed to break through Focus when the user permits it.
+        if reminderBudget > 0 {
+            for dayOffset in 0..<maximumSchedulingDays {
                 guard revision == schedulingRevision else { return false }
-                guard scheduledRequestCount < maximumPrayerRequests else { break }
+                guard reminderScheduledCount < reminderBudget else { break }
                 guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now),
                       let day = engine.calculateDay(
                           for: date,
@@ -159,7 +222,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
                 for prayer in day.prayers where prayer.kind != .sunrise {
                     guard revision == schedulingRevision else { return false }
-                    guard scheduledRequestCount < maximumPrayerRequests else { break }
+                    guard reminderScheduledCount < reminderBudget else { break }
                     guard settings.notificationEnabled(for: prayer.kind) else { continue }
 
                     let reminderDate = prayer.date.addingTimeInterval(-TimeInterval(leadMinutes) * 60)
@@ -176,6 +239,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                         "Namaz vakti: \(format(prayer.date, use24Hour: settings.use24Hour, language: settings.language, timeZone: timeZone))"
                     )
                     reminder.sound = .default
+                    reminder.interruptionLevel = .active
+                    reminder.threadIdentifier = "salahpath.prayer-reminders"
 
                     var components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
                     components.timeZone = timeZone
@@ -188,7 +253,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                     allRequestsScheduled = allRequestsScheduled && added
                     if added {
                         scheduledIdentifiers.insert(identifier)
-                        scheduledRequestCount += 1
+                        reminderScheduledCount += 1
                     }
                     guard revision == schedulingRevision else { return false }
                 }
@@ -204,22 +269,6 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 .map(\.identifier)
                 .filter { $0.hasPrefix(prayerIdentifierPrefix) }
         )
-
-        let anyPrayerEnabled =
-            settings.fajrNotificationEnabled ||
-            settings.dhuhrNotificationEnabled ||
-            settings.asrNotificationEnabled ||
-            settings.maghribNotificationEnabled ||
-            settings.ishaNotificationEnabled
-        let expectsPrayerRequests =
-            anyPrayerEnabled &&
-            (settings.notifyAtPrayerTime || leadMinutes > 0)
-
-        if !expectsPrayerRequests {
-            return allRequestsScheduled &&
-                scheduledIdentifiers.isEmpty &&
-                pendingIDs.isEmpty
-        }
 
         return allRequestsScheduled &&
             !scheduledIdentifiers.isEmpty &&
@@ -265,6 +314,8 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             "Namaz vakti bildiriminde ezan bu şekilde çalar."
         )
         content.sound = adhanSound(fajr: fajr)
+        content.interruptionLevel = .timeSensitive
+        content.threadIdentifier = "salahpath.prayer-times"
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         do {
@@ -295,6 +346,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             "Bu bildirimi görüyorsan iOS teslimatı çalışıyor."
         )
         content.sound = .default
+        content.interruptionLevel = .active
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         do {
@@ -325,6 +377,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 systemSettings.notificationCenterSetting == .enabled ||
                 systemSettings.lockScreenSetting == .enabled,
             soundsEnabled: systemSettings.soundSetting == .enabled,
+            timeSensitiveEnabled: systemSettings.timeSensitiveSetting == .enabled,
             pendingPrayerRequests: pending.filter { $0.identifier.hasPrefix(prayerIdentifierPrefix) }.count,
             pendingTotalRequests: pending.count,
             standardAdhanInstalled: standardInstalled,
