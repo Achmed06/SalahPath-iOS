@@ -214,6 +214,42 @@ struct SalahPathApp: App {
             NavigationStack { QuranPageReaderView(page: 604) }
         case "namaz-howto":
             NavigationStack { PrayerHowToView() }
+        case "namaz-step-01":
+            NavigationStack { PrayerHowToView(initialStepIndex: 0) }
+        case "namaz-step-02":
+            NavigationStack { PrayerHowToView(initialStepIndex: 1) }
+        case "namaz-step-03":
+            NavigationStack { PrayerHowToView(initialStepIndex: 2) }
+        case "namaz-step-04":
+            NavigationStack { PrayerHowToView(initialStepIndex: 3) }
+        case "namaz-step-05":
+            NavigationStack { PrayerHowToView(initialStepIndex: 4) }
+        case "namaz-step-06":
+            NavigationStack { PrayerHowToView(initialStepIndex: 5) }
+        case "namaz-step-07":
+            NavigationStack { PrayerHowToView(initialStepIndex: 6) }
+        case "namaz-step-08":
+            NavigationStack { PrayerHowToView(initialStepIndex: 7) }
+        case "namaz-step-09":
+            NavigationStack { PrayerHowToView(initialStepIndex: 8) }
+        case "namaz-step-10":
+            NavigationStack { PrayerHowToView(initialStepIndex: 9) }
+        case "namaz-step-11":
+            NavigationStack { PrayerHowToView(initialStepIndex: 10) }
+        case "namaz-step-12":
+            NavigationStack { PrayerHowToView(initialStepIndex: 11) }
+        case "namaz-step-13":
+            NavigationStack { PrayerHowToView(initialStepIndex: 12) }
+        case "namaz-step-14":
+            NavigationStack { PrayerHowToView(initialStepIndex: 13) }
+        case "namaz-step-15":
+            NavigationStack { PrayerHowToView(initialStepIndex: 14) }
+        case "namaz-step-16":
+            NavigationStack { PrayerHowToView(initialStepIndex: 15) }
+        case "namaz-step-17":
+            NavigationStack { PrayerHowToView(initialStepIndex: 16) }
+        case "namaz-step-18":
+            NavigationStack { PrayerHowToView(initialStepIndex: 17) }
         case "namaz-bowing":
             NavigationStack { PrayerHowToView(initialStepIndex: 3) }
         case "namaz-sujud":
