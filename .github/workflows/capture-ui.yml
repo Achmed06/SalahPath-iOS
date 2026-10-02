@@ -327,6 +327,8 @@ jobs:
           elif [ "$CAPTURE_MODE" = "prayer" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+            capture namaz-second-standing SalahPath-v3.62-B78-DE-PrayerStep09.png
+            capture namaz-second-upright SalahPath-v3.62-B78-DE-PrayerStep12.png
             capture namaz-sitting SalahPath-v3.62-B78-DE-PrayerSitting.png
             capture namaz-finger SalahPath-v3.62-B78-DE-PrayerFinger.png
             capture namaz-salam SalahPath-v3.62-B78-DE-PrayerSalam.png
