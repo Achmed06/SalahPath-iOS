@@ -1046,7 +1046,7 @@ struct PrayerHowToView: View {
 
 }
 
-// Male tutorial artwork uses the user-approved generated raster assets; female artwork remains unchanged.
+// Prayer tutorial artwork uses the user-approved generated raster assets; gender-specific Hanafi posture details remain in the step data.
 private struct PrayerTutorialStepCard: View {
     @EnvironmentObject private var settings: SettingsStore
     let step: PrayerTutorialStep
