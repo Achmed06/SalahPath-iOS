@@ -349,13 +349,21 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
 
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let now = Date()
+        // Do not reject iOS Reduced Accuracy locations. When "Precise Location" is
+        // disabled, Core Location can legitimately return city-level accuracy well
+        // above 1 km. Prayer times and Qibla can still use that coordinate, and the
+        // user should not end up stuck after granting location permission.
         guard let newest = locations.last(where: {
             Self.hasValidCoordinate($0) &&
             $0.horizontalAccuracy.isFinite &&
             $0.horizontalAccuracy >= 0 &&
-            $0.horizontalAccuracy <= 1_000 &&
-            abs($0.timestamp.timeIntervalSince(now)) <= 120
-        }) else { return }
+            abs($0.timestamp.timeIntervalSince(now)) <= 900
+        }) else {
+            Task { @MainActor in
+                self.lastError = "Aktueller Standort ist vorübergehend nicht verfügbar. Bitte erneut versuchen."
+            }
+            return
+        }
 
         Task { @MainActor in
             if self.pendingDeviceLocationSwitch {
