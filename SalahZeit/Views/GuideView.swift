@@ -338,11 +338,24 @@ struct GuideView: View {
 private struct PrayerPoseArtwork: View {
     let assetName: String
 
+    private var usesNewMaleArtwork: Bool {
+        assetName.hasPrefix("male_")
+    }
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(
-                    LinearGradient(
+                    usesNewMaleArtwork
+                    ? LinearGradient(
+                        colors: [
+                            Color(red: 0.997, green: 0.992, blue: 0.958),
+                            Color(red: 0.957, green: 0.974, blue: 0.951)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    : LinearGradient(
                         colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.42)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -352,7 +365,7 @@ private struct PrayerPoseArtwork: View {
             Image(assetName)
                 .resizable()
                 .scaledToFit()
-                .padding(4)
+                .padding(usesNewMaleArtwork ? 10 : 4)
         }
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .accessibilityHidden(true)
@@ -978,7 +991,11 @@ struct PrayerHowToView: View {
                 }
                 .padding()
             }
-            .background(SalahTheme.page)
+            .background(
+                settings.prayerAudience == .male
+                ? Color(red: 0.985, green: 0.978, blue: 0.925)
+                : SalahTheme.page
+            )
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .simultaneousGesture(
@@ -1034,6 +1051,8 @@ private struct PrayerTutorialStepCard: View {
     let step: PrayerTutorialStep
     let audience: PrayerAudience
 
+    private var isMale: Bool { audience == .male }
+
     private var standingStylePose: Bool {
         switch step.pose {
         case .intention, .takbir, .standing, .upright:
@@ -1048,14 +1067,103 @@ private struct PrayerTutorialStepCard: View {
         return "\(audience == .male ? "male" : "female")_\(key)"
     }
 
+    private var maleHeader: Color {
+        Color(red: 0.075, green: 0.34, blue: 0.31)
+    }
+
+    private var maleCream: Color {
+        Color(red: 0.997, green: 0.987, blue: 0.935)
+    }
+
+    private var maleInk: Color {
+        Color(red: 0.035, green: 0.14, blue: 0.20)
+    }
+
+    private var maleMuted: Color {
+        Color(red: 0.34, green: 0.39, blue: 0.40)
+    }
+
+    private var maleSoftTeal: Color {
+        Color(red: 0.91, green: 0.955, blue: 0.95)
+    }
+
+    private var maleTipTitle: String {
+        switch step.number {
+        case "1": return settings.t("Aufrecht stehen", "Dik dur")
+        case "2": return settings.t("Hanafi Mann", "Hanefî erkek")
+        case "3": return settings.t("Mann: rechte Hand über die linke unterhalb des Nabels", "Erkek: sağ el sol elin üzerinde, göbek altında")
+        case "4", "11": return settings.t("Mann: Rücken möglichst gerade", "Erkek: sırt mümkün olduğunca düz")
+        case "5", "12": return settings.t("Vollständig aufgerichtet stehen", "Tam doğrulmuş şekilde dur")
+        case "6", "13": return settings.t("Mann: Unterarme vom Boden und Arme vom Körper fernhalten", "Erkek: dirsekler yerden, kollar gövdeden uzak")
+        case "7", "14": return settings.t("Mann: auf dem linken Fuß sitzen", "Erkek: sol ayak üzerine otur")
+        case "8", "15": return settings.t("Zweite Secde", "İkinci secde")
+        case "9": return settings.t("Aufstehen zur 2. Rakʿah", "2. rekâta kalkış")
+        case "10": return settings.t("Hände unter dem Nabel gebunden", "Eller göbek altında bağlı")
+        case "16": return settings.t("Zeigefinger im Tashahhud", "Teşehhüdde işaret parmağı")
+        case "17": return settings.t("Oberkörper bleibt nach vorn.", "Gövde önde kalır.")
+        case "18": return settings.t("Kehre über die Mitte zurück", "Ortadan geri dön")
+        default: return settings.t("Gebetshaltung", "Namaz duruşu")
+        }
+    }
+
+    private var maleTipText: String {
+        if step.number == "16" {
+            return settings.t(
+                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
+                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+            )
+        }
+        if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
+            return note
+        }
+        return settings.language == .german ? step.deAction : step.trAction
+    }
+
+    @ViewBuilder
+    private var malePoseTip: some View {
+        if isMale, let imageName {
+            HStack(alignment: .center, spacing: 13) {
+                PrayerPoseArtwork(assetName: imageName)
+                    .frame(width: 108, height: 118)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(maleTipTitle)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(maleHeader)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(maleTipText)
+                        .font(.caption)
+                        .foregroundStyle(maleMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(11)
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.995, green: 0.983, blue: 0.925),
+                        Color(red: 0.985, green: 0.962, blue: 0.87)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                in: RoundedRectangle(cornerRadius: 15, style: .continuous)
+            )
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 10) {
                 Text(step.number)
                     .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: 34, height: 34)
-                    .background(SalahTheme.gold.opacity(0.95), in: Circle())
+                    .foregroundStyle(isMale ? maleHeader : SalahTheme.deepTeal)
+                    .frame(width: 38, height: 38)
+                    .background(SalahTheme.gold.opacity(0.96), in: Circle())
 
                 Text(settings.language == .german ? step.deTitle : step.trTitle)
                     .font(.headline.bold())
@@ -1065,23 +1173,23 @@ private struct PrayerTutorialStepCard: View {
                 Spacer(minLength: 4)
             }
             .padding(.horizontal, 14)
-            .padding(.vertical, 11)
-            .background(SalahTheme.teal)
+            .padding(.vertical, 12)
+            .background(isMale ? maleHeader : SalahTheme.teal)
 
             VStack(alignment: .leading, spacing: 13) {
-                if step.pose == .salam {
+                if step.pose == .salam && !isMale {
                     PrayerSalamVisual(side: step.imageKey == "salam_left" ? .left : .right)
                 } else if let imageName {
-                    ZStack(alignment: .center) {
-                        PrayerPoseArtwork(assetName: imageName)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: standingStylePose ? 236 : 220)
-                    .padding(.vertical, 6)
-                    .background(SalahTheme.cream)
+                    PrayerPoseArtwork(assetName: imageName)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: isMale ? 255 : (standingStylePose ? 236 : 220))
+                        .padding(.vertical, isMale ? 4 : 6)
+                        .background(isMale ? maleCream : SalahTheme.cream)
                 }
 
-                if step.number == "16" {
+                if isMale {
+                    malePoseTip
+                } else if step.number == "16" {
                     HStack(alignment: .center, spacing: 12) {
                         PrayerPoseArtwork(
                             assetName: "\(audience == .male ? "male" : "female")_finger"
@@ -1113,17 +1221,17 @@ private struct PrayerTutorialStepCard: View {
                 VStack(alignment: .leading, spacing: 7) {
                     Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")
                         .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.teal)
+                        .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
                     Text(settings.language == .german ? step.deAction : step.trAction)
                         .font(.subheadline)
-                        .foregroundStyle(SalahTheme.ink)
+                        .foregroundStyle(isMale ? maleInk : SalahTheme.ink)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
+                .background(isMale ? maleSoftTeal : SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
 
-                if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
+                if !isMale, let note = settings.language == .german ? step.deHanafi : step.trHanafi {
                     Label(note, systemImage: "info.circle.fill")
                         .font(.caption)
                         .foregroundStyle(SalahTheme.mutedInk)
@@ -1136,7 +1244,7 @@ private struct PrayerTutorialStepCard: View {
                     VStack(alignment: .leading, spacing: 10) {
                         Label(settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"), systemImage: "text.bubble.fill")
                             .font(.caption.bold())
-                            .foregroundStyle(SalahTheme.teal)
+                            .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
                         ForEach(step.recitations) { rec in
                             PrayerRecitationView(recitation: rec)
                         }
@@ -1144,14 +1252,14 @@ private struct PrayerTutorialStepCard: View {
                 }
             }
             .padding(14)
-            .background(SalahTheme.cream)
+            .background(isMale ? maleCream : SalahTheme.cream)
         }
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay {
             RoundedRectangle(cornerRadius: 20)
-                .stroke(SalahTheme.gold.opacity(0.48), lineWidth: 1)
+                .stroke(SalahTheme.gold.opacity(isMale ? 0.68 : 0.48), lineWidth: 1)
         }
-        .shadow(color: SalahTheme.deepTeal.opacity(0.05), radius: 7, y: 3)
+        .shadow(color: (isMale ? maleHeader : SalahTheme.deepTeal).opacity(0.06), radius: 7, y: 3)
     }
 }
 
@@ -1232,9 +1340,11 @@ private struct PrayerSalamVisual: View {
                     .font(.title2.bold())
                     .foregroundStyle(SalahTheme.teal)
                 Spacer()
-                Image(systemName: arrow)
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(SalahTheme.gold)
+                if settings.prayerAudience != .male {
+                    Image(systemName: arrow)
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundStyle(SalahTheme.gold)
+                }
             }
 
             HStack(alignment: .center, spacing: 14) {
