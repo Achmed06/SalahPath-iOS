@@ -1315,7 +1315,6 @@ private struct PrayerSalamVisual: View {
             number: isRight ? "1" : "2",
             direction: isRight ? settings.t("RECHTS", "SAĞA") : settings.t("LINKS", "SOLA"),
             imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")",
-            arrow: isRight ? "arrow.right" : "arrow.left",
             instruction: isRight
                 ? settings.t(
                     "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
@@ -1329,7 +1328,7 @@ private struct PrayerSalamVisual: View {
         .accessibilityElement(children: .contain)
     }
 
-    private func salamDirection(number: String, direction: String, imageName: String, arrow: String, instruction: String) -> some View {
+    private func salamDirection(number: String, direction: String, imageName: String, instruction: String) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(number)
@@ -1341,11 +1340,6 @@ private struct PrayerSalamVisual: View {
                     .font(.title2.bold())
                     .foregroundStyle(SalahTheme.teal)
                 Spacer()
-                if settings.prayerAudience != .male {
-                    Image(systemName: arrow)
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundStyle(SalahTheme.gold)
-                }
             }
 
             HStack(alignment: .center, spacing: 14) {

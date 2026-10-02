@@ -1,15 +1,12 @@
 {
   "images": [
     {
-      "filename": "female_finger.svg",
+      "filename": "female_finger.jpg",
       "idiom": "universal"
     }
   ],
   "info": {
     "author": "xcode",
     "version": 1
-  },
-  "properties": {
-    "preserves-vector-representation": true
   }
 }
