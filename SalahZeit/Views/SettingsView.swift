@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var notificationStatusText: String?
     @State private var notificationSystemStatusText = "—"
     @State private var notificationAuthorizationDenied = false
+    @State private var notificationTimeSensitiveDisabled = false
     @State private var audioCacheText = "—"
     @State private var isClearingAudioCache = false
     @State private var quranTextCacheText = "—"
@@ -333,7 +334,8 @@ struct SettingsView: View {
                     .padding(.horizontal, 12)
                     .padding(.vertical, 7)
 
-                    if notificationAuthorizationDenied {
+                    if notificationAuthorizationDenied ||
+                        (settings.notificationsEnabled && notificationTimeSensitiveDisabled) {
                         Button {
                             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                             UIApplication.shared.open(url)
@@ -352,8 +354,8 @@ struct SettingsView: View {
                     }
 
                     Text(settings.t(
-                        "Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Beide stammen aus der Public-Domain-Sammlung „Adhan Recordings from Doha, Qatar“ im Internet Archive. Vorwarnungen behalten den normalen iOS-Ton.",
-                        "Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Her ikisi de Internet Archive'daki „Adhan Recordings from Doha, Qatar“ kamu malı koleksiyonundandır. Ön hatırlatmalar normal iOS sesini kullanır."
+                        "Der Gebetsbeginn wird als zeitkritische Mitteilung geplant; so kann iOS ihn – wenn erlaubt – sofort und durch Fokus-Modi zustellen. Der Lautlos-Schalter wird nicht umgangen. Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Vorwarnungen bleiben normale iOS-Mitteilungen.",
+                        "Namaz başlangıcı zamana duyarlı bildirim olarak planlanır; iOS izin verirse bildirimi hemen ve Odak modlarından geçirerek teslim edebilir. Sessiz anahtarı aşılmaz. Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Ön hatırlatmalar normal iOS bildirimleri olarak kalır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -740,6 +742,7 @@ struct SettingsView: View {
     private func refreshNotificationDiagnostics() async {
         let diagnostics = await NotificationManager.shared.diagnostics()
         notificationAuthorizationDenied = diagnostics.authorizationStatus == .denied
+        notificationTimeSensitiveDisabled = !diagnostics.timeSensitiveEnabled
 
         let permission: String
         switch diagnostics.authorizationStatus {
