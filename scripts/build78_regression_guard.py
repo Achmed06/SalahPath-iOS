@@ -283,12 +283,30 @@ for token in (
     'audiencePreviewCard(\n                    .male',
     'audiencePreviewCard(\n                    .female',
     'Text(settings.t("Wähle deine Anleitung", "Rehberini seç"))',
-    'Text(settings.t("Schritt für Schritt starten", "Adım adım başla"))',
+    'Text(settings.t("2 Rakʿāt Schritt für Schritt", "2 rekât adım adım"))',
     'Image(systemName: "globe")',
     '.accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))',
 ):
     if token not in guide:
         fail(f"prayer learning selector regression: missing {token}")
+
+for token in (
+    'Niyet ettim Allah rızası için bugünkü öğle namazının farzını kılmaya.',
+    'Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")',
+    '2-Rakʿāt-Bildanleitung für Mann/Frau öffnen',
+):
+    if token not in guide:
+        fail(f"prayer guidance completeness regression: missing {token}")
+
+for forbidden in (
+    'HanafiPrayerPlanView',
+    'Rak\'a einfach verstehen',
+    'PDF',
+    'KI-Stimme',
+    'yapay zekâ sesi',
+):
+    if forbidden in guide:
+        fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
 
 # 5a.2) Premium learning-row icons must stay unbadged; only SF fallbacks get a circle.
 for token in (
