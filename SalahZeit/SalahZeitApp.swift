@@ -218,6 +218,10 @@ struct SalahPathApp: App {
             NavigationStack { PrayerHowToView(initialStepIndex: 3) }
         case "namaz-sujud":
             NavigationStack { PrayerHowToView(initialStepIndex: 5) }
+        case "namaz-second-standing":
+            NavigationStack { PrayerHowToView(initialStepIndex: 8) }
+        case "namaz-second-upright":
+            NavigationStack { PrayerHowToView(initialStepIndex: 11) }
         case "namaz-sitting":
             NavigationStack { PrayerHowToView(initialStepIndex: 6) }
         case "namaz-finger":
