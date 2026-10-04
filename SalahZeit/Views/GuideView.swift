@@ -670,10 +670,6 @@ struct PrayerHowToView: View {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
     }
 
-    private var safeCurrentStepIndex: Int {
-        min(max(currentStepIndex, 0), max(steps.count - 1, 0))
-    }
-
     private var steps: [PrayerTutorialStep] {
         [
             .init(
@@ -1470,7 +1466,7 @@ struct WuduGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
-    @State private var showExactDetail = true
+    @State private var expandedWuduSteps: Set<Int> = []
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 10))
@@ -1683,7 +1679,18 @@ struct WuduGuideView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                DisclosureGroup(isExpanded: $showExactDetail) {
+                DisclosureGroup(
+                    isExpanded: Binding(
+                        get: { expandedWuduSteps.contains(step.number) },
+                        set: { isExpanded in
+                            if isExpanded {
+                                expandedWuduSteps.insert(step.number)
+                            } else {
+                                expandedWuduSteps.remove(step.number)
+                            }
+                        }
+                    )
+                ) {
                     Text(exactDetail(for: step.number))
                         .font(.subheadline)
                         .foregroundStyle(SalahTheme.mutedInk)
