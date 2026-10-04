@@ -1445,7 +1445,6 @@ private struct WuduInstructionVisual: View {
             .resizable()
             .interpolation(.high)
             .scaledToFit()
-            .scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
