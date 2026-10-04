@@ -974,70 +974,37 @@ struct PrayerHowToView: View {
                                 .font(.title3.bold())
                         }
                         Text(settings.t(
-                            "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla. Danach gehst du Schritt für Schritt weiter.",
-                            "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön. Sonra adım adım ilerle."
+                            "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla. Danach folgst du den Schritten einfach von oben nach unten.",
+                            "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön. Sonra adımları yukarıdan aşağıya sırayla takip et."
                         ))
                         .font(.subheadline)
                         .fixedSize(horizontal: false, vertical: true)
                     }
                     .cardStyle()
 
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
-                                .foregroundStyle(SalahTheme.deepTeal)
-                            Spacer()
-                            Text(settings.prayerAudience.title(settings.language))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
-                                .padding(.vertical, 5)
-                                .background(SalahTheme.softTeal, in: Capsule())
-                        }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
-                    }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+                    prayerStepRail(proxy: proxy)
 
-                    PrayerTutorialStepCard(step: steps[safeCurrentStepIndex], audience: settings.prayerAudience)
-                        .id("prayer-step-card-\(currentStepIndex)")
-
-                    if steps.count > 1 {
-                        HStack(spacing: 10) {
-                            if currentStepIndex > 0 {
-                                Label(
-                                    settings.t("Rechts wischen · zurück", "Sağa kaydır · geri"),
-                                    systemImage: "arrow.right"
-                                )
+                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                        PrayerTutorialStepCard(step: step, audience: settings.prayerAudience)
+                            .id("prayer-step-card-\(index)")
+                            .onAppear {
+                                if currentStepIndex != index {
+                                    currentStepIndex = index
+                                }
                             }
-                            Spacer(minLength: 8)
-                            if currentStepIndex < steps.count - 1 {
-                                Label(
-                                    settings.t("Links wischen · weiter", "Sola kaydır · devam"),
-                                    systemImage: "arrow.left"
-                                )
-                            }
-                        }
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .padding(.vertical, 8)
-                        .accessibilityElement(children: .combine)
                     }
 
-                    if currentStepIndex == steps.count - 1 {
-                        VStack(alignment: .leading, spacing: 8) {
-                                                Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
-                                                Text(settings.t(
-                                                    "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
-                                                    "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
-                                                ))
-                                                .font(.footnote)
-                                                .foregroundStyle(.secondary)
-                                            }
-                                            .cardStyle(material: true)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                            .font(.headline)
+                        Text(settings.t(
+                            "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
+                            "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
+                        ))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     }
+                    .cardStyle(material: true)
                 }
                 .padding()
             }
@@ -1048,28 +1015,6 @@ struct PrayerHowToView: View {
             )
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 18)
-                    .onEnded { value in
-                        let horizontal = abs(value.predictedEndTranslation.width) > abs(value.translation.width)
-                            ? value.predictedEndTranslation.width
-                            : value.translation.width
-                        let vertical = abs(value.predictedEndTranslation.height) > abs(value.translation.height)
-                            ? value.predictedEndTranslation.height
-                            : value.translation.height
-
-                        guard abs(horizontal) > 48,
-                              abs(horizontal) > abs(vertical) * 1.20 else { return }
-
-                        let offset = horizontal < 0 ? 1 : -1
-                        let target = min(max(currentStepIndex + offset, 0), steps.count - 1)
-                        guard target != currentStepIndex else { return }
-
-                        withAnimation(.easeOut(duration: 0.16)) {
-                            currentStepIndex = target
-                        }
-                    }
-            )
             .onAppear {
                 guard currentStepIndex > 0 else { return }
                 Task { @MainActor in
@@ -1078,20 +1023,62 @@ struct PrayerHowToView: View {
                     proxy.scrollTo("prayer-step-card-\(currentStepIndex)", anchor: .top)
                 }
             }
-            .onChange(of: currentStepIndex) { _, newIndex in
-                Task { @MainActor in
-                    await Task.yield()
-                    await Task.yield()
-                    withAnimation(.easeInOut(duration: 0.22)) {
-                        proxy.scrollTo("prayer-step-card-\(newIndex)", anchor: .top)
-                    }
-                }
-            }
             .onChange(of: settings.prayerAudience) { _, _ in
                 currentStepIndex = 0
-                proxy.scrollTo("prayer-step-top", anchor: .top)
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    proxy.scrollTo("prayer-step-top", anchor: .top)
+                }
             }
         }
+    }
+
+    @ViewBuilder
+    private func prayerStepRail(proxy: ScrollViewProxy) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(settings.t("Schritte", "Adımlar"))
+                    .font(.headline.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+                Spacer()
+                Text("\(currentStepIndex + 1) / \(steps.count)")
+                    .font(.caption.bold())
+                    .foregroundStyle(SalahTheme.mutedInk)
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                        Button {
+                            currentStepIndex = index
+                            withAnimation(.easeInOut(duration: 0.22)) {
+                                proxy.scrollTo("prayer-step-card-\(index)", anchor: .top)
+                            }
+                        } label: {
+                            Text(step.number)
+                                .font(.caption.bold())
+                                .frame(minWidth: 34, minHeight: 34)
+                                .background(
+                                    index == currentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    in: Circle()
+                                )
+                                .foregroundStyle(index == currentStepIndex ? Color.white : SalahTheme.deepTeal)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.vertical, 2)
+            }
+
+            Text(settings.t(
+                "Scrolle einfach nach unten: Schritt 1, dann 2, dann 3 usw. Über die Zahlen kannst du direkt zu einem Schritt springen.",
+                "Aşağı doğru kaydır: 1, sonra 2, sonra 3 diye devam eder. Numaralara dokunarak doğrudan bir adıma gidebilirsin."
+            ))
+            .font(.caption)
+            .foregroundStyle(SalahTheme.mutedInk)
+        }
+        .padding(12)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 
 }
@@ -1487,7 +1474,7 @@ struct WuduGuideView: View {
     @State private var showExactDetail = true
 
     init(initialStepIndex: Int = 0) {
-        _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 12))
+        _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 10))
     }
 
     private var safeCurrentStepIndex: Int {
@@ -1495,19 +1482,17 @@ struct WuduGuideView: View {
     }
 
     private let steps: [WuduTutorialStep] = [
-        .init(number: 1, image: "wudu_intention", deTitle: "Niyyah / Absicht", trTitle: "Niyet", deAction: "Fasse im Herzen die Absicht, Wudu zu nehmen. In der hanafitischen Lehre ist die Niyyah Sunnah und gehört nicht zu den vier Fard-Bestandteilen.", trAction: "Kalben abdest almaya niyet et. Hanefî mezhebinde niyet sünnettir; abdestin dört farzından biri değildir.", repeatText: nil, hanafiFard: false),
-        .init(number: 2, image: "wudu_basmala", deTitle: "Basmala", trTitle: "Besmele", deAction: "Beginne mit Bismillāh. Dies gehört zur dargestellten Wudu-Praxis und ist kein eigener Fard-Bestandteil.", trAction: "Bismillâh diyerek başla. Bu, gösterilen abdest uygulamasının bir parçasıdır; ayrı bir farz değildir.", repeatText: nil, hanafiFard: false),
-        .init(number: 3, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Beide Hände bis zu den Handgelenken waschen und die Fingerzwischenräume erreichen.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına su ulaştır.", repeatText: "3×", hanafiFard: false),
-        .init(number: 4, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Mit der rechten Hand Wasser in den Mund nehmen und gründlich spülen.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
-        .init(number: 5, image: "wudu_nose", deTitle: "Nase: Wasser & reinigen", trTitle: "Buruna su verme ve temizleme", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
-        .init(number: 6, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht: vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr. Kein Bereich darf trocken bleiben. Einmal vollständig ist Farz; dreimal entspricht der Sunnah-Praxis.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka. Kuru yer kalmamalı. Bir kez tam yıkamak farzdır; üç kez yıkamak sünnet uygulamasıdır.", repeatText: "3×", hanafiFard: true),
-        .init(number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 8, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen. Achte auf Fingerzwischenräume und darauf, dass der Ellenbogen nass wird.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Parmak aralarına ve dirseğin tamamen ıslanmasına dikkat et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 9, image: "wudu_head", deTitle: "Masah des Kopfes", trTitle: "Başın meshi", deAction: "Mit feuchten Händen direkt über Kopf bzw. Haar streichen. Die feuchte Hand muss Kopf oder Haar erreichen; eine Kopfbedeckung, die das verhindert, darf nicht dazwischenliegen. Hanafi: Für die Gültigkeit muss mindestens ein Viertel des Kopfes vom Masah erfasst werden; die vollständige Masah wird in dieser Lernreihenfolge einmal gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır; bunu engelleyen takke, bone vb. arada olmamalıdır. Hanefî: Geçerlilik için başın en az dörtte biri mesh edilmelidir; bu öğrenme sıralamasında tam baş meshi bir kez gösterilir.", repeatText: "1×", hanafiFard: true),
-        .init(number: 10, image: "wudu_ears", deTitle: "Ohren", trTitle: "Kulaklar", deAction: "Mit erneut angefeuchteten Händen die Ohren abwischen: außen mit den Daumen, innen mit Zeige- oder kleinen Fingern. Nicht einer der vier Fard-Bestandteile.", trAction: "Eller tekrar ıslatılarak kulakların dışı başparmakla, içi işaret veya serçe parmakla mesh edilir. Dört farzdan biri değildir.", repeatText: "1×", hanafiFard: false),
-        .init(number: 11, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "In der Diyanet/Hanafi-Lernreihenfolge wird die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger gewischt. Nicht die Kehle oder Vorderseite des Halses wischen. Dieser Schritt ist Sunnah und gehört NICHT zu den vier Farz-Bestandteilen.", trAction: "Diyanet/Hanefî öğrenme sıralamasında ense, ıslak parmakların dış kısmıyla mesh edilir. Boğazın ön tarafı mesh edilmez. Bu adım sünnettir ve abdestin dört farzından biri DEĞİLDİR.", repeatText: "1×", hanafiFard: false),
-        .init(number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true),
-        .init(number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel. Führe Wasser auch zwischen die Zehen und kontrolliere Ferse, Fußsohle und Knöchel auf trockene Stellen.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka. Parmak aralarına da su ulaştır; topuk, ayak tabanı ve aşık kemiklerinde kuru yer kalmadığını kontrol et.", repeatText: "3×", hanafiFard: true)
+        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: false),
+        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
+        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
+        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", hanafiFard: true),
+        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
+        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
+        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchten Hände müssen Kopf oder Haar erreichen.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", hanafiFard: true),
+        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", hanafiFard: false),
+        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", hanafiFard: false),
+        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true),
+        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true)
     ]
 
     var body: some View {
@@ -1517,13 +1502,13 @@ struct WuduGuideView: View {
                     Color.clear.frame(height: 1).id("wudu-step-top")
 
                     VStack(alignment: .leading, spacing: 9) {
-                        Label(settings.t("Wudu ganz von vorne", "Abdesti en baştan öğren"), systemImage: "drop.fill")
+                        Label(settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), systemImage: "drop.fill")
                             .font(.title3.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
 
                         Text(settings.t(
-                            "Männer und Frauen machen Wudu grundsätzlich gleich. Vertikal scrollst du innerhalb eines Schritts. Wische nach links für den nächsten Schritt und nach rechts für den vorherigen.",
-                            "Erkekler ve kadınlar abdesti temelde aynı şekilde alır. Dikey kaydırma adımın içinde gezinir. Sonraki adım için sola, önceki adım için sağa kaydır."
+                            "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh. Danach folgen die 11 sichtbaren Handlungen direkt in der richtigen Reihenfolge.",
+                            "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla. Ardından 11 görünür uygulamayı doğru sırayla takip et."
                         ))
                         .font(.subheadline)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1531,153 +1516,69 @@ struct WuduGuideView: View {
                         Divider()
 
                         Text(settings.t(
-                            "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: 1) Gesicht waschen, 2) Arme mit Ellenbogen waschen, 3) mindestens ein Viertel des Kopfes mit nasser Hand wischen, 4) Füße mit Knöcheln waschen.",
-                            "Hanefî/Diyanet anlatımında abdestin 4 farzı: 1) yüzü yıkamak, 2) kolları dirseklerle yıkamak, 3) başın en az dörtte birini mesh etmek, 4) ayakları aşık kemikleriyle yıkamaktır."
+                            "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
+                            "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
                         ))
                         .font(.footnote.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
+                    }
+                    .cardStyle(material: true)
 
+                    wuduStepRail(proxy: proxy)
+
+                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                        wuduStepCard(step)
+                            .id("wudu-step-card-\(index)")
+                            .onAppear {
+                                if currentStepIndex != index {
+                                    currentStepIndex = index
+                                }
+                            }
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
+                            .font(.headline)
+                        Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
+                            .font(.title3)
+                            .multilineTextAlignment(.trailing)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                        Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
+                            .font(.subheadline.weight(.semibold))
                         Text(settings.t(
-                            "Bei den Farz-Waschschritten reicht für die Gültigkeit eine vollständige Waschung; dreimaliges Waschen ist die Sunnah-Praxis. Kopf-Masah wird einmal gezeigt.",
-                            "Farz olan yıkama bölümlerinde geçerlilik için bir kez tam yıkamak yeterlidir; üç kez yıkamak sünnettir. Baş meshi bir kez gösterilir."
+                            "Ich bezeuge, dass es keinen Gott außer Allah gibt, ohne Teilhaber, und dass Muhammad Sein Diener und Gesandter ist.",
+                            "Allah'tan başka ilâh olmadığına, O'nun ortağı bulunmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim."
                         ))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                     }
-                    .cardStyle(material: true)
+                    .cardStyle()
 
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text(settings.t("Schritt", "Adım") + " \(currentStepIndex + 1) / \(steps.count)")
-                                .font(.headline.bold())
-                                .foregroundStyle(SalahTheme.deepTeal)
-                            Spacer()
-                            Text(steps[safeCurrentStepIndex].hanafiFard ? settings.t("FARZ · PFLICHT", "FARZ") : settings.t("SUNNAH", "SÜNNET"))
-                                .font(.caption.bold())
-                                .padding(.horizontal, 9)
-                                .padding(.vertical, 5)
-                                .background(
-                                    (steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal),
-                                    in: Capsule()
-                                )
-                                .foregroundStyle(SalahTheme.deepTeal)
-                        }
-                        ProgressView(value: Double(currentStepIndex + 1), total: Double(steps.count))
-                            .tint(SalahTheme.teal)
-                    }
-                    .padding(12)
-                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
-
-                    wuduStepCard(steps[safeCurrentStepIndex])
-                        .id("wudu-step-card-\(currentStepIndex)")
-
-                    if steps.count > 1 {
-                        HStack(spacing: 10) {
-                            if currentStepIndex > 0 {
-                                Label(
-                                    settings.t("Rechts wischen · zurück", "Sağa kaydır · geri"),
-                                    systemImage: "arrow.right"
-                                )
-                            }
-                            Spacer(minLength: 8)
-                            if currentStepIndex < steps.count - 1 {
-                                Label(
-                                    settings.t("Links wischen · weiter", "Sola kaydır · devam"),
-                                    systemImage: "arrow.left"
-                                )
-                            }
-                        }
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .padding(.vertical, 8)
-                        .accessibilityElement(children: .combine)
-                    }
-
-                    if currentStepIndex == steps.count - 1 {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
+                    VStack(alignment: .leading, spacing: 9) {
+                        Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
+                            .font(.headline.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+                        NavigationLink { GhuslGuideView() } label: {
+                            Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
                                 .font(.headline)
-                            Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
-                                .font(.title3)
-                                .multilineTextAlignment(.trailing)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                            Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
-                                .font(.subheadline.weight(.semibold))
-                            Text(settings.t(
-                                "Ich bezeuge, dass es keinen Gott außer Allah gibt, ohne Teilhaber, und dass Muhammad Sein Diener und Gesandter ist.",
-                                "Allah'tan başka ilâh olmadığına, O'nun ortağı bulunmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim."
-                            ))
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .cardStyle()
+                        .buttonStyle(.plain)
+                        Divider()
+                        NavigationLink { TayammumGuideView() } label: {
+                            Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
                     }
-
-                    if currentStepIndex == steps.count - 1 {
-                        VStack(alignment: .leading, spacing: 9) {
-                                                Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
-                                                    .font(.headline.bold())
-                                                    .foregroundStyle(SalahTheme.deepTeal)
-                        
-                                                NavigationLink { GhuslGuideView() } label: {
-                                                    Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
-                                                        .font(.headline)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                }
-                                                .buttonStyle(.plain)
-                        
-                                                Divider()
-                        
-                                                NavigationLink { TayammumGuideView() } label: {
-                                                    Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
-                                                        .font(.headline)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                }
-                                                .buttonStyle(.plain)
-                                            }
-                                            .cardStyle()
-                        
-                                            VStack(alignment: .leading, spacing: 7) {
-                                                Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
-                                                    .font(.headline)
-                                                Text(settings.t(
-                                                    "Diyanet Namaz İlmihali und Din İşleri Yüksek Kurulu. Die vier Farz-Bestandteile und die vollständige hanafitische Lernreihenfolge werden direkt in SalahPath erklärt. Nacken/Ense ist hier als Sunnah dargestellt, nicht als Farz.",
-                                                    "Diyanet Namaz İlmihali ve Din İşleri Yüksek Kurulu. Abdestin dört farzı ve tam Hanefî öğrenme sırası doğrudan SalahPath içinde açıklanır. Boyun/ense burada sünnet olarak gösterilir, farz değildir."
-                                                ))
-                                                .font(.footnote)
-                                                .foregroundStyle(.secondary)
-                                            }
-                                            .cardStyle(material: true)
-                    }
+                    .cardStyle()
                 }
                 .padding()
             }
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
-            .simultaneousGesture(
-                DragGesture(minimumDistance: 18)
-                    .onEnded { value in
-                        let horizontal = abs(value.predictedEndTranslation.width) > abs(value.translation.width)
-                            ? value.predictedEndTranslation.width
-                            : value.translation.width
-                        let vertical = abs(value.predictedEndTranslation.height) > abs(value.translation.height)
-                            ? value.predictedEndTranslation.height
-                            : value.translation.height
-
-                        guard abs(horizontal) > 48,
-                              abs(horizontal) > abs(vertical) * 1.20 else { return }
-
-                        let offset = horizontal < 0 ? 1 : -1
-                        let target = min(max(currentStepIndex + offset, 0), steps.count - 1)
-                        guard target != currentStepIndex else { return }
-
-                        withAnimation(.easeOut(duration: 0.16)) {
-                            currentStepIndex = target
-                        }
-                    }
-            )
             .onAppear {
                 guard currentStepIndex > 0 else { return }
                 Task { @MainActor in
@@ -1686,16 +1587,56 @@ struct WuduGuideView: View {
                     proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
                 }
             }
-            .onChange(of: currentStepIndex) { _, newIndex in
-                Task { @MainActor in
-                    await Task.yield()
-                    await Task.yield()
-                    withAnimation(.easeInOut(duration: 0.22)) {
-                        proxy.scrollTo("wudu-step-card-\(newIndex)", anchor: .top)
+        }
+    }
+
+    @ViewBuilder
+    private func wuduStepRail(proxy: ScrollViewProxy) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text(settings.t("Schritte", "Adımlar"))
+                    .font(.headline.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+                Spacer()
+                Text("\(currentStepIndex + 1) / \(steps.count)")
+                    .font(.caption.bold())
+                    .foregroundStyle(SalahTheme.mutedInk)
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                        Button {
+                            currentStepIndex = index
+                            withAnimation(.easeInOut(duration: 0.22)) {
+                                proxy.scrollTo("wudu-step-card-\(index)", anchor: .top)
+                            }
+                        } label: {
+                            Text("\(step.number)")
+                                .font(.caption.bold())
+                                .frame(minWidth: 34, minHeight: 34)
+                                .background(
+                                    index == currentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    in: Circle()
+                                )
+                                .foregroundStyle(index == currentStepIndex ? Color.white : SalahTheme.deepTeal)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
+                .padding(.vertical, 2)
             }
+
+            Text(settings.t(
+                "Scrolle nach unten: 1 → 2 → 3 → … → 11. Über die Zahlen kannst du direkt zu einem Schritt springen.",
+                "Aşağı doğru kaydır: 1 → 2 → 3 → … → 11. Numaralara dokunarak doğrudan bir adıma gidebilirsin."
+            ))
+            .font(.caption)
+            .foregroundStyle(SalahTheme.mutedInk)
         }
+        .padding(12)
+        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 
     @ViewBuilder
@@ -1766,46 +1707,39 @@ struct WuduGuideView: View {
     }
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
-        if [6, 7, 8, 12, 13].contains(step.number) {
+        if [4, 5, 6, 10, 11].contains(step.number) {
             return settings.t("1× Farz · 3× Sunnah", "1× Farz · 3× Sünnet")
         }
-        if step.number == 9 { return "1×" }
-        if let repeatText = step.repeatText {
-            return settings.t("\(repeatText) Sunnah", "\(repeatText) Sünnet")
-        }
-        return settings.t("Sunnah", "Sünnet")
+        if [7, 8, 9].contains(step.number) { return "1×" }
+        return settings.t("3× Sunnah", "3× Sünnet")
     }
 
     private func exactDetail(for number: Int) -> String {
         let de: [Int: String] = [
-            1: "Die Absicht ist im Herzen. Du musst keinen bestimmten deutschen oder arabischen Satz laut sprechen.",
-            2: "Sprich Bismillāh vor dem eigentlichen Waschen. Es ist in dieser hanafitischen Lernreihenfolge Sunnah, nicht einer der vier Farz-Bestandteile.",
-            3: "Wasche Handflächen, Handrücken, Finger und Fingerzwischenräume bis einschließlich Handgelenk. Schmuck darf Wasser nicht von der Haut abhalten.",
-            4: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich. Beim Fasten nicht übertreiben, damit kein Wasser geschluckt wird.",
-            5: "Nimm das Wasser mit der rechten Hand zur Nase. Nach jedem Einziehen wird die Nase mit der linken Hand gereinigt bzw. geschnäuzt. Beim Fasten nicht tief hochziehen, damit kein Wasser in den Rachen gelangt.",
-            6: "Gesichtsgrenze: oben der normale Haaransatz, unten das Kinn, seitlich ungefähr von Ohr zu Ohr. Wasser muss die gesamte zu waschende Haut erreichen. Bei dichtem Bart die Haare mit den Fingern durchfahren, damit Wasser gut verteilt wird.",
-            7: "Beginne bei der rechten Hand und wasche bis über den Ellenbogen. Drehe den Arm so, dass Innen- und Außenseite sowie der Ellenbogen sicher nass werden.",
-            8: "Genauso links: von der Hand bis einschließlich Ellenbogen. Kontrolliere besonders den Ellenbogen und Stellen unter eng anliegendem Schmuck.",
-            9: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Die Hände sind feucht. Hanafi: mindestens ein Viertel des Kopfes ist Farz; die vollständige Kopf-Masah wird als Sunnah gezeigt.",
-            10: "Mit feuchten Fingern die Innenbereiche der Ohren vorsichtig wischen, außen mit den Daumen. Kein Wasser tief in den Gehörgang drücken.",
-            11: "Dieser Schritt ist NICHT Farz. In der Diyanet/Hanafi-Darstellung wird die Ense/Nackenpartie mit feuchten Fingerrücken gewischt. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
-            12: "Wasche Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume. Erst wenn überall Wasser angekommen ist, ist der Fuß vollständig gewaschen.",
-            13: "Wie beim rechten Fuß: Oberseite, Sohle, Ferse, beide Knöchel und alle Zehenzwischenräume vollständig erreichen."
+            1: "Wasche Handflächen, Handrücken, Finger und Fingerzwischenräume bis einschließlich Handgelenk.",
+            2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich.",
+            3: "Nimm das Wasser mit der rechten Hand zur Nase. Danach wird die Nase mit der linken Hand gereinigt bzw. geschnäuzt.",
+            4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
+            5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
+            6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
+            7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Die Hände sind feucht.",
+            8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
+            9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
+            10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
+            11: "Wasche danach den linken Fuß genauso vollständig."
         ]
         let tr: [Int: String] = [
-            1: "Niyet kalptedir. Belirli bir Türkçe veya Arapça cümleyi sesli söylemek zorunda değilsin.",
-            2: "Asıl yıkamaya başlamadan önce Bismillāh de. Bu Hanefî öğrenme sıralamasında sünnettir; dört farzdan biri değildir.",
-            3: "Avuçları, el üstlerini, parmakları ve parmak aralarını bileklerle birlikte yıka. Takı suyun deriye ulaşmasını engellememeli.",
-            4: "Sağ elle ağza su alıp iyice çalkala. Oruçluyken suyun yutulmaması için aşırıya kaçma.",
-            5: "Suyu sağ elinle burnuna ver. Her çekişten sonra sol elle burnunu temizleyip sümkür. Oruçluyken suyun boğaza kaçmaması için derine çekme.",
-            6: "Yüz sınırı: normal saç çizgisinden çeneye, yanlarda yaklaşık bir kulaktan diğer kulağa kadar. Yıkanması gereken her yere su ulaşmalı. Sık sakalda suyun iyi dağılması için parmaklarla arala.",
-            7: "Sağ elden başlayıp dirsek dahil kolu yıka. Kolun içi, dışı ve dirseğin tamamen ıslandığından emin ol.",
-            8: "Aynı şekilde sol eli ve kolu dirsek dahil yıka. Özellikle dirsek ve sıkı takı altlarını kontrol et.",
-            9: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî: başın en az dörtte birini mesh etmek farzdır; tam baş meshi sünnet olarak gösterilir.",
-            10: "Islak parmaklarla kulakların iç kısmını nazikçe, dışını başparmaklarla mesh et. Suyu kulak kanalına derin itme.",
-            11: "Bu adım farz DEĞİLDİR. Diyanet/Hanefî anlatımında ense ıslak parmakların dış kısmıyla mesh edilir. Boğazın ön tarafı mesh edilmez.",
-            12: "Ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını yıka. Her yere su ulaşınca ayak tamamen yıkanmış olur.",
-            13: "Sağ ayakta olduğu gibi ayağın üstü, tabanı, topuğu, iki aşık kemiği ve bütün parmak aralarına su ulaştır."
+            1: "Avuçları, el üstlerini, parmakları ve parmak aralarını bileklerle birlikte yıka.",
+            2: "Sağ elle ağza su alıp iyice çalkala.",
+            3: "Suyu sağ elinle burnuna ver. Ardından sol elle burnunu temizleyip sümkür.",
+            4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
+            5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.",
+            6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
+            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir.",
+            8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
+            9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
+            10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
+            11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
         ]
         return settings.language == .german ? (de[number] ?? "") : (tr[number] ?? "")
     }
