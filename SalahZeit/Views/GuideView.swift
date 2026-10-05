@@ -1734,6 +1734,13 @@ struct WuduGuideView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
+                            Divider()
+                            NavigationLink { WuduSpecialCasesView() } label: {
+                                Label(settings.t("Wudu-Sonderfälle · Mest, Verband, Nagellack", "Abdest özel durumları · Mest, sargı, oje"), systemImage: "cross.case.fill")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .buttonStyle(.plain)
                         }
                         .cardStyle()
                     }
@@ -1995,6 +2002,70 @@ struct WuduGuideView: View {
 
 }
 
+
+struct WuduSpecialCasesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Mest / geeignete Socken · Hanafi", "Mest / uygun çorap · Hanefî")) {
+                Text(settings.t(
+                    "Nicht über jeden gewöhnlichen dünnen Socken darf einfach gewischt werden. Hanafitisch müssen Mest bzw. geeignete Socken die Knöchel bedecken und ausreichend fest, blickdicht und widerstandsfähig sein; Wasser darf nicht sofort bis zum Fuß durchdringen.",
+                    "Her sıradan ince çorap üzerine mesh edilmez. Hanefî mezhebinde mest veya uygun çorap aşık kemiklerini örtmeli; yeterince sağlam, kalın ve dayanıklı olmalı, suyu hemen ayağa geçirmemelidir."
+                ))
+                Text(settings.t(
+                    "Sie werden nach einem vollständigen Wudu angezogen, bei dem die Füße gewaschen wurden. Die Mesh-Frist beginnt mit dem ersten Wudu-Bruch nach dem Anziehen: für Ortsansässige 24 Stunden, für Reisende 72 Stunden.",
+                    "Ayakların yıkandığı tam bir abdestten sonra giyilir. Mesh süresi, giyildikten sonra abdestin ilk bozulduğu andan itibaren başlar: mukim için 24 saat, seferî için 72 saat."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                Text(settings.t(
+                    "Beim neuen Wudu wird über die Oberseite der geeigneten Fußbekleidung mit feuchten Fingern gewischt; die nackten Füße einfach nur abzuwischen ersetzt das Waschen nicht.",
+                    "Yeni abdestte uygun mestin üst kısmı ıslak parmaklarla mesh edilir; çıplak ayağı sadece mesh etmek, ayağı yıkamanın yerine geçmez."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Wunde, Verband oder Gips", "Yara, sargı veya alçı")) {
+                Text(settings.t(
+                    "Kann die Stelle ohne Schaden gewaschen werden, wird sie gewaschen. Würde Waschen schaden oder die Heilung verzögern, wird über den notwendigen Verband bzw. Gips einmal gewischt.",
+                    "Bölge zarar vermeden yıkanabiliyorsa yıkanır. Yıkamak zarar verecek veya iyileşmeyi geciktirecekse gerekli sargı ya da alçı üzerine bir defa mesh edilir."
+                ))
+                Text(settings.t(
+                    "Ist sogar das Wischen schädlich, wird auch dieses ausgelassen. Für medizinisch notwendige Abdeckungen gelten damit andere Regeln als für freiwillig aufgebrachte wasserundurchlässige Schichten.",
+                    "Mesh etmek bile zarar veriyorsa mesh de terk edilir. Bu nedenle tıbben gerekli örtüler, isteğe bağlı su geçirmeyen tabakalardan farklı hükme tabidir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Nagellack, Farbe & wasserundurchlässige Schichten", "Oje, boya ve su geçirmeyen tabakalar")) {
+                Text(settings.t(
+                    "Wasser muss die Stellen erreichen, die im Wudu oder Ghusl gewaschen werden müssen. Freiwillig aufgetragene Schichten, die Wasser tatsächlich abhalten – z. B. gewöhnlicher wasserundurchlässiger Nagellack – müssen vorher entfernt werden.",
+                    "Abdest veya gusülde yıkanması gereken yerlere su ulaşmalıdır. Suyu gerçekten engelleyen ve isteğe bağlı sürülen tabakalar – örneğin normal su geçirmeyen oje – önceden çıkarılmalıdır."
+                ))
+                Text(settings.t(
+                    "Eine medizinisch notwendige, vorübergehende Schutzschicht kann nach Diyanet bei ärztlich empfohlener Behandlung wie ein Verband behandelt werden, wenn keine zumutbare Alternative besteht.",
+                    "Doktor tavsiyesiyle tedavi için zorunlu ve geçici kullanılan koruyucu bir tabaka, uygun başka yol bulunmadığında Diyanet'e göre sargı hükmünde değerlendirilebilir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Diese Zusammenfassung folgt der hanafitischen/Diyanet-Einordnung. Bei speziellen medizinischen Hilfsmitteln, ungewöhnlichen Sockenmaterialien oder anderen Rechtsschulen können Details abweichen.",
+                    "Bu özet Hanefî/Diyanet yaklaşımını esas alır. Özel tıbbî malzemelerde, alışılmadık çorap türlerinde veya diğer mezheplerde ayrıntılar değişebilir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Wudu-Sonderfälle", "Abdest özel durumları"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
 
 // MARK: - Ghusl and Tayammum
 
