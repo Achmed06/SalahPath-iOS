@@ -2558,7 +2558,7 @@ struct PrayerTermsView: View {
         ("Sujūd / Secde", "Niederwerfung im Gebet.", "Namazdaki secde bölümü."),
         ("Qibla / Kıble", "Gebetsrichtung zur Kaaba in Mekka.", "Mekke'deki Kâbe yönü."),
         ("Adhān / Ezan", "Gebetsruf zum Beginn der Gebetszeit.", "Namaz vaktini bildiren çağrı."),
-        ("Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.", "Cemaat namazından hemen önce okunan çağrı."),
+        ("Iqāmah / Kamet", "Ruf unmittelbar vor dem Beginn eines Farḍ-Gebets; nicht begrifflich auf Gemeinschaftsgebete beschränkt.", "Farz namaza başlamadan önce getirilen çağrı; yalnız cemaat namazıyla sınırlı değildir."),
         ("Dhikr / Zikir", "Gedenken Allahs durch Worte, Duʿāʾ und Qurʾān-Rezitation.", "Allah'ı söz, dua ve Kur'an ile anmak."),
         ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿāt wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
     ]
@@ -4872,6 +4872,10 @@ private struct QadaPrayerGuideView: View {
                 qadaPoint(settings.t(
                     "Die Absicht muss das nachzuholende Gebet bestimmen. Ein einziges Gebet kann nicht zugleich als Kaza und als aktuelle Sunnah gezählt werden.",
                     "Niyette hangi namazın kazasının kılındığı belirlenir. Tek bir namaz aynı anda hem kaza hem de vaktin sünneti olarak sayılmaz."
+                ))
+                qadaPoint(settings.t(
+                    "Für Männer sind Ezân und Kâmet nach der hanafitischen/Diyanet-Darstellung auch bei Kaza-Gebeten Sunnah. Werden mehrere Kaza-Gebete am selben Ort nacheinander gebetet, genügt ein Ezân zu Beginn; für jedes einzelne Kaza-Gebet wird eine eigene Kâmet gebracht. Frauen lesen nach Diyanets hanafitischer Darstellung weder Ezân noch Kâmet.",
+                    "Hanefî/Diyanet anlatımında erkekler için kaza namazlarında da ezan ve kâmet sünnettir. Aynı yerde art arda birden fazla kaza kılınacaksa başta bir ezan yeterli olabilir; her kaza namazı için ayrı kâmet getirilir. Diyanet'in Hanefî anlatımında kadınlar ezan okumaz ve kâmet getirmez."
                 ))
                 qadaPoint(settings.t(
                     "Ein vier-Rakʿah-Farḍ, das während einer hanafitisch gültigen Reise im seferî-Zustand verpasst wurde, wird später als zwei Rakʿāt nachgeholt – auch wenn man inzwischen wieder mukīm ist. Umgekehrt wird ein als mukīm verpasstes vier-Rakʿah-Gebet auch auf einer späteren Reise als vier Rakʿāt nachgeholt.",
