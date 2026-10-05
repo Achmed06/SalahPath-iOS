@@ -759,8 +759,8 @@ struct PrayerHowToView: View {
                 trTitle: "Doğrulma – 1. rekât",
                 deAction: "Richte dich vollständig aus dem Rukūʿ auf. Stehe kurz ganz ruhig, bevor du in die Secde gehst.",
                 trAction: "Rükûdan tamamen doğrul. Secdeye gitmeden önce kısa bir an tamamen dik ve sakin dur.",
-                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
-                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                deHanafi: "Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten „Semi'allāhu limen hamideh“. „Rabbenâ lekel-hamd“ sagen der Alleinbetende und der Mitbetende hinter dem Imam; nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich.",
+                trHanafi: "Hanefî/Diyanet: İmam ve yalnız kılan doğrulurken „Semi'allāhu limen hamideh“ der. „Rabbenâ lekel-hamd“ı yalnız kılan ve imama uyan söyler; Ebû Hanîfe'ye göre imam ayrıca tahmîd söylemez.",
                 recitations: [PrayerText.rising, PrayerText.upright]
             ),
             .init(
@@ -843,8 +843,8 @@ struct PrayerHowToView: View {
                 trTitle: "Doğrulma – 2. rekât",
                 deAction: "Richte dich wieder vollständig aus dem Rukūʿ auf und bleibe kurz ruhig stehen, bevor du zur Secde gehst.",
                 trAction: "Rükûdan yeniden tamamen doğrul ve secdeye gitmeden önce kısa bir an sakin dur.",
-                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
-                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                deHanafi: "Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten „Semi'allāhu limen hamideh“. „Rabbenâ lekel-hamd“ sagen der Alleinbetende und der Mitbetende hinter dem Imam; nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich.",
+                trHanafi: "Hanefî/Diyanet: İmam ve yalnız kılan doğrulurken „Semi'allāhu limen hamideh“ der. „Rabbenâ lekel-hamd“ı yalnız kılan ve imama uyan söyler; Ebû Hanîfe'ye göre imam ayrıca tahmîd söylemez.",
                 recitations: [PrayerText.rising, PrayerText.upright]
             ),
             .init(
@@ -1032,6 +1032,17 @@ struct PrayerHowToView: View {
                             .foregroundStyle(.secondary)
                         }
                         .cardStyle(material: true)
+
+                        NavigationLink { PrayerMistakesView() } label: {
+                            Label(
+                                settings.t("Fehler im Gebet · Sehiv-Secdesi", "Namazda hata · Sehiv secdesi"),
+                                systemImage: "exclamationmark.arrow.triangle.2.circlepath"
+                            )
+                            .font(.headline.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
+                        .cardStyle()
                     }
                 }
                 .padding()
@@ -1481,6 +1492,132 @@ private struct QunutDuaView: View {
     }
 }
 
+private struct PrayerMistakesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(
+                        settings.t("Gebetsfehler richtig einordnen", "Namazdaki hataları doğru değerlendirmek"),
+                        systemImage: "exclamationmark.arrow.triangle.2.circlepath"
+                    )
+                    .font(.title3.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Diese Übersicht folgt der hanafitischen/Diyanet-Grunddarstellung. Nicht jeder Fehler macht das Gebet ungültig und nicht jeder Fehler wird durch Sehiv-Secdesi behoben.",
+                        "Bu özet Hanefî/Diyanet temel anlatımını izler. Her hata namazı bozmaz; her hata da sehiv secdesiyle giderilmez."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Was kann das Gebet ungültig machen?", "Namazı neler bozabilir?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    prayerIssue(settings.t("Wudu bzw. die notwendige rituelle Reinheit geht während des Gebets verloren.", "Namaz sırasında abdestin veya gerekli hükmî temizliğin bozulması."))
+                    prayerIssue(settings.t("Im Gebet mit gewöhnlicher menschlicher Rede sprechen.", "Namazda normal insan sözüyle konuşmak."))
+                    prayerIssue(settings.t("Essen oder trinken.", "Yemek veya içmek."))
+                    prayerIssue(settings.t("Die Brust deutlich von der Qibla wegdrehen.", "Göğsü kıbleden belirgin biçimde çevirmek."))
+                    prayerIssue(settings.t("So viele gebetsfremde Bewegungen machen, dass ein Außenstehender den Eindruck bekommt, man sei nicht mehr im Gebet.", "Dışarıdan bakanın artık namaz kılınmadığını düşüneceği kadar namaz dışı hareket yapmak."))
+                    prayerIssue(settings.t("Hanafi: so laut lachen, dass Umstehende es hören; dies bricht zusätzlich Wudu.", "Hanefî: yakındakilerin duyacağı kadar sesli gülmek; bu aynı zamanda abdesti de bozar."))
+                    prayerIssue(settings.t("Eine notwendige Bedingung oder einen grundlegenden Bestandteil des Gebets fehlen lassen. Details hängen davon ab, was genau ausgelassen wurde.", "Namazın gerekli bir şartını veya temel rüknünü yerine getirmemek. Sonuç, tam olarak neyin terk edildiğine göre değişir."))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Wann ist Sehiv-Secdesi nötig?", "Sehiv secdesi ne zaman gerekir?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Hanefî/Diyanet: Wird aus Versehen ein Rukn verzögert, wiederholt oder vorgezogen oder ein Wājib ausgelassen, verzögert oder verändert, wird die Unachtsamkeit mit Sehiv-Secdesi ausgeglichen.",
+                        "Hanefî/Diyanet: Unutarak bir rükün geciktirilir, tekrarlanır veya öne alınırsa ya da bir vacip terk edilir, geciktirilir veya değiştirilirse sehiv secdesi gerekir."
+                    ))
+                    .fixedSize(horizontal: false, vertical: true)
+
+                    Divider()
+
+                    numberedPrayerMistake("1", settings.t(
+                        "Im letzten Sitzen Ettehiyyâtü lesen.",
+                        "Son oturuşta Ettehiyyâtü'yü oku."
+                    ))
+                    numberedPrayerMistake("2", settings.t(
+                        "Nach rechts Salām geben und ohne Unterbrechung mit Allāhu akbar in die erste Secde gehen.",
+                        "Sağa selâm ver; ara vermeden Allāhu ekber diyerek birinci secdeye git."
+                    ))
+                    numberedPrayerMistake("3", settings.t(
+                        "In jeder der zwei Secden dreimal „Sübhâne rabbiyel-aʿlâ“ sagen; zwischen den Secden mit Takbīr sitzen.",
+                        "İki secdenin her birinde üç kez „Sübhâne rabbiyel-aʿlâ“ de; arada tekbirle otur."
+                    ))
+                    numberedPrayerMistake("4", settings.t(
+                        "Nach der zweiten Secde sitzen und Ettehiyyâtü, Allahümme Salli, Allahümme Bârik und eine Rabbenâ-Dua lesen.",
+                        "İkinci secdeden sonra oturup Ettehiyyâtü, Allahümme Salli, Allahümme Bârik ve bir Rabbenâ duası oku."
+                    ))
+                    numberedPrayerMistake("5", settings.t(
+                        "Danach zuerst nach rechts und dann nach links Salām geben.",
+                        "Ardından önce sağa, sonra sola selâm ver."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Wichtig", "Önemli"), systemImage: "info.circle.fill")
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Sehiv-Secdesi repariert nicht pauschal jeden Fehler. Wer z. B. einen Farz/Rukn bewusst auslässt oder einen komplizierten Fehlerfall hat, sollte die konkrete Regel prüfen. Bei Zweifel zeigt SalahPath hier bewusst keine automatische Gültigkeitsentscheidung.",
+                        "Sehiv secdesi her hatayı otomatik olarak düzeltmez. Örneğin bir farz/rükün bilerek terk edilmişse veya hata karmaşıksa somut hüküm ayrıca kontrol edilmelidir. SalahPath şüpheli durumda namazın geçerliliği hakkında otomatik hüküm vermez."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Grundlage: Diyanet Din İşleri Yüksek Kurulu · Sehiv Secdesi ve Tilavet Secdesi; Diyanet Namaz İlmihali · Namazı Bozan Şeyler. Darstellung: hanafitischer Grundrahmen.",
+                        "Kaynak: Diyanet Din İşleri Yüksek Kurulu · Sehiv Secdesi ve Tilavet Secdesi; Diyanet Namaz İlmihali · Namazı Bozan Şeyler. Anlatım: Hanefî temel çerçeve."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Gebetsfehler", "Namaz hataları"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func prayerIssue(_ text: String) -> some View {
+        Label(text, systemImage: "exclamationmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func numberedPrayerMistake(_ number: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text(number)
+                .font(.caption.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(width: 26, height: 26)
+                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+            Text(text)
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
 // MARK: - Wudu
 
 private struct WuduTutorialStep: Identifiable {
@@ -1609,6 +1746,57 @@ struct WuduGuideView: View {
                             .foregroundStyle(.secondary)
                         }
                         .cardStyle()
+
+                        VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Was bricht Wudu?", "Abdesti ne bozar?"), systemImage: "exclamationmark.shield.fill")
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Text(settings.t(
+                                "Hanafi/Diyanet – häufige Fälle:",
+                                "Hanefî/Diyanet – sık görülen durumlar:"
+                            ))
+                            .font(.caption.bold())
+                            .foregroundStyle(SalahTheme.teal)
+
+                            Label(settings.t(
+                                "Ausscheidungen aus den beiden natürlichen Ausgängen, einschließlich Wind.",
+                                "Ön veya arka yoldan idrar, dışkı, akıntı veya yel çıkması."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Fließendes Blut, Eiter oder Wundflüssigkeit; andere Rechtsschulen beurteilen dies teilweise anders.",
+                                "Akan kan, irin veya yara sıvısı; diğer mezheplerde bu konuda farklı hükümler vardır."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Mundvolles Erbrechen im hanafitischen Fiqh.",
+                                "Hanefî fıkhında ağız dolusu kusmak."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Bewusstlosigkeit, starke Berauschung oder Schlaf, bei dem die Körperkontrolle verloren geht. Festes Sitzen mit stabiler Sitzhaltung wird beim Schlaf gesondert beurteilt.",
+                                "Bayılma, ağır sarhoşluk veya beden kontrolünün kaybolduğu uyku. Kalçalar yere sağlam oturmuş ve oturuş korunmuşsa uyku ayrıca değerlendirilir."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Hanafi: lautes Lachen im Gebet, das Umstehende hören können, beendet sowohl das Gebet als auch Wudu.",
+                                "Hanefî: Namazda yakındakilerin duyacağı kadar sesli gülmek hem namazı hem abdesti bozar."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Text(settings.t(
+                                "Berührung zwischen Mann und Frau allein bricht Wudu im hanafitischen Madhhab nicht automatisch. Bei konkreten Sonderfällen und anderen Rechtsschulen gelten teils andere Regeln.",
+                                "Kadın ile erkeğin yalnızca birbirine dokunması Hanefî mezhebinde abdesti kendiliğinden bozmaz. Özel durumlarda ve diğer mezheplerde farklı hükümler bulunabilir."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle(material: true)
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
@@ -4107,6 +4295,7 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
+                NavigationLink { PrayerMistakesView() } label: { Label(settings.t("Gebetsfehler & Sehiv-Secdesi", "Namaz hataları & Sehiv secdesi"), systemImage: "exclamationmark.arrow.triangle.2.circlepath") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
 
@@ -4275,7 +4464,7 @@ struct ThirtyTwoFardView: View {
                 trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Ahiret gününe iman", "Kader ve kazaya iman"]
             ),
             .init(
-                deTitle: "5 Säulen / Bedingungen des Islam",
+                deTitle: "5 Säulen des Islam",
                 trTitle: "İslam’ın 5 şartı",
                 deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Hajj verrichten, wenn die Voraussetzungen erfüllt sind"],
                 trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Gücü yeten için hacca gitmek"]
@@ -4321,8 +4510,8 @@ struct ThirtyTwoFardView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "„32 Farz“ ist eine traditionelle Lernformel, mit der zentrale Glaubens- und Gottesdienstpflichten übersichtlich zusammengefasst werden; sie ist kein eigener zusätzlicher Glaubensgrundsatz. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
-                        "„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak için kullanılan geleneksel bir öğrenme formülüdür; başlı başına ayrı bir iman şartı değildir. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
+                        "„32 Farz“ ist eine traditionelle Lernformel, mit der zentrale Glaubens- und Gottesdienstpflichten übersichtlich zusammengefasst werden; sie ist kein eigener zusätzlicher Glaubensgrundsatz. Die konkrete Zählweise hier folgt der hanafitischen/Diyanet-Lehrdarstellung; andere Rechtsschulen können einzelne Pflichten anders zählen oder einordnen. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
+                        "„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak için kullanılan geleneksel bir öğrenme formülüdür; başlı başına ayrı bir iman şartı değildir. Buradaki sayım Hanefî/Diyanet öğretim anlatımını izler; diğer mezhepler bazı farzları farklı sayabilir veya sınıflandırabilir. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
