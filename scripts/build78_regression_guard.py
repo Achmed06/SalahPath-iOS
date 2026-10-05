@@ -462,6 +462,23 @@ if 'case .sunrise: return "Güneş"' not in home:
 if 'case .sunrise: return "Sabah"' in home:
     fail("Turkish sunrise/prayer-name confusion returned")
 
+# 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
+for token in (
+    'private struct PrayerSpecialSituationsView: View',
+    'Reise · Seferîlik & Qasr',
+    'mindestens ungefähr 90 km',
+    'weniger als 15 Tage Aufenthalt',
+    'vier-rakʿātigen Farḍ-Gebete Dhuhr, Asr und Isha auf zwei Rakʿāt',
+    'private struct TilawahSajdahGuideView: View',
+    'Die 14 Secde-Ayat',
+    'An-Naḥl 16:49',
+    'Diyanet erklärt ausdrücklich: Wird ein Secde-Ayat über Radio, Fernsehen, Internet',
+    'private func isTilawahSajdahAyah(surah: Int, ayah: Int) -> Bool',
+    'settings.t("Secde-Ayat", "Secde âyeti")',
+):
+    if token not in guide:
+        fail(f"missing high-priority Islamic learning module regression: {token}")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
