@@ -1976,7 +1976,7 @@ struct GhuslGuideView: View {
                 .font(.caption.bold())
                 .foregroundStyle(.white)
                 .frame(width: 26, height: 26)
-                .background(SalahTheme.teal, in: Circle())
+                .background(SalahTheme.navigationTeal, in: Circle())
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -2100,7 +2100,7 @@ struct TayammumGuideView: View {
                 .font(.caption.bold())
                 .foregroundStyle(.white)
                 .frame(width: 26, height: 26)
-                .background(SalahTheme.teal, in: Circle())
+                .background(SalahTheme.navigationTeal, in: Circle())
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -6599,7 +6599,7 @@ struct FastingBasicsView: View {
                 .font(.caption.bold())
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
-                .background(SalahTheme.teal, in: Circle())
+                .background(SalahTheme.navigationTeal, in: Circle())
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -6877,7 +6877,7 @@ private struct IslamicCalendarEventDetailView: View {
         .buttonStyle(.plain)
         .foregroundStyle(.white)
         .background(
-            SalahTheme.deepTeal,
+            SalahTheme.navigationTeal,
             in: RoundedRectangle(cornerRadius: 15, style: .continuous)
         )
     }
@@ -8170,7 +8170,7 @@ struct TasbihCounterView: View {
                     Image(systemName: "plus")
                         .font(.title2.bold())
                         .frame(width: 58, height: 58)
-                        .background(SalahTheme.teal, in: Circle())
+                        .background(SalahTheme.navigationTeal, in: Circle())
                         .foregroundStyle(.white)
                 }
             }
