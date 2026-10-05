@@ -212,7 +212,7 @@ struct PrayerTrackerOverviewView: View {
 
                                         if count == PrayerTrackerStore.requiredKinds.count {
                                             Circle()
-                                                .fill(SalahTheme.teal)
+                                                .fill(SalahTheme.navigationTeal)
                                                 .frame(width: 28, height: 28)
                                             Image(systemName: "checkmark")
                                                 .font(.caption2.bold())
@@ -597,7 +597,7 @@ private struct DailyDuaDetailView: View {
                         } label: {
                             ZStack {
                                 Circle()
-                                    .fill(SalahTheme.teal)
+                                    .fill(SalahTheme.navigationTeal)
                                     .frame(width: 48, height: 48)
 
                                 if isResolvingAudio {
@@ -1521,7 +1521,7 @@ struct HomeView: View {
             } label: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(SalahTheme.teal)
+                        .fill(SalahTheme.navigationTeal)
                         .frame(width: 30, height: 28)
 
                     if dailyDuaAudioLoading {
@@ -1629,7 +1629,7 @@ struct HomeView: View {
                 HStack(spacing: 5) {
                     ZStack {
                         Circle()
-                            .fill(SalahTheme.teal)
+                            .fill(SalahTheme.navigationTeal)
                             .frame(width: 20, height: 20)
                         Image(systemName: "checkmark")
                             .font(.system(size: 8, weight: .black))
@@ -1693,7 +1693,7 @@ struct HomeView: View {
 
                 if done {
                     Circle()
-                        .fill(SalahTheme.teal)
+                        .fill(SalahTheme.navigationTeal)
                         .frame(width: 21, height: 21)
 
                     Image(systemName: "checkmark")
@@ -2009,7 +2009,7 @@ struct HomeView: View {
                         }
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
-                        .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                         HStack(spacing: 7) {
                             TextField(settings.t("Stadt oder PLZ manuell", "Şehir veya posta kodu"), text: $manualLocationText)
