@@ -53,6 +53,8 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Marked short Quran extracts (20:114 and 3:173) as excerpts instead of implying that the displayed words are the complete verse.
 - The Home-card Sayyid al-Istighfar entry now contains the full displayed formula; it is no longer a truncated quotation presented as complete.
 - Corrected the morning/evening “Allahumma bika asbahna / amsayna” display so the evening tab shows the evening wording and the morning wording includes its closing phrase.
+- Replaced the vague Ramadan daytime-intention cutoff with Diyanet's precise Hanafi rule: for Ramadan, specified vows and voluntary fasts the intention may be made until about 10 minutes before solar noon if nothing invalidating occurred after imsak; qada, kaffarah and unscheduled vow fasts must be intended by imsak.
+- Added the consensus menstruation/postpartum qada distinction to the Qada tracker: prayers missed during hayd/nifas are not made up, while missed Ramadan fasts are made up after purification.
 - Clarified that the Three Quls card displays only the opening lines while the practice refers to the complete surahs.
 - Removed the unsupported implication that `Astaghfirullah` has a fixed count of 33 in this morning/evening screen. The counter is no longer presented as a transmitted prescribed number.
 - Reworded broad claims of “authentic hadiths” to “hadith sources” and explicitly notes that grading can differ.
