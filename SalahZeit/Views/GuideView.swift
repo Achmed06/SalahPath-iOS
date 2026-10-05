@@ -681,6 +681,14 @@ private enum PrayerText {
         deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
         trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Quran 2:201", trNote: "Kur'an 2:201")
 
+    static let rabbanaGhfirli = PrayerRecitation(
+        deLabel: "Rabbenağfirlî", trLabel: "Rabbenağfirlî",
+        arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+        transliteration: "Rabbenağfir lî ve li-vâlideyye ve lil-mü'minîne yevme yekûmül-hisâb.",
+        deMeaning: "Unser Herr, vergib mir, meinen Eltern und den Gläubigen an dem Tag, an dem die Abrechnung stattfindet.",
+        trMeaning: "Rabbimiz, hesap görülecek gün beni, anne babamı ve müminleri bağışla.",
+        deNote: "Quran 14:41", trNote: "Kur'an 14:41")
+
     static let salam = PrayerRecitation(
         deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
         arabic: "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ", transliteration: "Es-selâmü aleyküm ve rahmetullâh",
@@ -5590,10 +5598,10 @@ struct PrayerDuaAudioView: View {
             recitations: [PrayerText.salli, PrayerText.barik]
         ),
         .init(
-            deTitle: "Rabbena-Dua", trTitle: "Rabbenâ duası",
-            deDetail: "Abschlussdua im letzten Sitzen vor dem Salam.",
-            trDetail: "Son oturuşta selâmdan önce okunan kapanış duası.",
-            recitations: [PrayerText.rabbana]
+            deTitle: "Rabbenâ-Duas", trTitle: "Rabbenâ duaları",
+            deDetail: "Zwei verbreitete Quran-Duas für das letzte Sitzen vor dem Salām.",
+            trDetail: "Son oturuşta selâmdan önce okunabilen iki yaygın Kur'an duası.",
+            recitations: [PrayerText.rabbana, PrayerText.rabbanaGhfirli]
         ),
         .init(
             deTitle: "Rabbighfirli", trTitle: "Rabbighfir lî",
