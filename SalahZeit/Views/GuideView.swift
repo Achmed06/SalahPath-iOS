@@ -6671,8 +6671,8 @@ struct MorningEveningAdhkarView: View {
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Hisn al-Muslim 78 · Morgen-/Abendfassung; Wortlautvarianten überliefert"),
         .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
-        .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86 · Abu Dawud / Tirmidhi"),
-        .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87 · Ahmad / Tirmidhi")
+        .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86"),
+        .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87")
     ]
 
     var body: some View {
@@ -6681,8 +6681,6 @@ struct MorningEveningAdhkarView: View {
                 Picker(settings.t("Kategorie", "Kategori"), selection: $category) {
                     Text(settings.t("Morgen", "Sabah")).tag(0)
                     Text(settings.t("Abend", "Akşam")).tag(1)
-                    Text(settings.t("Täglich", "Günlük")).tag(2)
-                    Text(settings.t("Speziell", "Özel")).tag(3)
                 }
                 .pickerStyle(.segmented)
                 .padding(6)
@@ -6875,12 +6873,7 @@ struct MorningEveningAdhkarView: View {
     }
 
     private var visibleItems: [AdhkarEntry] {
-        switch category {
-        case 0: return items
-        case 1: return items
-        case 2: return items.filter { ["istighfar", "raditu", "ayatkursi"].contains($0.id) }
-        default: return items.filter { ["protection", "threequls"].contains($0.id) }
-        }
+        items
     }
 
     private var selectedItem: AdhkarEntry? {
@@ -6888,12 +6881,7 @@ struct MorningEveningAdhkarView: View {
     }
 
     private var periodKey: String {
-        switch category {
-        case 0: return "morning"
-        case 1: return "evening"
-        case 2: return "daily"
-        default: return "special"
-        }
+        category == 0 ? "morning" : "evening"
     }
 
     private func normalizeSelection() {
@@ -7248,6 +7236,7 @@ struct FastingRulesView: View {
 
             Section(settings.t("Bricht das Fasten", "Orucu bozar")) {
                 rule("fork.knife", settings.t("Bewusst essen oder trinken", "Bilerek yemek veya içmek"), settings.t("Hanafi: Wer ein gültig begonnenes Ramadan-Fasten ohne legitime Entschuldigung bewusst durch gewöhnliches Essen, Trinken oder etwas in deren Bedeutung bricht, schuldet Qada und Kaffarah. Bei einem legitimen Entschuldigungsgrund oder anderen Sonderfällen kann nur Qada gelten.", "Hanefî: Geçerli başlanmış Ramazan orucunu meşru bir mazeret olmadan, alışılmış yiyecek-içecek veya bunların hükmündeki bir şeyle bilerek bozan kişiye kaza ve kefaret gerekir. Meşru mazeret veya başka özel durumlarda yalnız kaza gerekebilir."))
+                rule("heart.slash.fill", settings.t("Geschlechtsverkehr", "Cinsel ilişki"), settings.t("Freiwilliger Geschlechtsverkehr während eines gültig begonnenen Ramadan-Fastens erfordert nach Diyanet grundsätzlich Qada und Kaffarah. Sonderfälle müssen getrennt beurteilt werden.", "Geçerli başlanmış Ramazan orucunda isteyerek cinsel ilişkide bulunmak Diyanet'e göre kural olarak kaza ve kefaret gerektirir. Özel durumlar ayrıca değerlendirilmelidir."))
                 rule("smoke.fill", settings.t("Rauchen / Nargile", "Sigara / nargile"), settings.t("Das Fasten wird dadurch ungültig.", "Oruç bozulur."))
                 rule("drop.triangle.fill", settings.t("Nährende Infusionen / Nahrung über den Körper", "Besleyici serum / gıda niteliğinde uygulamalar"), settings.t("Nährende oder einer Nahrungsaufnahme gleichkommende Zuführung bricht nach Diyanet das Fasten; medizinische Einzelfälle separat prüfen.", "Besleyici veya gıda hükmündeki uygulamalar Diyanet'e göre orucu bozar; tıbbî özel durumlar ayrıca değerlendirilmelidir."))
                 rule("arrow.uturn.down", settings.t("Absichtlich mundvoll erbrechen", "Bilerek ağız dolusu kusmak"), settings.t("Erfordert nach der hanafitischen Darstellung Qada.", "Hanefî anlatıma göre kaza gerekir."))
@@ -7317,7 +7306,7 @@ struct FastingExceptionsView: View {
             Section(settings.t("Vorübergehender Grund → später Qada", "Geçici mazeret → sonra kaza")) {
                 exception(settings.t("Krankheit", "Hastalık"), settings.t("Wenn Fasten die Krankheit verschlimmern, verlängern oder voraussichtlich krank machen würde, darf verschoben und später nachgeholt werden.", "Oruç hastalığı artıracak, uzatacak veya kişiyi hasta edecekse ertelenebilir; daha sonra kaza edilir."))
                 exception(settings.t("Reise", "Yolculuk"), settings.t("Eine religiös als Reise geltende Fahrt kann eine Erleichterung geben. Nach Diyanet/Hanafi gelten konkrete Reisebedingungen; verpasste Tage werden später nachgeholt.", "Dinî sefer sayılan yolculuk ruhsat sebebi olabilir. Diyanet/Hanefî ölçülerinde belirli şartlar vardır; tutulmayan günler sonra kaza edilir."))
-                exception(settings.t("Schwangerschaft / Stillzeit", "Hamilelik / emzirme"), settings.t("Besteht begründete Sorge um Mutter oder Kind, darf nicht gefastet und später Qada gemacht werden.", "Anne veya çocuk için zarar endişesi varsa oruç tutulmayabilir; daha sonra kaza edilir."))
+                exception(settings.t("Schwangerschaft / Stillzeit", "Hamilelik / emzirme"), settings.t("Besteht begründete Sorge um Mutter oder Kind, darf nach Hanafi/Diyanet nicht gefastet und später Qada gemacht werden. In der schafiitischen Einordnung kann bei Sorge nur um das Kind zusätzlich Fidya erforderlich sein.", "Anne veya çocuk için zarar endişesi varsa Hanefî/Diyanet'e göre oruç tutulmayabilir ve daha sonra kaza edilir. Şafiî mezhebinde endişe yalnız çocuk içinse ayrıca fidye gerekebilir."))
                 exception(settings.t("Menstruation / Nifas", "Hayız / nifas"), settings.t("Während Menstruation und Wochenbett/Nifas wird nicht gefastet; diese Ramadan-Tage werden später als Qada nachgeholt. Die in dieser Zeit ausfallenden Pflichtgebete werden nicht nachgeholt.", "Hayız ve nifas döneminde oruç tutulmaz; Ramazan'da tutulmayan günler daha sonra kaza edilir. Bu dönemde kılınmayan farz namazlar sonradan kaza edilmez."))
             }
 
