@@ -2421,6 +2421,93 @@ private struct PrayerCatalogItem: Identifiable {
     let source: String
 }
 
+private struct PrayerMakruhTimesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Drei Kerāhat-Zeiten · Hanafi/Diyanet", "Üç kerahat vakti · Hanefî/Diyanet")) {
+                timeRule(
+                    settings.t("Nach Sonnenaufgang", "Güneş doğduktan sonra"),
+                    settings.t(
+                        "Vom Sonnenaufgang bis ungefähr 40–50 Minuten danach wird kein Gebet begonnen.",
+                        "Güneş doğduktan yaklaşık 40–50 dakika sonrasına kadar namaza başlanmaz."
+                    )
+                )
+                timeRule(
+                    settings.t("Kurz vor Dhuhr / Zeval", "Öğleden hemen önce / zeval"),
+                    settings.t(
+                        "Wenn die Sonne genau im Zenit steht – in gemäßigten Regionen ungefähr die letzten 10 Minuten vor Beginn von Dhuhr – wird kein Gebet begonnen.",
+                        "Güneş tam tepe noktasındayken – mutedil bölgelerde öğle vaktinden yaklaşık son 10 dakika önce – namaza başlanmaz."
+                    )
+                )
+                timeRule(
+                    settings.t("Kurz vor Sonnenuntergang", "Güneş batmadan önce"),
+                    settings.t(
+                        "Ungefähr 40–50 Minuten vor Sonnenuntergang bis Maghrib wird kein anderes Gebet begonnen. Ausnahme: Das Fard des aktuellen Asr-Tages darf noch gebetet werden; es ohne Entschuldigung so weit hinauszuschieben ist jedoch makruh.",
+                        "Güneş batmadan yaklaşık 40–50 dakika önce akşam vaktine kadar başka namaz başlanmaz. İstisna: O günün ikindi farzı hâlâ kılınabilir; ancak mazeretsiz olarak bu kadar geciktirmek mekruhtur."
+                    )
+                )
+            }
+
+            Section(settings.t("Weitere Zeiten nur für Nafila", "Sadece nafile için diğer kerahat vakitleri")) {
+                timeRule(
+                    settings.t("Ab Imsak bis Sonnenaufgang", "İmsaktan güneş doğuncaya kadar"),
+                    settings.t(
+                        "Außer der Sunnah des Fajr wird in diesem Zeitraum kein zusätzliches Nafila-Gebet begonnen.",
+                        "Sabah namazının sünneti dışında bu sürede ek nafile namaz başlanmaz."
+                    )
+                )
+                timeRule(
+                    settings.t("Nach dem Asr-Fard", "İkindi farzından sonra"),
+                    settings.t(
+                        "Nach dem Asr-Fard bis Sonnenuntergang wird kein Nafila-Gebet begonnen.",
+                        "İkindi farzından sonra güneş batıncaya kadar nafile namaz başlanmaz."
+                    )
+                )
+                timeRule(
+                    settings.t("Maghrib-Zeit vor dem Fard", "Akşam vakti farzdan önce"),
+                    settings.t(
+                        "Wenn Maghrib begonnen hat, wird vor dem Maghrib-Fard kein Nafila-Gebet eingeschoben.",
+                        "Akşam vakti girdikten sonra akşam farzından önce nafile namaz araya konmaz."
+                    )
+                )
+                timeRule(
+                    settings.t("Jumuʿah-Khutbah", "Cuma hutbesi"),
+                    settings.t(
+                        "Ab dem Zeitpunkt, an dem der Khatīb am Freitag die Minbar besteigt, wird kein Nafila-Gebet begonnen.",
+                        "Cuma günü hatip minbere çıktıktan sonra nafile namaz başlanmaz."
+                    )
+                )
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Die 40–50- bzw. 10-Minuten-Angaben sind Diyanets Näherungswerte für gemäßigte Regionen. Die astronomische Situation und lokale Gebetskalender sind maßgeblich. Andere Rechtsschulen beurteilen einzelne Ausnahmen anders.",
+                    "40–50 ve 10 dakikalık süreler Diyanet'in mutedil bölgeler için verdiği yaklaşık değerlerdir. Astronomik durum ve yerel namaz takvimi esas alınmalıdır. Diğer mezheplerde bazı istisnalar farklı değerlendirilir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func timeRule(_ title: String, _ text: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.headline)
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.vertical, 2)
+    }
+}
+
 struct PrayerCatalogView: View {
     @EnvironmentObject private var settings: SettingsStore
     @State private var search = ""
@@ -2739,8 +2826,8 @@ struct PrayerCatalogView: View {
                     "Öğle, ikindi ve yatsının dört rekât farzları seferî iken iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır.",
                     "Seferî kişi mukim imama uyarsa dört rekâtlı farzı imamla birlikte tam kılar."
                 ],
-                deNotes: ["Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch."],
-                trNotes: ["Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir."],
+                deNotes: ["Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch.", "Hanafi: Ein vier-rakʿātiges Fard, das während echter Seferîlik versäumt wurde, wird später auch als Ortsansässiger mit 2 Rakʿāt nachgeholt. Ein als Ortsansässiger versäumtes vier-rakʿātiges Fard wird dagegen auch auf Reise mit 4 Rakʿāt nachgeholt."],
+                trNotes: ["Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir.", "Hanefî: Seferî iken kazaya kalan dört rekâtlı farz daha sonra mukim olunsa da 2 rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı farz ise seferde kaza edilse bile 4 rekât kılınır."],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
@@ -2876,12 +2963,12 @@ struct PrayerCatalogView: View {
                 deSteps: [
                     "Verbreitete hanafitische Praxis: 4 Sunnah vor dem Fard.",
                     "Khutbah anhören; danach 2 Rakʿāt Fard hinter dem Imam.",
-                    "Danach nach Abū Ḥanīfa 4 Sunnah; bei den hanafitischen Schülern ist auch eine zusätzliche 2er-Einheit überliefert."
+                    "Danach 4 Sunnah. Nach Abū Yūsuf ist anschließend zusätzlich eine 2-Rakʿāt-Einheit überliefert, sodass nach dem Fard insgesamt 6 Rakʿāt gebetet werden."
                 ],
                 trSteps: [
                     "Yaygın Hanefî uygulaması: farzdan önce 4 rekât sünnet.",
                     "Hutbeyi dinle; ardından imam arkasında 2 rekât cuma farzı.",
-                    "Ardından Ebû Hanîfe'ye göre 4 rekât sünnet; Hanefî imameyn görüşünde ilave 2 rekât da aktarılmıştır."
+                    "Ardından 4 rekât sünnet kılınır. Ebû Yûsuf'a göre buna ayrıca 2 rekât daha eklenir; böylece farzdan sonra toplam 6 rekât kılınır."
                 ],
                 deNotes: ["Die 2 Fard werden vom Imam laut rezitiert."],
                 trNotes: ["İki rekât farzda imam kıraati sesli yapar."],
@@ -2960,6 +3047,12 @@ struct PrayerCatalogView: View {
                     .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 3)
+            }
+
+            Section {
+                NavigationLink { PrayerMakruhTimesView() } label: {
+                    Label(settings.t("Wann kein Gebet begonnen wird · Kerāhat", "Namaza başlanmayan vakitler · Kerahat"), systemImage: "sun.horizon.fill")
+                }
             }
 
             Section {
@@ -4528,6 +4621,7 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
+                NavigationLink { PrayerMakruhTimesView() } label: { Label(settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"), systemImage: "sun.horizon.fill") }
             }
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
@@ -7503,10 +7597,10 @@ struct HijriCalendarView: View {
     private var hijriRecommendedFastingSection: some View {
         Section(settings.t("Regelmäßig empfohlene Fastentage", "Düzenli tavsiye edilen oruç günleri")) {
             calendarInfo(
-                settings.t("Weiße Tage · 13., 14. und 15. jedes Hijri-Monats", "Eyyâm-ı bîd · her hicrî ayın 13, 14 ve 15'i"),
+                settings.t("Weiße Tage · normalerweise 13., 14. und 15. des Hijri-Monats", "Eyyâm-ı bîd · normalde hicrî ayın 13, 14 ve 15'i"),
                 settings.t(
-                    "Freiwilliges Fasten an diesen drei Tagen ist empfohlen. Es ist kein Pflichtfasten.",
-                    "Bu üç günde nafile oruç tavsiye edilir. Farz değildir."
+                    "Freiwilliges Fasten an diesen drei Tagen ist empfohlen. Ausnahme: Fällt einer dieser Tage auf einen Tag, an dem Fasten verboten ist, wird dort nicht gefastet. Besonders wichtig: Der 13. Dhu l-Hijjah ist ein Tashrīq-Tag.",
+                    "Bu üç günde nafile oruç tavsiye edilir. Ancak bu günlerden biri oruç tutulması yasak bir güne denk gelirse oruç tutulmaz. Özellikle 13 Zilhicce teşrik günüdür."
                 )
             )
             calendarInfo(
@@ -7523,6 +7617,12 @@ struct HijriCalendarView: View {
                     "Ramazan'dan sonra Şevval ayında altı gün nafile oruç tavsiye edilir; sabit günlere bağlı değildir ve tutulmamış Ramazan kazalarının yerine geçmez."
                 )
             )
+            Text(settings.t(
+                "Grundregel für freiwillige Fastentage: Ramazan-Bayram am 1. Shawwal sowie Kurban-Bayram und die anschließenden Tashrīq-Tage haben Vorrang vor einem freiwilligen Fastenmuster. Trifft z. B. Montag/Donnerstag oder ein „weißer Tag“ darauf, wird wegen dieser Empfehlung nicht gefastet.",
+                "Nafile oruçlarda temel kural: Ramazan Bayramı'nın 1. günü ile Kurban Bayramı ve devamındaki teşrik günlerinde oruç yasağı, nafile oruç düzeninden önce gelir. Örneğin pazartesi/perşembe veya eyyâm-ı bîd bu günlere denk gelirse bu tavsiye sebebiyle oruç tutulmaz."
+            ))
+            .font(.footnote)
+            .foregroundStyle(.secondary)
         }
     }
 
