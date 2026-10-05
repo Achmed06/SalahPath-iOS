@@ -13,6 +13,8 @@ struct SalahFeatureIcon: View {
             return "feature_home"
         case "prayer", "prayer_active", "prayer_inactive":
             return "feature_prayer"
+        case "prayer_guide":
+            return "feature_prayer_guide"
         case "wudu", "wudu_active", "wudu_inactive":
             return "feature_wudu"
         case "quran", "quran_active", "quran_inactive":
@@ -1262,7 +1264,9 @@ struct MoreView: View {
 
     private func discoverDashboardGlyphKind(for symbol: String) -> String? {
         switch symbol {
-        case "figure.mind.and.body", "rectangle.stack.badge.play.fill":
+        case "figure.mind.and.body":
+            return "prayer_guide"
+        case "rectangle.stack.badge.play.fill":
             return "prayer"
         case "drop.fill":
             return "wudu"
