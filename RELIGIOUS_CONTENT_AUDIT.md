@@ -46,6 +46,9 @@ Hadith/adhkar reference checked:
 - Ghusl no longer uses the overbroad German phrase “after ejaculation” without qualification; it specifies semen discharge with sexual arousal / orgasm, while intercourse remains independently listed as a trigger.
 - Tayammum wording was narrowed from generic “earthy/mineral” material to clean earth or material counted as earth substance, matching the Diyanet formulation more closely.
 - Ramadan niyyah no longer says only “before the Islamic midday boundary.” It states Diyanet’s explicit deadline of 10 minutes before solar zenith under the applicable conditions and separately states that Qada, Kaffarah, and non-time-fixed vow fasts require intention by Imsak.
+- The adhkar screen no longer creates separate “Daily” and “Special” counter sessions for adhkar whose cited practice is specifically morning/evening. This avoids turning a morning/evening count into an apparent additional third prescription.
+- The fasting-rules screen now lists deliberate intercourse explicitly alongside deliberate eating/drinking because Diyanet treats it as a major Ramadan fast-breaking case that can entail both Qada and Kaffarah.
+- Pregnancy/breastfeeding wording now identifies the Qada-only presentation as Hanafi/Diyanet and notes the Shafiʿi distinction where concern only for the child can add Fidya.
 
 ## Areas checked without a required correction in this pass
 
