@@ -665,6 +665,7 @@ struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
+    @State private var isPrayerStepTrackingEnabled = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
@@ -984,6 +985,7 @@ struct PrayerHowToView: View {
                         PrayerTutorialStepCard(step: step, audience: settings.prayerAudience)
                             .id("prayer-step-card-\(index)")
                             .onAppear {
+                                guard isPrayerStepTrackingEnabled else { return }
                                 if currentStepIndex != index {
                                     currentStepIndex = index
                                 }
@@ -1012,17 +1014,27 @@ struct PrayerHowToView: View {
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                guard currentStepIndex > 0 else { return }
+                let initialIndex = currentStepIndex
                 Task { @MainActor in
                     await Task.yield()
                     await Task.yield()
-                    proxy.scrollTo("prayer-step-card-\(currentStepIndex)", anchor: .top)
+                    if initialIndex > 0 {
+                        proxy.scrollTo("prayer-step-card-\(initialIndex)", anchor: .top)
+                    }
+                    await Task.yield()
+                    currentStepIndex = initialIndex
+                    isPrayerStepTrackingEnabled = true
                 }
             }
             .onChange(of: settings.prayerAudience) { _, _ in
+                isPrayerStepTrackingEnabled = false
                 currentStepIndex = 0
                 withAnimation(.easeInOut(duration: 0.2)) {
                     proxy.scrollTo("prayer-step-top", anchor: .top)
+                }
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 250_000_000)
+                    isPrayerStepTrackingEnabled = true
                 }
             }
         }
@@ -1045,9 +1057,15 @@ struct PrayerHowToView: View {
                 HStack(spacing: 8) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                         Button {
+                            isPrayerStepTrackingEnabled = false
                             currentStepIndex = index
                             withAnimation(.easeInOut(duration: 0.22)) {
                                 proxy.scrollTo("prayer-step-card-\(index)", anchor: .top)
+                            }
+                            Task { @MainActor in
+                                try? await Task.sleep(nanoseconds: 300_000_000)
+                                currentStepIndex = index
+                                isPrayerStepTrackingEnabled = true
                             }
                         } label: {
                             Text(step.number)
@@ -1465,6 +1483,7 @@ struct WuduGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
+    @State private var isWuduStepTrackingEnabled = false
     @State private var expandedWuduSteps: Set<Int> = []
 
     init(initialStepIndex: Int = 0) {
@@ -1524,6 +1543,7 @@ struct WuduGuideView: View {
                         wuduStepCard(step)
                             .id("wudu-step-card-\(index)")
                             .onAppear {
+                                guard isWuduStepTrackingEnabled else { return }
                                 if currentStepIndex != index {
                                     currentStepIndex = index
                                 }
@@ -1574,11 +1594,16 @@ struct WuduGuideView: View {
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
-                guard currentStepIndex > 0 else { return }
+                let initialIndex = currentStepIndex
                 Task { @MainActor in
                     await Task.yield()
                     await Task.yield()
-                    proxy.scrollTo("wudu-step-card-\(currentStepIndex)", anchor: .top)
+                    if initialIndex > 0 {
+                        proxy.scrollTo("wudu-step-card-\(initialIndex)", anchor: .top)
+                    }
+                    await Task.yield()
+                    currentStepIndex = initialIndex
+                    isWuduStepTrackingEnabled = true
                 }
             }
         }
@@ -1601,9 +1626,15 @@ struct WuduGuideView: View {
                 HStack(spacing: 8) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                         Button {
+                            isWuduStepTrackingEnabled = false
                             currentStepIndex = index
                             withAnimation(.easeInOut(duration: 0.22)) {
                                 proxy.scrollTo("wudu-step-card-\(index)", anchor: .top)
+                            }
+                            Task { @MainActor in
+                                try? await Task.sleep(nanoseconds: 300_000_000)
+                                currentStepIndex = index
+                                isWuduStepTrackingEnabled = true
                             }
                         } label: {
                             Text("\(step.number)")
