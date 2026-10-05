@@ -2609,6 +2609,110 @@ struct PrayerCatalogView: View {
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
+                id: "tahajjud", group: "special",
+                deTitle: "Tahajjud · Nachtgebet", trTitle: "Teheccüd Namazı",
+                deRuling: "Sunnah / Nafila", trRuling: "Sünnet / Nafile", rakaLabel: "2–8+",
+                deSummary: "Freiwilliges Nachtgebet zwischen Isha und Fajr, besonders nach dem Aufwachen in der Nacht.",
+                trSummary: "Yatsı ile fecr arasında, özellikle gece uykudan kalkınca kılınan nafile gece namazı.",
+                deSteps: [
+                    "Fasse die Niyyah für Tahajjud. Gebetet wird zwischen Isha und Fajr.",
+                    "Diyanet empfiehlt zwei bis acht Rakʿāt in geraden Zahlen; wer möchte, kann mehr beten.",
+                    "Je zwei Rakʿāt Salām zu geben ist vorzugswürdig. Jede 2er-Einheit folgt dem normalen Nafila-Ablauf mit Fātiha und zusätzlicher Sura/Versen."
+                ],
+                trSteps: [
+                    "Teheccüd namazına niyet et. Yatsı ile fecr arasında kılınır.",
+                    "Diyanet iki ile sekiz rekât arasında çift sayılarla kılınmasını tavsiye eder; isteyen daha fazla da kılabilir.",
+                    "İkişer rekâtta bir selâm vermek daha faziletlidir. Her iki rekâtlık bölüm normal nafile namaz düzenine göre Fâtiha ve zamm-ı sûre/ayetlerle kılınır."
+                ],
+                deNotes: ["Wer Witr noch nicht gebetet hat, kann das Nachtgebet vor Witr verrichten; Witr bleibt im Hanafi-Madhhab eine eigene wajib-Pflicht."],
+                trNotes: ["Vitir henüz kılınmadıysa gece namazından sonra kılınabilir; Hanefî mezhebinde vitir ayrıca vaciptir."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
+                id: "duha", group: "special",
+                deTitle: "Duha / Kuşluk", trTitle: "Kuşluk / Duhâ Namazı",
+                deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "2–12",
+                deSummary: "Freiwilliges Vormittagsgebet nach Ablauf der verbotenen Sonnenaufgangszeit.",
+                trSummary: "Güneş doğuşundaki kerahat vakti geçtikten sonra kılınan nafile kuşluk namazı.",
+                deSteps: [
+                    "Beginne ungefähr 40–50 Minuten nach Sonnenaufgang; die Zeit reicht bis ungefähr 10 Minuten vor Dhuhr.",
+                    "Es können zwei bis zwölf Rakʿāt gebetet werden.",
+                    "Als einfache Lernform bete jeweils zwei Rakʿāt nach dem normalen Nafila-Ablauf und gib danach Salām."
+                ],
+                trSteps: [
+                    "Güneş doğduktan yaklaşık 40–50 dakika sonra başlayabilir; vakti öğleye yaklaşık 10 dakika kalıncaya kadar sürer.",
+                    "İki rekâttan on iki rekâta kadar kılınabilir.",
+                    "Öğrenmek için en sade uygulama, normal nafile düzeninde ikişer rekât kılıp selâm vermektir."
+                ],
+                deNotes: ["Nicht unmittelbar beim Sonnenaufgang beginnen; dort liegt eine Zeit, in der kein Nafila-Gebet begonnen wird."],
+                trNotes: ["Güneş doğarken hemen başlanmaz; bu vakit nafile namaz başlanmayan kerahat vaktidir."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
+                id: "istikhara", group: "special",
+                deTitle: "Istikhāra · Entscheidungshilfe", trTitle: "İstihâre Namazı",
+                deRuling: "Mandub / Nafila", trRuling: "Mendup / Nafile", rakaLabel: "2",
+                deSummary: "Zwei Rakʿāt und anschließend Dua, wenn bei einer erlaubten Entscheidung unklar ist, was besser ist.",
+                trSummary: "Mubah bir konuda hangisinin hayırlı olduğunda tereddüt edildiğinde iki rekât namaz ve ardından dua.",
+                deSteps: [
+                    "Istikhāra ist für erlaubte Entscheidungen gedacht, bei denen du unsicher bist – nicht für etwas, dessen Pflicht oder Verbot bereits eindeutig ist.",
+                    "Bete zwei Rakʿāt Nafila. Diyanet nennt als empfohlene Rezitation nach Fātiha in der ersten Rakʿah al-Kāfirūn und in der zweiten al-Ikhlāṣ.",
+                    "Sprich anschließend die überlieferte Istikhāra-Dua und bitte Allah darum, das Gute zu erleichtern und das Schädliche fernzuhalten."
+                ],
+                trSteps: [
+                    "İstihâre, hükmü zaten farz veya haram olarak açık olan işler için değil, mubah bir konuda hayırlı olanı aramak içindir.",
+                    "İki rekât nafile namaz kıl. Diyanet, birinci rekâtta Fâtiha'dan sonra Kâfirûn, ikinci rekâtta İhlâs sûresini okumayı tavsiye eder.",
+                    "Ardından istihâre duasını okuyarak hayırlı olanı kolaylaştırmasını ve zararlı olanı uzaklaştırmasını Allah'tan iste."
+                ],
+                deNotes: ["Ein Traum nach Istikhāra ist keine Voraussetzung und nach Diyanet keine verlässliche Grundlage, um die Entscheidung daraus abzuleiten. Beratung (Istishāra) und vernünftige Prüfung bleiben sinnvoll."],
+                trNotes: ["İstihâreden sonra rüya görmek şart değildir; Diyanet rüyayı iyi-kötü diye yorumlamanın dayanağı olmadığını belirtir. İstişare ve makul değerlendirme de yapılmalıdır."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
+                id: "tilawah_sajdah", group: "special",
+                deTitle: "Tilāwah-Secde", trTitle: "Tilavet Secdesi",
+                deRuling: "Hanafi: Wajib", trRuling: "Hanefî: Vacip", rakaLabel: "1 Sujud",
+                deSummary: "Eine einzelne Niederwerfung wegen einer Secde-Aya des Quran.",
+                trSummary: "Kur'an'daki secde ayetlerinden biri sebebiyle yapılan tek secde.",
+                deSteps: [
+                    "Hanafi: Wer den arabischen Wortlaut einer Secde-Aya liest oder hört, verrichtet Tilāwah-Secde.",
+                    "Außerhalb des Gebets gelten dafür Reinheit, Qibla, Bedeckung und Niyyah wie beim Gebet.",
+                    "Ohne die Hände zu heben mit Allāhu akbar einmal in Sujud gehen, dreimal „Subḥāna rabbiyal-aʿlā“ sprechen und mit Allāhu akbar wieder aufstehen.",
+                    "Danach gibt es kein Tashahhud und keinen Salām."
+                ],
+                trSteps: [
+                    "Hanefî: Secde ayetinin Arapça lafzını okuyan veya dinleyen kişi tilavet secdesi yapar.",
+                    "Namaz dışında taharet, kıble, örtünme ve niyet gibi namaz şartları aranır.",
+                    "Elleri kaldırmadan Allâhü ekber diyerek bir kez secdeye git; üç defa „Sübhâne rabbiye'l-a'lâ“ de ve Allâhü ekber diyerek kalk.",
+                    "Ardından Ettehiyyâtü oturuşu ve selâm yoktur."
+                ],
+                deNotes: ["Wer nur die Übersetzung einer Secde-Aya liest, liest nicht den Quran-Wortlaut; Diyanet empfiehlt dennoch vorsichtshalber eine Tilāwah-Secde."],
+                trNotes: ["Secde ayetinin yalnız mealini okumak Kur'an lafzını okumak değildir; Diyanet yine de ihtiyaten tilavet secdesi yapılmasını belirtir."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
+                id: "sick_prayer", group: "special",
+                deTitle: "Gebet bei Krankheit · Sitzen / Îmā", trTitle: "Hasta Namazı · Oturarak / Îmâ",
+                deRuling: "Erleichterung bei echter Unfähigkeit", trRuling: "Gerçek mazerette ruhsat", rakaLabel: "nach Gebet",
+                deSummary: "Pflichtgebete werden soweit körperlich möglich in ihrer normalen Form verrichtet; bei echter Unfähigkeit gelten Erleichterungen.",
+                trSummary: "Farz namaz mümkün olduğu ölçüde aslî şekliyle kılınır; gerçek güç yetmezlik veya ağır meşakkatte ruhsatlar uygulanır.",
+                deSteps: [
+                    "Wer stehen kann, betet grundsätzlich stehend. Wer dazu wegen echter Unfähigkeit oder erheblicher gesundheitlicher Belastung nicht in der Lage ist, darf sitzend beten.",
+                    "Wer Rukūʿ oder Sujud nicht körperlich ausführen kann, kann nach den Voraussetzungen mit Kopfbewegung (Îmā) beten.",
+                    "Bei Îmā wird der Kopf für Rukūʿ etwas gesenkt und für Sujud deutlich tiefer. Ein künstlich erhöhtes Objekt für die Stirn ersetzt die Secde nicht.",
+                    "Bei komplexen körperlichen Einschränkungen muss die konkrete Form nach den tatsächlich noch möglichen Bewegungen bestimmt werden."
+                ],
+                trSteps: [
+                    "Ayakta durabilen kişi esasen ayakta kılar. Gerçek güç yetmezlik veya ciddi sağlık meşakkati varsa oturarak kılabilir.",
+                    "Rükû veya secdeyi bedenen yapamayan kişi şartları oluştuğunda başıyla îmâ ederek kılabilir.",
+                    "Îmâda rükû için baş biraz, secde için rükûdan daha fazla eğilir. Alnı yükseltilmiş bir nesneye götürmek secdenin yerine konmaz.",
+                    "Karmaşık fiziksel kısıtlamalarda namaz şekli kişinin gerçekten yapabildiği hareketlere göre belirlenmelidir."
+                ],
+                deNotes: ["Hanafi: Îmā erfolgt mit dem Kopf. Diese Kurzfassung ist keine medizinische Beurteilung; leichte Beschwerden allein erlauben nicht automatisch das Weglassen eines Gebetsbestandteils."],
+                trNotes: ["Hanefî: Îmâ baş ile yapılır. Bu kısa anlatım tıbbî değerlendirme değildir; hafif rahatsızlıklar namaz rükünlerini otomatik olarak düşürmez."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu · 2026 Hasta Namazı"
+            ),
+            .init(
                 id: "tasbih_prayer", group: "special",
                 deTitle: "Tasbih-Gebet", trTitle: "Tesbih Namazı",
                 deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "4",
