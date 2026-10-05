@@ -177,10 +177,19 @@ enum AsrRule: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     func title(_ language: AppLanguage) -> String {
         switch (self, language) {
-        case (.standard, .german): return "Standard (Schafiʿi / Maliki / Hanbali)"
-        case (.standard, .turkish): return "Standart (Şafiî / Malikî / Hanbelî)"
-        case (.hanafi, .german): return "Hanafi"
-        case (.hanafi, .turkish): return "Hanefî"
+        case (.standard, .german): return "Asr-ı evvel (Diyanet / Imameyn)"
+        case (.standard, .turkish): return "Asr-ı evvel (Diyanet / İmameyn)"
+        case (.hanafi, .german): return "Asr-ı sânî (Abū Hanīfa)"
+        case (.hanafi, .turkish): return "Asr-ı sânî (Ebû Hanîfe)"
+        }
+    }
+
+    func note(_ language: AppLanguage) -> String {
+        switch language {
+        case .german:
+            return "Diyanet verwendet in seinem Kalender Asr-ı evvel: die Auffassung von Abū Yūsuf und Imam Muhammad, die auch den anderen drei sunnitischen Rechtsschulen entspricht. Asr-ı sânî ist die Auffassung Abū Hanīfas und beginnt später."
+        case .turkish:
+            return "Diyanet takviminde asr-ı evvel esas alınır: bu, Ebû Yûsuf ve İmam Muhammed'in ve diğer üç Sünnî mezhebin görüşüdür. Asr-ı sânî Ebû Hanîfe'nin görüşüdür ve daha geç başlar."
         }
     }
 
