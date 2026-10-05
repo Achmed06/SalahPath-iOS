@@ -515,6 +515,28 @@ for token in (
 if 'NavigationLink { TayammumGuideView() } label: { Label("Tayammum"' in guide:
     fail("Turkish Ilmihal label must localize Tayammum as Teyemmüm")
 
+# 5a.3d) Practical Zakat fundamentals must remain sourced and non-price-stale.
+for token in (
+    'private struct ZakatGuideView: View',
+    '80,18 g 24-karätigem Gold',
+    'kırkta biri yani %2,5',
+    'ein Mondjahr (kamerî yıl)',
+    'Langfristige Schulden werden nach Diyanets heutiger Praxis nicht vollständig auf einmal abgezogen',
+    'Gold- und Silberschmuck ist bei erfüllten übrigen Voraussetzungen grundsätzlich zakatpflichtig',
+    'Quran 9:60 nennt acht Empfängergruppen',
+    'Zakat wird nicht an eigene Eltern/Großeltern, Kinder/Enkel oder den Ehepartner gegeben',
+    'kein Zakat-Nisab',
+):
+    if token not in guide:
+        fail(f"Zakat guidance regression: missing {token}")
+
+for forbidden in (
+    'Zakat-Nisab: €',
+    'Zekât nisabı: €',
+):
+    if forbidden in guide:
+        fail(f"stale fixed-currency Zakat nisab returned: {forbidden}")
+
 # 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
 for token in (
     'private struct PrayerSpecialSituationsView: View',
