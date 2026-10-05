@@ -177,10 +177,10 @@ enum AsrRule: String, CaseIterable, Identifiable {
     var id: String { rawValue }
     func title(_ language: AppLanguage) -> String {
         switch (self, language) {
-        case (.standard, .german): return "Standard (Schafiʿi / Maliki / Hanbali)"
-        case (.standard, .turkish): return "Standart (Şafiî / Malikî / Hanbelî)"
-        case (.hanafi, .german): return "Hanafi"
-        case (.hanafi, .turkish): return "Hanefî"
+        case (.standard, .german): return "Diyanet / Standard (Asr-i awwal)"
+        case (.standard, .turkish): return "Diyanet / Standart (asr-ı evvel)"
+        case (.hanafi, .german): return "Abū Ḥanīfa (Hanafi · Asr-i thānī)"
+        case (.hanafi, .turkish): return "Ebû Hanîfe (Hanefî · asr-ı sânî)"
         }
     }
 
