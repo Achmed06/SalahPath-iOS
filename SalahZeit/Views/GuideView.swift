@@ -1441,11 +1441,10 @@ private struct WuduInstructionVisual: View {
             .resizable()
             .interpolation(.high)
             .scaledToFit()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, maxHeight: 430, alignment: .center)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 10)
             .frame(maxWidth: .infinity)
-            .frame(height: 188)
             .background(
                 LinearGradient(
                     colors: [SalahTheme.cream, SalahTheme.softTeal.opacity(0.48)],
