@@ -6632,6 +6632,11 @@ struct FastingRulesView: View {
                 rule("arrow.up.to.line", settings.t("Unfreiwilliges Erbrechen", "İstem dışı kusmak"), settings.t("Spontanes Erbrechen bricht das Fasten nicht.", "Kendiliğinden kusmak orucu bozmaz."))
             }
 
+            Section(settings.t("Tage, an denen nicht gefastet wird", "Oruç tutulmayan günler")) {
+                rule("calendar.badge.exclamationmark", settings.t("1. Shawwal · Ramadanfest", "1 Şevval · Ramazan Bayramı"), settings.t("Hanefî/Diyanet: An diesem Tag ist Fasten tahrīman makruh, also religiös untersagt.", "Hanefî/Diyanet: Bu günde oruç tutmak tahrîmen mekruhtur ve dinen yasaklanmıştır."))
+                rule("calendar.badge.exclamationmark", settings.t("10.–13. Dhu l-Hijjah · Opferfest & Tashriq", "10–13 Zilhicce · Kurban Bayramı & Teşrik"), settings.t("Hanefî/Diyanet: An allen vier Tagen des Opferfestes ist Fasten tahrīman makruh. Die Tashriq-Tage 11.–13. Dhu l-Hijjah sind Tage des Essens, Trinkens und Allah-Gedenkens.", "Hanefî/Diyanet: Kurban Bayramı'nın dört gününde de oruç tutmak tahrîmen mekruhtur. 11–13 Zilhicce teşrik günleri yeme, içme ve Allah'ı anma günleridir."))
+            }
+
             Section(settings.t("Qada, Kaffarah, Fidya – nicht verwechseln", "Kaza, kefaret, fidye – karıştırma")) {
                 definition(settings.t("Qada", "Kaza"), settings.t("Einen verpassten oder ungültig gewordenen Fastentag später nachholen.", "Kaçırılan veya bozulan oruç gününü daha sonra tutmak."))
                 definition(settings.t("Kaffarah", "Kefaret"), settings.t("Zusätzliche Sühne bei bestimmten bewusst begangenen Brüchen eines Ramadan-Fastens. Nicht jeder gebrochene Fastentag löst Kaffarah aus.", "Ramazan orucunun belirli kasıtlı ihlallerinde gereken ek kefarettir. Her bozulan oruç kefaret gerektirmez."))
@@ -7238,8 +7243,8 @@ struct HijriCalendarView: View {
                 trMeaning: "Kurban Bayramı'nın ilk gününden sonraki bu günlere teşrik günleri denir.",
                 deRecommended: ["Hanefî/Diyanet: Nach jedem Farz-Gebet die Tashriq-Takbire sprechen; die Pflichtzeit endet nach dem Asr-Gebet am 13. Dhu l-Hijjah (insgesamt 23 Farz-Gebete ab Fajr am 9. Dhu l-Hijjah).", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
                 trRecommended: ["Hanefî/Diyanet: Her farz namazın ardından teşrik tekbirini getir; vacip vakit 9 Zilhicce sabah namazından başlayıp 13 Zilhicce ikindi namazından sonra sona erer (toplam 23 farz namaz).", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
-                deCaution: "Diese Tage sind keine gewöhnlichen freiwilligen Fastentage.",
-                trCaution: "Bu günler normal nafile oruç günleri değildir."
+                deCaution: "Hanefî/Diyanet: An den Tashriq-Tagen (11.–13. Dhu l-Hijjah) ist Fasten tahrīman makruh; es sind Tage des Essens, Trinkens und Allah-Gedenkens.",
+                trCaution: "Hanefî/Diyanet: Teşrik günlerinde (11–13 Zilhicce) oruç tutmak tahrîmen mekruhtur; bu günler yeme, içme ve Allah'ı anma günleridir."
             )
         }
 
