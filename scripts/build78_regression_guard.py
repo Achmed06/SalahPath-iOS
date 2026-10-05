@@ -322,6 +322,93 @@ for name in (
     if name not in capture:
         fail(f"light/dark visual QA coverage missing: {name}")
 
+# 5a.0) Verified Islamic wording must not regress.
+for token in (
+    'Âmîn gehört nicht zur Sura und ist kein Quranvers',
+    'Âmin sûrenin bir parçası ve Kur\'an ayeti değildir',
+    'bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt',
+    '„lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir',
+    'trTitle: "Rabbiğfir lî"',
+    '„32 Farz“ ist eine traditionelle Lernformel',
+    '„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak',
+    'insgesamt 23 Farz-Gebete ab Fajr am 9. Dhu l-Hijjah',
+    'toplam 23 farz namaz',
+):
+    if token not in guide:
+        fail(f"verified Islamic guidance regression: missing {token}")
+
+if 'leddâllîn. Âmîn.' in guide:
+    fail("Fatiha regression: Amin must not be embedded in the surah transliteration")
+
+app_settings = read("SalahZeit/Models/AppSettings.swift")
+for token in (
+    'Diyanet / Standard (Asr-i awwal)',
+    'Diyanet / Standart (asr-ı evvel)',
+    'Abū Ḥanīfa (Hanafi · Asr-i thānī)',
+    'Ebû Hanîfe (Hanefî · asr-ı sânî)',
+):
+    if token not in app_settings:
+        fail(f"Asr-method labeling regression: missing {token}")
+
+home_source_for_labels = read("SalahZeit/Views/HomeView.swift")
+if 'case .sunrise: return "Güneş"' not in home_source_for_labels:
+    fail("Turkish prayer-time label regression: sunrise must be Güneş, not Sabah")
+
+for token in (
+    '@State private var counter = 0',
+    'settings.t("Istighfar", "İstiğfar")',
+    'settings.t("Tasbih", "Tesbih")',
+    'settings.t("Tawhid", "Tevhid")',
+    'settings.t("Salawat", "Salavat")',
+    'Freier Zähler: SalahPath behauptet hier keine religiös festgelegte Anzahl.',
+):
+    if token not in guide:
+        fail(f"free dhikr counter regression: missing {token}")
+
+if '@State private var counter = 33' in guide:
+    fail("free dhikr counter must not imply an unsupported fixed count of 33")
+
+for token in (
+    'güneşin tepe noktasına gelmesinden yaklaşık 10 dakika öncesine kadar niyet edilebilir',
+    'Kaza, kefaret ve zamanı belirlenmemiş adak oruçlarına ise en geç imsak vaktine kadar',
+    'Menstruation und Wochenbett/Nifas: In dieser Zeit versäumte Gebete werden nicht als Qada nachgeholt.',
+    'Hayız ve lohusalık/nifas: Bu dönemlerde kılınmayan namazlar kaza edilmez.',
+):
+    if token not in guide:
+        fail(f"fasting/qada religious guidance regression: missing {token}")
+
+for forbidden in (
+    'bis vor die islamische Mittagsgrenze niyet gemacht werden',
+    'gündüz kuşluk/öğle sınırından önce de niyet edilebilir',
+):
+    if forbidden in guide:
+        fail(f"imprecise fasting intention wording returned: {forbidden}")
+
+for token in (
+    'Tage, an denen nicht gefastet wird',
+    'Oruç tutulmayan günler',
+    '10.–13. Dhu l-Hijjah · Opferfest & Tashriq',
+    'Kurban Bayramı\'nın dört gününde de oruç tutmak tahrîmen mekruhtur',
+):
+    if token not in guide:
+        fail(f"prohibited fasting-day regression: missing {token}")
+
+for token in (
+    '@State private var selectedID = "ayatkursi"',
+    'private func displayMeaning(for item: AdhkarEntry) -> String',
+    'category == 1 ? "evening" : "morning"',
+):
+    if token not in guide:
+        fail(f"morning/evening adhkar regression: missing {token}")
+
+for forbidden in (
+    'Text(settings.t("Täglich", "Günlük")).tag(2)',
+    'Text(settings.t("Speziell", "Özel")).tag(3)',
+    'id: "istighfar", deTitle: "Astaghfirullah"',
+):
+    if forbidden in guide:
+        fail(f"unsupported fixed-count adhkar category returned: {forbidden}")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
@@ -360,6 +447,176 @@ for token in (
 ):
     if token not in guide:
         fail(f"premium learning-row icon regression: missing {token}")
+
+# 5a.3) Verified Islamic-content audit guards.
+for token in (
+    'Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten',
+    'nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich',
+    'Label(settings.t("Was bricht Wudu?", "Abdesti ne bozar?")',
+    'Fließendes Blut, Eiter oder Wundflüssigkeit',
+    'Mundvolles Erbrechen im hanafitischen Fiqh.',
+    'Berührung zwischen Mann und Frau allein bricht Wudu im hanafitischen Madhhab nicht automatisch.',
+    'case adab',
+    'classification: .adab',
+    'PFLICHTKERN',
+    '1× Pflicht · 3× Sunnah',
+    'gehört zu den Âdâb des Wudu, nicht zu den Farz',
+    'Wasserbarrieren, Verband & Mest',
+    'gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch',
+    'Gebetsarten & Anleitungen',
+    'static let rabbanaGhfirli = PrayerRecitation(',
+    'Hisn al-Muslim 78 · überlieferte Varianten bei Tirmizî 3391 / İbn Mâce 3868',
+    'deNote: "Quran 14:41", trNote: "Kur\'an 14:41"',
+    "nestağfiruke ve nestehdîk",
+    "leke nüsallî ve nescüdü",
+    'private struct PrayerMistakesView: View',
+    'Gebetsfehler & Sehiv-Secdesi',
+    'Wann ist Sehiv-Secdesi nötig?',
+    'Im letzten Sitzen Ettehiyyâtü lesen.',
+    '„32 Farz“ ist eine traditionelle Lernformel',
+    'Die konkrete Zählweise hier folgt der hanafitischen/Diyanet-Lehrdarstellung',
+):
+    if token not in guide:
+        fail(f"verified Islamic guidance regression: missing {token}")
+
+for forbidden in (
+    'Allein/Imam: beim Hochkommen Semi\'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd.',
+    'deTitle: "5 Säulen / Bedingungen des Islam"',
+    'title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek")',
+    'dies wird als Sunnah eingeordnet. Die Vorderseite des Halses',
+    'sünnet olarak değerlendirilir. Boğazın ön tarafını',
+    'nestağfirüke ve nestehdîk',
+    'leke nusallî ve nescüd.',
+    'Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391',
+):
+    if forbidden in guide:
+        fail(f"ambiguous Islamic guidance returned: {forbidden}")
+
+if 'case .sunrise: return "Güneş"' not in home:
+    fail("Turkish sunrise label must be Güneş, not Sabah")
+if 'case .sunrise: return "Sabah"' in home:
+    fail("Turkish sunrise/prayer-name confusion returned")
+
+# 5a.3b) Important missing-learning modules found by the religious audit.
+for token in (
+    'private struct PrayerRestrictedTimesView: View',
+    'Drei strenge Kerâhat-Zeiten',
+    'Üç temel kerâhat vakti',
+    'Vom Sonnenaufgang bis die Sonne deutlich gestiegen ist.',
+    'letzten 10 Minuten vor Eintritt der Dhuhr-Zeit',
+    'Nach dem verrichteten Asr-Gebet bis Sonnenuntergang werden keine Nafila-Gebete begonnen.',
+    'private struct WomensPurityGuideView: View',
+    'Hayd & Nifas',
+    'Istihāda / Blutung außerhalb von Hayd und Nifas',
+    'Die in dieser Zeit ausgefallenen Gebete werden später nicht nachgeholt.',
+    'Ramazan\'da tutulmayan oruçlar ise hâl sona erdikten sonra kaza edilir.',
+    'klassische hanafitische Grundregel nennt für Hayd mindestens 3 und höchstens 10 Tage',
+    'klassische Obergrenze beträgt 40 Tage',
+    'Deshalb klassifiziert SalahPath deine Blutung nicht automatisch.',
+):
+    if token not in guide:
+        fail(f"religious learning-module regression: missing {token}")
+
+# 5a.3c) Kaza-prayer guidance and Turkish terminology.
+for token in (
+    'private struct QadaPrayerGuideView: View',
+    'Die Farḍ-Gebete der fünf täglichen Gebete werden nachgeholt. Witr ist im hanafitischen Madhhab wājib',
+    'vollständig verpasstes Fajr/Sabah-Gebet noch am selben Tag vor Zawāl',
+    'als zwei Rakʿāt nachgeholt – auch wenn man inzwischen wieder mukīm ist',
+    'Kaza-Gebete werden nicht in den drei strengen Kerâhat-Zeiten begonnen',
+    'Zwischen Imsak und Sonnenaufgang ist Kaza nicht pauschal verboten',
+    'Sunnah trotz Kaza-Schuld?',
+    'settings.t("Tayammum", "Teyemmüm")',
+):
+    if token not in guide:
+        fail(f"qada/Turkish terminology regression: missing {token}")
+
+if 'NavigationLink { TayammumGuideView() } label: { Label("Tayammum"' in guide:
+    fail("Turkish Ilmihal label must localize Tayammum as Teyemmüm")
+
+# 5a.3d) Practical Zakat fundamentals must remain sourced and non-price-stale.
+for token in (
+    'private struct ZakatGuideView: View',
+    '80,18 g 24-karätigem Gold',
+    'kırkta biri yani %2,5',
+    'ein Mondjahr (kamerî yıl)',
+    'Langfristige Schulden werden nach Diyanets heutiger Praxis nicht vollständig auf einmal abgezogen',
+    'Gold- und Silberschmuck ist bei erfüllten übrigen Voraussetzungen grundsätzlich zakatpflichtig',
+    'Quran 9:60 nennt acht Empfängergruppen',
+    'Zakat wird nicht an eigene Eltern/Großeltern, Kinder/Enkel oder den Ehepartner gegeben',
+    'kein Zakat-Nisab',
+):
+    if token not in guide:
+        fail(f"Zakat guidance regression: missing {token}")
+
+for forbidden in (
+    'Zakat-Nisab: €',
+    'Zekât nisabı: €',
+):
+    if forbidden in guide:
+        fail(f"stale fixed-currency Zakat nisab returned: {forbidden}")
+
+# 5a.3e) Fitre, Kurban and Iqamah audit guards.
+for token in (
+    'private struct FitraGuideView: View',
+    'Anders als bei Zakat muss dieses Vermögen für Fitre nicht ertragsfähig',
+    'am ersten Eid-Tag mit Eintritt der Morgendämmerung verpflichtend',
+    'Sie darf bereits im Ramadan gegeben werden.',
+    'kein Zakat-Nisab',
+    'private struct KurbanGuideView: View',
+    '80,18 g 24-karätiges Gold oder dessen Wert',
+    'Hanefî: Die Zeit endet mit Sonnenuntergang am 3. Eid-Tag.',
+    'Kamel: 5 Mondjahre; Rind/Büffel: 2 Mondjahre; Schaf/Ziege: 1 Mondjahr.',
+    'kein Anteil darf kleiner als ein Siebtel sein',
+    'Eine reine Geldspende ohne tatsächliche, gültige Schlachtung ersetzt das Udhiyah-Kurban nicht.',
+    'ist empfohlen, aber hanafitisch kein zwingendes Drittel-Schema',
+    'Ruf unmittelbar vor dem Beginn eines Farḍ-Gebets; nicht begrifflich auf Gemeinschaftsgebete beschränkt.',
+    'auch bei Kaza-Gebeten Sunnah',
+):
+    if token not in guide:
+        fail(f"Fitre/Kurban/Iqamah religious-content regression: missing {token}")
+
+for forbidden in (
+    'Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.',
+    'Fitre-Betrag: €',
+    'Fıtır sadakası: €',
+):
+    if forbidden in guide:
+        fail(f"religious-content wording regression returned: {forbidden}")
+
+# 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
+for token in (
+    'private struct PrayerSpecialSituationsView: View',
+    'Reise · Seferîlik & Qasr',
+    'mindestens ungefähr 90 km',
+    'weniger als 15 Tage Aufenthalt',
+    'vier-rakʿātigen Farḍ-Gebete Dhuhr, Asr und Isha auf zwei Rakʿāt',
+    'private struct TilawahSajdahGuideView: View',
+    'Die 14 Secde-Ayat',
+    'An-Naḥl 16:49',
+    'Diyanet erklärt ausdrücklich: Wird ein Secde-Ayat über Radio, Fernsehen, Internet',
+    'private func isTilawahSajdahAyah(surah: Int, ayah: Int) -> Bool',
+    'settings.t("Secde-Ayat", "Secde âyeti")',
+):
+    if token not in guide:
+        fail(f"missing high-priority Islamic learning module regression: {token}")
+
+# 5a.5) Gender/obligation caveats for communal prayers.
+for token in (
+    'Frauen sind nach Diyanet nicht zum Eid-Gebet verpflichtet',
+    'Hanafi ist das Eid-Gebet für diejenigen wajib, für die auch das Freitagsgebet verpflichtend ist.',
+    'Frauen, Reisende und weitere Personen, für die Jumuʿah nicht verpflichtend ist, dürfen teilnehmen',
+):
+    if token not in guide:
+        fail(f"communal prayer obligation caveat regression: {token}")
+
+# 5a.6) Prayer precondition must distinguish Wudu from required Ghusl.
+for token in (
+    'du bist rituell rein (Wudu; wenn erforderlich auch Ghusl)',
+    'hükmen temiz ol (abdestli; gerekiyorsa ayrıca gusüllü)',
+):
+    if token not in guide:
+        fail(f"ritual-purity prayer precondition regression: {token}")
 
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")

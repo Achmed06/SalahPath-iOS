@@ -233,7 +233,7 @@ struct GuideView: View {
             NavigationLink { PrayerCatalogView() } label: {
                 referenceRow(
                     icon: "rectangle.stack.badge.play.fill",
-                    title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
+                    title: settings.t("Gebetsarten & Anleitungen", "Namaz türleri & rehberler"),
                     subtitle: settings.t("Fajr bis Jumuʿah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
                 )
             }
@@ -613,10 +613,10 @@ private enum PrayerText {
     static let fatiha = PrayerRecitation(
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
-        transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
-        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
+        deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
+        trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
+        deNote: "Nach al-Fātiha sagt man Âmîn; Âmîn gehört nicht zur Sura und ist kein Quranvers. Hanafi: Âmîn wird leise gesprochen. Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Fâtiha'dan sonra Âmin denir; Âmin sûrenin bir parçası ve Kur'an ayeti değildir. Hanefî: Âmin sessiz söylenir. İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -680,6 +680,14 @@ private enum PrayerText {
         transliteration: "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr.",
         deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
         trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Quran 2:201", trNote: "Kur'an 2:201")
+
+    static let rabbanaGhfirli = PrayerRecitation(
+        deLabel: "Rabbenâğfirli", trLabel: "Rabbenâğfirli",
+        arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+        transliteration: "Rabbenâğfir lî ve li-vâlideyye ve lil-mü'minîne yevme yekûmül-hisâb.",
+        deMeaning: "Unser Herr, vergib mir, meinen Eltern und den Gläubigen an dem Tag, an dem die Abrechnung stattfindet.",
+        trMeaning: "Rabbimiz, hesap görülecek gün beni, anne babamı ve müminleri bağışla.",
+        deNote: "Quran 14:41", trNote: "Kur'an 14:41")
 
     static let salam = PrayerRecitation(
         deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
@@ -759,8 +767,8 @@ struct PrayerHowToView: View {
                 trTitle: "Doğrulma – 1. rekât",
                 deAction: "Richte dich vollständig aus dem Rukūʿ auf. Stehe kurz ganz ruhig, bevor du in die Secde gehst.",
                 trAction: "Rükûdan tamamen doğrul. Secdeye gitmeden önce kısa bir an tamamen dik ve sakin dur.",
-                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
-                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                deHanafi: "Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten „Semi'allāhu limen hamideh“. „Rabbenâ lekel-hamd“ sagen der Alleinbetende und der Mitbetende hinter dem Imam; nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich.",
+                trHanafi: "Hanefî/Diyanet: İmam ve yalnız kılan doğrulurken „Semi'allāhu limen hamideh“ der. „Rabbenâ lekel-hamd“ı yalnız kılan ve imama uyan söyler; Ebû Hanîfe'ye göre imam ayrıca tahmîd söylemez.",
                 recitations: [PrayerText.rising, PrayerText.upright]
             ),
             .init(
@@ -843,8 +851,8 @@ struct PrayerHowToView: View {
                 trTitle: "Doğrulma – 2. rekât",
                 deAction: "Richte dich wieder vollständig aus dem Rukūʿ auf und bleibe kurz ruhig stehen, bevor du zur Secde gehst.",
                 trAction: "Rükûdan yeniden tamamen doğrul ve secdeye gitmeden önce kısa bir an sakin dur.",
-                deHanafi: "Allein/Imam: beim Hochkommen Semi'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd. Hinter dem Imam: Rabbenâ lekel-hamd.",
-                trHanafi: "Yalnız/İmam: doğrulurken Semi'allāhu limen hamideh; tam doğrulunca Rabbenâ lekel-hamd. İmama uyan: Rabbenâ lekel-hamd.",
+                deHanafi: "Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten „Semi'allāhu limen hamideh“. „Rabbenâ lekel-hamd“ sagen der Alleinbetende und der Mitbetende hinter dem Imam; nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich.",
+                trHanafi: "Hanefî/Diyanet: İmam ve yalnız kılan doğrulurken „Semi'allāhu limen hamideh“ der. „Rabbenâ lekel-hamd“ı yalnız kılan ve imama uyan söyler; Ebû Hanîfe'ye göre imam ayrıca tahmîd söylemez.",
                 recitations: [PrayerText.rising, PrayerText.upright]
             ),
             .init(
@@ -1002,8 +1010,8 @@ struct PrayerHowToView: View {
                                     .font(.title3.bold())
                             }
                             Text(settings.t(
-                                "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla.",
-                                "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön."
+                                "Prüfe: Die Gebetszeit hat begonnen, du bist rituell rein (Wudu; wenn erforderlich auch Ghusl), dein Körper, deine Kleidung und dein Gebetsplatz sind von relevanter Unreinheit gereinigt, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla.",
+                                "Kontrol et: Namaz vakti girmiş olsun, hükmen temiz ol (abdestli; gerekiyorsa ayrıca gusüllü), bedenin, elbisen ve namaz yerin namaza engel necasetten temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön."
                             ))
                             .font(.subheadline)
                             .fixedSize(horizontal: false, vertical: true)
@@ -1032,6 +1040,17 @@ struct PrayerHowToView: View {
                             .foregroundStyle(.secondary)
                         }
                         .cardStyle(material: true)
+
+                        NavigationLink { PrayerMistakesView() } label: {
+                            Label(
+                                settings.t("Fehler im Gebet · Sehiv-Secdesi", "Namazda hata · Sehiv secdesi"),
+                                systemImage: "exclamationmark.arrow.triangle.2.circlepath"
+                            )
+                            .font(.headline.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
+                        .cardStyle()
                     }
                 }
                 .padding()
@@ -1208,8 +1227,8 @@ private struct PrayerTutorialStepCard: View {
     private var maleTipText: String {
         if step.number == "16" {
             return settings.t(
-                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt.",
+                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı „lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir."
             )
         }
         if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
@@ -1303,8 +1322,8 @@ private struct PrayerTutorialStepCard: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt.",
+                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı „lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir."
                             ))
                             .font(.caption)
                             .foregroundStyle(SalahTheme.mutedInk)
@@ -1465,11 +1484,11 @@ private struct QunutDuaView: View {
         List {
             Section("Kunut 1") {
                 Text("اللَّهُمَّ إِنَّا نَسْتَعِينُكَ وَنَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ وَنُؤْمِنُ بِكَ وَنَتُوبُ إِلَيْكَ وَنَتَوَكَّلُ عَلَيْكَ وَنُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ نَشْكُرُكَ وَلَا نَكْفُرُكَ وَنَخْلَعُ وَنَتْرُكُ مَنْ يَفْجُرُكَ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme innâ nesteînüke ve nestağfirüke ve nestehdîk. Ve nü'minü bike ve netûbü ileyk. Ve netevekkelü aleyke ve nüsnî aleykel-hayra küllehû neşkürüke ve lâ nekfürük. Ve nahleu ve netrükü men yefcürük.")
+                Text("Allâhümme innâ nesteînüke ve nestağfiruke ve nestehdîk. Ve nü'minü bike ve netûbü ileyke ve netevekkelü aleyke ve nüsnî aleyke'l-hayra kullehü neşkuruke, velâ nekfüruk. Ve nahleu ve netrukü men yefcüruk.")
             }
             Section("Kunut 2") {
                 Text("اللَّهُمَّ إِيَّاكَ نَعْبُدُ وَلَكَ نُصَلِّي وَنَسْجُدُ وَإِلَيْكَ نَسْعَى وَنَحْفِدُ نَرْجُو رَحْمَتَكَ وَنَخْشَى عَذَابَكَ إِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme iyyâke na'büdü ve leke nusallî ve nescüd. Ve ileyke nes'â ve nahfid. Nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bil-küffâri mülhik.")
+                Text("Allâhümme iyyâke na'büdü ve leke nüsallî ve nescüdü ve ileyke nes'â ve nahfidü nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bi'l-küffâri mülhık.")
             }
             Section {
                 Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Für die Aussprache ist eine verlässliche menschliche Aufnahme am besten geeignet.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Telaffuz çalışırken güvenilir bir insan kaydı kullanmak en uygunudur."))
@@ -1481,7 +1500,372 @@ private struct QunutDuaView: View {
     }
 }
 
+private struct PrayerMistakesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(
+                        settings.t("Gebetsfehler richtig einordnen", "Namazdaki hataları doğru değerlendirmek"),
+                        systemImage: "exclamationmark.arrow.triangle.2.circlepath"
+                    )
+                    .font(.title3.bold())
+                    .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Diese Übersicht folgt der hanafitischen/Diyanet-Grunddarstellung. Nicht jeder Fehler macht das Gebet ungültig und nicht jeder Fehler wird durch Sehiv-Secdesi behoben.",
+                        "Bu özet Hanefî/Diyanet temel anlatımını izler. Her hata namazı bozmaz; her hata da sehiv secdesiyle giderilmez."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Was kann das Gebet ungültig machen?", "Namazı neler bozabilir?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    prayerIssue(settings.t("Wudu bzw. die notwendige rituelle Reinheit geht während des Gebets verloren.", "Namaz sırasında abdestin veya gerekli hükmî temizliğin bozulması."))
+                    prayerIssue(settings.t("Im Gebet mit gewöhnlicher menschlicher Rede sprechen.", "Namazda normal insan sözüyle konuşmak."))
+                    prayerIssue(settings.t("Essen oder trinken.", "Yemek veya içmek."))
+                    prayerIssue(settings.t("Die Brust deutlich von der Qibla wegdrehen.", "Göğsü kıbleden belirgin biçimde çevirmek."))
+                    prayerIssue(settings.t("So viele gebetsfremde Bewegungen machen, dass ein Außenstehender den Eindruck bekommt, man sei nicht mehr im Gebet.", "Dışarıdan bakanın artık namaz kılınmadığını düşüneceği kadar namaz dışı hareket yapmak."))
+                    prayerIssue(settings.t("Hanafi: so laut lachen, dass Umstehende es hören; dies bricht zusätzlich Wudu.", "Hanefî: yakındakilerin duyacağı kadar sesli gülmek; bu aynı zamanda abdesti de bozar."))
+                    prayerIssue(settings.t("Eine notwendige Bedingung oder einen grundlegenden Bestandteil des Gebets fehlen lassen. Details hängen davon ab, was genau ausgelassen wurde.", "Namazın gerekli bir şartını veya temel rüknünü yerine getirmemek. Sonuç, tam olarak neyin terk edildiğine göre değişir."))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Wann ist Sehiv-Secdesi nötig?", "Sehiv secdesi ne zaman gerekir?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    Text(settings.t(
+                        "Hanefî/Diyanet: Wird aus Versehen ein Rukn verzögert, wiederholt oder vorgezogen oder ein Wājib ausgelassen, verzögert oder verändert, wird die Unachtsamkeit mit Sehiv-Secdesi ausgeglichen.",
+                        "Hanefî/Diyanet: Unutarak bir rükün geciktirilir, tekrarlanır veya öne alınırsa ya da bir vacip terk edilir, geciktirilir veya değiştirilirse sehiv secdesi gerekir."
+                    ))
+                    .fixedSize(horizontal: false, vertical: true)
+
+                    Divider()
+
+                    numberedPrayerMistake("1", settings.t(
+                        "Im letzten Sitzen Ettehiyyâtü lesen.",
+                        "Son oturuşta Ettehiyyâtü'yü oku."
+                    ))
+                    numberedPrayerMistake("2", settings.t(
+                        "Nach rechts Salām geben und ohne Unterbrechung mit Allāhu akbar in die erste Secde gehen.",
+                        "Sağa selâm ver; ara vermeden Allāhu ekber diyerek birinci secdeye git."
+                    ))
+                    numberedPrayerMistake("3", settings.t(
+                        "In jeder der zwei Secden dreimal „Sübhâne rabbiyel-aʿlâ“ sagen; zwischen den Secden mit Takbīr sitzen.",
+                        "İki secdenin her birinde üç kez „Sübhâne rabbiyel-aʿlâ“ de; arada tekbirle otur."
+                    ))
+                    numberedPrayerMistake("4", settings.t(
+                        "Nach der zweiten Secde sitzen und Ettehiyyâtü, Allahümme Salli, Allahümme Bârik und eine Rabbenâ-Dua lesen.",
+                        "İkinci secdeden sonra oturup Ettehiyyâtü, Allahümme Salli, Allahümme Bârik ve bir Rabbenâ duası oku."
+                    ))
+                    numberedPrayerMistake("5", settings.t(
+                        "Danach zuerst nach rechts und dann nach links Salām geben.",
+                        "Ardından önce sağa, sonra sola selâm ver."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(settings.t("Wichtig", "Önemli"), systemImage: "info.circle.fill")
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Sehiv-Secdesi repariert nicht pauschal jeden Fehler. Wer z. B. einen Farz/Rukn bewusst auslässt oder einen komplizierten Fehlerfall hat, sollte die konkrete Regel prüfen. Bei Zweifel zeigt SalahPath hier bewusst keine automatische Gültigkeitsentscheidung.",
+                        "Sehiv secdesi her hatayı otomatik olarak düzeltmez. Örneğin bir farz/rükün bilerek terk edilmişse veya hata karmaşıksa somut hüküm ayrıca kontrol edilmelidir. SalahPath şüpheli durumda namazın geçerliliği hakkında otomatik hüküm vermez."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Grundlage: Diyanet Din İşleri Yüksek Kurulu · Sehiv Secdesi ve Tilavet Secdesi; Diyanet Namaz İlmihali · Namazı Bozan Şeyler. Darstellung: hanafitischer Grundrahmen.",
+                        "Kaynak: Diyanet Din İşleri Yüksek Kurulu · Sehiv Secdesi ve Tilavet Secdesi; Diyanet Namaz İlmihali · Namazı Bozan Şeyler. Anlatım: Hanefî temel çerçeve."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Gebetsfehler", "Namaz hataları"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func prayerIssue(_ text: String) -> some View {
+        Label(text, systemImage: "exclamationmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func numberedPrayerMistake(_ number: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text(number)
+                .font(.caption.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(width: 26, height: 26)
+                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+            Text(text)
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct PrayerSpecialSituationsView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Gebet in besonderen Situationen", "Özel durumlarda namaz"), systemImage: "figure.roll")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Die folgenden Regeln sind ausdrücklich als hanafitische/Diyanet-Grunddarstellung formuliert. Bei Reise, Krankheit und eingeschränkter Beweglichkeit gibt es Detailunterschiede zwischen den Rechtsschulen.",
+                        "Aşağıdaki hükümler açıkça Hanefî/Diyanet temel anlatımıdır. Seferîlik, hastalık ve hareket kısıtlılığında mezhepler arasında ayrıntı farkları vardır."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Reise · Seferîlik & Qasr", "Yolculuk · Seferîlik & Kasr"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    specialPrayerPoint(settings.t(
+                        "Hanafi: Wer vorübergehend zu einem mindestens ungefähr 90 km entfernten Ziel reist und dort weniger als 15 Tage Aufenthalt beabsichtigt, gilt grundsätzlich als seferî. Bei 15 Tagen oder mehr beabsichtigtem Aufenthalt gilt man dort als mukīm.",
+                        "Hanefî: Geçici olarak yaklaşık en az 90 km uzaktaki bir yere gidip orada 15 günden az kalmaya niyet eden kişi kural olarak seferîdir. 15 gün veya daha fazla kalmaya niyet edilirse orada mukim sayılır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Als seferî werden die vier-rakʿātigen Farḍ-Gebete Dhuhr, Asr und Isha auf zwei Rakʿāt gekürzt. Fajr bleibt zwei und Maghrib drei Rakʿāt.",
+                        "Seferî iken dört rekâtlı öğle, ikindi ve yatsı farzları iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Betet ein Reisender hinter einem ortsansässigen Imam, folgt er dem Imam und verrichtet das Gebet vollständig.",
+                        "Seferî kişi mukim bir imama uyarsa imama uyar ve namazı tam kılar."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Bei tatsächlichem Bedarf oder Zwang kann Diyanet auf Reisen das Zusammenlegen von Dhuhr+Asr bzw. Maghrib+Isha zulassen. Das ist eine Erleichterung für die konkrete Notwendigkeit, nicht eine zusätzliche tägliche Gebetsart.",
+                        "Gerçek ihtiyaç veya zorunluluk hâlinde Diyanet yolculukta öğle+ikindi veya akşam+yatsı namazlarının cem edilmesine ruhsat vermektedir. Bu, somut ihtiyaç için bir kolaylıktır; yeni bir günlük namaz şekli değildir."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Krankheit & eingeschränkte Bewegung", "Hastalık & hareket kısıtlılığı"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    specialPrayerPoint(settings.t(
+                        "Wer stehen kann, betet grundsätzlich stehend. Wer dazu nicht fähig ist, darf sitzend beten.",
+                        "Ayakta durabilen kişi kural olarak ayakta namaz kılar. Buna gücü yetmeyen kişi oturarak kılabilir."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Kann die Person keinen normalen Rukūʿ oder Sujūd ausführen, kann sie mit dem Kopf Īmāʾ machen: für Sujūd wird der Kopf stärker geneigt als für Rukūʿ.",
+                        "Normal rükû veya secde yapılamıyorsa baş ile îmâ yapılabilir: secde için baş, rükûdan daha fazla eğilir."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Diyanet/Hanafi: Wer mit dem Kopf keine Īmāʾ-Bewegung ausführen kann, betet nicht nur mit Augen-, Augenbrauen- oder bloßen inneren Zeichen. Hier besteht ein Rechtsschul-Unterschied, insbesondere zur schafiitischen Auffassung.",
+                        "Diyanet/Hanefî: Başıyla îmâ edemeyen kişi yalnız göz, kaş veya kalp işaretiyle namaz kılmaz. Bu konuda özellikle Şafiî görüşünden farklılık vardır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Eine leichte Beschwerde, die die normale Gebetsform tatsächlich nicht verhindert, ist nicht automatisch ein Grund, auf die erleichterte Form auszuweichen.",
+                        "Namazı normal şekliyle kılmaya gerçekten engel olmayan hafif bir rahatsızlık, kolaylaştırılmış şekle geçmek için tek başına yeterli değildir."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Diyanet Din İşleri Yüksek Kurulu · Seferilik/Kasr ve Cem; Umreye gidenlerin seferîliği; Hasta Namazı kararları (2026). Einzelfälle können zusätzliche Details haben.",
+                        "Diyanet Din İşleri Yüksek Kurulu · Seferilik/Kasr ve Cem; umre yolcularının seferîliği; Hasta Namazı kararları (2026). Bireysel durumlarda ek ayrıntılar olabilir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Reise & Krankheit", "Seferîlik & Hastalık"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func specialPrayerPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct TilawahSajdahGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private let references: [(String, String)] = [
+        ("Al-Aʿrāf 7:206", "Aʿrâf 7:206"),
+        ("Ar-Raʿd 13:15", "Raʿd 13:15"),
+        ("An-Naḥl 16:49", "Nahl 16:49"),
+        ("Al-Isrāʾ 17:107", "İsrâ 17:107"),
+        ("Maryam 19:58", "Meryem 19:58"),
+        ("Al-Ḥajj 22:18", "Hac 22:18"),
+        ("Ṣād 38:24", "Sâd 38:24"),
+        ("Al-Furqān 25:60", "Furkân 25:60"),
+        ("An-Naml 27:25", "Neml 27:25"),
+        ("As-Sajdah 32:15", "Secde 32:15"),
+        ("Fuṣṣilat 41:37", "Fussilet 41:37"),
+        ("An-Najm 53:62", "Necm 53:62"),
+        ("Al-Inshiqāq 84:21", "İnşikâk 84:21"),
+        ("Al-ʿAlaq 96:19", "Alak 96:19")
+    ]
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Hanafi/Diyanet: Wer einen der 14 Secde-Ayat auf Arabisch rezitiert oder hört, für den ist die Tilāwa-Secdesi wājib. Diyanet ordnet sie in den anderen drei sunnitischen Rechtsschulen als Sunnah ein.",
+                        "Hanefî/Diyanet: Kur'an'daki 14 secde âyetinden birini Arapça okuyan veya işiten kişiye tilâvet secdesi vaciptir. Diyanet, diğer üç Sünnî mezhepte bunu sünnet olarak açıklar."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("So wird sie außerhalb des Gebets gemacht", "Namaz dışında nasıl yapılır?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    tilawahStep("1", settings.t(
+                        "Wudu haben, zur Qibla stehen bzw. sich ausrichten, ʿAwrah bedecken und die Absicht für Tilāwa-Secdesi fassen.",
+                        "Abdestli ol, kıbleye yönel, avret yerlerini ört ve tilâvet secdesine niyet et."
+                    ))
+                    tilawahStep("2", settings.t(
+                        "Ohne die Hände zu heben „Allāhu akbar“ sagen und einmal in Sujūd gehen.",
+                        "Elleri kaldırmadan „Allāhu ekber“ diyerek bir kez secdeye git."
+                    ))
+                    tilawahStep("3", settings.t(
+                        "In der Secde dreimal „Sübhâne rabbiyel-aʿlâ“ sagen.",
+                        "Secdede üç kez „Sübhâne rabbiyel-aʿlâ“ de."
+                    ))
+                    tilawahStep("4", settings.t(
+                        "Mit „Allāhu akbar“ wieder aufstehen. Danach gibt es weder Tashahhud noch Salām.",
+                        "„Allāhu ekber“ diyerek kalk. Sonrasında tahiyyat oturuşu veya selâm yoktur."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(settings.t("Audio, App & Internet", "Ses, uygulama & internet"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Diyanet erklärt ausdrücklich: Wird ein Secde-Ayat über Radio, Fernsehen, Internet oder vergleichbare technische Wiedergabe gehört, gilt in der hanafitischen Darstellung ebenfalls die Tilāwa-Secdesi. SalahPath markiert deshalb diese Ayat im Quran-Reader.",
+                        "Diyanet açıkça belirtir: Secde âyeti radyo, televizyon, internet veya benzeri teknik bir yayından işitilirse Hanefî anlatımda yine tilâvet secdesi gerekir. Bu nedenle SalahPath bu âyetleri Kur'an okuyucusunda işaretler."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(settings.t("Die 14 Secde-Ayat", "14 secde âyeti"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    ForEach(references.indices, id: \.self) { index in
+                        let item = references[index]
+                        HStack(spacing: 9) {
+                            Text(String(index + 1))
+                                .font(.caption.bold().monospacedDigit())
+                                .frame(width: 27, height: 27)
+                                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+                            Text(settings.language == .german ? item.0 : item.1)
+                                .font(.subheadline)
+                            Spacer()
+                        }
+                    }
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Diyanet Kur'an Sözlüğü · Tilâvet Secdesi; Din İşleri Yüksek Kurulu · Namazın dışında veya namazda tilavet secdesi nasıl yapılır?",
+                        "Diyanet Kur'an Sözlüğü · Tilâvet Secdesi; Din İşleri Yüksek Kurulu · Namazın dışında veya namazda tilavet secdesi nasıl yapılır?"
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func tilawahStep(_ number: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text(number)
+                .font(.caption.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(width: 26, height: 26)
+                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+            Text(text)
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private func isTilawahSajdahAyah(surah: Int, ayah: Int) -> Bool {
+    let references: Set<String> = [
+        "7:206", "13:15", "16:49", "17:107", "19:58", "22:18", "38:24",
+        "25:60", "27:25", "32:15", "41:37", "53:62", "84:21", "96:19"
+    ]
+    return references.contains("\(surah):\(ayah)")
+}
+
 // MARK: - Wudu
+
+private enum WuduStepClassification {
+    case fardCore
+    case sunnah
+    case adab
+}
 
 private struct WuduTutorialStep: Identifiable {
     let id = UUID()
@@ -1492,7 +1876,7 @@ private struct WuduTutorialStep: Identifiable {
     let deAction: String
     let trAction: String
     let repeatText: String?
-    let hanafiFard: Bool
+    let classification: WuduStepClassification
 }
 
 // Standalone asset-backed Wudu/prayer artwork; keep right/left semantics and Guide icon routing consistent.
@@ -1541,17 +1925,17 @@ struct WuduGuideView: View {
     }
 
     private let steps: [WuduTutorialStep] = [
-        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: false),
-        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
-        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
-        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", hanafiFard: true),
-        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", hanafiFard: false),
-        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", hanafiFard: false),
-        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true),
-        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true)
+        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .sunnah),
+        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", classification: .sunnah),
+        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", classification: .sunnah),
+        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", classification: .fardCore),
+        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", classification: .sunnah),
+        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", classification: .adab),
+        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .fardCore),
+        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .fardCore)
     ]
 
     var body: some View {
@@ -1576,7 +1960,7 @@ struct WuduGuideView: View {
                             Divider()
 
                             Text(settings.t(
-                                "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
+                                "Die 4 Pflichtbestandteile des Wudu im hanafitischen/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
                                 "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
                             ))
                             .font(.footnote.bold())
@@ -1609,6 +1993,103 @@ struct WuduGuideView: View {
                             .foregroundStyle(.secondary)
                         }
                         .cardStyle()
+
+                        VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Was bricht Wudu?", "Abdesti ne bozar?"), systemImage: "exclamationmark.shield.fill")
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Text(settings.t(
+                                "Hanafi/Diyanet – häufige Fälle:",
+                                "Hanefî/Diyanet – sık görülen durumlar:"
+                            ))
+                            .font(.caption.bold())
+                            .foregroundStyle(SalahTheme.teal)
+
+                            Label(settings.t(
+                                "Ausscheidungen aus den beiden natürlichen Ausgängen, einschließlich Wind.",
+                                "Ön veya arka yoldan idrar, dışkı, akıntı veya yel çıkması."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Fließendes Blut, Eiter oder Wundflüssigkeit; andere Rechtsschulen beurteilen dies teilweise anders.",
+                                "Akan kan, irin veya yara sıvısı; diğer mezheplerde bu konuda farklı hükümler vardır."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Mundvolles Erbrechen im hanafitischen Fiqh.",
+                                "Hanefî fıkhında ağız dolusu kusmak."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Bewusstlosigkeit, starke Berauschung oder Schlaf, bei dem die Körperkontrolle verloren geht. Festes Sitzen mit stabiler Sitzhaltung wird beim Schlaf gesondert beurteilt.",
+                                "Bayılma, ağır sarhoşluk veya beden kontrolünün kaybolduğu uyku. Kalçalar yere sağlam oturmuş ve oturuş korunmuşsa uyku ayrıca değerlendirilir."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Hanafi: lautes Lachen im Gebet, das Umstehende hören können, beendet sowohl das Gebet als auch Wudu.",
+                                "Hanefî: Namazda yakındakilerin duyacağı kadar sesli gülmek hem namazı hem abdesti bozar."
+                            ), systemImage: "circle.fill")
+                            .font(.subheadline)
+
+                            Text(settings.t(
+                                "Berührung zwischen Mann und Frau allein bricht Wudu im hanafitischen Madhhab nicht automatisch. Bei konkreten Sonderfällen und anderen Rechtsschulen gelten teils andere Regeln.",
+                                "Kadın ile erkeğin yalnızca birbirine dokunması Hanefî mezhebinde abdesti kendiliğinden bozmaz. Özel durumlarda ve diğer mezheplerde farklı hükümler bulunabilir."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+
+                            Text(settings.t(
+                                "Quelle: Diyanet · Abdest / Abdesti Bozan Şeyler (hanafitische Grunddarstellung).",
+                                "Kaynak: Diyanet · Abdest / Abdesti Bozan Şeyler (Hanefî temel anlatım)."
+                            ))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle(material: true)
+
+                        VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Wasserbarrieren, Verband & Mest", "Su engelleri, sargı & mest"), systemImage: "bandage.fill")
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Label(settings.t(
+                                "Wasser muss die waschpflichtigen Stellen erreichen. Freiwillig aufgebrachte wasserundurchlässige Schichten, z. B. Nagellack, müssen vor Wudu oder Ghusl entfernt werden, wenn sie den Wasserkontakt verhindern.",
+                                "Su, yıkanması farz olan yerlere ulaşmalıdır. Oje gibi isteğe bağlı sürülen ve suyun temasını engelleyen tabakalar, abdest veya gusülden önce çıkarılmalıdır."
+                            ), systemImage: "drop.triangle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Medizinischer Sonderfall: Schadet das Waschen einer Wunde oder Behandlung, gelten Erleichterungen für Verband bzw. medizinische Schicht; je nach Schaden wird darüber gestrichen oder auch das Streichen unterlassen.",
+                                "Tıbbî durum: Bir yara veya tedavi bölgesini yıkamak zarar veriyorsa sargı ya da tıbbî tabaka için ruhsat vardır; zarara göre üzerine mesh edilir, mesh de zararlıysa terk edilir."
+                            ), systemImage: "cross.case.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Mest bzw. nur entsprechend geeignete dicke Socken dürfen unter hanafitischen Bedingungen statt der Füße gestrichen werden. Sie müssen nach einem vollständigen Wudu mit gewaschenen Füßen angezogen worden sein; gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch.",
+                                "Mest veya ancak Hanefî şartlarını taşıyan uygun kalın çoraplar, ayakları yıkamak yerine mesh edilebilir. Bunlar ayaklar yıkanarak alınmış tam bir abdestten sonra giyilmiş olmalıdır; sıradan ince çoraplar kendiliğinden bu hükme girmez."
+                            ), systemImage: "figure.walk")
+                            .font(.subheadline)
+
+                            Text(settings.t(
+                                "Mesh-Süre ab dem ersten Wudu-Bruch nach dem Anziehen: für Nichtreisende ein Tag/eine Nacht, für Reisende drei Tage/drei Nächte. Details wie Material, Haltbarkeit und Löcher sind Teil der hanafitischen Bedingungen.",
+                                "Mesh süresi, giyildikten sonraki ilk abdest bozulmasından itibaren mukim için bir gün bir gece, seferî için üç gün üç gecedir. Malzeme, dayanıklılık ve delik gibi ayrıntılar Hanefî şartlarının parçasıdır."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+
+                            Text(settings.t(
+                                "Quelle: Diyanet Din İşleri Yüksek Kurulu · Wudu; Mest-/Socken-Masah; Verband/Wunde und wasserhemmende Stoffe.",
+                                "Kaynak: Diyanet Din İşleri Yüksek Kurulu · Abdest; mest üzerine mesh; çorap üzerine mesh; sargı/yara ve suyu engelleyen maddeler."
+                            ))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle(material: true)
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
@@ -1670,14 +2151,12 @@ struct WuduGuideView: View {
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
-                Text(steps[safeCurrentStepIndex].hanafiFard
-                     ? settings.t("FARZ · PFLICHT", "FARZ")
-                     : settings.t("SUNNAH", "SÜNNET"))
+                Text(wuduClassificationLabel(for: steps[safeCurrentStepIndex].classification))
                     .font(.caption.bold())
                     .padding(.horizontal, 9)
                     .padding(.vertical, 5)
                     .background(
-                        steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal,
+                        wuduClassificationBackground(for: steps[safeCurrentStepIndex].classification),
                         in: Capsule()
                     )
                     .foregroundStyle(SalahTheme.deepTeal)
@@ -1710,6 +2189,28 @@ struct WuduGuideView: View {
         .padding(12)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+    }
+
+    private func wuduClassificationLabel(for classification: WuduStepClassification) -> String {
+        switch classification {
+        case .fardCore:
+            return settings.t("PFLICHTKERN", "FARZ TEMELİ")
+        case .sunnah:
+            return settings.t("SUNNAH", "SÜNNET")
+        case .adab:
+            return settings.t("ADAB", "ÂDÂB")
+        }
+    }
+
+    private func wuduClassificationBackground(for classification: WuduStepClassification) -> Color {
+        switch classification {
+        case .fardCore:
+            return SalahTheme.gold
+        case .sunnah:
+            return SalahTheme.softTeal
+        case .adab:
+            return SalahTheme.cream
+        }
     }
 
     private var wuduStepNavigationBar: some View {
@@ -1832,7 +2333,7 @@ struct WuduGuideView: View {
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
         if [4, 5, 6, 10, 11].contains(step.number) {
-            return settings.t("1× Farz · 3× Sunnah", "1× Farz · 3× Sünnet")
+            return settings.t("1× Pflicht · 3× Sunnah", "1× Farz · 3× Sünnet")
         }
         if [7, 8, 9].contains(step.number) { return "1×" }
         return settings.t("3× Sunnah", "3× Sünnet")
@@ -1846,9 +2347,9 @@ struct WuduGuideView: View {
             4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
             5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
             6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
-            7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Die Hände sind feucht.",
+            7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Hanefî: Mindestens ein Viertel des Kopfes einmal zu meshen erfüllt den Farz; den ganzen Kopf einmal zu meshen gehört zur vollständigen Sunnah-Ausführung.",
             8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
-            9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
+            9: "Hanefî: Das Wischen der Ense/Nackenpartie mit den feuchten Fingerrücken gehört zu den Âdâb des Wudu, nicht zu den Farz. Die Vorderseite des Halses bzw. Kehle nicht wischen. Andere Rechtsschulen bewerten das Nackenwischen teilweise anders.",
             10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
             11: "Wasche danach den linken Fuß genauso vollständig."
         ]
@@ -1859,9 +2360,9 @@ struct WuduGuideView: View {
             4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
             5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.",
             6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
-            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir.",
+            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî: Başın en az dörtte birini bir kez mesh etmek farzı yerine getirir; başın tamamını bir kez mesh etmek sünnete uygun tam uygulamadır.",
             8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
-            9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
+            9: "Hanefî: Enseyi ıslak parmakların dış kısmıyla mesh etmek abdestin âdâbındandır; farz değildir. Boğazın ön tarafını mesh etme. Diğer mezheplerde ense meshi farklı değerlendirilebilir.",
             10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
             11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
         ]
@@ -2130,7 +2631,7 @@ struct PrayerTermsView: View {
         ("Sujūd / Secde", "Niederwerfung im Gebet.", "Namazdaki secde bölümü."),
         ("Qibla / Kıble", "Gebetsrichtung zur Kaaba in Mekka.", "Mekke'deki Kâbe yönü."),
         ("Adhān / Ezan", "Gebetsruf zum Beginn der Gebetszeit.", "Namaz vaktini bildiren çağrı."),
-        ("Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.", "Cemaat namazından hemen önce okunan çağrı."),
+        ("Iqāmah / Kamet", "Ruf unmittelbar vor dem Beginn eines Farḍ-Gebets; nicht begrifflich auf Gemeinschaftsgebete beschränkt.", "Farz namaza başlamadan önce getirilen çağrı; yalnız cemaat namazıyla sınırlı değildir."),
         ("Dhikr / Zikir", "Gedenken Allahs durch Worte, Duʿāʾ und Qurʾān-Rezitation.", "Allah'ı söz, dua ve Kur'an ile anmak."),
         ("Witr / Vitir", "Gebet nach Isha; hanafitisch drei Rakʿāt wajib.", "Yatsıdan sonra kılınır; Hanefî mezhebinde üç rekât vaciptir.")
     ]
@@ -2421,8 +2922,8 @@ struct PrayerCatalogView: View {
                     "2. rekât: İmam Fâtiha + sûre okur → sonra üç zevaid tekbiri alınır ve eller salınır → sonraki tekbirle doğrudan rükûya gidilir.",
                     "2 secdeden sonra son oturuş ve selâm. Bayram hutbesi namazdan sonra okunur."
                 ],
-                deNotes: ["Keine Adhan/Iqama für das Eid-Gebet."],
-                trNotes: ["Bayram namazında ezan ve kamet yoktur."],
+                deNotes: ["Keine Adhan/Iqama für das Eid-Gebet.", "Wichtig zur Verpflichtung: Frauen sind nach Diyanet nicht zum Eid-Gebet verpflichtet, dürfen und sollen bei geeigneten Bedingungen aber teilnehmen. Hanafi ist das Eid-Gebet für diejenigen wajib, für die auch das Freitagsgebet verpflichtend ist."],
+                trNotes: ["Bayram namazında ezan ve kamet yoktur.", "Yükümlülük notu: Diyanet'e göre kadınlar bayram namazıyla yükümlü değildir; uygun şartlarda katılabilir ve katılımları teşvik edilmiştir. Hanefîlerde bayram namazı, cuma namazıyla yükümlü olanlar için vaciptir."],
                 source: "Diyanet · Bayram Namazı"
             ),
             .init(
@@ -2483,8 +2984,8 @@ struct PrayerCatalogView: View {
                     "Hutbeyi dinle; ardından imam arkasında 2 rekât cuma farzı.",
                     "Ardından Ebû Hanîfe'ye göre 4 rekât sünnet; Hanefî imameyn görüşünde ilave 2 rekât da aktarılmıştır."
                 ],
-                deNotes: ["Die 2 Fard werden vom Imam laut rezitiert."],
-                trNotes: ["İki rekât farzda imam kıraati sesli yapar."],
+                deNotes: ["Die 2 Fard werden vom Imam laut rezitiert.", "Frauen, Reisende und weitere Personen, für die Jumuʿah nicht verpflichtend ist, dürfen teilnehmen; wenn sie Jumuʿah gültig mitbeten, ersetzt es für sie an diesem Tag das Dhuhr-Gebet."],
+                trNotes: ["İki rekât farzda imam kıraati sesli yapar.", "Kadınlar, seferîler ve cuma ile yükümlü olmayan diğer kişiler cuma namazına katılabilir; geçerli şekilde cuma kılarlarsa o gün ayrıca öğle namazı kılmazlar."],
                 source: "Diyanet · Cuma Namazı"
             ),
             .init(
@@ -3910,6 +4411,451 @@ private struct IlmihalTopicView: View {
     }
 }
 
+private struct PrayerRestrictedTimesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Drei strenge Kerâhat-Zeiten", "Üç temel kerâhat vakti")) {
+                restriction(
+                    settings.t("Nach Sonnenaufgang", "Güneş doğduktan sonra"),
+                    settings.t(
+                        "Vom Sonnenaufgang bis die Sonne deutlich gestiegen ist. Diyanet nennt für gemäßigte Regionen ungefähr 40–50 Minuten.",
+                        "Güneşin doğmasından belirgin şekilde yükselmesine kadar. Diyanet mutedil bölgeler için yaklaşık 40–50 dakika belirtir."
+                    )
+                )
+                restriction(
+                    settings.t("Kurz vor Dhuhr / Sonnenhöchststand", "Öğle öncesi / güneş tepedeyken"),
+                    settings.t(
+                        "Während die Sonne genau am höchsten Punkt steht, bis sie sich nach Westen neigt. Diyanet beschreibt dies ungefähr als die letzten 10 Minuten vor Eintritt der Dhuhr-Zeit.",
+                        "Güneş tam tepe noktasındayken batıya yönelmeye başlayıncaya kadar. Diyanet bunu yaklaşık öğle vaktinden önceki son 10 dakika olarak açıklar."
+                    )
+                )
+                restriction(
+                    settings.t("Kurz vor Sonnenuntergang", "Güneş batmadan önce"),
+                    settings.t(
+                        "Wenn die Sonne gegen Ende des Tages gelb wird bis zum Sonnenuntergang. Diyanet nennt für gemäßigte Regionen ungefähr die letzten 40–50 Minuten. Wurde das Asr-Fard dieses Tages noch nicht gebetet, wird es dennoch verrichtet; es absichtlich so weit hinauszuzögern ist makruh.",
+                        "Günün sonunda güneş sararmaya başladıktan batıncaya kadar. Diyanet mutedil bölgeler için yaklaşık son 40–50 dakikayı belirtir. O günün ikindi farzı henüz kılınmadıysa yine kılınır; özürsüz şekilde bu kadar geciktirmek mekruhtur."
+                    )
+                )
+            }
+
+            Section(settings.t("Was in diesen drei Zeiten ebenfalls nicht begonnen wird", "Bu üç vakitte ayrıca başlanmayan ibadetler")) {
+                Text(settings.t(
+                    "Hanefî/Diyanet: In den drei strengen Kerâhat-Zeiten werden auch Kaza-Gebete und Witr nicht begonnen. Ein bereits vorher vorbereiteter Janazah-Gottesdienst und eine Tilāwa-Secdesi aufgrund eines vor Beginn dieser Kerâhat-Zeit gelesenen Secde-Ayat werden ebenfalls auf später verschoben. Für eine Janazah, die erst in dieser Zeit vorbereitet wurde, und für einen in dieser Zeit gelesenen Secde-Ayat gelten besondere Ausnahmen.",
+                    "Hanefî/Diyanet: Üç temel kerâhat vaktinde kaza namazına ve vitir namazına da başlanmaz. Kerâhat vaktinden önce hazırlanmış cenazenin namazı ve daha önce okunmuş secde âyetinin tilâvet secdesi de sonraya bırakılır. Cenaze bu vakitte hazırlanmışsa veya secde âyeti bu vakitte okunmuşsa özel istisnalar vardır."
+                ))
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Weitere Zeiten für Nafila-Gebete", "Nafile namazlar için diğer vakitler")) {
+                restriction(
+                    settings.t("Nach Imsak bis Sonnenaufgang", "İmsaktan güneş doğana kadar"),
+                    settings.t(
+                        "Außer der Fajr-Sunnah wird in dieser Zeit kein zusätzliches Nafila-Gebet begonnen.",
+                        "Sabah namazının sünneti dışında bu sürede başka nafile namaza başlanmaz."
+                    )
+                )
+                restriction(
+                    settings.t("Nach dem Asr-Gebet", "İkindi namazından sonra"),
+                    settings.t(
+                        "Nach dem verrichteten Asr-Gebet bis Sonnenuntergang werden keine Nafila-Gebete begonnen.",
+                        "İkindi namazı kılındıktan sonra güneş batıncaya kadar nafile namaza başlanmaz."
+                    )
+                )
+                restriction(
+                    settings.t("Maghrib-Zeit vor dem Fard", "Akşam vakti farzdan önce"),
+                    settings.t(
+                        "Wenn die Maghrib-Zeit eingetreten ist, wird das Fard nicht durch ein zusätzliches Nafila-Gebet davor verzögert.",
+                        "Akşam vakti girdikten sonra farzdan önce ek bir nafile namazla farz geciktirilmez."
+                    )
+                )
+                restriction(
+                    settings.t("Freitag nach Besteigen der Minbar", "Cuma günü hatip minbere çıktıktan sonra"),
+                    settings.t(
+                        "Nach Diyanets hanafitischer Darstellung wird dann kein Nafila-Gebet neu begonnen.",
+                        "Diyanet'in Hanefî anlatımına göre bu sırada yeni bir nafile namaza başlanmaz."
+                    )
+                )
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Die ungefähren Minutenangaben sind keine weltweit festen Uhrzeiten; sie beschreiben Diyanets Näherungswerte für gemäßigte Regionen. Maßgeblich sind die tatsächlichen Sonnenstände. Andere Rechtsschulen unterscheiden sich in einzelnen Details, insbesondere bei Gebeten mit besonderem Anlass.",
+                    "Yaklaşık dakika değerleri dünyanın her yerinde sabit saatler değildir; Diyanet'in mutedil bölgeler için verdiği yaklaşık değerlerdir. Esas olan güneşin gerçek konumudur. Diğer mezhepler, özellikle sebebe bağlı namazlarda bazı ayrıntıları farklı değerlendirir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle", "Kaynak")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · „Mekruh vakitler hangileridir? Hangi vakitlerde kaza ve hangi vakitlerde nâfile namaz kılınmaz?“",
+                    "Diyanet Din İşleri Yüksek Kurulu · „Mekruh vakitler hangileridir? Hangi vakitlerde kaza ve hangi vakitlerde nâfile namaz kılınmaz?“"
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kerâhat-Zeiten", "Kerâhat Vakitleri"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func restriction(_ title: String, _ detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.headline)
+            Text(detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct WomensPurityGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Hayd & Nifas", "Hayız & Nifas")) {
+                Text(settings.t(
+                    "Während bestätigter Menstruation (Hayd) oder Wochenbettblutung (Nifas) werden Gebet und Fasten nicht verrichtet; auch Tawaf wird nicht durchgeführt. Die in dieser Zeit ausgefallenen Gebete werden später nicht nachgeholt. Ausgefallene Ramadan-Fastentage werden nach Ende des Zustands als Qada nachgeholt.",
+                    "Kesinleşmiş hayız veya nifas hâlinde namaz kılınmaz, oruç tutulmaz ve tavaf yapılmaz. Bu sürede kılınmayan namazlar daha sonra kaza edilmez. Ramazan'da tutulmayan oruçlar ise hâl sona erdikten sonra kaza edilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Wenn Hayd oder Nifas beendet ist, wird Ghusl genommen und die normalen Gottesdienste werden wieder aufgenommen.",
+                    "Hayız veya nifas sona erdiğinde gusül alınır ve normal ibadetlere yeniden başlanır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Istihāda / Blutung außerhalb von Hayd und Nifas", "İstihâze / Hayız ve nifas dışı kanama")) {
+                Text(settings.t(
+                    "Istihāda ist nicht dasselbe wie Hayd oder Nifas. Sie hebt die grundsätzliche Gebets- und Fastenpflicht nicht automatisch auf. Bei fortdauernder Blutung können zusätzlich die Regeln für einen dauerhaften Entschuldigungszustand (maʿdhūr/özür) relevant werden.",
+                    "İstihâze, hayız veya nifas ile aynı değildir. Namaz ve oruç yükümlülüğünü kendiliğinden kaldırmaz. Sürekli kanamada ayrıca özür hâli hükümleri uygulanabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Hanafitische Zeitgrenzen – nicht blind als Rechner benutzen", "Hanefî süreler – otomatik hesap gibi kullanılmamalı")) {
+                Text(settings.t(
+                    "Die klassische hanafitische Grundregel nennt für Hayd mindestens 3 und höchstens 10 Tage sowie mindestens 15 Tage Reinheit zwischen zwei Menstruationen. Diyanet hat 2026 ausdrücklich klargestellt, dass bei seltenen, medizinisch bestätigten regelmäßigen Blutungsmustern auch Sonderfälle anders beurteilt werden können. Deshalb klassifiziert SalahPath deine Blutung nicht automatisch.",
+                    "Klasik Hanefî temel ölçü hayız için en az 3, en fazla 10 gün ve iki hayız arasında en az 15 gün temizlik süresidir. Diyanet 2026'da, tıbbî olarak da doğrulanan bazı nadir ve düzenli kanama örüntülerinin farklı değerlendirilebileceğini açıkça belirtmiştir. Bu nedenle SalahPath kanamanı otomatik olarak sınıflandırmaz."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Für Nifas gibt es im hanafitischen Fiqh keine Mindestdauer; die klassische Obergrenze beträgt 40 Tage. Endet die Blutung vorher eindeutig, wird Ghusl genommen und die Gottesdienste werden wieder aufgenommen.",
+                    "Hanefî fıkhında nifasın asgari süresi yoktur; klasik azami süre 40 gündür. Kanama daha önce kesin olarak biterse gusül alınır ve ibadetlere başlanır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Bei unklarem Verlauf", "Belirsiz durumda")) {
+                Text(settings.t(
+                    "Farbe, Unterbrechungen, Gewohnheitsdauer, Medikamente, Spirale, Schwangerschaft, Fehlgeburt oder ungewöhnlich lange Blutungen können die Einordnung verändern. Bei solchen Fällen zeigt die App bewusst kein Ja/Nein-Urteil. Notiere den tatsächlichen Verlauf und frage eine qualifizierte religiöse Stelle; bei medizinisch auffälliger Blutung zusätzlich ärztlich abklären.",
+                    "Renk, ara vermeler, mutat süre, ilaçlar, spiral, gebelik, düşük veya olağandışı uzun kanamalar hükmü değiştirebilir. Bu tür durumlarda uygulama bilinçli olarak otomatik evet/hayır hükmü vermez. Gerçek kanama düzenini kaydet, ehil bir dinî merciden sor; tıbbî açıdan olağandışı kanamada ayrıca doktora başvur."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Kadınlara Özgü Haller: Âdet Döngüsü/Hayız, Lohusalık/Nifas, Abdest ve Namaz sowie aktuelle Kurul-Entscheidungen bis 2026. Darstellung: hanafitischer Grundrahmen mit ausdrücklich genannten aktuellen Ausnahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Kadınlara Özgü Haller: Âdet Döngüsü/Hayız, Lohusalık/Nifas, Abdest ve Namaz ve 2026'ya kadar güncel Kurul kararları. Anlatım: açıkça belirtilen güncel istisnalarla Hanefî temel çerçeve."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Frauen · Reinheit", "Kadınlara Özgü Haller"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private struct FitraGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wer ist verpflichtet?", "Kim yükümlüdür?")) {
+                fitraPoint(settings.t(
+                    "Hanefî/Diyanet: Wer das Ramadanfest erreicht und neben Grundbedürfnissen sowie den relevanten Jahresschulden Nisab-Vermögen besitzt, ist zur Fitra verpflichtet.",
+                    "Hanefî/Diyanet: Ramazan Bayramı'na ulaşan ve aslî ihtiyaçları ile ilgili yıllık borçları dışında nisap miktarı mala sahip olan Müslüman fitre ile yükümlüdür."
+                ))
+                fitraPoint(settings.t(
+                    "Anders als bei Zakat muss dieses Vermögen für Fitre nicht ertragsfähig/„wachsend“ sein und es muss kein Mondjahr darüber vergangen sein.",
+                    "Zekâttan farklı olarak fitre nisabındaki malın nâmî/artıcı olması ve üzerinden bir kamerî yıl geçmesi gerekmez."
+                ))
+                fitraPoint(settings.t(
+                    "Hanefî: Die Person gibt für sich selbst und ihre noch nicht volljährigen Kinder, für die sie sorgeverantwortlich ist. Für Ehepartner, Eltern oder volljährige Kinder besteht nicht automatisch dieselbe Zahlungspflicht; freiwillige Zahlung für sie ist möglich.",
+                    "Hanefî: Kişi kendisi ve velâyeti altındaki ergenlik çağına ulaşmamış çocukları için fitre verir. Eş, anne-baba veya yetişkin çocuklar için otomatik ödeme yükümlülüğü yoktur; onlar adına gönüllü ödeme yapılabilir."
+                ))
+            }
+
+            Section(settings.t("Wann?", "Ne zaman?")) {
+                fitraPoint(settings.t(
+                    "Nach Abū Hanīfa wird Fitre am ersten Eid-Tag mit Eintritt der Morgendämmerung verpflichtend.",
+                    "Ebû Hanîfe'ye göre fitre, Ramazan Bayramı'nın birinci günü tan yerinin ağarmasıyla vacip olur."
+                ))
+                fitraPoint(settings.t(
+                    "Sie darf bereits im Ramadan gegeben werden. Für den Zweck der Fitre ist es besser, sie rechtzeitig vor dem Eid-Gebet bzw. vor dem Fest an Bedürftige zu geben.",
+                    "Fitre Ramazan ayı içinde önceden verilebilir. Fakirin bayram ihtiyacını karşılaması için bayramdan önce ve özellikle bayram namazından önce ulaştırılması daha uygundur."
+                ))
+                fitraPoint(settings.t(
+                    "Wurde sie nicht rechtzeitig gezahlt, fällt die Verpflichtung nicht einfach weg; sie soll möglichst bald nachgezahlt werden.",
+                    "Vaktinde verilmemiş fitre borcu düşmez; mümkün olan ilk fırsatta ödenmelidir."
+                ))
+            }
+
+            Section(settings.t("Wie hoch?", "Miktarı ne kadar?")) {
+                Text(settings.t(
+                    "Diyanet legt regelmäßig einen aktuellen Mindest-/Orientierungsbetrag anhand des normalen täglichen Nahrungsbedarfs fest. Dieser Betrag kann sich ändern. SalahPath speichert deshalb keinen dauerhaft festen Geldbetrag. Wer mehr tägliche Verpflegungskosten hat, kann seinen eigenen Tagesbedarf als Maß nehmen.",
+                    "Diyanet normal bir günlük gıda ihtiyacını esas alarak dönemsel bir asgarî/ölçü miktarı açıklar. Bu tutar değişebilir. Bu nedenle SalahPath kalıcı sabit para miktarı göstermez. Günlük gıda harcaması daha yüksek olan kişi kendi günlük gıda bedelini ölçü alabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Diyanet setzt den jeweils bekanntgegebenen Fitre-Betrag zugleich als Tagesbetrag für Fasten-Fidya an. Fitre und Fidya bleiben trotzdem unterschiedliche Verpflichtungen.",
+                    "Diyanet açıklanan fitre miktarını aynı zamanda bir günlük oruç fidyesi miktarı olarak belirler. Buna rağmen fitre ve fidye farklı yükümlülüklerdir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wer darf sie erhalten?", "Kime verilebilir?")) {
+                Text(settings.t(
+                    "Sie wird an bedürftige Personen gegeben, für deren Unterhalt man nicht selbst verantwortlich ist. Eigene Eltern/Großeltern, Kinder/Enkel und der Ehepartner erhalten die eigene Fitre nach der hanafitischen/Diyanet-Regel nicht.",
+                    "Fitre, kişinin bakmakla yükümlü olmadığı yoksul kimselere verilir. Hanefî/Diyanet kuralına göre kişi kendi anne-baba/büyükanne-büyükbabasına, çocuk/torunlarına ve eşine kendi fitresini vermez."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Fıtır Sadakası (Fitre): yükümlülük, vakit, miktar ve alıcılar. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Fıtır Sadakası (Fitre): yükümlülük, vakit, miktar ve alıcılar. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Fitre · Fitra", "Fitre · Fıtır Sadakası"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func fitraPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct KurbanGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wer ist nach Hanafi verpflichtet?", "Hanefî'ye göre kim yükümlüdür?")) {
+                kurbanPoint(settings.t(
+                    "Diyanet/Hanefî: Ein zurechnungsfähiger, volljähriger, nicht als Reisender (seferî) geltender Muslim ist verpflichtet, wenn er außerhalb von Grundbedürfnissen und Schulden mindestens Nisab-Vermögen besitzt.",
+                    "Diyanet/Hanefî: Akıl sağlığı yerinde, büluğa ermiş, seferî olmayan Müslüman; aslî ihtiyaçları ve borçları dışında nisap miktarı mala sahipse kurbanla yükümlüdür."
+                ))
+                kurbanPoint(settings.t(
+                    "Als finanzielles Maß verwendet Diyanet 80,18 g 24-karätiges Gold oder dessen Wert. Anders als bei Zakat muss dieses Vermögen nicht ertragsfähig sein und kein Mondjahr lang gehalten worden sein.",
+                    "Mali ölçü olarak Diyanet 80,18 gram 24 ayar altın veya değerini esas alır. Zekâttan farklı olarak bu malın nâmî olması ve üzerinden bir kamerî yıl geçmesi şart değildir."
+                ))
+                kurbanPoint(settings.t(
+                    "Die Verpflichtung ist individuell. Sind z. B. beide Ehepartner jeweils selbst nach diesen Kriterien vermögend, wird die Pflicht nicht allein dadurch erfüllt, dass nur ein „Familienoberhaupt“ opfert.",
+                    "Yükümlülük bireyseldir. Örneğin eşlerin ikisi de ayrı ayrı bu şartları taşıyorsa yalnız aile reisinin kurban kesmesi diğerinin yükümlülüğünü otomatik olarak düşürmez."
+                ))
+            }
+
+            Section(settings.t("Zeit", "Kurban vakti")) {
+                kurbanPoint(settings.t(
+                    "Wo ein Eid-Gebet stattfindet, beginnt die Opferzeit nach dem Eid-Gebet. Wo kein Eid-Gebet stattfindet, beginnt sie mit Fajr am ersten Festtag.",
+                    "Bayram namazı kılınan yerlerde kurban vakti bayram namazından sonra; bayram namazı kılınmayan yerlerde birinci gün fecrin girmesiyle başlar."
+                ))
+                kurbanPoint(settings.t(
+                    "Hanefî: Die Zeit endet mit Sonnenuntergang am 3. Eid-Tag. Schafiitisch reicht sie bis Sonnenuntergang am 4. Tag; deshalb darf SalahPath diese Frist nicht als rechtsschulübergreifend darstellen.",
+                    "Hanefî: Kurban vakti bayramın 3. günü güneş batınca biter. Şafiî mezhebinde 4. gün güneş batımına kadar devam eder; bu yüzden bu süre mezhepler üstü tek hüküm gibi sunulmamalıdır."
+                ))
+            }
+
+            Section(settings.t("Geeignete Tiere & Mindestalter", "Hayvan türü ve asgarî yaş")) {
+                kurbanPoint(settings.t(
+                    "Kamel: 5 Mondjahre; Rind/Büffel: 2 Mondjahre; Schaf/Ziege: 1 Mondjahr.",
+                    "Deve: 5 kamerî yaş; sığır/manda: 2; koyun/keçi: 1 yaşını doldurmuş olmalıdır."
+                ))
+                kurbanPoint(settings.t(
+                    "Sonderfall nur beim Schaf: Ein mindestens 6 Monate altes Schaf kann genügen, wenn es körperlich wie ein einjähriges Tier erscheint. Diese Ausnahme wird nicht auf Ziege, Rind oder Kamel übertragen.",
+                    "İstisna yalnız koyundadır: En az 6 aylık koyun bir yaşını doldurmuş gibi gösterişli ise kurban olabilir. Bu istisna keçi, sığır veya deveye uygulanmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Das Tier muss grundsätzlich gesund und ohne kurbanhindernde schwere Mängel sein. Nicht jeder kleine Makel macht ein Tier ungeeignet; die konkreten Mängelregeln sind detaillierter als ein einfacher Ja/Nein-Check.",
+                    "Hayvan genel olarak sağlıklı ve kurbana engel ağır kusurlardan uzak olmalıdır. Her küçük kusur hayvanı kurban olmaktan çıkarmaz; kusur hükümleri basit bir evet/hayır kontrolünden daha ayrıntılıdır."
+                ))
+            }
+
+            Section(settings.t("Anteile & Stellvertretung", "Hisse & vekâlet")) {
+                kurbanPoint(settings.t(
+                    "Schaf und Ziege sind jeweils für eine Person. Bei Rind/Büffel/Kamel können sich bis zu sieben Personen beteiligen; kein Anteil darf kleiner als ein Siebtel sein.",
+                    "Koyun ve keçi bir kişi içindir. Sığır, manda ve deveye en fazla yedi kişi ortak olabilir; hiçbir hisse yedide birden küçük olamaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Bei Stellvertretung/Vekâlet müssen Eigentum, Bevollmächtigung und die Zuordnung der Anteile vor der Schlachtung eindeutig sein.",
+                    "Vekâletle kurbanda mülkiyet, vekâlet ve hissedarların kesimden önce belirlenmesi açık olmalıdır."
+                ))
+                kurbanPoint(settings.t(
+                    "Eine reine Geldspende ohne tatsächliche, gültige Schlachtung ersetzt das Udhiyah-Kurban nicht.",
+                    "Fiilî ve geçerli bir kesim olmadan yalnız para bağışlamak udhiyye kurbanı yerine geçmez."
+                ))
+            }
+
+            Section(settings.t("Fleisch", "Etin paylaşımı")) {
+                Text(settings.t(
+                    "Die bekannte Dreiteilung – ein Teil für Bedürftige, ein Teil für Verwandte/Nachbarn, ein Teil für den eigenen Haushalt – ist empfohlen, aber hanafitisch kein zwingendes Drittel-Schema. Nach Diyanet darf grundsätzlich auch das gesamte Fleisch im Haushalt bleiben; bei vorhandener Bedürftigkeit ist großzügiges Verteilen besonders sinnvoll.",
+                    "Etin üçe ayrılarak bir kısmının yoksullara, bir kısmının akraba/komşulara, bir kısmının eve bırakılması tavsiye edilir; Hanefî mezhebinde zorunlu bir üçte bir oranı değildir. Diyanet'e göre etin tamamı evde de bırakılabilir; ihtiyaç sahiplerinin bulunduğu durumda paylaşmak daha uygundur."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Häufige falsche Vorstellungen", "Sık yapılan yanlışlar")) {
+                kurbanPoint(settings.t(
+                    "Unverheiratet zu sein verhindert die Kurban-Pflicht nicht, wenn die Voraussetzungen erfüllt sind.",
+                    "Bekâr olmak, şartları taşıyan kişinin kurban yükümlülüğünü ortadan kaldırmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Eine Frau darf ein Tier fachgerecht schlachten; das Geschlecht allein macht die Schlachtung nicht ungültig.",
+                    "Kesim ehliyeti bulunan kadın da kurban kesebilir; kadın olmak kesimi geçersiz yapmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Bei Großvieh müssen die Teilnehmer nicht zwingend 3, 5 oder 7 Personen sein; bis zu sieben gültige Anteile sind möglich.",
+                    "Büyükbaşta ortak sayısının mutlaka 3, 5 veya 7 olması gerekmez; yediyi geçmeyen geçerli hisseler mümkündür."
+                ))
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Kurban ibadeti 2026 · yükümlülük · kesim vakti · hayvan yaşı · ortaklık · etin değerlendirilmesi. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · 2026 Kurban açıklaması · yükümlülük · kesim vakti · yaş · ortaklık · etin değerlendirilmesi. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kurban / Opfer", "Kurban"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func kurbanPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct ZakatGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wann wird Zakat fällig?", "Zekât ne zaman farz olur?")) {
+                zakatPoint(settings.t(
+                    "Diyanet-Grundregel: Nach Abzug der grundlegenden Bedürfnisse und der für das Zakat-Jahr unmittelbar relevanten Schulden muss zakatpflichtiges Vermögen mindestens den Nisab erreichen.",
+                    "Diyanet temel kuralı: Aslî ihtiyaçlar ve zekât yılı içinde ödenmesi gereken ilgili borçlar çıktıktan sonra zekâta tâbi malın nisap miktarına ulaşması gerekir."
+                ))
+                zakatPoint(settings.t(
+                    "Für Geld, Handelsware und Gold legt Diyanet als Nisab den Wert von 80,18 g 24-karätigem Gold zugrunde. Der Geldwert davon ändert sich mit dem Goldpreis; SalahPath hinterlegt deshalb keinen festen Euro-Betrag.",
+                    "Para, ticaret malı ve altın için Diyanet nisap ölçüsü olarak 80,18 gram 24 ayar altın değerini esas alır. Bunun para karşılığı altın fiyatıyla değişir; bu yüzden SalahPath sabit bir TL/Euro tutarı göstermez."
+                ))
+                zakatPoint(settings.t(
+                    "Bei Vermögen, für das die Jahresregel gilt, muss grundsätzlich ein Mondjahr (kamerî yıl) vergehen und am Jahresende der Nisab weiterhin vorhanden sein.",
+                    "Yıl şartına tâbi mallarda genel olarak bir kamerî yıl geçmeli ve yıl sonunda nisap miktarı korunmuş olmalıdır."
+                ))
+            }
+
+            Section(settings.t("Wie viel?", "Ne kadar?")) {
+                zakatPoint(settings.t(
+                    "Bei Geld, Gold und Handelsware beträgt die übliche Zakat nach den genannten Voraussetzungen 1/40, also 2,5 % des zakatpflichtigen Nettobestands.",
+                    "Para, altın ve ticaret malında şartlar oluştuğunda zekât, zekâta tâbi net malın kırkta biri yani %2,5'tir."
+                ))
+                zakatPoint(settings.t(
+                    "Handelsware wird zum aktuellen Wert am Zakat-Stichtag bewertet. Zukünftige, noch nicht entstandene Gewinne werden nicht vorweg eingerechnet.",
+                    "Ticaret malları zekât hesaplama günündeki güncel değer üzerinden değerlendirilir. Henüz oluşmamış gelecekteki kârlar hesaba eklenmez."
+                ))
+                zakatPoint(settings.t(
+                    "Langfristige Schulden werden nach Diyanets heutiger Praxis nicht vollständig auf einmal abgezogen; maßgeblich sind insbesondere die im betreffenden Zakat-Jahr fälligen bzw. unmittelbar zu zahlenden Beträge.",
+                    "Uzun vadeli borçların tamamı tek seferde düşülmez; Diyanet'in güncel yaklaşımında özellikle o zekât yılı içinde vadesi gelen veya ödenmesi gereken kısım dikkate alınır."
+                ))
+            }
+
+            Section(settings.t("Goldschmuck – Rechtsschulunterschied", "Altın ziynet – mezhep farkı")) {
+                Text(settings.t(
+                    "Hanefî: Gold- und Silberschmuck ist bei erfüllten übrigen Voraussetzungen grundsätzlich zakatpflichtig. Diyanet nennt für Gold ebenfalls den Gegenwert von 80,18 g 24-karätigem Gold und 2,5 %. In der schafiitischen Rechtsschule wird üblicher, nicht übermäßiger persönlicher Schmuck anders beurteilt.",
+                    "Hanefî: Altın ve gümüş ziynet eşyası diğer şartları da taşıyorsa zekâta tâbidir. Diyanet altın için 80,18 gram 24 ayar altın karşılığını ve %2,5 oranını esas alır. Şafiî mezhebinde normal ölçüde kullanılan kişisel ziynet farklı değerlendirilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wer kann Zakat erhalten?", "Zekât kimlere verilir?")) {
+                Text(settings.t(
+                    "Quran 9:60 nennt acht Empfängergruppen. Für die alltägliche Praxis sind besonders Bedürftige, Arme, geeignete Schuldner und mittellose Reisende relevant; die übrigen Kategorien haben eigene Voraussetzungen.",
+                    "Tevbe 9:60 zekât için sekiz sınıf sayar. Günlük uygulamada özellikle fakirler, miskinler, uygun durumdaki borçlular ve yolda kalmış kişiler öne çıkar; diğer sınıfların kendi şartları vardır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Hanefî/Diyanet: Zakat wird nicht an eigene Eltern/Großeltern, Kinder/Enkel oder den Ehepartner gegeben. Auch wer außerhalb seiner Grundbedürfnisse selbst Nisab-Vermögen besitzt, gilt nicht als bedürftiger Zakat-Empfänger.",
+                    "Hanefî/Diyanet: Zekât anne-baba ve büyükanne/büyükbabalara, çocuk ve torunlara veya eşe verilmez. Aslî ihtiyaçları dışında nisap miktarı mala sahip olan kişi de fakir zekât alıcısı sayılmaz."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Nicht mit Fitre/Fidya verwechseln", "Fitre/fidye ile karıştırma")) {
+                Text(settings.t(
+                    "Zakat, Fitra/Sadaqat al-Fitr, Fasten-Fidya und freiwillige Sadaqa sind verschiedene Kategorien mit teilweise unterschiedlichen Voraussetzungen. Ein jährlich von Diyanet veröffentlichter Fitre-/Fidya-Betrag ist kein Zakat-Nisab.",
+                    "Zekât, fitre, oruç fidyesi ve gönüllü sadaka farklı hükümlere sahiptir. Diyanet'in yıllık açıkladığı fitre/fidye miktarı zekât nisabı değildir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Landwirtschaft, Vieh, Unternehmensbeteiligungen, Forderungen, Aktien/Fonds, Immobilien und gemischte Vermögen haben Zusatzregeln. Diese Seite ist kein individueller Zakat-Bescheid. Bei größeren oder gemischten Vermögen die konkrete Berechnung fachkundig prüfen.",
+                    "Tarım ürünleri, hayvanlar, şirket hisseleri, alacaklar, hisse/fonlar, gayrimenkuller ve karma mal varlıklarında ek hükümler vardır. Bu sayfa kişisel bir zekât fetvası değildir. Büyük veya karma mal varlığında hesabı ehil kişiye ayrıca kontrol ettir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Zekât nedir? · Zekât kimlere farzdır? · Ticaret malının zekâtı · Borçların düşülmesi · Zekât kimlere verilir/verilmez · Ziynet eşyası. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Zekât nedir? · Zekât kimlere farzdır? · Ticaret malının zekâtı · Borçların düşülmesi · Zekât kimlere verilir/verilmez · Ziynet eşyası. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func zakatPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 struct IlmihalDirectoryView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4100,21 +5046,28 @@ struct IlmihalDirectoryView: View {
             Section(settings.t("Reinheit", "Taharet")) {
                 NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
                 NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
-                NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+                NavigationLink { TayammumGuideView() } label: { Label(settings.t("Tayammum", "Teyemmüm"), systemImage: "hand.raised.fill") }
+                NavigationLink { WomensPurityGuideView() } label: { Label(settings.t("Frauen · Hayd, Nifas & Istihāda", "Kadınlar · Hayız, Nifas & İstihâze"), systemImage: "person.crop.circle.badge.questionmark") }
             }
 
             Section(settings.t("Gebet", "Namaz")) {
                 NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
+                NavigationLink { PrayerRestrictedTimesView() } label: { Label(settings.t("Kerâhat-Zeiten", "Kerâhat Vakitleri"), systemImage: "sun.horizon.fill") }
+                NavigationLink { PrayerMistakesView() } label: { Label(settings.t("Gebetsfehler & Sehiv-Secdesi", "Namaz hataları & Sehiv secdesi"), systemImage: "exclamationmark.arrow.triangle.2.circlepath") }
+                NavigationLink { PrayerSpecialSituationsView() } label: { Label(settings.t("Reise- & Kranken-Gebet", "Seferîlik & Hasta Namazı"), systemImage: "figure.roll") }
+                NavigationLink { TilawahSajdahGuideView() } label: { Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact") }
+                NavigationLink { QadaPrayerGuideView() } label: { Label(settings.t("Kaza-Gebete richtig nachholen", "Kaza Namazları"), systemImage: "clock.arrow.2.circlepath") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
                 NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
-                NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
+                NavigationLink { ZakatGuideView() } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
+                NavigationLink { FitraGuideView() } label: { Label(settings.t("Fitre · Fitra", "Fitre · Fıtır Sadakası"), systemImage: "heart.circle.fill") }
                 NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
-                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
+                NavigationLink { KurbanGuideView() } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
                 NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
             }
 
@@ -4148,6 +5101,93 @@ struct IlmihalDirectoryView: View {
 
 // MARK: - Supplementary reference utilities
 
+private struct QadaPrayerGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Was wird nachgeholt?", "Hangi namazlar kaza edilir?")) {
+                qadaPoint(settings.t(
+                    "Hanefî/Diyanet: Die Farḍ-Gebete der fünf täglichen Gebete werden nachgeholt. Witr ist im hanafitischen Madhhab wājib und wird ebenfalls nachgeholt.",
+                    "Hanefî/Diyanet: Beş vakit namazın farzları kaza edilir. Hanefî mezhebinde vitir vacip olduğu için o da kaza edilir."
+                ))
+                qadaPoint(settings.t(
+                    "Versäumte Sunnah-Gebete werden nach Ablauf ihrer Zeit grundsätzlich nicht als Kaza nachgeholt.",
+                    "Vakti çıktıktan sonra kılınmamış sünnet namazlar kural olarak kaza edilmez."
+                ))
+                qadaPoint(settings.t(
+                    "Ausnahme: Wird ein vollständig verpasstes Fajr/Sabah-Gebet noch am selben Tag vor Zawāl (vor dem Sonnenhöchststand/Dhuhr) nachgeholt, wird nach Diyanet auch seine zweirakʿatige Sunnah zusammen mit dem Farḍ nachgeholt.",
+                    "İstisna: Tamamen kaçırılmış sabah namazı aynı gün zevalden önce kaza edilirse Diyanet'e göre iki rekât sünneti de farzıyla birlikte kaza edilir."
+                ))
+            }
+
+            Section(settings.t("Wie wird ein Kaza-Gebet gebetet?", "Kaza namazı nasıl kılınır?")) {
+                qadaPoint(settings.t(
+                    "Die Rakʿah-Zahl und Grundform entsprechen dem verpassten Gebet. Fajr 2, Dhuhr 4, Asr 4, Maghrib 3, Isha 4; Witr wird hanafitisch als 3 Rakʿāt nachgeholt.",
+                    "Rekât sayısı ve temel kılınış kaçırılan namazla aynıdır. Sabah 2, öğle 4, ikindi 4, akşam 3, yatsı 4; vitir Hanefî olarak 3 rekât kaza edilir."
+                ))
+                qadaPoint(settings.t(
+                    "Die Absicht muss das nachzuholende Gebet bestimmen. Ein einziges Gebet kann nicht zugleich als Kaza und als aktuelle Sunnah gezählt werden.",
+                    "Niyette hangi namazın kazasının kılındığı belirlenir. Tek bir namaz aynı anda hem kaza hem de vaktin sünneti olarak sayılmaz."
+                ))
+                qadaPoint(settings.t(
+                    "Für Männer sind Ezân und Kâmet nach der hanafitischen/Diyanet-Darstellung auch bei Kaza-Gebeten Sunnah. Werden mehrere Kaza-Gebete am selben Ort nacheinander gebetet, genügt ein Ezân zu Beginn; für jedes einzelne Kaza-Gebet wird eine eigene Kâmet gebracht. Frauen lesen nach Diyanets hanafitischer Darstellung weder Ezân noch Kâmet.",
+                    "Hanefî/Diyanet anlatımında erkekler için kaza namazlarında da ezan ve kâmet sünnettir. Aynı yerde art arda birden fazla kaza kılınacaksa başta bir ezan yeterli olabilir; her kaza namazı için ayrı kâmet getirilir. Diyanet'in Hanefî anlatımında kadınlar ezan okumaz ve kâmet getirmez."
+                ))
+                qadaPoint(settings.t(
+                    "Ein vier-Rakʿah-Farḍ, das während einer hanafitisch gültigen Reise im seferî-Zustand verpasst wurde, wird später als zwei Rakʿāt nachgeholt – auch wenn man inzwischen wieder mukīm ist. Umgekehrt wird ein als mukīm verpasstes vier-Rakʿah-Gebet auch auf einer späteren Reise als vier Rakʿāt nachgeholt.",
+                    "Hanefî olarak seferî iken kazaya kalan dört rekâtlı farz, kişi sonradan mukim olsa bile iki rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı namaz ise daha sonra yolculukta kaza edilse de dört rekât kılınır."
+                ))
+            }
+
+            Section(settings.t("Wann nicht?", "Ne zaman kılınmaz?")) {
+                qadaPoint(settings.t(
+                    "Kaza-Gebete werden nicht in den drei strengen Kerâhat-Zeiten begonnen: beim Sonnenaufgang, während des Sonnenhöchststands unmittelbar vor Dhuhr und beim unmittelbar bevorstehenden Sonnenuntergang. Nutze dafür die separate Kerâhat-Zeiten-Seite.",
+                    "Kaza namazına üç temel kerâhat vaktinde başlanmaz: güneş doğarken, öğle öncesi güneş tam tepedeyken ve güneş batmak üzereyken. Ayrıntı için Kerâhat Vakitleri bölümünü kullan."
+                ))
+                qadaPoint(settings.t(
+                    "Zwischen Imsak und Sonnenaufgang ist Kaza nicht pauschal verboten: Wenn das aktuelle Fajr-Gebet dadurch nicht gefährdet wird, kann nach Diyanet Kaza gebetet werden. Das Verbot dort betrifft zusätzliche Sunnah/Nafila außer der Fajr-Sunnah.",
+                    "İmsak ile güneş doğuşu arasında kaza namazı mutlak olarak yasak değildir. O vaktin sabah namazını kaçırma tehlikesi yoksa Diyanet'e göre kaza kılınabilir. Bu süredeki yasak, sabah sünneti dışındaki ek sünnet ve nafile namazlarla ilgilidir."
+                ))
+            }
+
+            Section(settings.t("Hayd / Nifas", "Hayız / Nifas")) {
+                Text(settings.t(
+                    "Während Menstruation oder Wochenbett/Nifas nicht verrichtete Gebete werden später nicht als Kaza nachgeholt. Das unterscheidet sich vom Ramadan-Fasten: dort versäumte Fastentage werden nachgeholt.",
+                    "Hayız veya nifas döneminde kılınmayan namazlar daha sonra kaza edilmez. Ramazan orucu farklıdır; bu dönemde tutulmayan Ramazan oruçları daha sonra kaza edilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Sunnah trotz Kaza-Schuld?", "Kaza borcu varken sünnet?")) {
+                Text(settings.t(
+                    "Hanefî/Diyanet: Offene Kaza-Gebete sollen möglichst bald nachgeholt werden. Dennoch dürfen die regelmäßigen Sunnah-Gebete (rawātib) sowie z. B. Tahajjud oder Duha weiterhin gebetet werden. Andere Rechtsschulen, besonders die schafiitische Einordnung, können hier strenger sein.",
+                    "Hanefî/Diyanet: Kaza namazları ilk fırsatta kılınmalıdır. Bununla birlikte revâtib sünnetler, teheccüd ve kuşluk gibi nafile namazlar da kılınabilir. Diğer mezhepler, özellikle Şafiî görüşü, bu konuda daha sıkı olabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Namazların Kazası; Vitir Namazı; Kerâhat Vakitleri. Darstellung: hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Namazların Kazası; Vitir Namazı; Kerâhat Vakitleri. Anlatım: Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kaza-Gebete", "Kaza Namazları"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func qadaPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 struct PrayerDebtTrackerView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4175,6 +5215,17 @@ struct PrayerDebtTrackerView: View {
                 }
                 .cardStyle(material: true)
 
+                NavigationLink {
+                    QadaPrayerGuideView()
+                } label: {
+                    Label(settings.t("Welche Gebete und wie nachholen?", "Hangi namazlar, nasıl kaza edilir?"), systemImage: "book.pages")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.plain)
+                .cardStyle()
+
                 qadaRow(title: settings.t("Fajr", "Sabah"), value: $fajr)
                 qadaRow(title: settings.t("Dhuhr", "Öğle"), value: $dhuhr)
                 qadaRow(title: settings.t("Asr", "İkindi"), value: $asr)
@@ -4182,6 +5233,20 @@ struct PrayerDebtTrackerView: View {
                 qadaRow(title: settings.t("Isha", "Yatsı"), value: $isha)
                 qadaRow(title: settings.t("Witr", "Vitir"), value: $witr)
                 qadaRow(title: settings.t("Fastentage", "Oruç"), value: $fasting)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(settings.t("Wichtige Ausnahme", "Önemli istisna"), systemImage: "info.circle.fill")
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Menstruation und Wochenbett/Nifas: In dieser Zeit versäumte Gebete werden nicht als Qada nachgeholt. Nicht gefastete Ramadan-Tage werden nach Ende des Zustands dagegen nachgeholt. Darüber besteht nach Diyanet Konsens der Rechtsschulen.",
+                        "Hayız ve lohusalık/nifas: Bu dönemlerde kılınmayan namazlar kaza edilmez. Ramazan'da tutulmayan oruçlar ise temizlikten sonra kaza edilir. Diyanet bu konuda mezheplerin görüş birliğini aktarır."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
 
                 Button(role: .destructive) {
                     fajr = 0
@@ -4272,13 +5337,13 @@ struct ThirtyTwoFardView: View {
                 deTitle: "6 Grundlagen des Glaubens",
                 trTitle: "İmanın 6 şartı",
                 deItems: ["Glaube an Allah", "Glaube an die Engel", "Glaube an die offenbarten Bücher", "Glaube an die Propheten", "Glaube an den Jüngsten Tag", "Glaube an Qadar und göttliche Bestimmung"],
-                trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Ahiret gününe iman", "Kader ve kazaya iman"]
+                trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Âhiret gününe iman", "Kader ve kazaya iman"]
             ),
             .init(
-                deTitle: "5 Säulen / Bedingungen des Islam",
+                deTitle: "5 Säulen des Islam",
                 trTitle: "İslam’ın 5 şartı",
                 deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Hajj verrichten, wenn die Voraussetzungen erfüllt sind"],
-                trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Hacca gitmek"]
+                trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Gücü yeten için hacca gitmek"]
             ),
             .init(
                 deTitle: "4 Farz des Wudu",
@@ -4321,8 +5386,8 @@ struct ThirtyTwoFardView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Diese Ansicht ergänzt die ausführlichen SalahPath-Lernbereiche. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
-                        "Bu ekran ayrıntılı SalahPath derslerini tamamlar. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
+                        "„32 Farz“ ist eine traditionelle Lernformel, mit der zentrale Glaubens- und Gottesdienstpflichten übersichtlich zusammengefasst werden; sie ist kein eigener zusätzlicher Glaubensgrundsatz. Die konkrete Zählweise hier folgt der hanafitischen/Diyanet-Lehrdarstellung; andere Rechtsschulen können einzelne Pflichten anders zählen oder einordnen. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
+                        "„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak için kullanılan geleneksel bir öğrenme formülüdür; başlı başına ayrı bir iman şartı değildir. Buradaki sayım Hanefî/Diyanet öğretim anlatımını izler; diğer mezhepler bazı farzları farklı sayabilir veya sınıflandırabilir. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -5571,13 +6636,13 @@ struct PrayerDuaAudioView: View {
             recitations: [PrayerText.salli, PrayerText.barik]
         ),
         .init(
-            deTitle: "Rabbena-Dua", trTitle: "Rabbenâ duası",
-            deDetail: "Abschlussdua im letzten Sitzen vor dem Salam.",
-            trDetail: "Son oturuşta selâmdan önce okunan kapanış duası.",
-            recitations: [PrayerText.rabbana]
+            deTitle: "Rabbenâ-Duas", trTitle: "Rabbenâ duaları",
+            deDetail: "Zwei verbreitete Quran-Duas für das letzte Sitzen vor dem Salām.",
+            trDetail: "Son oturuşta selâmdan önce okunabilen iki yaygın Kur'an duası.",
+            recitations: [PrayerText.rabbana, PrayerText.rabbanaGhfirli]
         ),
         .init(
-            deTitle: "Rabbighfirli", trTitle: "Rabbenağfirli / Rabbighfir lî",
+            deTitle: "Rabbighfir lī", trTitle: "Rabbiğfir lî",
             deDetail: "Kurze Bitte um Vergebung; SalahPath zeigt sie auch zwischen den beiden Secden.",
             trDetail: "Kısa bağışlanma duası; SalahPath iki secde arasındaki oturuşta da gösterir.",
             recitations: [PrayerText.rabbighfirli]
@@ -5780,7 +6845,7 @@ struct ShortSurahLearningView: View {
     @AppStorage("surahRepeatCount") private var repeatCount = 1
 
     private let surahs: [ShortSurahAudio] = [
-        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
+        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Zentrale Sura des Gebets. Hanafi: Alleinbetende und Imam rezitieren sie in jeder Rakʿah; Mitbetende hinter dem Imam rezitieren sie nicht selbst.", trDetail: "Namazın temel sûresidir. Hanefî: Yalnız kılan ve imam her rekâtta okur; imama uyan kişi ayrıca okumaz."),
         .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Fîl sûresi."),
         .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Kureyş sûresi."),
         .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Mâûn sûresi."),
@@ -5823,7 +6888,7 @@ struct ShortSurahLearningView: View {
                 .foregroundStyle(.secondary)
             }
 
-            Section(settings.t("Kurze Suren", "Kısa sureler")) {
+            Section(settings.t("Kurze Suren", "Kısa sûreler")) {
                 ForEach(surahs) { item in
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 3) {
@@ -6033,15 +7098,14 @@ struct MorningEveningAdhkarView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.scenePhase) private var scenePhase
     @State private var category = 0
-    @State private var selectedID = "istighfar"
+    @State private var selectedID = "ayatkursi"
     @State private var refresh = 0
     @State private var now = Date()
 
     private let items: [AdhkarEntry] = [
         .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
-        .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
-        .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
+        .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Hisn al-Muslim 78 · überlieferte Varianten bei Tirmizî 3391 / İbn Mâce 3868"),
         .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86 · Abu Dawud / Tirmidhi"),
         .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87 · Ahmad / Tirmidhi")
     ]
@@ -6052,8 +7116,6 @@ struct MorningEveningAdhkarView: View {
                 Picker(settings.t("Kategorie", "Kategori"), selection: $category) {
                     Text(settings.t("Morgen", "Sabah")).tag(0)
                     Text(settings.t("Abend", "Akşam")).tag(1)
-                    Text(settings.t("Täglich", "Günlük")).tag(2)
-                    Text(settings.t("Speziell", "Özel")).tag(3)
                 }
                 .pickerStyle(.segmented)
                 .padding(6)
@@ -6143,7 +7205,7 @@ struct MorningEveningAdhkarView: View {
                 .font(.system(size: 15, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
 
-            Text(settings.language == .german ? item.deMeaning : item.trMeaning)
+            Text(displayMeaning(for: item))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(SalahTheme.mutedInk)
                 .multilineTextAlignment(.center)
@@ -6245,13 +7307,18 @@ struct MorningEveningAdhkarView: View {
         return "Allāhumma bika amsaynā wa bika aṣbaḥnā wa bika naḥyā wa bika namūtu wa ilayka-l-maṣīr."
     }
 
-    private var visibleItems: [AdhkarEntry] {
-        switch category {
-        case 0: return items
-        case 1: return items
-        case 2: return items.filter { ["istighfar", "raditu", "ayatkursi"].contains($0.id) }
-        default: return items.filter { ["protection", "threequls"].contains($0.id) }
+    private func displayMeaning(for item: AdhkarEntry) -> String {
+        guard item.id == "bika", category == 1 else {
+            return settings.language == .german ? item.deMeaning : item.trMeaning
         }
+        return settings.t(
+            "O Allah, durch Dich erreichen wir den Abend und durch Dich den Morgen; durch Dich leben und sterben wir, und zu Dir ist das Ziel.",
+            "Allah'ım, Senin yardımınla akşama ve sabaha erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır."
+        )
+    }
+
+    private var visibleItems: [AdhkarEntry] {
+        items
     }
 
     private var selectedItem: AdhkarEntry? {
@@ -6259,17 +7326,12 @@ struct MorningEveningAdhkarView: View {
     }
 
     private var periodKey: String {
-        switch category {
-        case 0: return "morning"
-        case 1: return "evening"
-        case 2: return "daily"
-        default: return "special"
-        }
+        category == 1 ? "evening" : "morning"
     }
 
     private func normalizeSelection() {
         if !visibleItems.contains(where: { $0.id == selectedID }) {
-            selectedID = visibleItems.first?.id ?? "istighfar"
+            selectedID = visibleItems.first?.id ?? "ayatkursi"
         }
     }
 
@@ -6548,8 +7610,8 @@ struct FastingBasicsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
                 Text(settings.t(
-                    "Hanafi/Diyanet: Für Ramadan kann unter bestimmten Voraussetzungen auch nach Imsak bis vor die islamische Mittagsgrenze niyet gemacht werden, sofern seit Fajr nichts Fastenwidriges getan wurde. Sicherer und besser ist die Absicht in der Nacht. Andere Rechtsschulen können hier strenger sein.",
-                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa belirli şartlarla gündüz kuşluk/öğle sınırından önce de niyet edilebilir. Geceden niyet etmek daha güvenli ve faziletlidir. Diğer mezheplerde hüküm daha sıkı olabilir."
+                    "Hanefî/Diyanet: Für das Ramadan-Fasten kann die Absicht – sofern seit Imsak nichts Fastenwidriges getan wurde – noch bis etwa 10 Minuten vor dem Sonnenhöchststand gefasst werden. Die Absicht in der Nacht ist besser. Für Qada-, Kaffarah- und zeitlich nicht festgelegte Gelübde-Fasten muss die Absicht spätestens bis Imsak gefasst sein. Andere Rechtsschulen unterscheiden sich.",
+                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa güneşin tepe noktasına gelmesinden yaklaşık 10 dakika öncesine kadar niyet edilebilir. Geceden niyet etmek daha faziletlidir. Kaza, kefaret ve zamanı belirlenmemiş adak oruçlarına ise en geç imsak vaktine kadar niyet edilmiş olmalıdır. Diğer mezheplerde hükümler farklıdır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -6630,6 +7692,11 @@ struct FastingRulesView: View {
                 rule("cross.case.fill", settings.t("Nicht nährende Spritze / Impfung", "Besleyici olmayan iğne / aşı"), settings.t("Diyanet bewertet nicht nährende Behandlungsinjektionen und Impfungen grundsätzlich als nicht fastenbrechend.", "Diyanet, besleyici olmayan tedavi iğneleri ve aşıları genel olarak orucu bozmayan uygulamalar arasında değerlendirir."))
                 rule("mouth.fill", settings.t("Zähne putzen", "Diş fırçalamak"), settings.t("Das Putzen selbst bricht nicht; Zahnpasta oder Wasser darf nicht geschluckt werden. Wegen des Risikos empfiehlt Diyanet besondere Vorsicht.", "Fırçalamak tek başına orucu bozmaz; macun veya su yutulmamalıdır. Diyanet risk nedeniyle dikkat tavsiye eder."))
                 rule("arrow.up.to.line", settings.t("Unfreiwilliges Erbrechen", "İstem dışı kusmak"), settings.t("Spontanes Erbrechen bricht das Fasten nicht.", "Kendiliğinden kusmak orucu bozmaz."))
+            }
+
+            Section(settings.t("Tage, an denen nicht gefastet wird", "Oruç tutulmayan günler")) {
+                rule("calendar.badge.exclamationmark", settings.t("1. Shawwal · Ramadanfest", "1 Şevval · Ramazan Bayramı"), settings.t("Hanefî/Diyanet: An diesem Tag ist Fasten tahrīman makruh, also religiös untersagt.", "Hanefî/Diyanet: Bu günde oruç tutmak tahrîmen mekruhtur ve dinen yasaklanmıştır."))
+                rule("calendar.badge.exclamationmark", settings.t("10.–13. Dhu l-Hijjah · Opferfest & Tashriq", "10–13 Zilhicce · Kurban Bayramı & Teşrik"), settings.t("Hanefî/Diyanet: An allen vier Tagen des Opferfestes ist Fasten tahrīman makruh. Die Tashriq-Tage 11.–13. Dhu l-Hijjah sind Tage des Essens, Trinkens und Allah-Gedenkens.", "Hanefî/Diyanet: Kurban Bayramı'nın dört gününde de oruç tutmak tahrîmen mekruhtur. 11–13 Zilhicce teşrik günleri yeme, içme ve Allah'ı anma günleridir."))
             }
 
             Section(settings.t("Qada, Kaffarah, Fidya – nicht verwechseln", "Kaza, kefaret, fidye – karıştırma")) {
@@ -7208,8 +8275,8 @@ struct HijriCalendarView: View {
                 trTitle: "Arefe günü · 9 Zilhicce",
                 deMeaning: "Der 9. Dhu l-Hijjah ist der Tag von ʿArafah und ein zentraler Tag des Hajj.",
                 trMeaning: "9 Zilhicce Arefe günüdür ve haccın en önemli günlerinden biridir.",
-                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Dua, Dhikr und gute Taten vermehren."],
-                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Dua, zikir ve hayırlı amelleri artır."],
+                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Hanefî/Diyanet: Ab dem Fajr-Gebet dieses Tages beginnen die verpflichtenden Tashriq-Takbire nach den Farz-Gebeten; sie laufen bis einschließlich Asr am 13. Dhu l-Hijjah.", "Dua, Dhikr und gute Taten vermehren."],
+                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Hanefî/Diyanet: Bu gün sabah namazından itibaren farz namazların ardından vacip teşrik tekbirleri başlar; 13 Zilhicce ikindi namazı dâhil devam eder.", "Dua, zikir ve hayırlı amelleri artır."],
                 deCaution: "Pilger auf ʿArafah werden nicht pauschal wie Nicht-Pilger zum Fasten angehalten; Kraft für die Hajj-Handlungen hat Vorrang.",
                 trCaution: "Arafat'taki hacılar, hac dışındaki kişiler gibi genel olarak oruca teşvik edilmez; hac ibadetlerine güç ayırmak önceliklidir."
             )
@@ -7222,8 +8289,8 @@ struct HijriCalendarView: View {
                 trTitle: "Kurban Bayramı · 10 Zilhicce",
                 deMeaning: "Eid al-Adha ist das Opferfest und fällt in die Hajj-Zeit.",
                 trMeaning: "Kurban Bayramı hac mevsimindeki büyük bayramdır.",
-                deRecommended: ["Eid-Gebet beachten.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
-                trRecommended: ["Bayram namazını değerlendir.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
+                deRecommended: ["Eid-Gebet beachten.", "Hanefî/Diyanet: Die Tashriq-Takbire nach jedem Farz-Gebet weiter sprechen.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
+                trRecommended: ["Bayram namazını değerlendir.", "Hanefî/Diyanet: Her farz namazın ardından teşrik tekbirlerini getirmeye devam et.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
                 deCaution: "Am Eid-Tag wird nicht gefastet.",
                 trCaution: "Bayram günü oruç tutulmaz."
             )
@@ -7236,10 +8303,10 @@ struct HijriCalendarView: View {
                 trTitle: "Teşrik günleri · \(d) Zilhicce",
                 deMeaning: "Die Tage nach dem ersten Opferfesttag heißen Tage des Tashriq.",
                 trMeaning: "Kurban Bayramı'nın ilk gününden sonraki bu günlere teşrik günleri denir.",
-                deRecommended: ["Nach den Farz-Gebeten die hanafitischen Tashriq-Takbire entsprechend ihrer Zeit beachten.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
-                trRecommended: ["Hanefî uygulamada farz namazlardan sonra teşrik tekbirlerini zamanına göre getir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
-                deCaution: "Diese Tage sind keine gewöhnlichen freiwilligen Fastentage.",
-                trCaution: "Bu günler normal nafile oruç günleri değildir."
+                deRecommended: ["Hanefî/Diyanet: Nach jedem Farz-Gebet die Tashriq-Takbire sprechen; die Pflichtzeit endet nach dem Asr-Gebet am 13. Dhu l-Hijjah (insgesamt 23 Farz-Gebete ab Fajr am 9. Dhu l-Hijjah).", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
+                trRecommended: ["Hanefî/Diyanet: Her farz namazın ardından teşrik tekbirini getir; vacip vakit 9 Zilhicce sabah namazından başlayıp 13 Zilhicce ikindi namazından sonra sona erer (toplam 23 farz namaz).", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
+                deCaution: "Hanefî/Diyanet: An den Tashriq-Tagen (11.–13. Dhu l-Hijjah) ist Fasten tahrīman makruh; es sind Tage des Essens, Trinkens und Allah-Gedenkens.",
+                trCaution: "Hanefî/Diyanet: Teşrik günlerinde (11–13 Zilhicce) oruç tutmak tahrîmen mekruhtur; bu günler yeme, içme ve Allah'ı anma günleridir."
             )
         }
 
@@ -7906,15 +8973,15 @@ private struct DhikrItem: Identifiable {
 
 struct DhikrView: View {
     @EnvironmentObject private var settings: SettingsStore
-    @State private var counter = 33
+    @State private var counter = 0
     @State private var section = 0
 
     private var tabs: [String] {
         [
-            settings.t("Morgen", "Sabah"),
-            settings.t("Abend", "Akşam"),
-            settings.t("Täglich", "Günlük"),
-            settings.t("Spezial", "Özel")
+            settings.t("Istighfar", "İstiğfar"),
+            settings.t("Tasbih", "Tesbih"),
+            settings.t("Tawhid", "Tevhid"),
+            settings.t("Salawat", "Salavat")
         ]
     }
 
@@ -7955,7 +9022,7 @@ struct DhikrView: View {
                         Button {
                             withAnimation(.easeOut(duration: 0.15)) {
                                 section = index
-                                counter = 33
+                                counter = 0
                             }
                         } label: {
                             Text(title)
@@ -8010,7 +9077,7 @@ struct DhikrView: View {
                             .frame(minWidth: 88)
                             .contextMenu {
                                 Button {
-                                    counter = 33
+                                    counter = 0
                                 } label: {
                                     Label(settings.t("Zurücksetzen", "Sıfırla"), systemImage: "arrow.counterclockwise")
                                 }
@@ -8036,6 +9103,15 @@ struct DhikrView: View {
                 .aspectRatio(1.18, contentMode: .fit)
                 .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7) }
+
+                Text(settings.t(
+                    "Freier Zähler: SalahPath behauptet hier keine religiös festgelegte Anzahl. Überlieferte Anzahlen findest du im Bereich Morgen- & Abend-Adhkar.",
+                    "Serbest sayaç: SalahPath burada dinen belirlenmiş bir sayı iddia etmez. Rivayet edilen sayılar Sabah & Akşam Zikirleri bölümünde gösterilir."
+                ))
+                .font(.caption2)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
 
                 VStack(spacing: 0) {
                     dhikrReferenceRow(
@@ -8957,7 +10033,7 @@ struct QuranView: View {
                                             Text(settings.t("Weiterlesen", "Okumaya devam et"))
                                                 .font(.headline.bold())
                                                 .foregroundStyle(SalahTheme.deepTeal)
-                                            Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(lastRead.ayah)")
+                                            Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(lastRead.ayah)")
                                                 .font(.subheadline)
                                                 .foregroundStyle(SalahTheme.ink)
                                             Text(chapter.name)
@@ -9157,7 +10233,7 @@ struct QuranView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
                                 .foregroundStyle(SalahTheme.teal)
-                            TextField(settings.t("Sura suchen", "Sure ara"), text: $search)
+                            TextField(settings.t("Sura suchen", "Sûre ara"), text: $search)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
                         }
@@ -9202,7 +10278,7 @@ struct QuranView: View {
                                         Text(surah.englishName)
                                             .font(.system(size: 13, weight: .bold))
                                             .foregroundStyle(SalahTheme.ink)
-                                        Text("\(surah.numberOfAyahs) \(settings.t("Verse", "ayet"))")
+                                        Text("\(surah.numberOfAyahs) \(settings.t("Verse", "âyet"))")
                                             .font(.caption2)
                                             .foregroundStyle(SalahTheme.mutedInk)
                                     }
@@ -9898,6 +10974,23 @@ struct QuranPageReaderView: View {
                                             .frame(width: 30, height: 30)
                                             .background(SalahTheme.gold.opacity(0.20), in: Circle())
 
+                                        if isTilawahSajdahAyah(surah: ayah.surah.number, ayah: ayah.numberInSurah) {
+                                            NavigationLink {
+                                                TilawahSajdahGuideView()
+                                            } label: {
+                                                Label(
+                                                    settings.t("Secde-Ayat", "Secde âyeti"),
+                                                    systemImage: "arrow.down.to.line.compact"
+                                                )
+                                                .font(.caption2.bold())
+                                                .foregroundStyle(SalahTheme.deepTeal)
+                                                .padding(.horizontal, 7)
+                                                .padding(.vertical, 5)
+                                                .background(SalahTheme.gold.opacity(0.18), in: Capsule())
+                                            }
+                                            .buttonStyle(.plain)
+                                        }
+
                                         Spacer()
 
                                         let bookmark = QuranBookmark(
@@ -10116,7 +11209,7 @@ struct QuranPageReaderView: View {
     private func playFromAyah(_ ayah: QuranPageAyah, urls: [URL], reciter: QuranReciter) {
         let startIndex = ayah.numberInSurah - 1
         guard urls.indices.contains(startIndex) else {
-            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu âyet için ses mevcut değil.")
             return
         }
 
@@ -10373,7 +11466,7 @@ struct QuranDirectoryView: View {
                         Text(chapter.englishName)
                             .font(.headline)
                             .foregroundStyle(SalahTheme.ink)
-                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "ayet")) · \(localizedRevelationType(chapter.revelationType))")
+                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "âyet")) · \(localizedRevelationType(chapter.revelationType))")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -10494,7 +11587,7 @@ struct QuranDirectoryView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(settings.t("Juz \(juz.number)", "\(juz.number). Cüz"))
                                 .font(.headline)
-                            Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(juz.ayah)")
+                            Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(juz.ayah)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -10582,7 +11675,7 @@ private struct QuranJuzLandingView: View {
 
                     Text(settings.t(
                         "Tippe auf einen Juz. SalahPath öffnet direkt die Ayah, an der dieser Juz beginnt. Von dort kannst du normal weiterlesen, hören und Lesezeichen setzen.",
-                        "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı ayeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
+                        "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı âyeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -10609,7 +11702,7 @@ private struct QuranJuzLandingView: View {
                                         .font(.headline)
                                         .foregroundStyle(SalahTheme.ink)
 
-                                    Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(juz.ayah)")
+                                    Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(juz.ayah)")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -10624,7 +11717,7 @@ private struct QuranJuzLandingView: View {
                         }
                         .accessibilityLabel(settings.t(
                             "Juz \(juz.number), beginnt bei \(chapter.englishName), Vers \(juz.ayah)",
-                            "\(juz.number). Cüz, \(chapter.englishName) suresi \(juz.ayah). ayette başlar"
+                            "\(juz.number). Cüz, \(chapter.englishName) sûresi \(juz.ayah). âyette başlar"
                         ))
                     }
                 }
@@ -10633,7 +11726,7 @@ private struct QuranJuzLandingView: View {
             Section {
                 Text(settings.t(
                     "Die Juz-Einteilung ist eine Leseeinteilung des Quran in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
-                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sure ve ayet numaralarını değiştirmez."
+                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sûre ve âyet numaralarını değiştirmez."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -10704,7 +11797,7 @@ private struct QuranFavoritesView: View {
                         } label: {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(surah.englishName).font(.headline)
-                                Text("\(settings.t("Ayah", "Ayet")) \(favorite.ayah)")
+                                Text("\(settings.t("Ayah", "Âyet")) \(favorite.ayah)")
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         }
@@ -10796,7 +11889,7 @@ private struct QuranSurahView: View {
                     Text(surah.englishName)
                         .font(.system(size: 17, weight: .bold, design: .serif))
                         .foregroundStyle(SalahTheme.ink)
-                    Text("\(surah.numberOfAyahs) \(settings.t("Verse", "ayet"))")
+                    Text("\(surah.numberOfAyahs) \(settings.t("Verse", "âyet"))")
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(SalahTheme.mutedInk)
                 }
@@ -10984,7 +12077,7 @@ private struct QuranSurahView: View {
                         .foregroundStyle(.secondary)
                         .accessibilityLabel(settings.t(
                             "Audio für Vers \(ar.numberInSurah) nicht verfügbar",
-                            "\(ar.numberInSurah). ayet için ses mevcut değil"
+                            "\(ar.numberInSurah). âyet için ses mevcut değil"
                         ))
                 }
 
@@ -11175,7 +12268,7 @@ private struct QuranSurahView: View {
 
     private func playFromAyah(index: Int, ayahNumber: Int) {
         guard resolvedAudioURLs.indices.contains(index) else {
-            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu âyet için ses mevcut değil.")
             return
         }
 

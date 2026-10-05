@@ -1750,7 +1750,7 @@ struct HomeView: View {
         let tasks = [
             ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "book.fill"),
             ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "circle.grid.cross.fill"),
-            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "graduationcap.fill")
+            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sûre tekrarla"), "graduationcap.fill")
         ]
         let done = tasks.filter { DailyDeenStore.isDone($0.0, now) }.count
         return VStack(alignment: .leading, spacing: 10) {
@@ -2428,7 +2428,7 @@ struct PrayerTimesOverviewView: View {
         if settings.language == .turkish {
             switch kind {
             case .fajr: return "İmsak"
-            case .sunrise: return "Sabah"
+            case .sunrise: return "Güneş"
             case .dhuhr: return "Öğle"
             case .asr: return "İkindi"
             case .maghrib: return "Akşam"
