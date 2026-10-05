@@ -12,6 +12,11 @@ Primary factual checks were made against official Diyanet Din İşleri Yüksek K
 Diyanet references checked:
 
 - Wudu: https://kurul.diyanet.gov.tr/tr/fetva/abdest-nedir-ve-nasil-alinir/0193c42d-4493-7cd5-0d48-874d6be1a7d3
+- Wudu obligatory-vs-Sunnah repetition: https://kuran.diyanet.gov.tr/mushaf/tefsir-2/maide-suresi-5/ayet-3/diyanet-vakfi-meali-4
+- Neck wiping classification (Hanafi adab): https://islamansiklopedisi.org.tr/mesh--abdest
+- Mest / qualifying socks: https://kurul.diyanet.gov.tr/tr/fetva/mest-uzerine-mesh-nasil-yapilir-ve-bunun-sartlari-nelerdir/0193c42d-4872-7a2c-ca0b-e6a5a832dc93
+- Water barriers / nail polish: https://kurul.diyanet.gov.tr/Cevap-Ara/43/boya-oje-ruj-ve-jole-gibi-maddeler-abdest-ve-gusle-engel-olur-mu
+- Bandages / wounds: https://kurul.diyanet.gov.tr/tr/fetva/bedeninde-veya-bir-uzvunda-sargi-alci-ya-da-yara-bulunan-kimse-nasil-abdest-alir/0193c42d-492b-764e-c148-284760fd9c5c
 - Ghusl: https://kurul.diyanet.gov.tr/tr/fetva/gusul-boy-abdesti-ne-zaman-gereklidir-ve-sunnete-uygun/0193c42d-4959-7fa3-b0b7-5a3001c5f706
 - Tayammum: https://kurul.diyanet.gov.tr/tr/fetva/teyemmum-nedir-nasil-yapilir-teyemmumu-bozan-seyler-nelerdir/0193c42d-4a83-7216-84a3-951c2fa115aa
 - Menstruation/postpartum worship rules: https://kurul.diyanet.gov.tr/tr/fetva/kadinlarin-adet-veya-lohusalik-hallerinde-yapamayacaklari/0193c42d-4b21-7774-1a09-738831304296
@@ -37,6 +42,10 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Corrected the Hanafi tashahhud index-finger wording: the finger is raised at `la ilaha` and lowered at `illallah`.
 - Clarified the Hanafi/Diyanet division of the ruku-rising formulas between imam, person praying alone, and follower.
 - Added a sourced Hanafi/Diyanet Wudu-invalidators overview and explicitly warns that other schools differ in several points.
+- Corrected the Wudu step classification model: Hanafi neck wiping is now shown as **adab/âdâb**, not automatically as Sunnah.
+- Clarified the mixed obligation/repetition issue in Wudu: washing the obligatory limbs once fulfills the obligatory wash, while the threefold washing shown in the full procedure is Sunnah; the head step separately explains the Hanafi minimum of one quarter versus wiping the full head.
+- Added practical Wudu special cases for water-blocking coatings (including nail polish), medically necessary dressings/treatments, and Hanafi mest/qualifying-sock wiping conditions and time limits.
+- Renamed the learning entry from the overbroad “Alle Gebete einzeln” to “Gebetsarten & Anleitungen” because the catalog is not an exhaustive list of every prayer/fiqh case.
 - Added a Sehiv-Secdesi / prayer-error module instead of implying that every prayer mistake has the same consequence.
 - Corrected the Turkish sunrise label from `Sabah` to `Güneş` in the reference prayer-time naming.
 - Clarified Diyanet's Asr-i awwal calculation versus Abu Hanifa's Asr-i thani view in settings.
