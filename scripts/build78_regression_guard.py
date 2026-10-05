@@ -926,8 +926,24 @@ for token in (
     'Diyanet nennt als Grenze 10 Minuten davor.',
     'Für Qada, Kaffarah und zeitlich nicht festgelegte Gelübdefasten muss die Absicht spätestens bis Imsak vorliegen.',
     'Hisn al-Muslim 78 · Morgen-/Abendfassung; Wortlautvarianten überliefert',
+    'Text(settings.t("Morgen", "Sabah")).tag(0)',
+    'Text(settings.t("Abend", "Akşam")).tag(1)',
+    'category == 0 ? "morning" : "evening"',
+    'source: "Hisn al-Muslim 86"',
+    'source: "Hisn al-Muslim 87"',
+    'Freiwilliger Geschlechtsverkehr während eines gültig begonnenen Ramadan-Fastens',
+    'In der schafiitischen Einordnung kann bei Sorge nur um das Kind zusätzlich Fidya erforderlich sein.',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
+
+for forbidden in (
+    'Text(settings.t("Täglich", "Günlük")).tag(2)',
+    'Text(settings.t("Speziell", "Özel")).tag(3)',
+    'case 2: return "daily"',
+    'default: return "special"',
+):
+    if forbidden in guide:
+        fail(f"religious-content audit regression: duplicate adhkar session returned: {forbidden}")
 
 print("Build 78 regression guard: OK")
