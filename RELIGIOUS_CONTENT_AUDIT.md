@@ -45,6 +45,8 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Removed unsupported fixed-count implications from the free dhikr counter; transmitted morning/evening counts remain in the sourced adhkar screen.
 - Added Tilawah-Secdesi guidance, the official Diyanet list of 14 sajdah verses, and an in-reader marker for those ayahs.
 - Added Hanafi/Diyanet traveller-prayer (qasr) and illness/ima guidance with explicit school-difference wording.
+- Added a dedicated Kerahat-times module because the prior app only mentioned prohibited prayer times incidentally. It now distinguishes the three strict solar windows from additional times when specifically voluntary prayer is makruh, with a warning that minute estimates are region-dependent.
+- Added a women-specific purity overview for hayd, nifas and istihada. It states the prayer/fasting qada distinction, ghusl after the end of hayd/nifas, classical Hanafi duration rules, the 2026 Diyanet medical-pattern caveat, and explicitly refuses to auto-classify an individual's bleeding.
 - Clarified that women are not obligated to attend Eid prayer and that women/travellers may attend Jumuah without being among those for whom it is obligatory.
 - Clarified the prayer precondition as ritual purity: Wudu and, where required, Ghusl.
 - Corrected the prayer-learning wording so the statement “Fatiha in every rak'ah” is not presented as universal for a Hanafi follower in congregational prayer. The guide now distinguishes praying alone / as imam from following an imam.
@@ -67,7 +69,7 @@ Hijri-calendar screens already state that the app uses the Umm al-Qura calculati
 
 ## Open follow-up items
 
-- A dedicated women-specific purity module for hayd, nifas and istihada is still intentionally not reduced to a few generic rules. Diyanet has detailed and recently updated case distinctions; this should be implemented only as a separately sourced module.
+- Individual hayd/nifas/istihada classification is intentionally not automated. The new overview is educational only; irregular bleeding patterns, medication/IUD effects, pregnancy-related bleeding and miscarriage cases still require case-specific evaluation.
 - Prayer artwork still needs a visual fiqh pass independent of the text audit. In particular, the male ruku artwork does not demonstrate a clearly straight back as well as the written Hanafi/Diyanet instruction does, and the male sujud/foot-position details deserve a clearer instructional redraw.
 - The app's default Asr choice is a product setting, not a universal fiqh truth. The UI now names the Diyanet/asr-i awwal and Abu Hanifa/asr-i thani options explicitly; future product changes must not relabel one as the only Hanafi-valid view.
 
