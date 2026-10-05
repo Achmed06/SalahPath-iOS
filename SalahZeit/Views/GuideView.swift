@@ -1216,8 +1216,8 @@ private struct PrayerTutorialStepCard: View {
     private var maleTipText: String {
         if step.number == "16" {
             return settings.t(
-                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                "Hanefî: Beim „Lā ilāha“ im Schahada-Abschnitt des Ettehiyyâtü hebst du den rechten Zeigefinger; bei „illallāh“ senkst du ihn wieder.",
+                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadette „Lâ ilâhe“ derken sağ işaret parmağını kaldır; „illallah“ derken tekrar indir."
             )
         }
         if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
@@ -1311,8 +1311,8 @@ private struct PrayerTutorialStepCard: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                                "Hanefî: Beim „Lā ilāha“ im Schahada-Abschnitt des Ettehiyyâtü hebst du den rechten Zeigefinger; bei „illallāh“ senkst du ihn wieder.",
+                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadette „Lâ ilâhe“ derken sağ işaret parmağını kaldır; „illallah“ derken tekrar indir."
                             ))
                             .font(.caption)
                             .foregroundStyle(SalahTheme.mutedInk)
