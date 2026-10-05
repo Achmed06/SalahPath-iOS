@@ -3190,12 +3190,12 @@ struct HajjUmrahGuideView: View {
                 title: settings.t("Hanafi-Hinweis", "Hanefî notu"),
                 icon: "info.circle.fill",
                 lines: settings.language == .german ? [
-                    "Tawaf ist für die Umrah grundlegend/fard.",
-                    "Saʿy ist im Hanafi-Madhhab wajib und folgt einem gültigen Tawaf.",
-                    "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen."
+                    "Der Umrah-Tawaf ist Farḍ. Saʿy ist im Hanafi-Madhhab wājib und folgt einem gültigen Tawaf.",
+                    "Nach dem Tawaf sind zwei Rakʿāt Tawaf-Gebet im Hanafi-Madhhab wājib. Sie gehören nicht zu den Gültigkeitsbedingungen des Tawaf.",
+                    "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen; diese unmittelbare Reihenfolge ist Sunnah."
                 ] : [
-                    "Umre tavafı umrenin farzıdır.",
-                    "Sa'y Hanefî mezhebinde vaciptir ve geçerli bir tavaftan sonra yapılır.",
+                    "Umre tavafı farzdır. Sa'y Hanefî mezhebinde vaciptir ve geçerli bir tavaftan sonra yapılır.",
+                    "Tavaftan sonra iki rekât tavaf namazı kılmak Hanefî mezhebinde vaciptir. Bu namaz tavafın geçerlilik şartı değildir.",
                     "Tavaf, sa'y ve ardından saç tıraşını gereksiz uzun ara vermeden peş peşe yapmak sünnettir."
                 ]
             )
