@@ -2144,7 +2144,7 @@ struct GhuslGuideView: View {
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Ghusl ist die rituelle Ganzkörperwaschung. Sie wird nötig, wenn der Zustand großer ritueller Unreinheit beendet werden muss, zum Beispiel nach Geschlechtsverkehr, nach Samenerguss bzw. Orgasmus oder nach einem feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird, sowie nach Ende von Menstruation oder Wochenbett.",
+                        "Ghusl ist die rituelle Ganzkörperwaschung. Sie wird nötig, wenn der Zustand großer ritueller Unreinheit beendet werden muss, zum Beispiel nach Geschlechtsverkehr, nach Samenabgang mit sexueller Erregung bzw. Orgasmus oder nach einem feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird, sowie nach Ende von Menstruation oder Wochenbett.",
                         "Gusül, hükmî büyük kirlilik hâlini gidermek için yapılan boy abdestidir. Cinsel ilişki, şehvetle meni gelmesi veya orgazm, ihtilamdan sonra uyandığında ıslaklık görülmesi ile hayız ya da nifasın sona ermesi gibi durumlarda gerekir."
                     ))
                     .fixedSize(horizontal: false, vertical: true)
@@ -2298,7 +2298,7 @@ struct TayammumGuideView: View {
                         "Abdest veya gusül yerine teyemmüm etmeye niyet et."
                     ))
                     step("2", settings.t(
-                        "Lege bzw. schlage beide geöffneten Hände auf saubere Erde oder etwas von erdiger/mineralischer Art. Bewege sie leicht vor und zurück und klopfe überschüssigen Staub ab.",
+                        "Lege bzw. schlage beide geöffneten Hände auf saubere Erde oder etwas, das zur Erdsubstanz zählt. Bewege sie leicht vor und zurück und klopfe überschüssigen Staub ab.",
                         "Parmaklar açık şekilde iki elini temiz toprağa veya toprak cinsinden bir yüzeye vur/temas ettir; hafifçe ileri geri hareket ettir ve fazla tozu silk."
                     ))
                     step("3", settings.t(
@@ -2740,16 +2740,22 @@ struct PrayerCatalogView: View {
                     "3. rekât: Fâtiha + sûre. Sonra kunut tekbiri alınır; eller kaldırılıp yeniden bağlanır ve Kunut duaları okunur.",
                     "Ardından rükû → 2 secde → tam son oturuş → selâm."
                 ],
-                deNotes: ["Wer die bekannten Qunūt-Duas noch nicht kann, soll sie lernen; Diyanet nennt bis dahin u. a. Rabbenā ātinā oder dreimal Allāhumma-ghfir lī als Möglichkeit."],
-                trNotes: ["Kunut dualarını bilmeyen kişi öğrenmeye çalışır; öğrenene kadar Diyanet Rabbenâ âtinâ veya üç kez Allahümmağfir lî gibi bir dua zikreder."],
+                deNotes: [
+                    "Wer die bekannten Qunūt-Duas noch nicht kann, soll sie lernen; Diyanet nennt bis dahin u. a. Rabbenā ātinā oder dreimal Allāhumma-ghfir lī als Möglichkeit.",
+                    "Die Einstufung als Wajib und dieser 3-Rakʿah-Ablauf sind hanafitisch. Andere sunnitische Rechtsschulen stufen Witr als Sunnah ein und unterscheiden sich teilweise bei Rakʿah-Zahl und Qunūt."
+                ],
+                trNotes: [
+                    "Kunut dualarını bilmeyen kişi öğrenmeye çalışır; öğrenene kadar Diyanet Rabbenâ âtinâ veya üç kez Allahümmağfir lî gibi bir dua zikreder.",
+                    "Vitri vacip saymak ve bu üç rekâtlık kılınış Hanefî mezhebine göredir. Diğer Sünnî mezhepler vitri sünnet kabul eder; rekât sayısı ve kunut ayrıntıları farklı olabilir."
+                ],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
                 id: "eid", group: "special",
                 deTitle: "Eid-Gebet", trTitle: "Bayram Namazı",
-                deRuling: "Hanafi: Wajib · gemeinschaftlich", trRuling: "Hanefî: Vacip · cemaatle", rakaLabel: "2",
-                deSummary: "Zwei Rakʿāt mit zusätzlichen Takbiren; danach folgt die Eid-Khutbah.",
-                trSummary: "İlave tekbirlerle kılınan iki rekât; ardından bayram hutbesi.",
+                deRuling: "Hanafi: Wajib für Jumuʿah-Pflichtige · gemeinschaftlich", trRuling: "Hanefî: Cuma yükümlülerine vacip · cemaatle", rakaLabel: "2",
+                deSummary: "Zwei Rakʿāt mit zusätzlichen Takbiren; die Eid-Khutbah ist Sunnah und folgt nach dem Gebet.",
+                trSummary: "İlave tekbirlerle kılınan iki rekât; bayram hutbesi sünnettir ve namazdan sonra okunur.",
                 deSteps: [
                     "1. Rakʿah: Eröffnungstakbir und Hände binden → Sübhaneke → drei zusätzliche Takbire. Bei den ersten zwei Händen lösen, beim dritten wieder binden.",
                     "Imam rezitiert Fātiha + Sura; danach Rukūʿ und 2 Sujud.",
@@ -2762,8 +2768,14 @@ struct PrayerCatalogView: View {
                     "2. rekât: İmam Fâtiha + sûre okur → sonra üç zevaid tekbiri alınır ve eller salınır → sonraki tekbirle doğrudan rükûya gidilir.",
                     "2 secdeden sonra son oturuş ve selâm. Bayram hutbesi namazdan sonra okunur."
                 ],
-                deNotes: ["Keine Adhan/Iqama für das Eid-Gebet."],
-                trNotes: ["Bayram namazında ezan ve kamet yoktur."],
+                deNotes: [
+                    "Keine Adhan/Iqama für das Eid-Gebet.",
+                    "Hanafitisch gilt die Wajib-Pflicht für diejenigen, die auch die Voraussetzungen der Jumuʿah-Pflicht erfüllen. Andere Rechtsschulen stufen das Eid-Gebet anders ein."
+                ],
+                trNotes: [
+                    "Bayram namazında ezan ve kamet yoktur.",
+                    "Hanefî mezhebinde vacip oluşu, cuma namazının yükümlülük şartlarını taşıyanlar içindir. Diğer mezheplerde bayram namazının hükmü farklı değerlendirilir."
+                ],
                 source: "Diyanet · Bayram Namazı"
             ),
             .init(
@@ -3046,8 +3058,8 @@ struct PrayerCatalogView: View {
                 id: "jumuah", group: "special",
                 deTitle: "Freitagsgebet", trTitle: "Cuma Namazı",
                 deRuling: "Fard für Verpflichtete · gemeinschaftlich", trRuling: "Yükümlüler için farz · cemaatle", rakaLabel: "2 Fard",
-                deSummary: "Das Freitagsgebet ersetzt für Verpflichtete am Freitag das Dhuhr-Fard und enthält eine verpflichtende Khutbah.",
-                trSummary: "Yükümlüler için cuma günü öğle farzı yerine kılınan, hutbeli cemaat namazı.",
+                deSummary: "Das Freitagsgebet ersetzt für Verpflichtete am Freitag das Dhuhr-Fard. Die Khutbah vor dem Gebet ist eine Gültigkeitsbedingung.",
+                trSummary: "Yükümlüler için cuma günü öğle farzının yerine kılınır. Namazdan önceki hutbe cumanın geçerlilik şartlarındandır.",
                 deSteps: [
                     "Verbreitete hanafitische Praxis: 4 Sunnah vor dem Fard.",
                     "Khutbah anhören; danach 2 Rakʿāt Fard hinter dem Imam.",
@@ -3058,8 +3070,16 @@ struct PrayerCatalogView: View {
                     "Hutbeyi dinle; ardından imam arkasında 2 rekât cuma farzı.",
                     "Ardından 4 rekât sünnet kılınır. Ebû Yûsuf'a göre buna ayrıca 2 rekât daha eklenir; böylece farzdan sonra toplam 6 rekât kılınır."
                 ],
-                deNotes: ["Die 2 Fard werden vom Imam laut rezitiert."],
-                trNotes: ["İki rekât farzda imam kıraati sesli yapar."],
+                deNotes: [
+                    "Die 2 Fard werden vom Imam laut rezitiert.",
+                    "Diyanet: Verpflichtet sind geistig zurechnungsfähige, pubertäre, gesunde, freie und ortsansässige muslimische Männer. Frauen, Reisende und Personen mit anerkanntem Hinderungsgrund sind nicht verpflichtet; nehmen sie teil, ersetzt die Jumuʿah ihr Dhuhr.",
+                    "Hat die Khutbah begonnen, soll keine Sunnah/Nafila mehr begonnen werden; die Khutbah wird angehört."
+                ],
+                trNotes: [
+                    "İki rekât farzda imam kıraati sesli yapar.",
+                    "Diyanet'e göre akıllı, buluğa ermiş, sağlıklı, hür ve mukim Müslüman erkekler yükümlüdür. Kadınlar, yolcular ve geçerli mazereti olanlar yükümlü değildir; ancak cumayı kılarlarsa ayrıca öğle namazı kılmazlar.",
+                    "Hutbe başladıktan sonra sünnet veya nafile namaza başlanmaz; hutbe dinlenir."
+                ],
                 source: "Diyanet · Cuma Namazı"
             ),
             .init(
@@ -3071,12 +3091,12 @@ struct PrayerCatalogView: View {
                 deSteps: [
                     "Zur Qibla und zum Verstorbenen ausrichten, Niyyah; Eröffnungstakbir und Hände binden.",
                     "Sübhaneke mit „wa jalla thanāʾuk“; zweiter Takbir ohne erneutes Händeheben → Salli/Bārik.",
-                    "Dritter Takbir → Janazah-Dua bzw. passende Dua; vierter Takbir → Salām rechts und links."
+                    "Dritter Takbir ebenfalls ohne erneutes Händeheben → Janazah-Dua bzw. passende Dua; vierter Takbir → Salām rechts und links."
                 ],
                 trSteps: [
                     "Kıbleye ve cenazeye dön, niyet et; iftitah tekbiri alıp elleri bağla.",
                     "„Ve celle senâük“ ile Sübhâneke; elleri kaldırmadan ikinci tekbir → Salli/Bârik.",
-                    "Üçüncü tekbir → cenaze duası veya uygun dua; dördüncü tekbir → sağa ve sola selâm."
+                    "Üçüncü tekbir de eller kaldırılmadan alınır → cenaze duası veya uygun dua; dördüncü tekbir → sağa ve sola selâm."
                 ],
                 deNotes: ["Kein Rukūʿ und kein Sujud."],
                 trNotes: ["Rükû ve secde yoktur."],
@@ -7157,8 +7177,8 @@ struct FastingBasicsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
                 Text(settings.t(
-                    "Hanafi/Diyanet: Für Ramadan kann unter bestimmten Voraussetzungen auch nach Imsak bis vor die islamische Mittagsgrenze niyet gemacht werden, sofern seit Fajr nichts Fastenwidriges getan wurde. Sicherer und besser ist die Absicht in der Nacht. Andere Rechtsschulen können hier strenger sein.",
-                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa belirli şartlarla gündüz kuşluk/öğle sınırından önce de niyet edilebilir. Geceden niyet etmek daha güvenli ve faziletlidir. Diğer mezheplerde hüküm daha sıkı olabilir."
+                    "Hanafi/Diyanet: Für das Ramadan-Fasten kann die Absicht unter den genannten Voraussetzungen noch nach Imsak bis kurz vor dem Sonnenhöchststand gefasst werden; Diyanet nennt als Grenze 10 Minuten davor. Seit Imsak darf dafür nichts Fastenwidriges getan worden sein. Für Qada, Kaffarah und zeitlich nicht festgelegte Gelübdefasten muss die Absicht spätestens bis Imsak vorliegen. Die Absicht in der Nacht ist für Ramadan besser. Andere Rechtsschulen können strenger sein.",
+                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa güneşin tepe noktasına gelmesinden 10 dakika öncesine kadar niyet edilebilir. Kaza, kefaret ve zamanı belirlenmemiş adak oruçlarında ise en geç imsak vaktine kadar niyet edilmiş olmalıdır. Ramazan için geceden niyet etmek daha faziletlidir. Diğer mezheplerde hüküm daha sıkı olabilir."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
