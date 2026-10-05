@@ -4367,6 +4367,15 @@ private struct PrayerRestrictedTimesView: View {
                 )
             }
 
+            Section(settings.t("Was in diesen drei Zeiten ebenfalls nicht begonnen wird", "Bu üç vakitte ayrıca başlanmayan ibadetler")) {
+                Text(settings.t(
+                    "Hanefî/Diyanet: In den drei strengen Kerâhat-Zeiten werden auch Kaza-Gebete und Witr nicht begonnen. Ein bereits vorher vorbereiteter Janazah-Gottesdienst und eine Tilāwa-Secdesi aufgrund eines vor Beginn dieser Kerâhat-Zeit gelesenen Secde-Ayat werden ebenfalls auf später verschoben. Für eine Janazah, die erst in dieser Zeit vorbereitet wurde, und für einen in dieser Zeit gelesenen Secde-Ayat gelten besondere Ausnahmen.",
+                    "Hanefî/Diyanet: Üç temel kerâhat vaktinde kaza namazına ve vitir namazına da başlanmaz. Kerâhat vaktinden önce hazırlanmış cenazenin namazı ve daha önce okunmuş secde âyetinin tilâvet secdesi de sonraya bırakılır. Cenaze bu vakitte hazırlanmışsa veya secde âyeti bu vakitte okunmuşsa özel istisnalar vardır."
+                ))
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
             Section(settings.t("Weitere Zeiten für Nafila-Gebete", "Nafile namazlar için diğer vakitler")) {
                 restriction(
                     settings.t("Nach Imsak bis Sonnenaufgang", "İmsaktan güneş doğana kadar"),
@@ -4686,7 +4695,7 @@ struct IlmihalDirectoryView: View {
             Section(settings.t("Reinheit", "Taharet")) {
                 NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
                 NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
-                NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+                NavigationLink { TayammumGuideView() } label: { Label(settings.t("Tayammum", "Teyemmüm"), systemImage: "hand.raised.fill") }
                 NavigationLink { WomensPurityGuideView() } label: { Label(settings.t("Frauen · Hayd, Nifas & Istihāda", "Kadınlar · Hayız, Nifas & İstihâze"), systemImage: "person.crop.circle.badge.questionmark") }
             }
 
@@ -4698,6 +4707,7 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { PrayerMistakesView() } label: { Label(settings.t("Gebetsfehler & Sehiv-Secdesi", "Namaz hataları & Sehiv secdesi"), systemImage: "exclamationmark.arrow.triangle.2.circlepath") }
                 NavigationLink { PrayerSpecialSituationsView() } label: { Label(settings.t("Reise- & Kranken-Gebet", "Seferîlik & Hasta Namazı"), systemImage: "figure.roll") }
                 NavigationLink { TilawahSajdahGuideView() } label: { Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact") }
+                NavigationLink { QadaPrayerGuideView() } label: { Label(settings.t("Kaza-Gebete richtig nachholen", "Kaza Namazları"), systemImage: "clock.arrow.2.circlepath") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
 
@@ -4739,6 +4749,89 @@ struct IlmihalDirectoryView: View {
 
 // MARK: - Supplementary reference utilities
 
+private struct QadaPrayerGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Was wird nachgeholt?", "Hangi namazlar kaza edilir?")) {
+                qadaPoint(settings.t(
+                    "Hanefî/Diyanet: Die Farḍ-Gebete der fünf täglichen Gebete werden nachgeholt. Witr ist im hanafitischen Madhhab wājib und wird ebenfalls nachgeholt.",
+                    "Hanefî/Diyanet: Beş vakit namazın farzları kaza edilir. Hanefî mezhebinde vitir vacip olduğu için o da kaza edilir."
+                ))
+                qadaPoint(settings.t(
+                    "Versäumte Sunnah-Gebete werden nach Ablauf ihrer Zeit grundsätzlich nicht als Kaza nachgeholt.",
+                    "Vakti çıktıktan sonra kılınmamış sünnet namazlar kural olarak kaza edilmez."
+                ))
+                qadaPoint(settings.t(
+                    "Ausnahme: Wird ein vollständig verpasstes Fajr/Sabah-Gebet noch am selben Tag vor Zawāl (vor dem Sonnenhöchststand/Dhuhr) nachgeholt, wird nach Diyanet auch seine zweirakʿatige Sunnah zusammen mit dem Farḍ nachgeholt.",
+                    "İstisna: Tamamen kaçırılmış sabah namazı aynı gün zevalden önce kaza edilirse Diyanet'e göre iki rekât sünneti de farzıyla birlikte kaza edilir."
+                ))
+            }
+
+            Section(settings.t("Wie wird ein Kaza-Gebet gebetet?", "Kaza namazı nasıl kılınır?")) {
+                qadaPoint(settings.t(
+                    "Die Rakʿah-Zahl und Grundform entsprechen dem verpassten Gebet. Fajr 2, Dhuhr 4, Asr 4, Maghrib 3, Isha 4; Witr wird hanafitisch als 3 Rakʿāt nachgeholt.",
+                    "Rekât sayısı ve temel kılınış kaçırılan namazla aynıdır. Sabah 2, öğle 4, ikindi 4, akşam 3, yatsı 4; vitir Hanefî olarak 3 rekât kaza edilir."
+                ))
+                qadaPoint(settings.t(
+                    "Die Absicht muss das nachzuholende Gebet bestimmen. Ein einziges Gebet kann nicht zugleich als Kaza und als aktuelle Sunnah gezählt werden.",
+                    "Niyette hangi namazın kazasının kılındığı belirlenir. Tek bir namaz aynı anda hem kaza hem de vaktin sünneti olarak sayılmaz."
+                ))
+                qadaPoint(settings.t(
+                    "Ein vier-Rakʿah-Farḍ, das während einer hanafitisch gültigen Reise im seferî-Zustand verpasst wurde, wird später als zwei Rakʿāt nachgeholt – auch wenn man inzwischen wieder mukīm ist. Umgekehrt wird ein als mukīm verpasstes vier-Rakʿah-Gebet auch auf einer späteren Reise als vier Rakʿāt nachgeholt.",
+                    "Hanefî olarak seferî iken kazaya kalan dört rekâtlı farz, kişi sonradan mukim olsa bile iki rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı namaz ise daha sonra yolculukta kaza edilse de dört rekât kılınır."
+                ))
+            }
+
+            Section(settings.t("Wann nicht?", "Ne zaman kılınmaz?")) {
+                qadaPoint(settings.t(
+                    "Kaza-Gebete werden nicht in den drei strengen Kerâhat-Zeiten begonnen: beim Sonnenaufgang, während des Sonnenhöchststands unmittelbar vor Dhuhr und beim unmittelbar bevorstehenden Sonnenuntergang. Nutze dafür die separate Kerâhat-Zeiten-Seite.",
+                    "Kaza namazına üç temel kerâhat vaktinde başlanmaz: güneş doğarken, öğle öncesi güneş tam tepedeyken ve güneş batmak üzereyken. Ayrıntı için Kerâhat Vakitleri bölümünü kullan."
+                ))
+                qadaPoint(settings.t(
+                    "Zwischen Imsak und Sonnenaufgang ist Kaza nicht pauschal verboten: Wenn das aktuelle Fajr-Gebet dadurch nicht gefährdet wird, kann nach Diyanet Kaza gebetet werden. Das Verbot dort betrifft zusätzliche Sunnah/Nafila außer der Fajr-Sunnah.",
+                    "İmsak ile güneş doğuşu arasında kaza namazı mutlak olarak yasak değildir. O vaktin sabah namazını kaçırma tehlikesi yoksa Diyanet'e göre kaza kılınabilir. Bu süredeki yasak, sabah sünneti dışındaki ek sünnet ve nafile namazlarla ilgilidir."
+                ))
+            }
+
+            Section(settings.t("Hayd / Nifas", "Hayız / Nifas")) {
+                Text(settings.t(
+                    "Während Menstruation oder Wochenbett/Nifas nicht verrichtete Gebete werden später nicht als Kaza nachgeholt. Das unterscheidet sich vom Ramadan-Fasten: dort versäumte Fastentage werden nachgeholt.",
+                    "Hayız veya nifas döneminde kılınmayan namazlar daha sonra kaza edilmez. Ramazan orucu farklıdır; bu dönemde tutulmayan Ramazan oruçları daha sonra kaza edilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Sunnah trotz Kaza-Schuld?", "Kaza borcu varken sünnet?")) {
+                Text(settings.t(
+                    "Hanefî/Diyanet: Offene Kaza-Gebete sollen möglichst bald nachgeholt werden. Dennoch dürfen die regelmäßigen Sunnah-Gebete (rawātib) sowie z. B. Tahajjud oder Duha weiterhin gebetet werden. Andere Rechtsschulen, besonders die schafiitische Einordnung, können hier strenger sein.",
+                    "Hanefî/Diyanet: Kaza namazları ilk fırsatta kılınmalıdır. Bununla birlikte revâtib sünnetler, teheccüd ve kuşluk gibi nafile namazlar da kılınabilir. Diğer mezhepler, özellikle Şafiî görüşü, bu konuda daha sıkı olabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Namazların Kazası; Vitir Namazı; Kerâhat Vakitleri. Darstellung: hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Namazların Kazası; Vitir Namazı; Kerâhat Vakitleri. Anlatım: Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kaza-Gebete", "Kaza Namazları"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func qadaPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 struct PrayerDebtTrackerView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4765,6 +4858,17 @@ struct PrayerDebtTrackerView: View {
                     .foregroundStyle(.secondary)
                 }
                 .cardStyle(material: true)
+
+                NavigationLink {
+                    QadaPrayerGuideView()
+                } label: {
+                    Label(settings.t("Welche Gebete und wie nachholen?", "Hangi namazlar, nasıl kaza edilir?"), systemImage: "book.pages")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.plain)
+                .cardStyle()
 
                 qadaRow(title: settings.t("Fajr", "Sabah"), value: $fajr)
                 qadaRow(title: settings.t("Dhuhr", "Öğle"), value: $dhuhr)
