@@ -369,6 +369,22 @@ if '@State private var counter = 33' in guide:
     fail("free dhikr counter must not imply an unsupported fixed count of 33")
 
 for token in (
+    'güneşin tepe noktasına gelmesinden yaklaşık 10 dakika öncesine kadar niyet edilebilir',
+    'Kaza, kefaret ve zamanı belirlenmemiş adak oruçlarına ise en geç imsak vaktine kadar',
+    'Menstruation und Wochenbett/Nifas: In dieser Zeit versäumte Gebete werden nicht als Qada nachgeholt.',
+    'Hayız ve lohusalık/nifas: Bu dönemlerde kılınmayan namazlar kaza edilmez.',
+):
+    if token not in guide:
+        fail(f"fasting/qada religious guidance regression: missing {token}")
+
+for forbidden in (
+    'bis vor die islamische Mittagsgrenze niyet gemacht werden',
+    'gündüz kuşluk/öğle sınırından önce de niyet edilebilir',
+):
+    if forbidden in guide:
+        fail(f"imprecise fasting intention wording returned: {forbidden}")
+
+for token in (
     'Tage, an denen nicht gefastet wird',
     'Oruç tutulmayan günler',
     '10.–13. Dhu l-Hijjah · Opferfest & Tashriq',
