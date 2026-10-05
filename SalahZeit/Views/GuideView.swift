@@ -233,7 +233,7 @@ struct GuideView: View {
             NavigationLink { PrayerCatalogView() } label: {
                 referenceRow(
                     icon: "rectangle.stack.badge.play.fill",
-                    title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
+                    title: settings.t("Gebetsarten & Anleitungen", "Namaz türleri & rehberler"),
                     subtitle: settings.t("Fajr bis Jumuʿah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
                 )
             }
@@ -1853,6 +1853,12 @@ private func isTilawahSajdahAyah(surah: Int, ayah: Int) -> Bool {
 
 // MARK: - Wudu
 
+private enum WuduStepClassification {
+    case fardCore
+    case sunnah
+    case adab
+}
+
 private struct WuduTutorialStep: Identifiable {
     let id = UUID()
     let number: Int
@@ -1862,7 +1868,7 @@ private struct WuduTutorialStep: Identifiable {
     let deAction: String
     let trAction: String
     let repeatText: String?
-    let hanafiFard: Bool
+    let classification: WuduStepClassification
 }
 
 // Standalone asset-backed Wudu/prayer artwork; keep right/left semantics and Guide icon routing consistent.
@@ -1911,17 +1917,17 @@ struct WuduGuideView: View {
     }
 
     private let steps: [WuduTutorialStep] = [
-        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: false),
-        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
-        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
-        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", hanafiFard: true),
-        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", hanafiFard: false),
-        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", hanafiFard: false),
-        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true),
-        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true)
+        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .sunnah),
+        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", classification: .sunnah),
+        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", classification: .sunnah),
+        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", classification: .fardCore),
+        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", classification: .fardCore),
+        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", classification: .sunnah),
+        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", classification: .adab),
+        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .fardCore),
+        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", classification: .fardCore)
     ]
 
     var body: some View {
@@ -2039,6 +2045,45 @@ struct WuduGuideView: View {
                         .cardStyle(material: true)
 
                         VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Wasserbarrieren, Verband & Mest", "Su engelleri, sargı & mest"), systemImage: "bandage.fill")
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Label(settings.t(
+                                "Wasser muss die waschpflichtigen Stellen erreichen. Freiwillig aufgebrachte wasserundurchlässige Schichten, z. B. Nagellack, müssen vor Wudu oder Ghusl entfernt werden, wenn sie den Wasserkontakt verhindern.",
+                                "Su, yıkanması farz olan yerlere ulaşmalıdır. Oje gibi isteğe bağlı sürülen ve suyun temasını engelleyen tabakalar, abdest veya gusülden önce çıkarılmalıdır."
+                            ), systemImage: "drop.triangle.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Medizinischer Sonderfall: Schadet das Waschen einer Wunde oder Behandlung, gelten Erleichterungen für Verband bzw. medizinische Schicht; je nach Schaden wird darüber gestrichen oder auch das Streichen unterlassen.",
+                                "Tıbbî durum: Bir yara veya tedavi bölgesini yıkamak zarar veriyorsa sargı ya da tıbbî tabaka için ruhsat vardır; zarara göre üzerine mesh edilir, mesh de zararlıysa terk edilir."
+                            ), systemImage: "cross.case.fill")
+                            .font(.subheadline)
+
+                            Label(settings.t(
+                                "Mest bzw. nur entsprechend geeignete dicke Socken dürfen unter hanafitischen Bedingungen statt der Füße gestrichen werden. Sie müssen nach einem vollständigen Wudu mit gewaschenen Füßen angezogen worden sein; gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch.",
+                                "Mest veya ancak Hanefî şartlarını taşıyan uygun kalın çoraplar, ayakları yıkamak yerine mesh edilebilir. Bunlar ayaklar yıkanarak alınmış tam bir abdestten sonra giyilmiş olmalıdır; sıradan ince çoraplar kendiliğinden bu hükme girmez."
+                            ), systemImage: "figure.walk")
+                            .font(.subheadline)
+
+                            Text(settings.t(
+                                "Mesh-Süre ab dem ersten Wudu-Bruch nach dem Anziehen: für Nichtreisende ein Tag/eine Nacht, für Reisende drei Tage/drei Nächte. Details wie Material, Haltbarkeit und Löcher sind Teil der hanafitischen Bedingungen.",
+                                "Mesh süresi, giyildikten sonraki ilk abdest bozulmasından itibaren mukim için bir gün bir gece, seferî için üç gün üç gecedir. Malzeme, dayanıklılık ve delik gibi ayrıntılar Hanefî şartlarının parçasıdır."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+
+                            Text(settings.t(
+                                "Quelle: Diyanet Din İşleri Yüksek Kurulu · Abdest; Mest üzerine mesh; Çorap üzerine mesh; sargı/yara und wasserhemmende Stoffe.",
+                                "Kaynak: Diyanet Din İşleri Yüksek Kurulu · Abdest; mest üzerine mesh; çorap üzerine mesh; sargı/yara ve suyu engelleyen maddeler."
+                            ))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle(material: true)
+
+                        VStack(alignment: .leading, spacing: 9) {
                             Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
@@ -2098,14 +2143,12 @@ struct WuduGuideView: View {
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
-                Text(steps[safeCurrentStepIndex].hanafiFard
-                     ? settings.t("FARZ · PFLICHT", "FARZ")
-                     : settings.t("SUNNAH", "SÜNNET"))
+                Text(wuduClassificationLabel(for: steps[safeCurrentStepIndex].classification))
                     .font(.caption.bold())
                     .padding(.horizontal, 9)
                     .padding(.vertical, 5)
                     .background(
-                        steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal,
+                        wuduClassificationBackground(for: steps[safeCurrentStepIndex].classification),
                         in: Capsule()
                     )
                     .foregroundStyle(SalahTheme.deepTeal)
@@ -2138,6 +2181,28 @@ struct WuduGuideView: View {
         .padding(12)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+    }
+
+    private func wuduClassificationLabel(for classification: WuduStepClassification) -> String {
+        switch classification {
+        case .fardCore:
+            return settings.t("FARZ-KERN", "FARZ TEMELİ")
+        case .sunnah:
+            return settings.t("SUNNAH", "SÜNNET")
+        case .adab:
+            return settings.t("ADAB", "ÂDÂB")
+        }
+    }
+
+    private func wuduClassificationBackground(for classification: WuduStepClassification) -> Color {
+        switch classification {
+        case .fardCore:
+            return SalahTheme.gold
+        case .sunnah:
+            return SalahTheme.softTeal
+        case .adab:
+            return SalahTheme.cream
+        }
     }
 
     private var wuduStepNavigationBar: some View {
@@ -2274,9 +2339,9 @@ struct WuduGuideView: View {
             4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
             5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
             6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
-            7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Die Hände sind feucht.",
+            7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Hanefî: Mindestens ein Viertel des Kopfes einmal zu meshen erfüllt den Farz; den ganzen Kopf einmal zu meshen gehört zur vollständigen Sunnah-Ausführung.",
             8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
-            9: "Hanefî/Diyanet: Wische die Ense/Nackenpartie mit feuchten Fingerrücken; dies wird als Sunnah eingeordnet. Die Vorderseite des Halses bzw. Kehle nicht wischen. Andere Rechtsschulen bewerten das Nackenwischen teilweise anders.",
+            9: "Hanefî: Das Wischen der Ense/Nackenpartie mit den feuchten Fingerrücken gehört zu den Âdâb des Wudu, nicht zu den Farz. Die Vorderseite des Halses bzw. Kehle nicht wischen. Andere Rechtsschulen bewerten das Nackenwischen teilweise anders.",
             10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
             11: "Wasche danach den linken Fuß genauso vollständig."
         ]
@@ -2287,9 +2352,9 @@ struct WuduGuideView: View {
             4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
             5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.",
             6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
-            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir.",
+            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî: Başın en az dörtte birini bir kez mesh etmek farzı yerine getirir; başın tamamını bir kez mesh etmek sünnete uygun tam uygulamadır.",
             8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
-            9: "Hanefî/Diyanet: Enseyi ıslak parmakların dış kısmıyla mesh etmek sünnet olarak değerlendirilir. Boğazın ön tarafını mesh etme. Diğer mezheplerde ense meshi farklı değerlendirilebilir.",
+            9: "Hanefî: Enseyi ıslak parmakların dış kısmıyla mesh etmek abdestin âdâbındandır; farz değildir. Boğazın ön tarafını mesh etme. Diğer mezheplerde ense meshi farklı değerlendirilebilir.",
             10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
             11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
         ]
