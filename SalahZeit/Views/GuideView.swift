@@ -614,15 +614,15 @@ private enum PrayerText {
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
-        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
+        trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
+        deNote: "Nach der Fātiha sagt man Âmîn. Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Fâtiha'dan sonra Âmin denir. Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
         arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
         transliteration: "Kul hüvallâhü ehad. Allâhüssamed. Lem yelid ve lem yûled. Ve lem yekün lehû küfüven ehad.",
-        deMeaning: "Sprich: Er ist Allah, der Eine …", trMeaning: "De ki: O Allah birdir …",
+        deMeaning: "Sprich: Er ist Allah, der Eine. Allah ist der Unabhängige, von dem alles abhängt. Er zeugt nicht und wurde nicht gezeugt. Und niemand ist Ihm ebenbürtig.", trMeaning: "De ki: O Allah birdir. Allah Samed'dir; hiçbir şeye muhtaç değildir, her şey O'na muhtaçtır. Doğurmamış ve doğmamıştır. Hiçbir şey O'na denk değildir.",
         deNote: "Nur ein Beispiel. Eine andere passende Sura oder Quranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
 
     static let ruku = PrayerRecitation(
@@ -657,8 +657,8 @@ private enum PrayerText {
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
         arabic: "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ، السَّلَامُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ، أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
         transliteration: "Ettehiyyâtü lillâhi vessalevâtü vettayyibât. Esselâmü aleyke eyyühen-nebiyyü ve rahmetullâhi ve berekâtüh. Esselâmü aleynâ ve alâ ibâdillâhis-sâlihîn. Eşhedü en lâ ilâhe illallâh ve eşhedü enne Muhammeden abdühû ve resûlüh.",
-        deMeaning: "Die Grüße, Gebete und guten Dinge gehören Allah … Ich bezeuge, dass es keinen Gott außer Allah gibt und dass Muhammad Sein Diener und Gesandter ist.",
-        trMeaning: "Bütün hürmetler, dualar ve güzel sözler Allah'a mahsustur … Allah'tan başka ilâh olmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim.", deNote: nil, trNote: nil)
+        deMeaning: "Alle Ehrbezeugungen, Gebete und guten Dinge gehören Allah. Friede sei mit dir, o Prophet, sowie Allahs Barmherzigkeit und Segen. Friede sei mit uns und mit Allahs rechtschaffenen Dienern. Ich bezeuge, dass es keinen Gott außer Allah gibt, und ich bezeuge, dass Muhammad Sein Diener und Gesandter ist.",
+        trMeaning: "Bütün hürmetler, dualar ve güzel sözler Allah'a mahsustur. Ey Peygamber, Allah'ın selâmı, rahmeti ve bereketi senin üzerine olsun. Selâm bizim ve Allah'ın salih kullarının üzerine olsun. Şahitlik ederim ki Allah'tan başka ilâh yoktur ve yine şahitlik ederim ki Muhammed O'nun kulu ve elçisidir.", deNote: nil, trNote: nil)
 
     static let salli = PrayerRecitation(
         deLabel: "Allahümme Salli", trLabel: "Allâhümme Salli",
