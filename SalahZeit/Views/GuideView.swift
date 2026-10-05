@@ -1634,7 +1634,7 @@ struct WuduGuideView: View {
         .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", ruling: .fard),
         .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", ruling: .fard),
         .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", ruling: .fard),
-        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Wische mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen. Hanafi: Mindestens ein Viertel des Kopfes zu wischen ist Farz; die Abbildung zeigt den vollständigen Kopf-Masḥ als Sunnah.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Hanefî: Başın en az dörtte birini mesh etmek farzdır; görsel başın tamamını mesh etmeyi sünnet uygulama olarak gösterir.", repeatText: "1×", ruling: .fard),
+        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Wische mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen. Hanafi: Mindestens ein Viertel des Kopfes zu wischen ist Fard; die Abbildung zeigt den vollständigen Kopf-Masḥ als Sunnah.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Hanefî: Başın en az dörtte birini mesh etmek farzdır; görsel başın tamamını mesh etmeyi sünnet uygulama olarak gösterir.", repeatText: "1×", ruling: .fard),
         .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", ruling: .sunnah),
         .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", ruling: .adab),
         .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", ruling: .fard),
@@ -1663,7 +1663,7 @@ struct WuduGuideView: View {
                             Divider()
 
                             Text(settings.t(
-                                "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
+                                "Die 4 Fard-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
                                 "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
                             ))
                             .font(.footnote.bold())
@@ -1955,10 +1955,10 @@ struct WuduGuideView: View {
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
         if [4, 5, 6, 10, 11].contains(step.number) {
-            return settings.t("1× Farz · 3× Sunnah", "1× Farz · 3× Sünnet")
+            return settings.t("1× Fard · 3× Sunnah", "1× Farz · 3× Sünnet")
         }
         if step.number == 7 {
-            return settings.t("≥¼ Kopf Farz · ganz Sunnah", "≥¼ baş Farz · tamamı Sünnet")
+            return settings.t("≥¼ Kopf Fard · ganz Sunnah", "≥¼ baş Farz · tamamı Sünnet")
         }
         if [8, 9].contains(step.number) { return "1×" }
         return settings.t("3× Sunnah", "3× Sünnet")
@@ -1972,7 +1972,7 @@ struct WuduGuideView: View {
             4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
             5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
             6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
-            7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für das Farz das Wischen von mindestens einem Viertel des Kopfes. Den ganzen Kopf einmal zu wischen ist Sunnah.",
+            7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für den Fard das Wischen von mindestens einem Viertel des Kopfes. Den ganzen Kopf einmal zu wischen ist Sunnah.",
             8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
             9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
             10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
@@ -2106,7 +2106,7 @@ struct GhuslGuideView: View {
                     ))
 
                     Text(settings.t(
-                        "Wichtig: Nach hanafitischer Auffassung gehören Mund und Nase zum Farz des Ghusl. Niyyah und Bismillah sind Sunnah. In anderen Rechtsschulen kann die Einordnung einzelner Punkte abweichen.",
+                        "Wichtig: Nach hanafitischer Auffassung gehören Mund und Nase zum Fard des Ghusl. Niyyah und Bismillah sind Sunnah. In anderen Rechtsschulen kann die Einordnung einzelner Punkte abweichen.",
                         "Önemli: Hanefî görüşte ağız ve burun guslün farzlarındandır. Niyet ve besmele sünnettir. Diğer mezheplerde bazı ayrıntıların hükmü farklı olabilir."
                     ))
                     .font(.footnote.bold())
@@ -4637,19 +4637,19 @@ struct ThirtyTwoFardView: View {
                 trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Hacca gitmek"]
             ),
             .init(
-                deTitle: "4 Farz des Wudu",
+                deTitle: "4 Fard des Wudu",
                 trTitle: "Abdestin 4 farzı",
                 deItems: ["Gesicht waschen", "Arme einschließlich Ellenbogen waschen", "Mindestens ein Viertel des Kopfes wischen", "Füße einschließlich Knöchel waschen"],
                 trItems: ["Yüzü yıkamak", "Kolları dirseklerle beraber yıkamak", "Başın dörtte birini mesh etmek", "Ayakları topuklarla beraber yıkamak"]
             ),
             .init(
-                deTitle: "3 Farz des Ghusl",
+                deTitle: "3 Fard des Ghusl",
                 trTitle: "Guslün 3 farzı",
                 deItems: ["Mund ausspülen", "Nase mit Wasser reinigen", "Den ganzen Körper vollständig waschen"],
                 trItems: ["Ağza su vermek", "Buruna su vermek", "Bütün bedeni kuru yer kalmayacak şekilde yıkamak"]
             ),
             .init(
-                deTitle: "2 Farz des Tayammum",
+                deTitle: "2 Fard des Tayammum",
                 trTitle: "Teyemmümün 2 farzı",
                 deItems: ["Absicht fassen", "Mit sauberer Erde oder erdähnlicher Oberfläche die vorgeschriebenen Wischhandlungen ausführen"],
                 trItems: ["Niyet etmek", "Temiz toprağa elleri vurup gerekli meshleri yapmak"]
@@ -7517,7 +7517,7 @@ struct HijriCalendarView: View {
                 trMeaning: "Aşure günü 10 Muharrem'dir. Bu günde nafile oruç tutmak sünnette yer alır.",
                 deRecommended: ["Am 10. Muharram freiwillig fasten.", "Nach hanafitischer/Diyanet-Empfehlung zusätzlich den 9. oder 11. Muharram mitfasten."],
                 trRecommended: ["10 Muharrem'de nafile oruç tut.", "Hanefî/Diyanet tavsiyesinde 9. veya 11. Muharrem'i de ekle."],
-                deCaution: "Das Fasten ist freiwillig, nicht Farz. Regionale Kulturbräuche rund um 'Aşure' sind nicht mit einer verpflichtenden Gottesdienstform gleichzusetzen.",
+                deCaution: "Das Fasten ist freiwillig, nicht Fard. Regionale Kulturbräuche rund um 'Aşure' sind nicht mit einer verpflichtenden Gottesdienstform gleichzusetzen.",
                 trCaution: "Bu oruç farz değil, nafiledir. Aşure etrafındaki kültürel gelenekler zorunlu ibadet şekliyle aynı değildir."
             )
         }
@@ -7979,7 +7979,7 @@ struct IslamLearningHubView: View {
             trIntro: "Helâl dinen izin verilen, haram ise dinen yasaklanan şeydir. Kişisel hoşnutsuzluk her şeyi otomatik olarak haram yapmaz.",
             dePoints: [
                 "Klare Verbote brauchen eine religiöse Grundlage.",
-                "Zwischen Farz, Wajib, Sunnah, Makruh, Mubah und Haram unterscheiden.",
+                "Zwischen Fard, Wajib, Sunnah, Makruh, Mubah und Haram unterscheiden.",
                 "Bei strittigen Fragen Rechtsschule und Beleg nennen statt pauschal zu urteilen."
             ],
             trPoints: [
@@ -7987,7 +7987,7 @@ struct IslamLearningHubView: View {
                 "Farz, vacip, sünnet, mekruh, mubah ve haramı birbirinden ayır.",
                 "İhtilaflı konularda kesin genelleme yerine mezhep ve delili belirt."
             ],
-            deDetail: "SalahPath soll Begriffe nicht inflationär verwenden. 'Haram' ist eine rechtliche Bewertung, nicht bloß 'ich finde es schlecht'. Ebenso bedeutet 'Sunnah' nicht automatisch Pflicht. In Hanafi-Fiqh gibt es zusätzlich die Kategorie Wajib, die von Farz unterschieden wird.",
+            deDetail: "SalahPath soll Begriffe nicht inflationär verwenden. 'Haram' ist eine rechtliche Bewertung, nicht bloß 'ich finde es schlecht'. Ebenso bedeutet 'Sunnah' nicht automatisch Pflicht. In Hanafi-Fiqh gibt es zusätzlich die Kategorie Wajib, die von Fard unterschieden wird.",
             trDetail: "SalahPath kavramları gelişigüzel kullanmamalıdır. 'Haram' fıkhî bir hükümdür; yalnız 'bence kötü' anlamına gelmez. 'Sünnet' de otomatik olarak farz değildir. Hanefî fıkhında ayrıca farzdan ayrı 'vacip' kategorisi vardır."
         ),
         .init(
