@@ -593,7 +593,7 @@ private enum PrayerText {
     static let subhanaka = PrayerRecitation(
         deLabel: "Sübhaneke", trLabel: "Sübhâneke",
         arabic: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَلَا إِلٰهَ غَيْرُكَ",
-        transliteration: "Sübhâneke Allâhümme ve bi hamdik. Ve tebârekesmük. Ve teâlâ ceddük. Ve lâ ilâhe ğayrük.",
+        transliteration: "Sübhânekellâhümme ve bihamdik. Ve tebârakesmük ve teâlâ ceddük. Ve lâ ilâhe ğayruk.",
         deMeaning: "Gepriesen bist Du, o Allah, und Dir gebührt Lob. Gesegnet ist Dein Name, erhaben ist Deine Majestät, und es gibt keinen Gott außer Dir.",
         trMeaning: "Allah'ım! Sen eksik sıfatlardan uzaksın. Seni överim. Senin adın mübarektir, şanın yücedir. Senden başka ilâh yoktur.",
         deNote: "In der ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
@@ -656,35 +656,35 @@ private enum PrayerText {
     static let tahiyyat = PrayerRecitation(
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
         arabic: "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ، السَّلَامُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِينَ، أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
-        transliteration: "Ettehiyyâtü lillâhi vessalevâtü vettayyibât. Esselâmü aleyke eyyühen-nebiyyü ve rahmetullâhi ve berekâtüh. Esselâmü aleynâ ve alâ ibâdillâhis-sâlihîn. Eşhedü en lâ ilâhe illallâh ve eşhedü enne Muhammeden abdühû ve resûlüh.",
+        transliteration: "Ettehiyyâtü lillâhi vessalevâtü vettayyibât. Esselâmü aleyke eyyühen-Nebiyyü ve rahmetullâhi ve berakâtühü. Esselâmü aleynâ ve alâ ibâdillâhis-sâlihîn. Eşhedü ellâ ilâhe illallâh ve eşhedü enne Muhammeden abdühû ve Rasûlüh.",
         deMeaning: "Alle Ehrbezeugungen, Gebete und guten Dinge gehören Allah. Friede sei mit dir, o Prophet, sowie Allahs Barmherzigkeit und Segen. Friede sei mit uns und mit Allahs rechtschaffenen Dienern. Ich bezeuge, dass es keinen Gott außer Allah gibt, und ich bezeuge, dass Muhammad Sein Diener und Gesandter ist.",
         trMeaning: "Bütün hürmetler, dualar ve güzel sözler Allah'a mahsustur. Ey Peygamber, Allah'ın selâmı, rahmeti ve bereketi senin üzerine olsun. Selâm bizim ve Allah'ın salih kullarının üzerine olsun. Şahitlik ederim ki Allah'tan başka ilâh yoktur ve yine şahitlik ederim ki Muhammed O'nun kulu ve elçisidir.", deNote: nil, trNote: nil)
 
     static let salli = PrayerRecitation(
         deLabel: "Allahümme Salli", trLabel: "Allâhümme Salli",
         arabic: "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
-        transliteration: "Allâhümme salli alâ Muhammedin ve alâ âli Muhammed. Kemâ salleyte alâ İbrâhîme ve alâ âli İbrâhîm. İnneke hamîdün mecîd.",
+        transliteration: "Allâhümme salli alâ Muhammediv ve alâ âli Muhammed. Kemâ salleyte alâ İbrâhîme ve alâ âli İbrâhîm. İnneke hamîdüm mecîd.",
         deMeaning: "O Allah, segne Muhammad und die Familie Muhammads, wie Du Ibrahim und die Familie Ibrahims gesegnet hast. Du bist der Lobenswerte, der Ruhmreiche.",
         trMeaning: "Allah'ım, İbrahim'e ve ailesine rahmet ettiğin gibi Muhammed'e ve ailesine de rahmet et. Şüphesiz Sen övülmeye lâyık ve şan sahibisin.", deNote: nil, trNote: nil)
 
     static let barik = PrayerRecitation(
         deLabel: "Allahümme Bârik", trLabel: "Allâhümme Bârik",
         arabic: "اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
-        transliteration: "Allâhümme bârik alâ Muhammedin ve alâ âli Muhammed. Kemâ bârekte alâ İbrâhîme ve alâ âli İbrâhîm. İnneke hamîdün mecîd.",
+        transliteration: "Allâhümme bârik alâ Muhammediv ve alâ âli Muhammed. Kemâ barekte alâ İbrâhîme ve alâ âli İbrâhîm. İnneke hamîdüm mecîd.",
         deMeaning: "O Allah, schenke Muhammad und der Familie Muhammads Segen, wie Du Ibrahim und der Familie Ibrahims Segen geschenkt hast. Du bist wahrlich der Lobenswerte, der Ruhmreiche.",
         trMeaning: "Allah'ım, İbrahim'e ve ailesine bereket verdiğin gibi Muhammed'e ve ailesine de bereket ver. Şüphesiz övülmeye lâyık yalnız Sensin, şan ve şeref sahibi de Sensin.", deNote: nil, trNote: nil)
 
     static let rabbana = PrayerRecitation(
         deLabel: "Rabbenâ Âtinâ", trLabel: "Rabbenâ Âtinâ",
         arabic: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
-        transliteration: "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr.",
+        transliteration: "Rabbenâ âtinâ fid'dünyâ hasenetev ve fil'âhireti hasenetev ve ginâ azâbennâr.",
         deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
         trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Quran 2:201", trNote: "Kur'an 2:201")
 
     static let rabbanaGhfirli = PrayerRecitation(
         deLabel: "Rabbenağfirlî", trLabel: "Rabbenağfirlî",
         arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
-        transliteration: "Rabbenağfir lî ve li-vâlideyye ve lil-mü'minîne yevme yekûmül-hisâb.",
+        transliteration: "Rabbenâğfirlî ve li-vâlideyye ve lil-mü'minîne yevme yegûmü'l-hisâb.",
         deMeaning: "Unser Herr, vergib mir, meinen Eltern und den Gläubigen an dem Tag, an dem die Abrechnung stattfindet.",
         trMeaning: "Rabbimiz, hesap görülecek gün beni, anne babamı ve müminleri bağışla.",
         deNote: "Quran 14:41", trNote: "Kur'an 14:41")
@@ -1473,7 +1473,7 @@ private struct QunutDuaView: View {
         List {
             Section("Kunut 1") {
                 Text("اللَّهُمَّ إِنَّا نَسْتَعِينُكَ وَنَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ وَنُؤْمِنُ بِكَ وَنَتُوبُ إِلَيْكَ وَنَتَوَكَّلُ عَلَيْكَ وَنُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ نَشْكُرُكَ وَلَا نَكْفُرُكَ وَنَخْلَعُ وَنَتْرُكُ مَنْ يَفْجُرُكَ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme innâ nesteînüke ve nestağfirüke ve nestehdîk. Ve nü'minü bike ve netûbü ileyk. Ve netevekkelü aleyke ve nüsnî aleykel-hayra küllehû neşkürüke ve lâ nekfürük. Ve nahleu ve netrükü men yefcürük.")
+                Text("Allâhümme innâ nesteînüke ve nestağfiruke ve nestehdîk. Ve nü'minü bike ve netûbü ileyk. Ve netevekkelü aleyke ve nüsnî aleykel-hayra kullehû neşküruke ve lâ nekfüruke ve nahleu ve netrukü men yefcüruk.")
                 Text(settings.t(
                     "O Allah, wir bitten Dich um Hilfe, Vergebung und Rechtleitung. Wir glauben an Dich, wenden uns Dir in Reue zu und vertrauen auf Dich. Wir loben Dich für alles Gute, danken Dir und sind Dir nicht undankbar. Wir lösen uns von dem, der sich Dir widersetzt.",
                     "Allah'ım, Senden yardım, bağışlanma ve hidayet isteriz. Sana inanır, Sana tövbe eder ve Sana güveniriz. Bütün hayırlarla Seni över, Sana şükreder ve nankörlük etmeyiz. Sana karşı gelenle bağımızı keseriz."
@@ -1483,7 +1483,7 @@ private struct QunutDuaView: View {
             }
             Section("Kunut 2") {
                 Text("اللَّهُمَّ إِيَّاكَ نَعْبُدُ وَلَكَ نُصَلِّي وَنَسْجُدُ وَإِلَيْكَ نَسْعَى وَنَحْفِدُ نَرْجُو رَحْمَتَكَ وَنَخْشَى عَذَابَكَ إِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme iyyâke na'büdü ve leke nusallî ve nescüd. Ve ileyke nes'â ve nahfid. Nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bil-küffâri mülhik.")
+                Text("Allâhümme iyyâke na'büdü ve leke nusallî ve nescüdü ve ileyke nes'a ve nahfidü. Nercû rahmeteke ve nahşâ azâbeke. İnne azâbeke bilküffâri mülhık.")
                 Text(settings.t(
                     "O Allah, Dir allein dienen wir; für Dich beten wir und vor Dir werfen wir uns nieder. Zu Dir eilen wir und bemühen uns im Gehorsam. Wir hoffen auf Deine Barmherzigkeit und fürchten Deine Strafe. Deine Strafe trifft die Leugner.",
                     "Allah'ım, yalnız Sana kulluk eder, Senin için namaz kılar ve Sana secde ederiz. Sana yönelir ve itaat için gayret ederiz. Rahmetini umar, azabından korkarız. Şüphesiz Senin azabın inkârcılara ulaşır."
@@ -1492,7 +1492,7 @@ private struct QunutDuaView: View {
                 .foregroundStyle(.secondary)
             }
             Section {
-                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Für die Aussprache ist eine verlässliche menschliche Aufnahme am besten geeignet.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Telaffuz çalışırken güvenilir bir insan kaydı kullanmak en uygunudur."))
+                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Arabischer Text und Lesefassung wurden gegen Diyanet-Lehrmaterial gegengeprüft; die Umschrift ist nur eine Aussprachehilfe.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Arapça metin ve okunuş Diyanet öğretim materyaliyle karşılaştırılmıştır; Latin harfli okunuş yalnız telaffuz yardımcısıdır."))
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
@@ -1500,6 +1500,67 @@ private struct QunutDuaView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+private struct JanazahDuaView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Nach dem 1. Takbir", "1. tekbirden sonra")) {
+                Text("سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَجَلَّ ثَنَاؤُكَ وَلَا إِلٰهَ غَيْرُكَ")
+                    .font(.title3)
+                    .multilineTextAlignment(.trailing)
+                Text("Sübhânekellâhümme ve bihamdik. Ve tebârakesmük ve teâlâ ceddük ve celle senâük. Ve lâ ilâhe ğayruk.")
+                Text(settings.t(
+                    "Im Totengebet wird bei Sübhaneke die Ergänzung „wa jalla thanāʾuk / ve celle senâük“ mitgelesen.",
+                    "Cenaze namazında Sübhâneke okunurken „ve celle senâük“ ilavesi de okunur."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Nach dem 2. Takbir", "2. tekbirden sonra")) {
+                Text(settings.t(
+                    "Lies Allahümme Salli und Allahümme Bârik.",
+                    "Allahümme Salli ve Allahümme Bârik dualarını oku."
+                ))
+                NavigationLink { PrayerDuaAudioView() } label: {
+                    Label(settings.t("Salli & Bârik öffnen", "Salli & Bârik'i aç"), systemImage: "text.book.closed.fill")
+                }
+            }
+
+            Section(settings.t("Nach dem 3. Takbir · Cenaze-Dua", "3. tekbirden sonra · Cenaze duası")) {
+                Text("اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا وَشَاهِدِنَا وَغَائِبِنَا وَذَكَرِنَا وَأُنْثَانَا وَصَغِيرِنَا وَكَبِيرِنَا. اللَّهُمَّ مَنْ أَحْيَيْتَهُ مِنَّا فَأَحْيِهِ عَلَى الْإِسْلَامِ، وَمَنْ تَوَفَّيْتَهُ مِنَّا فَتَوَفَّهُ عَلَى الْإِيمَانِ.")
+                    .font(.title3)
+                    .multilineTextAlignment(.trailing)
+                Text("Allâhümmağfir lihayyinâ ve meyyitinâ ve şâhidinâ ve gâibinâ ve zekerinâ ve ünsânâ ve sağîrinâ ve kebîrinâ. Allâhümme men ahyeytehû minnâ feahyihî alel-islâmi ve men teveffeytehû minnâ feteveffehû alel-îmâni.")
+                Text(settings.t(
+                    "O Allah, vergib unseren Lebenden und Verstorbenen, den Anwesenden und Abwesenden, unseren Männern und Frauen, den Jungen und Alten. Wen Du von uns leben lässt, den lass im Islam leben; wen Du von uns sterben lässt, den lass im Glauben sterben.",
+                    "Allah'ım, dirilerimizi ve ölülerimizi, hazır ve gaip olanlarımızı, erkeklerimizi ve kadınlarımızı, küçüklerimizi ve büyüklerimizi bağışla. Bizden yaşattıklarını İslâm üzere yaşat; vefat ettirdiklerini iman üzere vefat ettir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+                Text(settings.t(
+                    "Diyanet führt darüber hinaus weitere Bittgebete speziell für den Verstorbenen an. Wer die Cenaze-Dua nicht kennt, kann nach Diyanet mit Dua-Absicht al-Fātiha oder eine andere passende Dua lesen.",
+                    "Diyanet ayrıca vefat eden kişi için devam eden dualar da verir. Cenaze duasını bilmeyen kişi, Diyanet'e göre dua niyetiyle Fâtiha'yı veya başka uygun bir duayı okuyabilir."
+                ))
+                .font(.caption)
+                .foregroundStyle(SalahTheme.mutedInk)
+            }
+
+            Section(settings.t("Nach dem 4. Takbir", "4. tekbirden sonra")) {
+                Text(settings.t(
+                    "Danach wird das Totengebet mit Salām nach rechts und links beendet.",
+                    "Ardından cenaze namazı sağa ve sola selâm verilerek tamamlanır."
+                ))
+            }
+        }
+        .navigationTitle(settings.t("Cenaze-Dua", "Cenaze Duası"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 
 // MARK: - Wudu
 
@@ -2906,14 +2967,14 @@ private struct PrayerCatalogDetailView: View {
                 "Das Janazah-Gebet wird vollständig im Stehen gebetet; es gibt keinen Rukūʿ und keinen Sujūd. Richte dich zur Qibla aus und fasse die Niyyah für das Totengebet.",
                 "Mit dem ersten Takbir hebst du die Hände, sagst Allāhu akbar und bindest sie. Danach liest du Sübhaneke; in der verbreiteten hanafitischen Fassung wird dabei „wa jalla thanāʾuk“ ergänzt.",
                 "Beim zweiten Takbir sagst du Allāhu akbar, ohne die Hände erneut zu heben. Danach liest du Allahümme Salli und Allahümme Bârik.",
-                "Beim dritten Takbir sagst du erneut Allāhu akbar. Danach folgt die Janazah-Dua. Wenn du sie noch nicht auswendig kannst, sprich eine passende Dua für den Verstorbenen.",
+                "Beim dritten Takbir sagst du erneut Allāhu akbar. Danach folgt die Janazah-Dua. Wenn du sie noch nicht kennst, kannst du nach Diyanet mit Dua-Absicht al-Fātiha oder eine andere passende Dua lesen.",
                 "Beim vierten Takbir sagst du Allāhu akbar. Danach wird das Gebet mit Salām beendet.",
                 "Gib den Salām nach rechts und anschließend nach links. Während des gesamten Gebets bleibt der Körper stehen; Rukūʿ und Sujūd werden nicht ausgeführt."
             ] : [
                 "Cenaze namazının tamamı ayakta kılınır; rükû ve secde yoktur. Kıbleye dön ve cenaze namazına niyet et.",
                 "Birinci tekbirde ellerini kaldır, Allāhu ekber de ve bağla. Ardından Sübhâneke oku; yaygın Hanefî uygulamasında „ve celle senâük“ ilavesi de okunur.",
                 "İkinci tekbirde elleri yeniden kaldırmadan Allāhu ekber de. Ardından Allahümme Salli ve Allahümme Bârik oku.",
-                "Üçüncü tekbirde yine Allāhu ekber de. Ardından cenaze duası okunur. Duayı henüz bilmiyorsan vefat eden kişi için uygun bir dua et.",
+                "Üçüncü tekbirde yine Allāhu ekber de. Ardından cenaze duası okunur. Duayı henüz bilmiyorsan Diyanet'e göre dua niyetiyle Fâtiha'yı veya başka uygun bir duayı okuyabilirsin.",
                 "Dördüncü tekbirde Allāhu ekber de. Ardından namaz selâm ile tamamlanır.",
                 "Önce sağa, sonra sola selâm ver. Namaz boyunca ayakta kalınır; rükû ve secde yapılmaz."
             ]
@@ -3000,6 +3061,26 @@ private struct PrayerCatalogDetailView: View {
                         .padding(.vertical, 12)
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(SalahTheme.teal)
+                }
+
+                if item.id == "witr" {
+                    NavigationLink { QunutDuaView() } label: {
+                        Label(settings.t("Qunūt 1 & 2 vollständig öffnen", "Kunut 1 ve 2 tam metnini aç"), systemImage: "text.book.closed.fill")
+                            .font(.headline.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(SalahTheme.teal)
+                }
+
+                if item.id == "janazah" {
+                    NavigationLink { JanazahDuaView() } label: {
+                        Label(settings.t("Cenaze-Dua vollständig öffnen", "Cenaze duasını tam aç"), systemImage: "text.book.closed.fill")
+                            .font(.headline.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .buttonStyle(.bordered)
                     .tint(SalahTheme.teal)
                 }
 
