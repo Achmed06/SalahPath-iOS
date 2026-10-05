@@ -1542,31 +1542,31 @@ private struct JanazahDuaView: View {
                 .foregroundStyle(.secondary)
 
                 Text(settings.t(
-                    "Danach folgt die passende Fortsetzung für einen erwachsenen Mann oder eine erwachsene Frau. Bei einem nicht religiös verantwortlichen Kind wird nach Diyanet die unten gezeigte Kinderform anstelle des Satzes über das Sterben im Glauben verwendet.",
-                    "Ardından yetişkin erkek veya kadın için uygun devam bölümü okunur. Dinî sorumluluk çağına ulaşmamış çocukta Diyanet'e göre aşağıdaki çocuk duası, iman üzere vefat cümlesinin yerine okunur."
+                    "Danach folgt je nach verstorbener Person die passende Fortsetzung. Diyanet führt die gemeinsame Dua zuerst für jede Cenaze an; anschließend wird für einen erwachsenen Mann, eine erwachsene Frau, einen Jungen oder ein Mädchen die passende Zusatzdua gelesen.",
+                    "Ardından cenazenin durumuna göre uygun devam duası okunur. Diyanet ortak duanın önce her cenaze için okunacağını; sonra yetişkin erkek, yetişkin kadın, erkek çocuk veya kız çocuk için uygun ek duanın okunacağını belirtir."
                 ))
                 .font(.caption)
                 .foregroundStyle(SalahTheme.mutedInk)
             }
 
             Section(settings.t("Fortsetzung · erwachsener Mann", "Devam · yetişkin erkek")) {
-                Text("وَخُصَّ هَذَا الْمَيِّتَ بِالرَّوْحِ وَالرَّاحَةِ وَالْمَغْفِرَةِ وَالرِّضْوَانِ. اللَّهُمَّ إِنْ كَانَ مُحْسِنًا فَزِدْ فِي إِحْسَانِهِ، وَإِنْ كَانَ مُسِيئًا فَتَجَاوَزْ عَنْهُ وَلَقِّهِ الْأَمْنَ وَالْبُشْرَى وَالْكَرَامَةَ وَالزُّلْفَى بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("وَخُصَّ هَذَا الْمَيِّتَ بِالرَّوْحِ وَالرَّاحَةِ وَالرَّحْمَةِ وَالْمَغْفِرَةِ وَالرِّضْوَانِ. اللَّهُمَّ إِنْ كَانَ مُحْسِنًا فَزِدْ فِي إِحْسَانِهِ، وَإِنْ كَانَ مُسِيئًا فَتَجَاوَزْ عَنْهُ وَلَقِّهِ الْأَمْنَ وَالْبُشْرَى وَالْكَرَامَةَ وَالزُّلْفَى بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Ve hussa hâzel-meyyite bir-ravhi ver-râhati vel-mağfireti ver-rıdvân. Allâhümme in kâne muhsinen fezid fî ihsânihî ve in kâne müsîen fetecâvez anhü ve lakkıhil-emne vel-büşrâ vel-kerâmete vez-zülfâ birahmetike yâ erhamer-râhimîn.")
+                Text("Ve hussa hâzel-meyyite bir-ravhi ver-râhati ver-rahmeti vel-mağfireti ver-rıdvân. Allâhümme in kâne muhsinen fezid fî ihsânihî ve in kâne müsîen fetecâvez anhü ve lakkıhil-emne vel-büşrâ vel-kerâmete vez-zülfâ birahmetike yâ erhamer-râhimîn.")
                 Text(settings.t(
-                    "Und gewähre besonders diesem Verstorbenen Erleichterung, Ruhe, Vergebung und Wohlgefallen. Wenn er Gutes tat, mehre sein Gutes; wenn er fehlte, vergib ihm und schenke ihm Sicherheit, frohe Botschaft, Ehre und Nähe – durch Deine Barmherzigkeit, o Barmherzigster.",
-                    "Özellikle bu vefat edene rahatlık, huzur, mağfiret ve rızanı nasip et. İyilik sahibi ise iyiliğini artır; kusuru varsa bağışla. Ona emniyet, müjde, ikram ve yakınlık ver; rahmetinle ey merhametlilerin en merhametlisi."
+                    "Und gewähre besonders diesem Verstorbenen Erleichterung, Ruhe, Barmherzigkeit, Vergebung und Wohlgefallen. Wenn er Gutes tat, mehre sein Gutes; wenn er fehlte, vergib ihm und schenke ihm Sicherheit, frohe Botschaft, Ehre und Nähe – durch Deine Barmherzigkeit, o Barmherzigster.",
+                    "Özellikle bu vefat edene rahatlık, huzur, rahmet, mağfiret ve rızanı nasip et. İyilik sahibi ise iyiliğini artır; kusuru varsa bağışla. Ona emniyet, müjde, ikram ve yakınlık ver; rahmetinle ey merhametlilerin en merhametlisi."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             }
 
             Section(settings.t("Fortsetzung · erwachsene Frau", "Devam · yetişkin kadın")) {
-                Text("وَخُصَّ هَذِهِ الْمَيِّتَةَ بِالرَّوْحِ وَالرَّاحَةِ وَالْمَغْفِرَةِ وَالرِّضْوَانِ. اللَّهُمَّ إِنْ كَانَتْ مُحْسِنَةً فَزِدْ فِي إِحْسَانِهَا، وَإِنْ كَانَتْ مُسِيئَةً فَتَجَاوَزْ عَنْهَا وَلَقِّهَا الْأَمْنَ وَالْبُشْرَى وَالْكَرَامَةَ وَالزُّلْفَى بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("وَخُصَّ هَذِهِ الْمَيِّتَةَ بِالرَّوْحِ وَالرَّاحَةِ وَالرَّحْمَةِ وَالْمَغْفِرَةِ وَالرِّضْوَانِ. اللَّهُمَّ إِنْ كَانَتْ مُحْسِنَةً فَزِدْ فِي إِحْسَانِهَا، وَإِنْ كَانَتْ مُسِيئَةً فَتَجَاوَزْ عَنْهَا وَلَقِّهَا الْأَمْنَ وَالْبُشْرَى وَالْكَرَامَةَ وَالزُّلْفَى بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Ve hussa hâzihi'l-meyyite bir-ravhi ver-râhati vel-mağfireti ver-rıdvân. Allâhümme in kânet muhsineten fezid fî ihsânihâ ve in kânet müsîeten fetecâvez anhâ ve lakkihâ'l-emne vel-büşrâ vel-kerâmete vez-zülfâ birahmetike yâ erhamer-râhimîn.")
+                Text("Ve hussa hâzihi'l-meyyite bir-ravhi ver-râhati ver-rahmeti vel-mağfireti ver-rıdvân. Allâhümme in kânet muhsineten fezid fî ihsânihâ ve in kânet müsîeten fetecâvez anhâ ve lakkihâ'l-emne vel-büşrâ vel-kerâmete vez-zülfâ birahmetike yâ erhamer-râhimîn.")
                 Text(settings.t(
                     "Die Bedeutung entspricht der Fortsetzung für einen Mann; die arabischen Pronomen sind an eine verstorbene Frau angepasst.",
                     "Anlamı yetişkin erkek için okunan devam duasıyla aynıdır; Arapça zamirler vefat eden kadına göre uyarlanmıştır."
@@ -1580,10 +1580,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Jungen:",
                     "Erkek çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا")
+                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhü lenâ feratan, Allâhümme'c-alhü lenâ ecran ve zuhran, Allâhümme'c-alhü lenâ şefî'an müşeffe'an.")
+                Text("Allâhümme'c-alhü lenâ feratan, Allâhümme'c-alhü lenâ ecran ve zuhran, Allâhümme'c-alhü lenâ şefî'an müşeffe'an. Birahmetike yâ erhamer-râhimîn.")
 
                 Divider()
 
@@ -1591,10 +1591,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Mädchen:",
                     "Kız çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً")
+                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhâ lenâ feratan, Allâhümme'c-alhâ lenâ ecran ve zuhran, Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten.")
+                Text("Allâhümme'c-alhâ lenâ feratan, Allâhümme'c-alhâ lenâ ecran ve zuhran, Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten. Birahmetike yâ erhamer-râhimîn.")
 
                 Text(settings.t(
                     "Sinngemäß: O Allah, mache dieses Kind zu einem vorausgesandten Lohn und Vorrat für uns und zu einem Fürsprecher, dessen Fürsprache angenommen wird.",
