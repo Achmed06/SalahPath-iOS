@@ -479,6 +479,15 @@ for token in (
     if token not in guide:
         fail(f"missing high-priority Islamic learning module regression: {token}")
 
+# 5a.5) Gender/obligation caveats for communal prayers.
+for token in (
+    'Frauen sind nach Diyanet nicht zum Eid-Gebet verpflichtet',
+    'Hanafi ist das Eid-Gebet für diejenigen wajib, für die auch das Freitagsgebet verpflichtend ist.',
+    'Frauen, Reisende und weitere Personen, für die Jumuʿah nicht verpflichtend ist, dürfen teilnehmen',
+):
+    if token not in guide:
+        fail(f"communal prayer obligation caveat regression: {token}")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
