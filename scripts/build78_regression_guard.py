@@ -563,7 +563,7 @@ for token in (
     'Eine reine Geldspende ohne tatsächliche, gültige Schlachtung ersetzt das Udhiyah-Kurban nicht.',
     'ist empfohlen, aber hanafitisch kein zwingendes Drittel-Schema',
     'Ruf unmittelbar vor dem Beginn eines Farḍ-Gebets; nicht begrifflich auf Gemeinschaftsgebete beschränkt.',
-    'für Kaza-Gebete Sunnah',
+    'auch bei Kaza-Gebeten Sunnah',
 ):
     if token not in guide:
         fail(f"Fitre/Kurban/Iqamah religious-content regression: missing {token}")
