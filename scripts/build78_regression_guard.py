@@ -322,6 +322,38 @@ for name in (
     if name not in capture:
         fail(f"light/dark visual QA coverage missing: {name}")
 
+# 5a.0) Verified Islamic wording must not regress.
+for token in (
+    'Âmîn gehört nicht zur Sura und ist kein Quranvers',
+    'Âmin sûrenin bir parçası ve Kur\'an ayeti değildir',
+    'bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt',
+    '„lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir',
+    'trTitle: "Rabbiğfir lî"',
+    '„32 Farz“ ist eine traditionelle Lernformel',
+    '„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak',
+    'insgesamt 23 Farz-Gebete ab Fajr am 9. Dhu l-Hijjah',
+    'toplam 23 farz namaz',
+):
+    if token not in guide:
+        fail(f"verified Islamic guidance regression: missing {token}")
+
+if 'leddâllîn. Âmîn.' in guide:
+    fail("Fatiha regression: Amin must not be embedded in the surah transliteration")
+
+app_settings = read("SalahZeit/Models/AppSettings.swift")
+for token in (
+    'Diyanet / Standard (Asr-i awwal)',
+    'Diyanet / Standart (asr-ı evvel)',
+    'Abū Ḥanīfa (Hanafi · Asr-i thānī)',
+    'Ebû Hanîfe (Hanefî · asr-ı sânî)',
+):
+    if token not in app_settings:
+        fail(f"Asr-method labeling regression: missing {token}")
+
+home_source_for_labels = read("SalahZeit/Views/HomeView.swift")
+if 'case .sunrise: return "Güneş"' not in home_source_for_labels:
+    fail("Turkish prayer-time label regression: sunrise must be Güneş, not Sabah")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
