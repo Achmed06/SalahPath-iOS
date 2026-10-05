@@ -665,10 +665,13 @@ struct PrayerHowToView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
-    @State private var isPrayerStepTrackingEnabled = false
 
     init(initialStepIndex: Int = 0) {
         _currentStepIndex = State(initialValue: min(max(initialStepIndex, 0), 17))
+    }
+
+    private var safePrayerStepIndex: Int {
+        min(max(currentStepIndex, 0), max(steps.count - 1, 0))
     }
 
     private var steps: [PrayerTutorialStep] {
@@ -913,8 +916,8 @@ struct PrayerHowToView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Vertikal scrollst du innerhalb des Schritts. Wische nach links für den nächsten Schritt und nach rechts für den vorherigen.",
-                        "Her seferinde yalnız bir adım görürsün. Dikey kaydırma adımın içinde gezinir. Sonraki adım için sola, önceki adım için sağa kaydır."
+                        "Du siehst immer nur einen Schritt. Unten wechselst du eindeutig mit „Zurück“ und „Weiter“ zum vorherigen oder nächsten Schritt.",
+                        "Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“ düğmeleriyle önceki veya sonraki adıma geçersin."
                     ))
                     .font(.subheadline)
                     .foregroundStyle(SalahTheme.ink)
@@ -961,48 +964,48 @@ struct PrayerHowToView: View {
                     Color.clear.frame(height: 1).id("prayer-step-top")
                     prayerLearningHero
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("0")
-                                .font(.headline.bold())
-                                .frame(width: 34, height: 34)
-                                .background(SalahTheme.gold.opacity(0.22), in: Circle())
-                            Text(settings.t("Bevor du anfängst", "Başlamadan önce"))
-                                .font(.title3.bold())
-                        }
-                        Text(settings.t(
-                            "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla. Danach folgst du den Schritten einfach von oben nach unten.",
-                            "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön. Sonra adımları yukarıdan aşağıya sırayla takip et."
-                        ))
-                        .font(.subheadline)
-                        .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .cardStyle()
-
-                    prayerStepRail(proxy: proxy)
-
-                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
-                        PrayerTutorialStepCard(step: step, audience: settings.prayerAudience)
-                            .id("prayer-step-card-\(index)")
-                            .onAppear {
-                                guard isPrayerStepTrackingEnabled else { return }
-                                if currentStepIndex != index {
-                                    currentStepIndex = index
-                                }
+                    if safePrayerStepIndex == 0 {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("0")
+                                    .font(.headline.bold())
+                                    .frame(width: 34, height: 34)
+                                    .background(SalahTheme.gold.opacity(0.22), in: Circle())
+                                Text(settings.t("Bevor du anfängst", "Başlamadan önce"))
+                                    .font(.title3.bold())
                             }
+                            Text(settings.t(
+                                "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla.",
+                                "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön."
+                            ))
+                            .font(.subheadline)
+                            .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .cardStyle()
                     }
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
-                            .font(.headline)
-                        Text(settings.t(
-                            "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
-                            "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    Color.clear.frame(height: 1).id("prayer-step-content-top")
+                    prayerStepRail
+
+                    PrayerTutorialStepCard(
+                        step: steps[safePrayerStepIndex],
+                        audience: settings.prayerAudience
+                    )
+                    .id("prayer-active-step-\(safePrayerStepIndex)")
+
+                    if safePrayerStepIndex == steps.count - 1 {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                                .font(.headline)
+                            Text(settings.t(
+                                "Die Gebetsreihenfolge und die gekennzeichneten Mann/Frau-Haltungsdetails orientieren sich an der hanafitischen Diyanet-Darstellung. Unterschiede anderer Rechtsschulen werden nicht als Fehler dargestellt.",
+                                "Namaz sırası ve belirtilen erkek/kadın duruş ayrıntıları Diyanet'in Hanefî anlatımına dayanır. Diğer mezheplerin farklı uygulamaları hata olarak gösterilmez."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle(material: true)
                     }
-                    .cardStyle(material: true)
                 }
                 .padding()
             }
@@ -1013,86 +1016,111 @@ struct PrayerHowToView: View {
             )
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .safeAreaInset(edge: .bottom) {
+                prayerStepNavigationBar
+            }
             .onAppear {
-                let initialIndex = currentStepIndex
+                guard safePrayerStepIndex > 0 else { return }
                 Task { @MainActor in
                     await Task.yield()
-                    await Task.yield()
-                    if initialIndex > 0 {
-                        proxy.scrollTo("prayer-step-card-\(initialIndex)", anchor: .top)
-                    }
-                    await Task.yield()
-                    currentStepIndex = initialIndex
-                    isPrayerStepTrackingEnabled = true
+                    proxy.scrollTo("prayer-step-content-top", anchor: .top)
+                }
+            }
+            .onChange(of: currentStepIndex) { _, _ in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    proxy.scrollTo("prayer-step-content-top", anchor: .top)
                 }
             }
             .onChange(of: settings.prayerAudience) { _, _ in
-                isPrayerStepTrackingEnabled = false
                 currentStepIndex = 0
                 withAnimation(.easeInOut(duration: 0.2)) {
                     proxy.scrollTo("prayer-step-top", anchor: .top)
-                }
-                Task { @MainActor in
-                    try? await Task.sleep(nanoseconds: 250_000_000)
-                    isPrayerStepTrackingEnabled = true
                 }
             }
         }
     }
 
-    @ViewBuilder
-    private func prayerStepRail(proxy: ScrollViewProxy) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private var prayerStepRail: some View {
+        VStack(alignment: .leading, spacing: 9) {
             HStack {
-                Text(settings.t("Schritte", "Adımlar"))
+                Text(settings.t("Schritt", "Adım") + " \(safePrayerStepIndex + 1) / \(steps.count)")
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
-                Text("\(currentStepIndex + 1) / \(steps.count)")
+                Text(settings.prayerAudience.title(settings.language))
                     .font(.caption.bold())
-                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(SalahTheme.softTeal, in: Capsule())
             }
 
+            ProgressView(value: Double(safePrayerStepIndex + 1), total: Double(steps.count))
+                .tint(SalahTheme.teal)
+
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 7) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                         Button {
-                            isPrayerStepTrackingEnabled = false
                             currentStepIndex = index
-                            withAnimation(.easeInOut(duration: 0.22)) {
-                                proxy.scrollTo("prayer-step-card-\(index)", anchor: .top)
-                            }
-                            Task { @MainActor in
-                                try? await Task.sleep(nanoseconds: 300_000_000)
-                                currentStepIndex = index
-                                isPrayerStepTrackingEnabled = true
-                            }
                         } label: {
                             Text(step.number)
                                 .font(.caption.bold())
-                                .frame(minWidth: 34, minHeight: 34)
+                                .frame(minWidth: 32, minHeight: 32)
                                 .background(
-                                    index == currentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    index == safePrayerStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
                                     in: Circle()
                                 )
-                                .foregroundStyle(index == currentStepIndex ? Color.white : SalahTheme.deepTeal)
+                                .foregroundStyle(index == safePrayerStepIndex ? Color.white : SalahTheme.deepTeal)
                         }
                         .buttonStyle(.plain)
                     }
                 }
                 .padding(.vertical, 2)
             }
-
-            Text(settings.t(
-                "Scrolle einfach nach unten: Schritt 1, dann 2, dann 3 usw. Über die Zahlen kannst du direkt zu einem Schritt springen.",
-                "Aşağı doğru kaydır: 1, sonra 2, sonra 3 diye devam eder. Numaralara dokunarak doğrudan bir adıma gidebilirsin."
-            ))
-            .font(.caption)
-            .foregroundStyle(SalahTheme.mutedInk)
         }
         .padding(12)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+    }
+
+    private var prayerStepNavigationBar: some View {
+        HStack(spacing: 10) {
+            Button {
+                currentStepIndex = max(safePrayerStepIndex - 1, 0)
+            } label: {
+                Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+            }
+            .buttonStyle(.bordered)
+            .disabled(safePrayerStepIndex == 0)
+
+            Button {
+                if safePrayerStepIndex < steps.count - 1 {
+                    currentStepIndex = safePrayerStepIndex + 1
+                } else {
+                    dismiss()
+                }
+            } label: {
+                HStack {
+                    Text(safePrayerStepIndex < steps.count - 1
+                         ? settings.t("Weiter", "Devam")
+                         : settings.t("Fertig", "Bitti"))
+                    Image(systemName: safePrayerStepIndex < steps.count - 1
+                          ? "chevron.right"
+                          : "checkmark")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 11)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SalahTheme.teal)
+        }
+        .font(.headline)
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+        .background(.ultraThinMaterial)
     }
 
 }
@@ -1483,7 +1511,6 @@ struct WuduGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.dismiss) private var dismiss
     @State private var currentStepIndex: Int
-    @State private var isWuduStepTrackingEnabled = false
     @State private var expandedWuduSteps: Set<Int> = []
 
     init(initialStepIndex: Int = 0) {
@@ -1514,154 +1541,187 @@ struct WuduGuideView: View {
                 LazyVStack(spacing: 14) {
                     Color.clear.frame(height: 1).id("wudu-step-top")
 
-                    VStack(alignment: .leading, spacing: 9) {
-                        Label(settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), systemImage: "drop.fill")
-                            .font(.title3.bold())
+                    if safeCurrentStepIndex == 0 {
+                        VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), systemImage: "drop.fill")
+                                .font(.title3.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+
+                            Text(settings.t(
+                                "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh.",
+                                "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla."
+                            ))
+                            .font(.subheadline)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                            Divider()
+
+                            Text(settings.t(
+                                "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
+                                "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
+                            ))
+                            .font(.footnote.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
-
-                        Text(settings.t(
-                            "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh. Danach folgen die 11 sichtbaren Handlungen direkt in der richtigen Reihenfolge.",
-                            "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla. Ardından 11 görünür uygulamayı doğru sırayla takip et."
-                        ))
-                        .font(.subheadline)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                        Divider()
-
-                        Text(settings.t(
-                            "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
-                            "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
-                        ))
-                        .font(.footnote.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                        }
+                        .cardStyle(material: true)
                     }
-                    .cardStyle(material: true)
 
-                    wuduStepRail(proxy: proxy)
+                    Color.clear.frame(height: 1).id("wudu-step-content-top")
+                    wuduStepRail
 
-                    ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
-                        wuduStepCard(step)
-                            .id("wudu-step-card-\(index)")
-                            .onAppear {
-                                guard isWuduStepTrackingEnabled else { return }
-                                if currentStepIndex != index {
-                                    currentStepIndex = index
-                                }
+                    wuduStepCard(steps[safeCurrentStepIndex])
+                        .id("wudu-active-step-\(safeCurrentStepIndex)")
+
+                    if safeCurrentStepIndex == steps.count - 1 {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
+                                .font(.headline)
+                            Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
+                                .font(.title3)
+                                .multilineTextAlignment(.trailing)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                            Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
+                                .font(.subheadline.weight(.semibold))
+                            Text(settings.t(
+                                "Ich bezeuge, dass es keinen Gott außer Allah gibt, ohne Teilhaber, und dass Muhammad Sein Diener und Gesandter ist.",
+                                "Allah'tan başka ilâh olmadığına, O'nun ortağı bulunmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        }
+                        .cardStyle()
+
+                        VStack(alignment: .leading, spacing: 9) {
+                            Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+                            NavigationLink { GhuslGuideView() } label: {
+                                Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
-                            .font(.headline)
-                        Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
-                            .font(.title3)
-                            .multilineTextAlignment(.trailing)
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                        Text("Eşhedü en lâ ilâhe illallâhü vahdehû lâ şerîke leh, ve eşhedü enne Muhammeden abdühû ve resûlüh.")
-                            .font(.subheadline.weight(.semibold))
-                        Text(settings.t(
-                            "Ich bezeuge, dass es keinen Gott außer Allah gibt, ohne Teilhaber, und dass Muhammad Sein Diener und Gesandter ist.",
-                            "Allah'tan başka ilâh olmadığına, O'nun ortağı bulunmadığına ve Muhammed'in O'nun kulu ve elçisi olduğuna şahitlik ederim."
-                        ))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    }
-                    .cardStyle()
-
-                    VStack(alignment: .leading, spacing: 9) {
-                        Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
-                            .font(.headline.bold())
-                            .foregroundStyle(SalahTheme.deepTeal)
-                        NavigationLink { GhuslGuideView() } label: {
-                            Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            .buttonStyle(.plain)
+                            Divider()
+                            NavigationLink { TayammumGuideView() } label: {
+                                Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
-                        Divider()
-                        NavigationLink { TayammumGuideView() } label: {
-                            Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
-                                .font(.headline)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .buttonStyle(.plain)
+                        .cardStyle()
                     }
-                    .cardStyle()
                 }
                 .padding()
             }
             .background(SalahTheme.page)
             .navigationTitle(settings.t("Wudu lernen", "Abdest öğren"))
             .navigationBarTitleDisplayMode(.inline)
+            .safeAreaInset(edge: .bottom) {
+                wuduStepNavigationBar
+            }
             .onAppear {
-                let initialIndex = currentStepIndex
+                guard safeCurrentStepIndex > 0 else { return }
                 Task { @MainActor in
                     await Task.yield()
-                    await Task.yield()
-                    if initialIndex > 0 {
-                        proxy.scrollTo("wudu-step-card-\(initialIndex)", anchor: .top)
-                    }
-                    await Task.yield()
-                    currentStepIndex = initialIndex
-                    isWuduStepTrackingEnabled = true
+                    proxy.scrollTo("wudu-step-content-top", anchor: .top)
+                }
+            }
+            .onChange(of: currentStepIndex) { _, _ in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    proxy.scrollTo("wudu-step-content-top", anchor: .top)
                 }
             }
         }
     }
 
-    @ViewBuilder
-    private func wuduStepRail(proxy: ScrollViewProxy) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private var wuduStepRail: some View {
+        VStack(alignment: .leading, spacing: 9) {
             HStack {
-                Text(settings.t("Schritte", "Adımlar"))
+                Text(settings.t("Schritt", "Adım") + " \(safeCurrentStepIndex + 1) / \(steps.count)")
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
-                Text("\(currentStepIndex + 1) / \(steps.count)")
+                Text(steps[safeCurrentStepIndex].hanafiFard
+                     ? settings.t("FARZ · PFLICHT", "FARZ")
+                     : settings.t("SUNNAH", "SÜNNET"))
                     .font(.caption.bold())
-                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(
+                        steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal,
+                        in: Capsule()
+                    )
+                    .foregroundStyle(SalahTheme.deepTeal)
             }
 
+            ProgressView(value: Double(safeCurrentStepIndex + 1), total: Double(steps.count))
+                .tint(SalahTheme.teal)
+
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 7) {
                     ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
                         Button {
-                            isWuduStepTrackingEnabled = false
                             currentStepIndex = index
-                            withAnimation(.easeInOut(duration: 0.22)) {
-                                proxy.scrollTo("wudu-step-card-\(index)", anchor: .top)
-                            }
-                            Task { @MainActor in
-                                try? await Task.sleep(nanoseconds: 300_000_000)
-                                currentStepIndex = index
-                                isWuduStepTrackingEnabled = true
-                            }
                         } label: {
                             Text("\(step.number)")
                                 .font(.caption.bold())
-                                .frame(minWidth: 34, minHeight: 34)
+                                .frame(minWidth: 32, minHeight: 32)
                                 .background(
-                                    index == currentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    index == safeCurrentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
                                     in: Circle()
                                 )
-                                .foregroundStyle(index == currentStepIndex ? Color.white : SalahTheme.deepTeal)
+                                .foregroundStyle(index == safeCurrentStepIndex ? Color.white : SalahTheme.deepTeal)
                         }
                         .buttonStyle(.plain)
                     }
                 }
                 .padding(.vertical, 2)
             }
-
-            Text(settings.t(
-                "Scrolle nach unten: 1 → 2 → 3 → … → 11. Über die Zahlen kannst du direkt zu einem Schritt springen.",
-                "Aşağı doğru kaydır: 1 → 2 → 3 → … → 11. Numaralara dokunarak doğrudan bir adıma gidebilirsin."
-            ))
-            .font(.caption)
-            .foregroundStyle(SalahTheme.mutedInk)
         }
         .padding(12)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
+    }
+
+    private var wuduStepNavigationBar: some View {
+        HStack(spacing: 10) {
+            Button {
+                currentStepIndex = max(safeCurrentStepIndex - 1, 0)
+            } label: {
+                Label(settings.t("Zurück", "Geri"), systemImage: "chevron.left")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+            }
+            .buttonStyle(.bordered)
+            .disabled(safeCurrentStepIndex == 0)
+
+            Button {
+                if safeCurrentStepIndex < steps.count - 1 {
+                    currentStepIndex = safeCurrentStepIndex + 1
+                } else {
+                    dismiss()
+                }
+            } label: {
+                HStack {
+                    Text(safeCurrentStepIndex < steps.count - 1
+                         ? settings.t("Weiter", "Devam")
+                         : settings.t("Fertig", "Bitti"))
+                    Image(systemName: safeCurrentStepIndex < steps.count - 1
+                          ? "chevron.right"
+                          : "checkmark")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 11)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(SalahTheme.teal)
+        }
+        .font(.headline)
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+        .background(.ultraThinMaterial)
     }
 
     @ViewBuilder
