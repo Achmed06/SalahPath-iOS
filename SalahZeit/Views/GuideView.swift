@@ -1952,7 +1952,7 @@ struct WuduGuideView: View {
                             Divider()
 
                             Text(settings.t(
-                                "Die 4 Farz-Bestandteile im Hanafi/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
+                                "Die 4 Pflichtbestandteile des Wudu im hanafitischen/Diyanet-Ablauf sind: Gesicht waschen, Arme mit Ellenbogen waschen, mindestens ein Viertel des Kopfes mit nasser Hand wischen und Füße mit Knöcheln waschen.",
                                 "Hanefî/Diyanet anlatımında abdestin 4 farzı: yüzü yıkamak, kolları dirseklerle yıkamak, başın en az dörtte birini mesh etmek ve ayakları aşık kemikleriyle yıkamaktır."
                             ))
                             .font(.footnote.bold())
@@ -2075,7 +2075,7 @@ struct WuduGuideView: View {
                             .foregroundStyle(.secondary)
 
                             Text(settings.t(
-                                "Quelle: Diyanet Din İşleri Yüksek Kurulu · Abdest; Mest üzerine mesh; Çorap üzerine mesh; sargı/yara und wasserhemmende Stoffe.",
+                                "Quelle: Diyanet Din İşleri Yüksek Kurulu · Wudu; Mest-/Socken-Masah; Verband/Wunde und wasserhemmende Stoffe.",
                                 "Kaynak: Diyanet Din İşleri Yüksek Kurulu · Abdest; mest üzerine mesh; çorap üzerine mesh; sargı/yara ve suyu engelleyen maddeler."
                             ))
                             .font(.caption2)
@@ -2186,7 +2186,7 @@ struct WuduGuideView: View {
     private func wuduClassificationLabel(for classification: WuduStepClassification) -> String {
         switch classification {
         case .fardCore:
-            return settings.t("FARZ-KERN", "FARZ TEMELİ")
+            return settings.t("PFLICHTKERN", "FARZ TEMELİ")
         case .sunnah:
             return settings.t("SUNNAH", "SÜNNET")
         case .adab:
@@ -2325,7 +2325,7 @@ struct WuduGuideView: View {
 
     private func repeatLabel(for step: WuduTutorialStep) -> String {
         if [4, 5, 6, 10, 11].contains(step.number) {
-            return settings.t("1× Farz · 3× Sunnah", "1× Farz · 3× Sünnet")
+            return settings.t("1× Pflicht · 3× Sunnah", "1× Farz · 3× Sünnet")
         }
         if [7, 8, 9].contains(step.number) { return "1×" }
         return settings.t("3× Sunnah", "3× Sünnet")
