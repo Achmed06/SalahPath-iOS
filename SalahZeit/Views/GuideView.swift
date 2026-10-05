@@ -10823,7 +10823,7 @@ private struct QuranSurahView: View {
                 Button(action: toggleFullSurah) {
                     ZStack {
                         Circle()
-                            .fill(audioReady ? SalahTheme.teal : Color.secondary.opacity(0.34))
+                            .fill(audioReady ? SalahTheme.navigationTeal : Color.secondary.opacity(0.34))
                             .frame(width: 46, height: 46)
                         if isResolvingAudio {
                             ProgressView().tint(.white)
