@@ -498,6 +498,23 @@ for token in (
     if token not in guide:
         fail(f"religious learning-module regression: missing {token}")
 
+# 5a.3c) Kaza-prayer guidance and Turkish terminology.
+for token in (
+    'private struct QadaPrayerGuideView: View',
+    'Die Farḍ-Gebete der fünf täglichen Gebete werden nachgeholt. Witr ist im hanafitischen Madhhab wājib',
+    'vollständig verpasstes Fajr/Sabah-Gebet noch am selben Tag vor Zawāl',
+    'als zwei Rakʿāt nachgeholt – auch wenn man inzwischen wieder mukīm ist',
+    'Kaza-Gebete werden nicht in den drei strengen Kerâhat-Zeiten begonnen',
+    'Zwischen Imsak und Sonnenaufgang ist Kaza nicht pauschal verboten',
+    'Sunnah trotz Kaza-Schuld?',
+    'settings.t("Tayammum", "Teyemmüm")',
+):
+    if token not in guide:
+        fail(f"qada/Turkish terminology regression: missing {token}")
+
+if 'NavigationLink { TayammumGuideView() } label: { Label("Tayammum"' in guide:
+    fail("Turkish Ilmihal label must localize Tayammum as Teyemmüm")
+
 # 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
 for token in (
     'private struct PrayerSpecialSituationsView: View',
