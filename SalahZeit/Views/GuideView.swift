@@ -2866,10 +2866,14 @@ private struct PrayerCatalogDetailView: View {
 
                 if hasCompleteIllustratedGuide {
                     NavigationLink { PrayerHowToView() } label: {
-                        Label(
-                            settings.t("2-Rakʿāt-Bildanleitung für Mann/Frau öffnen", "Erkek/Kadın 2 rekât görsel anlatımını aç"),
-                            systemImage: "figure.mind.and.body"
-                        )
+                        HStack(spacing: 10) {
+                            SalahFeatureIcon(kind: "prayer_guide")
+                                .frame(width: 30, height: 30)
+                            Text(settings.t(
+                                "2-Rakʿāt-Bildanleitung für Mann/Frau öffnen",
+                                "Erkek/Kadın 2 rekât görsel anlatımını aç"
+                            ))
+                        }
                         .font(.headline.bold())
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -3156,7 +3160,11 @@ struct RamadanGuideIndexView: View {
 
             Section(settings.t("Ramadan-Gebete", "Ramazan Namazları")) {
                 NavigationLink { PrayerCatalogView() } label: {
-                    Label(settings.t("Tarawih, Tasbih & Eid-Gebet", "Teravih, Tesbih & Bayram Namazı"), systemImage: "figure.mind.and.body")
+                    HStack(spacing: 9) {
+                        SalahFeatureIcon(kind: "prayer_guide")
+                            .frame(width: 23, height: 23)
+                        Text(settings.t("Tarawih, Tasbih & Eid-Gebet", "Teravih, Tesbih & Bayram Namazı"))
+                    }
                 }
             }
 
@@ -4077,7 +4085,13 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Gebet", "Namaz")) {
                 NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
-                NavigationLink { PrayerHowToView() } label: { Label(settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat"), systemImage: "figure.mind.and.body") }
+                NavigationLink { PrayerHowToView() } label: {
+                    HStack(spacing: 9) {
+                        SalahFeatureIcon(kind: "prayer_guide")
+                            .frame(width: 23, height: 23)
+                        Text(settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat"))
+                    }
+                }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
@@ -7778,9 +7792,8 @@ struct PrayerSequenceReferenceView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(spacing: 9) {
-                    Image(systemName: "figure.mind.and.body")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "prayer_guide")
+                        .frame(width: 24, height: 24)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(settings.t("Gebetsablauf im Überblick", "Namaz akışı özeti"))
                             .font(.headline)
