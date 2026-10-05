@@ -614,8 +614,8 @@ private enum PrayerText {
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert.",
-        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur.",
+        deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
+        trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
         deNote: "Nach al-Fātiha sagt man Âmîn; Âmîn gehört nicht zur Sura und ist kein Quranvers. Hanafi: Âmîn wird leise gesprochen. Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Fâtiha'dan sonra Âmin denir; Âmin sûrenin bir parçası ve Kur'an ayeti değildir. Hanefî: Âmin sessiz söylenir. İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
@@ -680,6 +680,14 @@ private enum PrayerText {
         transliteration: "Rabbenâ âtinâ fid-dünyâ haseneten ve fil-âhireti haseneten ve kınâ azâben-nâr.",
         deMeaning: "Unser Herr, gib uns Gutes im Diesseits und Gutes im Jenseits und bewahre uns vor der Strafe des Feuers.",
         trMeaning: "Rabbimiz, bize dünyada da iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.", deNote: "Quran 2:201", trNote: "Kur'an 2:201")
+
+    static let rabbanaGhfirli = PrayerRecitation(
+        deLabel: "Rabbenâğfirli", trLabel: "Rabbenâğfirli",
+        arabic: "رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+        transliteration: "Rabbenâğfir lî ve li-vâlideyye ve lil-mü'minîne yevme yekûmül-hisâb.",
+        deMeaning: "Unser Herr, vergib mir, meinen Eltern und den Gläubigen an dem Tag, an dem die Abrechnung stattfindet.",
+        trMeaning: "Rabbimiz, hesap görülecek gün beni, anne babamı ve müminleri bağışla.",
+        deNote: "Quran 14:41", trNote: "Kur'an 14:41")
 
     static let salam = PrayerRecitation(
         deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
@@ -1476,11 +1484,11 @@ private struct QunutDuaView: View {
         List {
             Section("Kunut 1") {
                 Text("اللَّهُمَّ إِنَّا نَسْتَعِينُكَ وَنَسْتَغْفِرُكَ وَنَسْتَهْدِيكَ وَنُؤْمِنُ بِكَ وَنَتُوبُ إِلَيْكَ وَنَتَوَكَّلُ عَلَيْكَ وَنُثْنِي عَلَيْكَ الْخَيْرَ كُلَّهُ نَشْكُرُكَ وَلَا نَكْفُرُكَ وَنَخْلَعُ وَنَتْرُكُ مَنْ يَفْجُرُكَ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme innâ nesteînüke ve nestağfirüke ve nestehdîk. Ve nü'minü bike ve netûbü ileyk. Ve netevekkelü aleyke ve nüsnî aleykel-hayra küllehû neşkürüke ve lâ nekfürük. Ve nahleu ve netrükü men yefcürük.")
+                Text("Allâhümme innâ nesteînüke ve nestağfiruke ve nestehdîk. Ve nü'minü bike ve netûbü ileyke ve netevekkelü aleyke ve nüsnî aleyke'l-hayra kullehü neşkuruke, velâ nekfüruk. Ve nahleu ve netrukü men yefcüruk.")
             }
             Section("Kunut 2") {
                 Text("اللَّهُمَّ إِيَّاكَ نَعْبُدُ وَلَكَ نُصَلِّي وَنَسْجُدُ وَإِلَيْكَ نَسْعَى وَنَحْفِدُ نَرْجُو رَحْمَتَكَ وَنَخْشَى عَذَابَكَ إِنَّ عَذَابَكَ بِالْكُفَّارِ مُلْحِقٌ").font(.title3).multilineTextAlignment(.trailing)
-                Text("Allâhümme iyyâke na'büdü ve leke nusallî ve nescüd. Ve ileyke nes'â ve nahfid. Nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bil-küffâri mülhik.")
+                Text("Allâhümme iyyâke na'büdü ve leke nüsallî ve nescüdü ve ileyke nes'â ve nahfidü nercû rahmeteke ve nahşâ azâbek. İnne azâbeke bi'l-küffâri mülhık.")
             }
             Section {
                 Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Für die Aussprache ist eine verlässliche menschliche Aufnahme am besten geeignet.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Telaffuz çalışırken güvenilir bir insan kaydı kullanmak en uygunudur."))
@@ -6628,10 +6636,10 @@ struct PrayerDuaAudioView: View {
             recitations: [PrayerText.salli, PrayerText.barik]
         ),
         .init(
-            deTitle: "Rabbena-Dua", trTitle: "Rabbenâ duası",
-            deDetail: "Abschlussdua im letzten Sitzen vor dem Salam.",
-            trDetail: "Son oturuşta selâmdan önce okunan kapanış duası.",
-            recitations: [PrayerText.rabbana]
+            deTitle: "Rabbenâ-Duas", trTitle: "Rabbenâ duaları",
+            deDetail: "Zwei verbreitete Quran-Duas für das letzte Sitzen vor dem Salām.",
+            trDetail: "Son oturuşta selâmdan önce okunabilen iki yaygın Kur'an duası.",
+            recitations: [PrayerText.rabbana, PrayerText.rabbanaGhfirli]
         ),
         .init(
             deTitle: "Rabbighfir lī", trTitle: "Rabbiğfir lî",
