@@ -38,7 +38,7 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Clarified the Hanafi/Diyanet division of the ruku-rising formulas between imam, person praying alone, and follower.
 - Added a sourced Hanafi/Diyanet Wudu-invalidators overview and explicitly warns that other schools differ in several points.
 - Added a Sehiv-Secdesi / prayer-error module instead of implying that every prayer mistake has the same consequence.
-- Corrected the Turkish sunrise label from `Sabah` to `Gunes` in the reference prayer-time naming.
+- Corrected the Turkish sunrise label from `Sabah` to `Güneş` in the reference prayer-time naming.
 - Clarified Diyanet's Asr-i awwal calculation versus Abu Hanifa's Asr-i thani view in settings.
 - Reframed `32 Farz` as a traditional Hanafi/Diyanet teaching framework rather than an independent creed category.
 - Added the exact Hanafi/Diyanet Tashriq-takbir period and the prohibited fasting days around both Eids.
