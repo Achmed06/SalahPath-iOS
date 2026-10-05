@@ -914,4 +914,20 @@ for token in (
     if token not in settings_view:
         fail(f"notification permission-sync regression: missing {token}")
 
+# Religious-content audit: keep school-specific rulings and exact qualification wording.
+for token in (
+    'Hanafi: Wajib für Jumuʿah-Pflichtige · gemeinschaftlich',
+    'die Eid-Khutbah ist Sunnah und folgt nach dem Gebet.',
+    'Die Khutbah vor dem Gebet ist eine Gültigkeitsbedingung.',
+    'Hat die Khutbah begonnen, soll keine Sunnah/Nafila mehr begonnen werden',
+    'Dritter Takbir ebenfalls ohne erneutes Händeheben',
+    'Samenabgang mit sexueller Erregung bzw. Orgasmus',
+    'etwas, das zur Erdsubstanz zählt',
+    'Diyanet nennt als Grenze 10 Minuten davor.',
+    'Für Qada, Kaffarah und zeitlich nicht festgelegte Gelübdefasten muss die Absicht spätestens bis Imsak vorliegen.',
+    'Hisn al-Muslim 78 · Morgen-/Abendfassung; Wortlautvarianten überliefert',
+):
+    if token not in guide:
+        fail(f"religious-content audit regression: missing {token}")
+
 print("Build 78 regression guard: OK")
