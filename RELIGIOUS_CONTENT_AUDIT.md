@@ -17,6 +17,9 @@ Diyanet references checked:
 - Mest / qualifying socks: https://kurul.diyanet.gov.tr/tr/fetva/mest-uzerine-mesh-nasil-yapilir-ve-bunun-sartlari-nelerdir/0193c42d-4872-7a2c-ca0b-e6a5a832dc93
 - Water barriers / nail polish: https://kurul.diyanet.gov.tr/Cevap-Ara/43/boya-oje-ruj-ve-jole-gibi-maddeler-abdest-ve-gusle-engel-olur-mu
 - Bandages / wounds: https://kurul.diyanet.gov.tr/tr/fetva/bedeninde-veya-bir-uzvunda-sargi-alci-ya-da-yara-bulunan-kimse-nasil-abdest-alir/0193c42d-492b-764e-c148-284760fd9c5c
+- Diyanet prayer learning texts (Tashahhud / Salli-Bārik / Rabbana): https://dijital.diyanet.gov.tr/File/Download?id=4218&path=4218_1.pdf
+- Diyanet Namaz İlmihali Qunūt reading: https://namaz.diyanet.gov.tr/namaz/html/kutuphane/HTML/NamazIlmihali/assets/common/downloads/publication.pdf
+- Quran 14:41: https://kuran.diyanet.gov.tr/mushaf/kuran-tefsir-1/ibrahim-suresi-14/ayet-41/diyanet-isleri-baskanligi-meali-1
 - Ghusl: https://kurul.diyanet.gov.tr/tr/fetva/gusul-boy-abdesti-ne-zaman-gereklidir-ve-sunnete-uygun/0193c42d-4959-7fa3-b0b7-5a3001c5f706
 - Tayammum: https://kurul.diyanet.gov.tr/tr/fetva/teyemmum-nedir-nasil-yapilir-teyemmumu-bozan-seyler-nelerdir/0193c42d-4a83-7216-84a3-951c2fa115aa
 - Menstruation/postpartum worship rules: https://kurul.diyanet.gov.tr/tr/fetva/kadinlarin-adet-veya-lohusalik-hallerinde-yapamayacaklari/0193c42d-4b21-7774-1a09-738831304296
@@ -46,6 +49,10 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Clarified the mixed obligation/repetition issue in Wudu: washing the obligatory limbs once fulfills the obligatory wash, while the threefold washing shown in the full procedure is Sunnah; the head step separately explains the Hanafi minimum of one quarter versus wiping the full head.
 - Added practical Wudu special cases for water-blocking coatings (including nail polish), medically necessary dressings/treatments, and Hanafi mest/qualifying-sock wiping conditions and time limits.
 - Renamed the learning entry from the overbroad “Alle Gebete einzeln” to “Gebetsarten & Anleitungen” because the catalog is not an exhaustive list of every prayer/fiqh case.
+- Began the strict Arabic/transliteration pass: the core Arabic strings for Fātiha, Tashahhud, Salli/Bārik and both Hanafi Qunūt duas were checked against Diyanet learning material; no substantive Arabic-text mismatch was found in those strings.
+- Standardized the Qunūt transliterations to Diyanet's published Turkish reading form so learners are not taught inconsistent terminal vowels/consonants.
+- Restored the separate Quran 14:41 “Rabbenâğfirli” recitation to the prayer-dua lesson and kept it distinct from the shorter between-sujūd “Rabbighfir lī”.
+- Replaced the Fātiha “meaning” field's catalog-style summary with an actual German/Turkish meaning so the UI no longer labels a description as the meaning of the surah.
 - Added a Sehiv-Secdesi / prayer-error module instead of implying that every prayer mistake has the same consequence.
 - Corrected the Turkish sunrise label from `Sabah` to `Güneş` in the reference prayer-time naming.
 - Clarified Diyanet's Asr-i awwal calculation versus Abu Hanifa's Asr-i thani view in settings.
