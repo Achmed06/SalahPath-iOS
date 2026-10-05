@@ -7396,8 +7396,8 @@ struct HijriCalendarView: View {
                 trTitle: "Arefe günü · 9 Zilhicce",
                 deMeaning: "Der 9. Dhu l-Hijjah ist der Tag von ʿArafah und ein zentraler Tag des Hajj.",
                 trMeaning: "9 Zilhicce Arefe günüdür ve haccın en önemli günlerinden biridir.",
-                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Dua, Dhikr und gute Taten vermehren."],
-                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Dua, zikir ve hayırlı amelleri artır."],
+                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Dua, Dhikr und gute Taten vermehren.", "Hanafi: Nach dem Fajr-Fard beginnen die Tashrīq-Takbīre; sie werden nach jedem Fard-Gebet bis einschließlich Asr am 13. Dhu l-Hijjah gesprochen."],
+                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Dua, zikir ve hayırlı amelleri artır.", "Hanefî: Sabah namazının farzından sonra teşrik tekbirleri başlar; 13 Zilhicce ikindi farzı dahil her farz namazın ardından getirilir."],
                 deCaution: "Pilger auf ʿArafah werden nicht pauschal wie Nicht-Pilger zum Fasten angehalten; Kraft für die Hajj-Handlungen hat Vorrang.",
                 trCaution: "Arafat'taki hacılar, hac dışındaki kişiler gibi genel olarak oruca teşvik edilmez; hac ibadetlerine güç ayırmak önceliklidir."
             )
@@ -7424,8 +7424,8 @@ struct HijriCalendarView: View {
                 trTitle: "Teşrik günleri · \(d) Zilhicce",
                 deMeaning: "Die Tage nach dem ersten Opferfesttag heißen Tage des Tashriq.",
                 trMeaning: "Kurban Bayramı'nın ilk gününden sonraki bu günlere teşrik günleri denir.",
-                deRecommended: ["Nach den Farz-Gebeten die hanafitischen Tashriq-Takbire entsprechend ihrer Zeit beachten.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
-                trRecommended: ["Hanefî uygulamada farz namazlardan sonra teşrik tekbirlerini zamanına göre getir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
+                deRecommended: ["Hanafi: Die Tashrīq-Takbīre laufen bereits seit Fajr am 9. Dhu l-Hijjah und enden nach Asr am 13.; in diesem Zeitraum werden sie nach jedem Fard-Gebet gesprochen.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
+                trRecommended: ["Hanefî uygulamada teşrik tekbirleri 9 Zilhicce sabah farzından başlar ve 13 Zilhicce ikindi farzından sonra biter; bu sürede her farz namazın ardından getirilir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
                 deCaution: "Diese Tage sind keine gewöhnlichen freiwilligen Fastentage.",
                 trCaution: "Bu günler normal nafile oruç günleri değildir."
             )
