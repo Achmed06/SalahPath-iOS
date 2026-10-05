@@ -7906,15 +7906,15 @@ private struct DhikrItem: Identifiable {
 
 struct DhikrView: View {
     @EnvironmentObject private var settings: SettingsStore
-    @State private var counter = 33
+    @State private var counter = 0
     @State private var section = 0
 
     private var tabs: [String] {
         [
-            settings.t("Morgen", "Sabah"),
-            settings.t("Abend", "Akşam"),
-            settings.t("Täglich", "Günlük"),
-            settings.t("Spezial", "Özel")
+            settings.t("Istighfar", "İstiğfar"),
+            settings.t("Tasbih", "Tesbih"),
+            settings.t("Tawhid", "Tevhid"),
+            settings.t("Salawat", "Salavat")
         ]
     }
 
@@ -7955,7 +7955,7 @@ struct DhikrView: View {
                         Button {
                             withAnimation(.easeOut(duration: 0.15)) {
                                 section = index
-                                counter = 33
+                                counter = 0
                             }
                         } label: {
                             Text(title)
@@ -8010,7 +8010,7 @@ struct DhikrView: View {
                             .frame(minWidth: 88)
                             .contextMenu {
                                 Button {
-                                    counter = 33
+                                    counter = 0
                                 } label: {
                                     Label(settings.t("Zurücksetzen", "Sıfırla"), systemImage: "arrow.counterclockwise")
                                 }
@@ -8036,6 +8036,15 @@ struct DhikrView: View {
                 .aspectRatio(1.18, contentMode: .fit)
                 .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7) }
+
+                Text(settings.t(
+                    "Freier Zähler: SalahPath behauptet hier keine religiös festgelegte Anzahl. Überlieferte Anzahlen findest du im Bereich Morgen- & Abend-Adhkar.",
+                    "Serbest sayaç: SalahPath burada dinen belirlenmiş bir sayı iddia etmez. Rivayet edilen sayılar Sabah & Akşam Zikirleri bölümünde gösterilir."
+                ))
+                .font(.caption2)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
 
                 VStack(spacing: 0) {
                     dhikrReferenceRow(
