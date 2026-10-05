@@ -6033,7 +6033,7 @@ struct MorningEveningAdhkarView: View {
     @EnvironmentObject private var settings: SettingsStore
     @Environment(\.scenePhase) private var scenePhase
     @State private var category = 0
-    @State private var selectedID = "istighfar"
+    @State private var selectedID = "ayatkursi"
     @State private var refresh = 0
     @State private var now = Date()
 
@@ -6041,7 +6041,6 @@ struct MorningEveningAdhkarView: View {
         .init(id: "ayatkursi", deTitle: "Ayat al-Kursi", trTitle: "Âyetel Kürsî", arabic: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ …", transliteration: "Allāhu lā ilāha illā huwa-l-Ḥayyul-Qayyūm…", deMeaning: "Quran 2:255. Für den vollständigen Text öffne die Sura al-Baqara im Quran-Bereich.", trMeaning: "Kur'an 2:255. Tam metin için Kur'an bölümünde Bakara sûresini aç.", count: 1, source: "Quran 2:255 · Hisn al-Muslim 75"),
         .init(id: "threequls", deTitle: "Al-Ikhlas, Al-Falaq, An-Nas", trTitle: "İhlâs, Felak, Nâs", arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ · قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ · قُلْ أَعُوذُ بِرَبِّ النَّاسِ", transliteration: "Qul huwa-llāhu aḥad · Qul aʿūdhu bi-rabbi-l-falaq · Qul aʿūdhu bi-rabbi-n-nās", deMeaning: "Angezeigt sind nur die Anfangszeilen. Rezitiert werden die vollständigen Suren Al-Ikhlas, Al-Falaq und An-Nas jeweils dreimal.", trMeaning: "Burada yalnız başlangıç satırları gösterilir. İhlâs, Felak ve Nâs sûrelerinin tamamı ayrı ayrı üçer kez okunur.", count: 3, source: "Hisn al-Muslim 76"),
         .init(id: "bika", deTitle: "Allahumma bika asbahna / amsayna", trTitle: "Allahümme bike asbahnâ / emseynâ", arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", transliteration: "Allāhumma bika aṣbaḥnā wa bika amsaynā wa bika naḥyā wa bika namūtu wa ilayka-n-nushūr.", deMeaning: "O Allah, durch Dich erreichen wir Morgen und Abend, durch Dich leben und sterben wir, und zu Dir ist die Rückkehr.", trMeaning: "Allah'ım, Senin yardımınla sabaha ve akşama erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır.", count: 1, source: "Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391"),
-        .init(id: "istighfar", deTitle: "Astaghfirullah", trTitle: "Estağfirullâh", arabic: "أَسْتَغْفِرُ اللَّهَ", transliteration: "Astaghfirullāh", deMeaning: "Ich bitte Allah um Vergebung. Hier wird keine bestimmte überlieferte Anzahl behauptet.", trMeaning: "Allah'tan bağışlanma dilerim. Burada rivayet edilmiş belirli bir sayı iddia edilmez.", count: 1, source: "Allgemeines Istighfar / genel istiğfar"),
         .init(id: "protection", deTitle: "Bismillahi alladhi la yadurru", trTitle: "Bismillâhillezî lâ yadurru", arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillāhi-lladhī lā yaḍurru maʿa-smihi shay'un fi-l-arḍi wa lā fi-s-samā' wa huwa-s-Samīʿu-l-ʿAlīm", deMeaning: "Bitte um Schutz, dreimal morgens und dreimal abends überliefert.", trMeaning: "Korunma duası; sabah ve akşam üçer kez rivayet edilmiştir.", count: 3, source: "Hisn al-Muslim 86 · Abu Dawud / Tirmidhi"),
         .init(id: "raditu", deTitle: "Raditu billahi Rabban", trTitle: "Radîtü billâhi Rabben", arabic: "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ نَبِيًّا", transliteration: "Raḍītu billāhi Rabban, wa bi-l-Islāmi dīnan, wa bi-Muḥammadin nabiyyan", deMeaning: "Bekenntnis der Zufriedenheit mit Allah als Herrn, Islam als Religion und Muhammad als Propheten.", trMeaning: "Allah'ı Rab, İslâm'ı din ve Muhammed'i peygamber olarak kabul ve hoşnutluk ifadesi.", count: 3, source: "Hisn al-Muslim 87 · Ahmad / Tirmidhi")
     ]
@@ -6052,8 +6051,6 @@ struct MorningEveningAdhkarView: View {
                 Picker(settings.t("Kategorie", "Kategori"), selection: $category) {
                     Text(settings.t("Morgen", "Sabah")).tag(0)
                     Text(settings.t("Abend", "Akşam")).tag(1)
-                    Text(settings.t("Täglich", "Günlük")).tag(2)
-                    Text(settings.t("Speziell", "Özel")).tag(3)
                 }
                 .pickerStyle(.segmented)
                 .padding(6)
@@ -6143,7 +6140,7 @@ struct MorningEveningAdhkarView: View {
                 .font(.system(size: 15, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
 
-            Text(settings.language == .german ? item.deMeaning : item.trMeaning)
+            Text(displayMeaning(for: item))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(SalahTheme.mutedInk)
                 .multilineTextAlignment(.center)
@@ -6245,13 +6242,18 @@ struct MorningEveningAdhkarView: View {
         return "Allāhumma bika amsaynā wa bika aṣbaḥnā wa bika naḥyā wa bika namūtu wa ilayka-l-maṣīr."
     }
 
-    private var visibleItems: [AdhkarEntry] {
-        switch category {
-        case 0: return items
-        case 1: return items
-        case 2: return items.filter { ["istighfar", "raditu", "ayatkursi"].contains($0.id) }
-        default: return items.filter { ["protection", "threequls"].contains($0.id) }
+    private func displayMeaning(for item: AdhkarEntry) -> String {
+        guard item.id == "bika", category == 1 else {
+            return settings.language == .german ? item.deMeaning : item.trMeaning
         }
+        return settings.t(
+            "O Allah, durch Dich erreichen wir den Abend und durch Dich den Morgen; durch Dich leben und sterben wir, und zu Dir ist das Ziel.",
+            "Allah'ım, Senin yardımınla akşama ve sabaha erişiriz; Seninle yaşar ve ölürüz. Dönüş Sanadır."
+        )
+    }
+
+    private var visibleItems: [AdhkarEntry] {
+        items
     }
 
     private var selectedItem: AdhkarEntry? {
@@ -6259,17 +6261,12 @@ struct MorningEveningAdhkarView: View {
     }
 
     private var periodKey: String {
-        switch category {
-        case 0: return "morning"
-        case 1: return "evening"
-        case 2: return "daily"
-        default: return "special"
-        }
+        category == 1 ? "evening" : "morning"
     }
 
     private func normalizeSelection() {
         if !visibleItems.contains(where: { $0.id == selectedID }) {
-            selectedID = visibleItems.first?.id ?? "istighfar"
+            selectedID = visibleItems.first?.id ?? "ayatkursi"
         }
     }
 
