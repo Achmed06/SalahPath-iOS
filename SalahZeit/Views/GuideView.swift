@@ -1484,6 +1484,7 @@ private struct WuduInstructionVisual: View {
     var body: some View {
         Image(key)
             .renderingMode(.original)
+            .flipsForRightToLeftLayoutDirection(false)
             .resizable()
             .interpolation(.high)
             .scaledToFit()
