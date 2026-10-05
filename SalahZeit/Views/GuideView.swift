@@ -1503,7 +1503,7 @@ private struct QunutDuaView: View {
 
 // MARK: - Wudu
 
-private enum WuduRuling {
+private enum WuduRuling: Equatable {
     case fard
     case sunnah
     case adab
