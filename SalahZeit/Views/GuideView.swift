@@ -1795,9 +1795,10 @@ private struct TilawahSajdahGuideView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
-                    ForEach(Array(references.enumerated()), id: .offset) { index, item in
+                    ForEach(references.indices, id: \.self) { index in
+                        let item = references[index]
                         HStack(spacing: 9) {
-                            Text("\(index + 1)")
+                            Text(String(index + 1))
                                 .font(.caption.bold().monospacedDigit())
                                 .frame(width: 27, height: 27)
                                 .background(SalahTheme.gold.opacity(0.22), in: Circle())
