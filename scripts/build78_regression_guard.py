@@ -464,6 +464,10 @@ for token in (
     'Wasserbarrieren, Verband & Mest',
     'gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch',
     'Gebetsarten & Anleitungen',
+    'static let rabbanaGhfirli = PrayerRecitation(',
+    'deNote: "Quran 14:41", trNote: "Kur\'an 14:41"',
+    "nestağfiruke ve nestehdîk",
+    "leke nüsallî ve nescüdü",
     'private struct PrayerMistakesView: View',
     'Gebetsfehler & Sehiv-Secdesi',
     'Wann ist Sehiv-Secdesi nötig?',
@@ -480,6 +484,8 @@ for forbidden in (
     'title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek")',
     'dies wird als Sunnah eingeordnet. Die Vorderseite des Halses',
     'sünnet olarak değerlendirilir. Boğazın ön tarafını',
+    'nestağfirüke ve nestehdîk',
+    'leke nusallî ve nescüd.',
 ):
     if forbidden in guide:
         fail(f"ambiguous Islamic guidance returned: {forbidden}")
