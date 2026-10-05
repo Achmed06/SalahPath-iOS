@@ -4505,6 +4505,101 @@ private struct WomensPurityGuideView: View {
     }
 }
 
+private struct ZakatGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wann wird Zakat fällig?", "Zekât ne zaman farz olur?")) {
+                zakatPoint(settings.t(
+                    "Diyanet-Grundregel: Nach Abzug der grundlegenden Bedürfnisse und der für das Zakat-Jahr unmittelbar relevanten Schulden muss zakatpflichtiges Vermögen mindestens den Nisab erreichen.",
+                    "Diyanet temel kuralı: Aslî ihtiyaçlar ve zekât yılı içinde ödenmesi gereken ilgili borçlar çıktıktan sonra zekâta tâbi malın nisap miktarına ulaşması gerekir."
+                ))
+                zakatPoint(settings.t(
+                    "Für Geld, Handelsware und Gold legt Diyanet als Nisab den Wert von 80,18 g 24-karätigem Gold zugrunde. Der Geldwert davon ändert sich mit dem Goldpreis; SalahPath hinterlegt deshalb keinen festen Euro-Betrag.",
+                    "Para, ticaret malı ve altın için Diyanet nisap ölçüsü olarak 80,18 gram 24 ayar altın değerini esas alır. Bunun para karşılığı altın fiyatıyla değişir; bu yüzden SalahPath sabit bir TL/Euro tutarı göstermez."
+                ))
+                zakatPoint(settings.t(
+                    "Bei Vermögen, für das die Jahresregel gilt, muss grundsätzlich ein Mondjahr (kamerî yıl) vergehen und am Jahresende der Nisab weiterhin vorhanden sein.",
+                    "Yıl şartına tâbi mallarda genel olarak bir kamerî yıl geçmeli ve yıl sonunda nisap miktarı korunmuş olmalıdır."
+                ))
+            }
+
+            Section(settings.t("Wie viel?", "Ne kadar?")) {
+                zakatPoint(settings.t(
+                    "Bei Geld, Gold und Handelsware beträgt die übliche Zakat nach den genannten Voraussetzungen 1/40, also 2,5 % des zakatpflichtigen Nettobestands.",
+                    "Para, altın ve ticaret malında şartlar oluştuğunda zekât, zekâta tâbi net malın kırkta biri yani %2,5'tir."
+                ))
+                zakatPoint(settings.t(
+                    "Handelsware wird zum aktuellen Wert am Zakat-Stichtag bewertet. Zukünftige, noch nicht entstandene Gewinne werden nicht vorweg eingerechnet.",
+                    "Ticaret malları zekât hesaplama günündeki güncel değer üzerinden değerlendirilir. Henüz oluşmamış gelecekteki kârlar hesaba eklenmez."
+                ))
+                zakatPoint(settings.t(
+                    "Langfristige Schulden werden nach Diyanets heutiger Praxis nicht vollständig auf einmal abgezogen; maßgeblich sind insbesondere die im betreffenden Zakat-Jahr fälligen bzw. unmittelbar zu zahlenden Beträge.",
+                    "Uzun vadeli borçların tamamı tek seferde düşülmez; Diyanet'in güncel yaklaşımında özellikle o zekât yılı içinde vadesi gelen veya ödenmesi gereken kısım dikkate alınır."
+                ))
+            }
+
+            Section(settings.t("Goldschmuck – Rechtsschulunterschied", "Altın ziynet – mezhep farkı")) {
+                Text(settings.t(
+                    "Hanefî: Gold- und Silberschmuck ist bei erfüllten übrigen Voraussetzungen grundsätzlich zakatpflichtig. Diyanet nennt für Gold ebenfalls den Gegenwert von 80,18 g 24-karätigem Gold und 2,5 %. In der schafiitischen Rechtsschule wird üblicher, nicht übermäßiger persönlicher Schmuck anders beurteilt.",
+                    "Hanefî: Altın ve gümüş ziynet eşyası diğer şartları da taşıyorsa zekâta tâbidir. Diyanet altın için 80,18 gram 24 ayar altın karşılığını ve %2,5 oranını esas alır. Şafiî mezhebinde normal ölçüde kullanılan kişisel ziynet farklı değerlendirilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wer kann Zakat erhalten?", "Zekât kimlere verilir?")) {
+                Text(settings.t(
+                    "Quran 9:60 nennt acht Empfängergruppen. Für die alltägliche Praxis sind besonders Bedürftige, Arme, geeignete Schuldner und mittellose Reisende relevant; die übrigen Kategorien haben eigene Voraussetzungen.",
+                    "Tevbe 9:60 zekât için sekiz sınıf sayar. Günlük uygulamada özellikle fakirler, miskinler, uygun durumdaki borçlular ve yolda kalmış kişiler öne çıkar; diğer sınıfların kendi şartları vardır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Hanefî/Diyanet: Zakat wird nicht an eigene Eltern/Großeltern, Kinder/Enkel oder den Ehepartner gegeben. Auch wer außerhalb seiner Grundbedürfnisse selbst Nisab-Vermögen besitzt, gilt nicht als bedürftiger Zakat-Empfänger.",
+                    "Hanefî/Diyanet: Zekât anne-baba ve büyükanne/büyükbabalara, çocuk ve torunlara veya eşe verilmez. Aslî ihtiyaçları dışında nisap miktarı mala sahip olan kişi de fakir zekât alıcısı sayılmaz."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Nicht mit Fitre/Fidya verwechseln", "Fitre/fidye ile karıştırma")) {
+                Text(settings.t(
+                    "Zakat, Fitra/Sadaqat al-Fitr, Fasten-Fidya und freiwillige Sadaqa sind verschiedene Kategorien mit teilweise unterschiedlichen Voraussetzungen. Ein jährlich von Diyanet veröffentlichter Fitre-/Fidya-Betrag ist kein Zakat-Nisab.",
+                    "Zekât, fitre, oruç fidyesi ve gönüllü sadaka farklı hükümlere sahiptir. Diyanet'in yıllık açıkladığı fitre/fidye miktarı zekât nisabı değildir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Landwirtschaft, Vieh, Unternehmensbeteiligungen, Forderungen, Aktien/Fonds, Immobilien und gemischte Vermögen haben Zusatzregeln. Diese Seite ist kein individueller Zakat-Bescheid. Bei größeren oder gemischten Vermögen die konkrete Berechnung fachkundig prüfen.",
+                    "Tarım ürünleri, hayvanlar, şirket hisseleri, alacaklar, hisse/fonlar, gayrimenkuller ve karma mal varlıklarında ek hükümler vardır. Bu sayfa kişisel bir zekât fetvası değildir. Büyük veya karma mal varlığında hesabı ehil kişiye ayrıca kontrol ettir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Zekât nedir? · Zekât kimlere farzdır? · Ticaret malının zekâtı · Borçların düşülmesi · Zekât kimlere verilir/verilmez · Ziynet eşyası. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Zekât nedir? · Zekât kimlere farzdır? · Ticaret malının zekâtı · Borçların düşülmesi · Zekât kimlere verilir/verilmez · Ziynet eşyası. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func zakatPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 struct IlmihalDirectoryView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4713,7 +4808,7 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
                 NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
-                NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
+                NavigationLink { ZakatGuideView() } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
                 NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
                 NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
                 NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
