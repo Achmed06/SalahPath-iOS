@@ -488,6 +488,14 @@ for token in (
     if token not in guide:
         fail(f"communal prayer obligation caveat regression: {token}")
 
+# 5a.6) Prayer precondition must distinguish Wudu from required Ghusl.
+for token in (
+    'du bist rituell rein (Wudu; wenn erforderlich auch Ghusl)',
+    'hükmen temiz ol (abdestli; gerekiyorsa ayrıca gusüllü)',
+):
+    if token not in guide:
+        fail(f"ritual-purity prayer precondition regression: {token}")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
