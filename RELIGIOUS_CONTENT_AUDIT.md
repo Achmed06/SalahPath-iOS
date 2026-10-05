@@ -53,6 +53,9 @@ Hadith reference checked for the morning/evening formula used by SalahPath:
 - Standardized the Qunūt transliterations to Diyanet's published Turkish reading form so learners are not taught inconsistent terminal vowels/consonants.
 - Restored the separate Quran 14:41 “Rabbenâğfirli” recitation to the prayer-dua lesson and kept it distinct from the shorter between-sujūd “Rabbighfir lī”.
 - Replaced the Fātiha “meaning” field's catalog-style summary with an actual German/Turkish meaning so the UI no longer labels a description as the meaning of the surah.
+- Verified all four Quran-referenced Daily Dua entries (2:201, 20:114 excerpt, 3:173 excerpt, 25:74) against the cited Quran locations; no reference mismatch was found.
+- Verified the 14 Tilāwah-Sajdah verse references against Diyanet's own Tilâvet Secdesi list; the existing list matches, so no verse-number correction was made.
+- Corrected the source attribution for the “Allāhumma bika aṣbaḥnā / amsaynā” morning/evening dhikr: SalahPath keeps the displayed transmitted variant, but no longer attributes that exact wording to a Diyanet/Riyâzü’s-Sâlihîn rendering that differs in its evening wording.
 - Added a Sehiv-Secdesi / prayer-error module instead of implying that every prayer mistake has the same consequence.
 - Corrected the Turkish sunrise label from `Sabah` to `Güneş` in the reference prayer-time naming.
 - Clarified Diyanet's Asr-i awwal calculation versus Abu Hanifa's Asr-i thani view in settings.
