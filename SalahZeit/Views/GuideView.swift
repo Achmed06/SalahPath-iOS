@@ -4505,6 +4505,189 @@ private struct WomensPurityGuideView: View {
     }
 }
 
+private struct FitraGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wer ist verpflichtet?", "Kim yükümlüdür?")) {
+                fitraPoint(settings.t(
+                    "Hanefî/Diyanet: Wer das Ramadanfest erreicht und neben Grundbedürfnissen sowie den relevanten Jahresschulden Nisab-Vermögen besitzt, ist zur Fitra verpflichtet.",
+                    "Hanefî/Diyanet: Ramazan Bayramı'na ulaşan ve aslî ihtiyaçları ile ilgili yıllık borçları dışında nisap miktarı mala sahip olan Müslüman fitre ile yükümlüdür."
+                ))
+                fitraPoint(settings.t(
+                    "Anders als bei Zakat muss dieses Vermögen für Fitre nicht ertragsfähig/„wachsend“ sein und es muss kein Mondjahr darüber vergangen sein.",
+                    "Zekâttan farklı olarak fitre nisabındaki malın nâmî/artıcı olması ve üzerinden bir kamerî yıl geçmesi gerekmez."
+                ))
+                fitraPoint(settings.t(
+                    "Hanefî: Die Person gibt für sich selbst und ihre noch nicht volljährigen Kinder, für die sie sorgeverantwortlich ist. Für Ehepartner, Eltern oder volljährige Kinder besteht nicht automatisch dieselbe Zahlungspflicht; freiwillige Zahlung für sie ist möglich.",
+                    "Hanefî: Kişi kendisi ve velâyeti altındaki ergenlik çağına ulaşmamış çocukları için fitre verir. Eş, anne-baba veya yetişkin çocuklar için otomatik ödeme yükümlülüğü yoktur; onlar adına gönüllü ödeme yapılabilir."
+                ))
+            }
+
+            Section(settings.t("Wann?", "Ne zaman?")) {
+                fitraPoint(settings.t(
+                    "Nach Abū Hanīfa wird Fitre am ersten Eid-Tag mit Eintritt der Morgendämmerung verpflichtend.",
+                    "Ebû Hanîfe'ye göre fitre, Ramazan Bayramı'nın birinci günü tan yerinin ağarmasıyla vacip olur."
+                ))
+                fitraPoint(settings.t(
+                    "Sie darf bereits im Ramadan gegeben werden. Für den Zweck der Fitre ist es besser, sie rechtzeitig vor dem Eid-Gebet bzw. vor dem Fest an Bedürftige zu geben.",
+                    "Fitre Ramazan ayı içinde önceden verilebilir. Fakirin bayram ihtiyacını karşılaması için bayramdan önce ve özellikle bayram namazından önce ulaştırılması daha uygundur."
+                ))
+                fitraPoint(settings.t(
+                    "Wurde sie nicht rechtzeitig gezahlt, fällt die Verpflichtung nicht einfach weg; sie soll möglichst bald nachgezahlt werden.",
+                    "Vaktinde verilmemiş fitre borcu düşmez; mümkün olan ilk fırsatta ödenmelidir."
+                ))
+            }
+
+            Section(settings.t("Wie hoch?", "Miktarı ne kadar?")) {
+                Text(settings.t(
+                    "Diyanet legt regelmäßig einen aktuellen Mindest-/Orientierungsbetrag anhand des normalen täglichen Nahrungsbedarfs fest. Dieser Betrag kann sich ändern. SalahPath speichert deshalb keinen dauerhaft festen Geldbetrag. Wer mehr tägliche Verpflegungskosten hat, kann seinen eigenen Tagesbedarf als Maß nehmen.",
+                    "Diyanet normal bir günlük gıda ihtiyacını esas alarak dönemsel bir asgarî/ölçü miktarı açıklar. Bu tutar değişebilir. Bu nedenle SalahPath kalıcı sabit para miktarı göstermez. Günlük gıda harcaması daha yüksek olan kişi kendi günlük gıda bedelini ölçü alabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Diyanet setzt den jeweils bekanntgegebenen Fitre-Betrag zugleich als Tagesbetrag für Fasten-Fidya an. Fitre und Fidya bleiben trotzdem unterschiedliche Verpflichtungen.",
+                    "Diyanet açıklanan fitre miktarını aynı zamanda bir günlük oruç fidyesi miktarı olarak belirler. Buna rağmen fitre ve fidye farklı yükümlülüklerdir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Wer darf sie erhalten?", "Kime verilebilir?")) {
+                Text(settings.t(
+                    "Sie wird an bedürftige Personen gegeben, für deren Unterhalt man nicht selbst verantwortlich ist. Eigene Eltern/Großeltern, Kinder/Enkel und der Ehepartner erhalten die eigene Fitre nach der hanafitischen/Diyanet-Regel nicht.",
+                    "Fitre, kişinin bakmakla yükümlü olmadığı yoksul kimselere verilir. Hanefî/Diyanet kuralına göre kişi kendi anne-baba/büyükanne-büyükbabasına, çocuk/torunlarına ve eşine kendi fitresini vermez."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Fıtır Sadakası (Fitre): yükümlülük, vakit, miktar ve alıcılar. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Fıtır Sadakası (Fitre): yükümlülük, vakit, miktar ve alıcılar. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Fitre · Fitra", "Fitre · Fıtır Sadakası"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func fitraPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct KurbanGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Wer ist nach Hanafi verpflichtet?", "Hanefî'ye göre kim yükümlüdür?")) {
+                kurbanPoint(settings.t(
+                    "Diyanet/Hanefî: Ein zurechnungsfähiger, volljähriger, nicht als Reisender (seferî) geltender Muslim ist verpflichtet, wenn er außerhalb von Grundbedürfnissen und Schulden mindestens Nisab-Vermögen besitzt.",
+                    "Diyanet/Hanefî: Akıl sağlığı yerinde, büluğa ermiş, seferî olmayan Müslüman; aslî ihtiyaçları ve borçları dışında nisap miktarı mala sahipse kurbanla yükümlüdür."
+                ))
+                kurbanPoint(settings.t(
+                    "Als finanzielles Maß verwendet Diyanet 80,18 g 24-karätiges Gold oder dessen Wert. Anders als bei Zakat muss dieses Vermögen nicht ertragsfähig sein und kein Mondjahr lang gehalten worden sein.",
+                    "Mali ölçü olarak Diyanet 80,18 gram 24 ayar altın veya değerini esas alır. Zekâttan farklı olarak bu malın nâmî olması ve üzerinden bir kamerî yıl geçmesi şart değildir."
+                ))
+                kurbanPoint(settings.t(
+                    "Die Verpflichtung ist individuell. Sind z. B. beide Ehepartner jeweils selbst nach diesen Kriterien vermögend, wird die Pflicht nicht allein dadurch erfüllt, dass nur ein „Familienoberhaupt“ opfert.",
+                    "Yükümlülük bireyseldir. Örneğin eşlerin ikisi de ayrı ayrı bu şartları taşıyorsa yalnız aile reisinin kurban kesmesi diğerinin yükümlülüğünü otomatik olarak düşürmez."
+                ))
+            }
+
+            Section(settings.t("Zeit", "Kurban vakti")) {
+                kurbanPoint(settings.t(
+                    "Wo ein Eid-Gebet stattfindet, beginnt die Opferzeit nach dem Eid-Gebet. Wo kein Eid-Gebet stattfindet, beginnt sie mit Fajr am ersten Festtag.",
+                    "Bayram namazı kılınan yerlerde kurban vakti bayram namazından sonra; bayram namazı kılınmayan yerlerde birinci gün fecrin girmesiyle başlar."
+                ))
+                kurbanPoint(settings.t(
+                    "Hanefî: Die Zeit endet mit Sonnenuntergang am 3. Eid-Tag. Schafiitisch reicht sie bis Sonnenuntergang am 4. Tag; deshalb darf SalahPath diese Frist nicht als rechtsschulübergreifend darstellen.",
+                    "Hanefî: Kurban vakti bayramın 3. günü güneş batınca biter. Şafiî mezhebinde 4. gün güneş batımına kadar devam eder; bu yüzden bu süre mezhepler üstü tek hüküm gibi sunulmamalıdır."
+                ))
+            }
+
+            Section(settings.t("Geeignete Tiere & Mindestalter", "Hayvan türü ve asgarî yaş")) {
+                kurbanPoint(settings.t(
+                    "Kamel: 5 Mondjahre; Rind/Büffel: 2 Mondjahre; Schaf/Ziege: 1 Mondjahr.",
+                    "Deve: 5 kamerî yaş; sığır/manda: 2; koyun/keçi: 1 yaşını doldurmuş olmalıdır."
+                ))
+                kurbanPoint(settings.t(
+                    "Sonderfall nur beim Schaf: Ein mindestens 6 Monate altes Schaf kann genügen, wenn es körperlich wie ein einjähriges Tier erscheint. Diese Ausnahme wird nicht auf Ziege, Rind oder Kamel übertragen.",
+                    "İstisna yalnız koyundadır: En az 6 aylık koyun bir yaşını doldurmuş gibi gösterişli ise kurban olabilir. Bu istisna keçi, sığır veya deveye uygulanmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Das Tier muss grundsätzlich gesund und ohne kurbanhindernde schwere Mängel sein. Nicht jeder kleine Makel macht ein Tier ungeeignet; die konkreten Mängelregeln sind detaillierter als ein einfacher Ja/Nein-Check.",
+                    "Hayvan genel olarak sağlıklı ve kurbana engel ağır kusurlardan uzak olmalıdır. Her küçük kusur hayvanı kurban olmaktan çıkarmaz; kusur hükümleri basit bir evet/hayır kontrolünden daha ayrıntılıdır."
+                ))
+            }
+
+            Section(settings.t("Anteile & Stellvertretung", "Hisse & vekâlet")) {
+                kurbanPoint(settings.t(
+                    "Schaf und Ziege sind jeweils für eine Person. Bei Rind/Büffel/Kamel können sich bis zu sieben Personen beteiligen; kein Anteil darf kleiner als ein Siebtel sein.",
+                    "Koyun ve keçi bir kişi içindir. Sığır, manda ve deveye en fazla yedi kişi ortak olabilir; hiçbir hisse yedide birden küçük olamaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Bei Stellvertretung/Vekâlet müssen Eigentum, Bevollmächtigung und die Zuordnung der Anteile vor der Schlachtung eindeutig sein.",
+                    "Vekâletle kurbanda mülkiyet, vekâlet ve hissedarların kesimden önce belirlenmesi açık olmalıdır."
+                ))
+                kurbanPoint(settings.t(
+                    "Eine reine Geldspende ohne tatsächliche, gültige Schlachtung ersetzt das Udhiyah-Kurban nicht.",
+                    "Fiilî ve geçerli bir kesim olmadan yalnız para bağışlamak udhiyye kurbanı yerine geçmez."
+                ))
+            }
+
+            Section(settings.t("Fleisch", "Etin paylaşımı")) {
+                Text(settings.t(
+                    "Die bekannte Dreiteilung – ein Teil für Bedürftige, ein Teil für Verwandte/Nachbarn, ein Teil für den eigenen Haushalt – ist empfohlen, aber hanafitisch kein zwingendes Drittel-Schema. Nach Diyanet darf grundsätzlich auch das gesamte Fleisch im Haushalt bleiben; bei vorhandener Bedürftigkeit ist großzügiges Verteilen besonders sinnvoll.",
+                    "Etin üçe ayrılarak bir kısmının yoksullara, bir kısmının akraba/komşulara, bir kısmının eve bırakılması tavsiye edilir; Hanefî mezhebinde zorunlu bir üçte bir oranı değildir. Diyanet'e göre etin tamamı evde de bırakılabilir; ihtiyaç sahiplerinin bulunduğu durumda paylaşmak daha uygundur."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Häufige falsche Vorstellungen", "Sık yapılan yanlışlar")) {
+                kurbanPoint(settings.t(
+                    "Unverheiratet zu sein verhindert die Kurban-Pflicht nicht, wenn die Voraussetzungen erfüllt sind.",
+                    "Bekâr olmak, şartları taşıyan kişinin kurban yükümlülüğünü ortadan kaldırmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Eine Frau darf ein Tier fachgerecht schlachten; das Geschlecht allein macht die Schlachtung nicht ungültig.",
+                    "Kesim ehliyeti bulunan kadın da kurban kesebilir; kadın olmak kesimi geçersiz yapmaz."
+                ))
+                kurbanPoint(settings.t(
+                    "Bei Großvieh müssen die Teilnehmer nicht zwingend 3, 5 oder 7 Personen sein; bis zu sieben gültige Anteile sind möglich.",
+                    "Büyükbaşta ortak sayısının mutlaka 3, 5 veya 7 olması gerekmez; yediyi geçmeyen geçerli hisseler mümkündür."
+                ))
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Kurban ibadeti 2026 · yükümlülük · kesim vakti · hayvan yaşı · ortaklık · etin değerlendirilmesi. Hanafitischer/Diyanet-Grundrahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · 2026 Kurban açıklaması · yükümlülük · kesim vakti · yaş · ortaklık · etin değerlendirilmesi. Hanefî/Diyanet temel çerçevesi."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kurban / Opfer", "Kurban"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func kurbanPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
 private struct ZakatGuideView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4809,8 +4992,9 @@ struct IlmihalDirectoryView: View {
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
                 NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
                 NavigationLink { ZakatGuideView() } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
+                NavigationLink { FitraGuideView() } label: { Label(settings.t("Fitre · Fitra", "Fitre · Fıtır Sadakası"), systemImage: "heart.circle.fill") }
                 NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
-                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
+                NavigationLink { KurbanGuideView() } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
                 NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
             }
 
