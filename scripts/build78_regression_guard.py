@@ -377,6 +377,22 @@ for token in (
     if token not in guide:
         fail(f"prohibited fasting-day regression: missing {token}")
 
+for token in (
+    '@State private var selectedID = "ayatkursi"',
+    'private func displayMeaning(for item: AdhkarEntry) -> String',
+    'category == 1 ? "evening" : "morning"',
+):
+    if token not in guide:
+        fail(f"morning/evening adhkar regression: missing {token}")
+
+for forbidden in (
+    'Text(settings.t("Täglich", "Günlük")).tag(2)',
+    'Text(settings.t("Speziell", "Özel")).tag(3)',
+    'id: "istighfar", deTitle: "Astaghfirullah"',
+):
+    if forbidden in guide:
+        fail(f"unsupported fixed-count adhkar category returned: {forbidden}")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
