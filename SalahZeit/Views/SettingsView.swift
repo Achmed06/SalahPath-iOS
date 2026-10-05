@@ -526,7 +526,7 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
-                        .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 9))
+                        .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 9))
 
                         if locationManager.usesManualLocation {
                             Button {

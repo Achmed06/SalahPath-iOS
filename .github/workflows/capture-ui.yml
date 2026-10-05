@@ -367,20 +367,44 @@ jobs:
             # appAppearance preference was not sufficient in CI and previously
             # produced identical "light" and "dark" screenshots.
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appAppearance system
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
+
             xcrun simctl ui "$SIM_UDID" appearance light
             capture home SalahPath-v3.62-B78-DE-Home.png
+            capture quran SalahPath-v3.62-B78-DE-Quran.png
+            capture dhikr SalahPath-v3.62-B78-DE-Dhikr.png
+            capture namaz SalahPath-v3.62-B78-DE-Namaz.png
+            capture times SalahPath-v3.62-B78-DE-PrayerTimes.png
             capture more SalahPath-v3.62-B78-DE-More.png
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
             capture settings SalahPath-v3.62-B78-DE-Settings.png
+            capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+            capture namaz-step-10 SalahPath-v3.62-B78-DE-MalePrayerStep10.png
+            capture wudu SalahPath-v3.62-B78-DE-Wudu.png
+            capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
+
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
             xcrun simctl ui "$SIM_UDID" appearance dark
             capture home SalahPath-v3.62-B78-DE-Dark-Home.png
+            capture quran SalahPath-v3.62-B78-DE-Dark-Quran.png
+            capture dhikr SalahPath-v3.62-B78-DE-Dark-Dhikr.png
+            capture namaz SalahPath-v3.62-B78-DE-Dark-Namaz.png
+            capture times SalahPath-v3.62-B78-DE-Dark-PrayerTimes.png
             capture more SalahPath-v3.62-B78-DE-Dark-More.png
             capture qibla SalahPath-v3.62-B78-DE-Dark-Qibla.png
             capture settings SalahPath-v3.62-B78-DE-Dark-Settings.png
+            capture namaz-howto SalahPath-v3.62-B78-DE-Dark-PrayerHowTo.png
+            capture namaz-step-10 SalahPath-v3.62-B78-DE-Dark-MalePrayerStep10.png
+            capture wudu SalahPath-v3.62-B78-DE-Dark-Wudu.png
+            capture wudu-head SalahPath-v3.62-B78-DE-Dark-WuduHead.png
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
+            capture namaz-howto SalahPath-v3.62-B78-DE-Dark-FemalePrayerHowTo.png
 
             # A false dark-mode capture is worse than no dark-mode capture:
             # fail if the screenshots are byte-identical to their light pair.
-            for screen in Home More Qibla Settings; do
+            for screen in Home Quran Dhikr Namaz PrayerTimes More Qibla Settings PrayerHowTo MalePrayerStep10 Wudu WuduHead FemalePrayerHowTo; do
               LIGHT="ui-preview/SalahPath-v3.62-B78-DE-${screen}.png"
               DARK="ui-preview/SalahPath-v3.62-B78-DE-Dark-${screen}.png"
               if cmp -s "$LIGHT" "$DARK"; then
@@ -388,6 +412,7 @@ jobs:
                 exit 3
               fi
             done
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience male
             xcrun simctl ui "$SIM_UDID" appearance light
           elif [ "$CAPTURE_MODE" = "core" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german

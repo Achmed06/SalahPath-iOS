@@ -587,7 +587,7 @@ private struct OnboardingFlowView: View {
                     }
                     .buttonStyle(.plain)
                     .foregroundStyle(.white)
-                    .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 11))
+                    .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 11))
                     .disabled(manualLocation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || resolvingLocation)
                 }
 

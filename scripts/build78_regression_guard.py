@@ -278,6 +278,50 @@ for token in (
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
 
+# 5a) Prayer/Wudu step navigation must never strand the viewport outside newly rendered content.
+for token in (
+    'ScrollView {\n                VStack(spacing: 14) {\n                    Color.clear.frame(height: 1).id("prayer-step-top")',
+    'ScrollView {\n                VStack(spacing: 14) {\n                    Color.clear.frame(height: 1).id("wudu-step-top")',
+    'private func scrollPrayerGuide(_ proxy: ScrollViewProxy, to target: String)',
+    'private func scrollWuduGuide(_ proxy: ScrollViewProxy, to target: String)',
+    'transaction.disablesAnimations = true',
+):
+    if token not in guide:
+        fail(f"stable Prayer/Wudu navigation regression: missing {token}")
+
+for forbidden in (
+    'LazyVStack(spacing: 14) {\n                    Color.clear.frame(height: 1).id("prayer-step-top")',
+    'LazyVStack(spacing: 14) {\n                    Color.clear.frame(height: 1).id("wudu-step-top")',
+    'withAnimation(.easeInOut(duration: 0.2)) {\n                    proxy.scrollTo("prayer-step-content-top"',
+    'withAnimation(.easeInOut(duration: 0.2)) {\n                    proxy.scrollTo("wudu-step-content-top"',
+):
+    if forbidden in guide:
+        fail(f"blank step-navigation regression returned: {forbidden}")
+
+# White action labels must stay on the brand-stable dark surface in both appearances.
+for token in (
+    'index == safePrayerStepIndex ? SalahTheme.navigationTeal : SalahTheme.softTeal',
+    'index == safeCurrentStepIndex ? SalahTheme.navigationTeal : SalahTheme.softTeal',
+    '.tint(SalahTheme.navigationTeal)',
+):
+    if token not in guide:
+        fail(f"Prayer/Wudu appearance contrast regression: missing {token}")
+
+for name in (
+    "B78-DE-Dark-Home.png",
+    "B78-DE-Dark-Quran.png",
+    "B78-DE-Dark-Dhikr.png",
+    "B78-DE-Dark-Namaz.png",
+    "B78-DE-Dark-PrayerTimes.png",
+    "B78-DE-Dark-PrayerHowTo.png",
+    "B78-DE-Dark-MalePrayerStep10.png",
+    "B78-DE-Dark-FemalePrayerHowTo.png",
+    "B78-DE-Dark-Wudu.png",
+    "B78-DE-Dark-WuduHead.png",
+):
+    if name not in capture:
+        fail(f"light/dark visual QA coverage missing: {name}")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
