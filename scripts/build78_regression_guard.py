@@ -478,6 +478,26 @@ if 'case .sunrise: return "Güneş"' not in home:
 if 'case .sunrise: return "Sabah"' in home:
     fail("Turkish sunrise/prayer-name confusion returned")
 
+# 5a.3b) Important missing-learning modules found by the religious audit.
+for token in (
+    'private struct PrayerRestrictedTimesView: View',
+    'Drei strenge Kerâhat-Zeiten',
+    'Üç temel kerâhat vakti',
+    'Vom Sonnenaufgang bis die Sonne deutlich gestiegen ist.',
+    'letzten 10 Minuten vor Eintritt der Dhuhr-Zeit',
+    'Nach dem verrichteten Asr-Gebet bis Sonnenuntergang werden keine Nafila-Gebete begonnen.',
+    'private struct WomensPurityGuideView: View',
+    'Hayd & Nifas',
+    'Istihāda / Blutung außerhalb von Hayd und Nifas',
+    'Die in dieser Zeit ausgefallenen Gebete werden später nicht nachgeholt.',
+    'Ramazan\'da tutulmayan oruçlar ise hâl sona erdikten sonra kaza edilir.',
+    'klassische hanafitische Grundregel nennt für Hayd mindestens 3 und höchstens 10 Tage',
+    'klassische Obergrenze beträgt 40 Tage',
+    'Deshalb klassifiziert SalahPath deine Blutung nicht automatisch.',
+):
+    if token not in guide:
+        fail(f"religious learning-module regression: missing {token}")
+
 # 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
 for token in (
     'private struct PrayerSpecialSituationsView: View',
