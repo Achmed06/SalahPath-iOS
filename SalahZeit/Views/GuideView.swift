@@ -5264,7 +5264,7 @@ struct ThirtyTwoFardView: View {
                 deTitle: "6 Grundlagen des Glaubens",
                 trTitle: "İmanın 6 şartı",
                 deItems: ["Glaube an Allah", "Glaube an die Engel", "Glaube an die offenbarten Bücher", "Glaube an die Propheten", "Glaube an den Jüngsten Tag", "Glaube an Qadar und göttliche Bestimmung"],
-                trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Ahiret gününe iman", "Kader ve kazaya iman"]
+                trItems: ["Allah’a iman", "Meleklere iman", "Kitaplara iman", "Peygamberlere iman", "Âhiret gününe iman", "Kader ve kazaya iman"]
             ),
             .init(
                 deTitle: "5 Säulen des Islam",
@@ -6815,7 +6815,7 @@ struct ShortSurahLearningView: View {
                 .foregroundStyle(.secondary)
             }
 
-            Section(settings.t("Kurze Suren", "Kısa sureler")) {
+            Section(settings.t("Kurze Suren", "Kısa sûreler")) {
                 ForEach(surahs) { item in
                     HStack(spacing: 12) {
                         VStack(alignment: .leading, spacing: 3) {
@@ -9960,7 +9960,7 @@ struct QuranView: View {
                                             Text(settings.t("Weiterlesen", "Okumaya devam et"))
                                                 .font(.headline.bold())
                                                 .foregroundStyle(SalahTheme.deepTeal)
-                                            Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(lastRead.ayah)")
+                                            Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(lastRead.ayah)")
                                                 .font(.subheadline)
                                                 .foregroundStyle(SalahTheme.ink)
                                             Text(chapter.name)
@@ -10160,7 +10160,7 @@ struct QuranView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "magnifyingglass")
                                 .foregroundStyle(SalahTheme.teal)
-                            TextField(settings.t("Sura suchen", "Sure ara"), text: $search)
+                            TextField(settings.t("Sura suchen", "Sûre ara"), text: $search)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
                         }
@@ -10205,7 +10205,7 @@ struct QuranView: View {
                                         Text(surah.englishName)
                                             .font(.system(size: 13, weight: .bold))
                                             .foregroundStyle(SalahTheme.ink)
-                                        Text("\(surah.numberOfAyahs) \(settings.t("Verse", "ayet"))")
+                                        Text("\(surah.numberOfAyahs) \(settings.t("Verse", "âyet"))")
                                             .font(.caption2)
                                             .foregroundStyle(SalahTheme.mutedInk)
                                     }
@@ -11136,7 +11136,7 @@ struct QuranPageReaderView: View {
     private func playFromAyah(_ ayah: QuranPageAyah, urls: [URL], reciter: QuranReciter) {
         let startIndex = ayah.numberInSurah - 1
         guard urls.indices.contains(startIndex) else {
-            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu âyet için ses mevcut değil.")
             return
         }
 
@@ -11393,7 +11393,7 @@ struct QuranDirectoryView: View {
                         Text(chapter.englishName)
                             .font(.headline)
                             .foregroundStyle(SalahTheme.ink)
-                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "ayet")) · \(localizedRevelationType(chapter.revelationType))")
+                        Text("\(chapter.numberOfAyahs) \(settings.t("Verse", "âyet")) · \(localizedRevelationType(chapter.revelationType))")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -11514,7 +11514,7 @@ struct QuranDirectoryView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(settings.t("Juz \(juz.number)", "\(juz.number). Cüz"))
                                 .font(.headline)
-                            Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(juz.ayah)")
+                            Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(juz.ayah)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -11602,7 +11602,7 @@ private struct QuranJuzLandingView: View {
 
                     Text(settings.t(
                         "Tippe auf einen Juz. SalahPath öffnet direkt die Ayah, an der dieser Juz beginnt. Von dort kannst du normal weiterlesen, hören und Lesezeichen setzen.",
-                        "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı ayeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
+                        "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı âyeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -11629,7 +11629,7 @@ private struct QuranJuzLandingView: View {
                                         .font(.headline)
                                         .foregroundStyle(SalahTheme.ink)
 
-                                    Text("\(chapter.englishName) · \(settings.t("Vers", "Ayet")) \(juz.ayah)")
+                                    Text("\(chapter.englishName) · \(settings.t("Vers", "Âyet")) \(juz.ayah)")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -11644,7 +11644,7 @@ private struct QuranJuzLandingView: View {
                         }
                         .accessibilityLabel(settings.t(
                             "Juz \(juz.number), beginnt bei \(chapter.englishName), Vers \(juz.ayah)",
-                            "\(juz.number). Cüz, \(chapter.englishName) suresi \(juz.ayah). ayette başlar"
+                            "\(juz.number). Cüz, \(chapter.englishName) sûresi \(juz.ayah). âyette başlar"
                         ))
                     }
                 }
@@ -11653,7 +11653,7 @@ private struct QuranJuzLandingView: View {
             Section {
                 Text(settings.t(
                     "Die Juz-Einteilung ist eine Leseeinteilung des Quran in 30 Teile. Sie verändert weder Suren- noch Ayah-Nummern.",
-                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sure ve ayet numaralarını değiştirmez."
+                    "Cüz sistemi Kur'an'ı okumayı kolaylaştırmak için 30 bölüme ayırır. Sûre ve âyet numaralarını değiştirmez."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -11724,7 +11724,7 @@ private struct QuranFavoritesView: View {
                         } label: {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(surah.englishName).font(.headline)
-                                Text("\(settings.t("Ayah", "Ayet")) \(favorite.ayah)")
+                                Text("\(settings.t("Ayah", "Âyet")) \(favorite.ayah)")
                                     .font(.caption).foregroundStyle(.secondary)
                             }
                         }
@@ -11816,7 +11816,7 @@ private struct QuranSurahView: View {
                     Text(surah.englishName)
                         .font(.system(size: 17, weight: .bold, design: .serif))
                         .foregroundStyle(SalahTheme.ink)
-                    Text("\(surah.numberOfAyahs) \(settings.t("Verse", "ayet"))")
+                    Text("\(surah.numberOfAyahs) \(settings.t("Verse", "âyet"))")
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(SalahTheme.mutedInk)
                 }
@@ -12004,7 +12004,7 @@ private struct QuranSurahView: View {
                         .foregroundStyle(.secondary)
                         .accessibilityLabel(settings.t(
                             "Audio für Vers \(ar.numberInSurah) nicht verfügbar",
-                            "\(ar.numberInSurah). ayet için ses mevcut değil"
+                            "\(ar.numberInSurah). âyet için ses mevcut değil"
                         ))
                 }
 
@@ -12195,7 +12195,7 @@ private struct QuranSurahView: View {
 
     private func playFromAyah(index: Int, ayahNumber: Int) {
         guard resolvedAudioURLs.indices.contains(index) else {
-            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu ayet için ses mevcut değil.")
+            audio.lastError = settings.t("Audio für diesen Vers ist nicht verfügbar.", "Bu âyet için ses mevcut değil.")
             return
         }
 
