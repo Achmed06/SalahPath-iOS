@@ -465,6 +465,7 @@ for token in (
     'gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch',
     'Gebetsarten & Anleitungen',
     'static let rabbanaGhfirli = PrayerRecitation(',
+    'Hisn al-Muslim 78 · überlieferte Varianten bei Tirmizî 3391 / İbn Mâce 3868',
     'deNote: "Quran 14:41", trNote: "Kur\'an 14:41"',
     "nestağfiruke ve nestehdîk",
     "leke nüsallî ve nescüdü",
@@ -486,6 +487,7 @@ for forbidden in (
     'sünnet olarak değerlendirilir. Boğazın ön tarafını',
     'nestağfirüke ve nestehdîk',
     'leke nusallî ve nescüd.',
+    'Diyanet Riyâzü’s-Sâlihîn 1458 · Ebû Dâvûd 5068 · Tirmizî 3391',
 ):
     if forbidden in guide:
         fail(f"ambiguous Islamic guidance returned: {forbidden}")
