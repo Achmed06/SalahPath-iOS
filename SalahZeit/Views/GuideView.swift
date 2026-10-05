@@ -743,8 +743,8 @@ struct PrayerHowToView: View {
                 trTitle: "Kıyam – 1. rekât",
                 deAction: "Stehe ruhig mit gebundenen Händen und schaue zum Ort der Niederwerfung. In der ersten Rakʿah liest du Sübhaneke, danach Eʿūḏu, Basmala, al-Fātiha, Âmîn und anschließend eine zusätzliche Sura oder passende Verse.",
                 trAction: "Eller bağlı şekilde sakin dur ve secde edeceğin yere bak. İlk rekâtta Sübhâneke, ardından Eûzü, Besmele, Fâtiha, Âmin ve sonra zamm-ı sûre veya uygun ayetler okunur.",
-                deHanafi: (settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.") + " Hinter einem Imam werden Fātiha und Zusatzsura nicht selbst rezitiert.",
-                trHanafi: (settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.") + " İmama uyarken Fâtiha ve zamm-ı sûre ayrıca okunmaz.",
+                deHanafi: (settings.prayerAudience == .male ? "Mann: rechte Hand über die linke unterhalb des Nabels; rechte Hand umfasst das linke Handgelenk." : "Frau: rechte Hand über die linke auf der Brust; Handgelenk nicht wie beim Mann umfassen.") + " Hinter einem Imam werden Fātiha und Zusatzsura nicht selbst rezitiert; nach der Fātiha des Imams wird Âmîn leise gesprochen.",
+                trHanafi: (settings.prayerAudience == .male ? "Erkek: sağ el sol elin üzerinde, göbek altında; sağ el sol bileği kavrar." : "Kadın: sağ el sol elin üzerinde göğüs üstünde; bilek erkeklerdeki gibi kavranmaz.") + " İmama uyarken Fâtiha ve zamm-ı sûre ayrıca okunmaz; imam Fâtiha'yı bitirince Âmin sessizce söylenir.",
                 recitations: [PrayerText.subhanaka, PrayerText.audhu, PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
             ),
             .init(
@@ -827,8 +827,8 @@ struct PrayerHowToView: View {
                 trTitle: "Kıyam – 2. rekât",
                 deAction: "In der zweiten Rakʿah liest du nicht noch einmal Sübhaneke und Eʿūḏu. Beginne mit der Basmala, lies al-Fātiha, sage Âmîn und lies anschließend eine zusätzliche Sura oder passende Verse.",
                 trAction: "İkinci rekâtta Sübhâneke ve Eûzü yeniden okunmaz. Besmele ile başla, Fâtiha'yı oku, Âmin de ve ardından zamm-ı sûre veya uygun ayetler oku.",
-                deHanafi: nil,
-                trHanafi: nil,
+                deHanafi: "Hanafi: Hinter einem Imam rezitierst du Fātiha und Zusatzsura nicht selbst; nach der Fātiha des Imams sagst du Âmîn leise.",
+                trHanafi: "Hanefî: İmama uyarken Fâtiha ve zamm-ı sûreyi kendin okumazsın; imam Fâtiha'yı bitirince Âmin'i sessizce söylersin.",
                 recitations: [PrayerText.basmala, PrayerText.fatiha, PrayerText.ikhlas]
             ),
             .init(
