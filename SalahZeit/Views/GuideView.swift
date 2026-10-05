@@ -613,10 +613,10 @@ private enum PrayerText {
     static let fatiha = PrayerRecitation(
         deLabel: "Al-Fātiha", trLabel: "Fâtiha Sûresi",
         arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ\nالرَّحْمٰنِ الرَّحِيمِ\nمَالِكِ يَوْمِ الدِّينِ\nإِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ\nاهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ\nصِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
-        transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn. Âmîn.",
-        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert; nach ihrem Ende sagt man Âmîn.",
-        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur; sonunda Âmin denir.",
-        deNote: "Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
+        deMeaning: "Die eröffnende Sura. Beim Gebet allein oder als Imam wird al-Fātiha in jeder Rakʿah rezitiert.",
+        trMeaning: "Açılış sûresi. Yalnız kılarken veya imam olarak her rekâtta Fâtiha okunur.",
+        deNote: "Nach al-Fātiha sagt man Âmîn; Âmîn gehört nicht zur Sura und ist kein Quranvers. Hanafi: Âmîn wird leise gesprochen. Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Fâtiha'dan sonra Âmin denir; Âmin sûrenin bir parçası ve Kur'an ayeti değildir. Hanefî: Âmin sessiz söylenir. İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -1208,8 +1208,8 @@ private struct PrayerTutorialStepCard: View {
     private var maleTipText: String {
         if step.number == "16" {
             return settings.t(
-                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt.",
+                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı „lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir."
             )
         }
         if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
@@ -1303,8 +1303,8 @@ private struct PrayerTutorialStepCard: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger erhoben und bei „illallāh“ wieder gesenkt.",
-                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı kaldırılır; „illallah“ derken indirilir."
+                                "Hanefî: Im Schahada-Abschnitt des Ettehiyyâtü wird der rechte Zeigefinger bei „lā ilāha“ gehoben und bei „illallāh“ wieder gesenkt.",
+                                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadet bölümünde sağ işaret parmağı „lâ ilâhe“ derken kaldırılır, „illallah“ derken indirilir."
                             ))
                             .font(.caption)
                             .foregroundStyle(SalahTheme.mutedInk)
@@ -1848,7 +1848,7 @@ struct WuduGuideView: View {
             6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
             7: "Masah bedeutet wischen, nicht den Kopf wie das Gesicht waschen. Die Hände sind feucht.",
             8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
-            9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
+            9: "Hanefî/Diyanet: Wische die Ense/Nackenpartie mit feuchten Fingerrücken; dies wird als Sunnah eingeordnet. Die Vorderseite des Halses bzw. Kehle nicht wischen. Andere Rechtsschulen bewerten das Nackenwischen teilweise anders.",
             10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
             11: "Wasche danach den linken Fuß genauso vollständig."
         ]
@@ -1861,7 +1861,7 @@ struct WuduGuideView: View {
             6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
             7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir.",
             8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
-            9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
+            9: "Hanefî/Diyanet: Enseyi ıslak parmakların dış kısmıyla mesh etmek sünnet olarak değerlendirilir. Boğazın ön tarafını mesh etme. Diğer mezheplerde ense meshi farklı değerlendirilebilir.",
             10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
             11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
         ]
@@ -4278,7 +4278,7 @@ struct ThirtyTwoFardView: View {
                 deTitle: "5 Säulen / Bedingungen des Islam",
                 trTitle: "İslam’ın 5 şartı",
                 deItems: ["Schahada sprechen", "Gebet verrichten", "Im Ramadan fasten", "Zakat geben", "Hajj verrichten, wenn die Voraussetzungen erfüllt sind"],
-                trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Hacca gitmek"]
+                trItems: ["Kelime-i şehadet getirmek", "Namaz kılmak", "Oruç tutmak", "Zekât vermek", "Gücü yeten için hacca gitmek"]
             ),
             .init(
                 deTitle: "4 Farz des Wudu",
@@ -4321,8 +4321,8 @@ struct ThirtyTwoFardView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Diese Ansicht ergänzt die ausführlichen SalahPath-Lernbereiche. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
-                        "Bu ekran ayrıntılı SalahPath derslerini tamamlar. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
+                        "„32 Farz“ ist eine traditionelle Lernformel, mit der zentrale Glaubens- und Gottesdienstpflichten übersichtlich zusammengefasst werden; sie ist kein eigener zusätzlicher Glaubensgrundsatz. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
+                        "„32 Farz“, temel iman ve ibadet hükümlerini öğretmeyi kolaylaştırmak için kullanılan geleneksel bir öğrenme formülüdür; başlı başına ayrı bir iman şartı değildir. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -5577,7 +5577,7 @@ struct PrayerDuaAudioView: View {
             recitations: [PrayerText.rabbana]
         ),
         .init(
-            deTitle: "Rabbighfirli", trTitle: "Rabbenağfirli / Rabbighfir lî",
+            deTitle: "Rabbighfir lī", trTitle: "Rabbiğfir lî",
             deDetail: "Kurze Bitte um Vergebung; SalahPath zeigt sie auch zwischen den beiden Secden.",
             trDetail: "Kısa bağışlanma duası; SalahPath iki secde arasındaki oturuşta da gösterir.",
             recitations: [PrayerText.rabbighfirli]
@@ -7208,8 +7208,8 @@ struct HijriCalendarView: View {
                 trTitle: "Arefe günü · 9 Zilhicce",
                 deMeaning: "Der 9. Dhu l-Hijjah ist der Tag von ʿArafah und ein zentraler Tag des Hajj.",
                 trMeaning: "9 Zilhicce Arefe günüdür ve haccın en önemli günlerinden biridir.",
-                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Dua, Dhikr und gute Taten vermehren."],
-                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Dua, zikir ve hayırlı amelleri artır."],
+                deRecommended: ["Für Nicht-Pilger ist freiwilliges Fasten an ʿArafah besonders empfohlen.", "Hanefî/Diyanet: Ab dem Fajr-Gebet dieses Tages beginnen die verpflichtenden Tashriq-Takbire nach den Farz-Gebeten; sie laufen bis einschließlich Asr am 13. Dhu l-Hijjah.", "Dua, Dhikr und gute Taten vermehren."],
+                trRecommended: ["Hacda olmayanlar için Arefe orucu özellikle tavsiye edilir.", "Hanefî/Diyanet: Bu gün sabah namazından itibaren farz namazların ardından vacip teşrik tekbirleri başlar; 13 Zilhicce ikindi namazı dâhil devam eder.", "Dua, zikir ve hayırlı amelleri artır."],
                 deCaution: "Pilger auf ʿArafah werden nicht pauschal wie Nicht-Pilger zum Fasten angehalten; Kraft für die Hajj-Handlungen hat Vorrang.",
                 trCaution: "Arafat'taki hacılar, hac dışındaki kişiler gibi genel olarak oruca teşvik edilmez; hac ibadetlerine güç ayırmak önceliklidir."
             )
@@ -7222,8 +7222,8 @@ struct HijriCalendarView: View {
                 trTitle: "Kurban Bayramı · 10 Zilhicce",
                 deMeaning: "Eid al-Adha ist das Opferfest und fällt in die Hajj-Zeit.",
                 trMeaning: "Kurban Bayramı hac mevsimindeki büyük bayramdır.",
-                deRecommended: ["Eid-Gebet beachten.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
-                trRecommended: ["Bayram namazını değerlendir.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
+                deRecommended: ["Eid-Gebet beachten.", "Hanefî/Diyanet: Die Tashriq-Takbire nach jedem Farz-Gebet weiter sprechen.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
+                trRecommended: ["Bayram namazını değerlendir.", "Hanefî/Diyanet: Her farz namazın ardından teşrik tekbirlerini getirmeye devam et.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
                 deCaution: "Am Eid-Tag wird nicht gefastet.",
                 trCaution: "Bayram günü oruç tutulmaz."
             )
@@ -7236,8 +7236,8 @@ struct HijriCalendarView: View {
                 trTitle: "Teşrik günleri · \(d) Zilhicce",
                 deMeaning: "Die Tage nach dem ersten Opferfesttag heißen Tage des Tashriq.",
                 trMeaning: "Kurban Bayramı'nın ilk gününden sonraki bu günlere teşrik günleri denir.",
-                deRecommended: ["Nach den Farz-Gebeten die hanafitischen Tashriq-Takbire entsprechend ihrer Zeit beachten.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
-                trRecommended: ["Hanefî uygulamada farz namazlardan sonra teşrik tekbirlerini zamanına göre getir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
+                deRecommended: ["Hanefî/Diyanet: Nach jedem Farz-Gebet die Tashriq-Takbire sprechen; die Pflichtzeit endet nach dem Asr-Gebet am 13. Dhu l-Hijjah (insgesamt 23 Farz-Gebete ab Fajr am 9. Dhu l-Hijjah).", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
+                trRecommended: ["Hanefî/Diyanet: Her farz namazın ardından teşrik tekbirini getir; vacip vakit 9 Zilhicce sabah namazından başlayıp 13 Zilhicce ikindi namazından sonra sona erer (toplam 23 farz namaz).", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
                 deCaution: "Diese Tage sind keine gewöhnlichen freiwilligen Fastentage.",
                 trCaution: "Bu günler normal nafile oruç günleri değildir."
             )
