@@ -1002,8 +1002,8 @@ struct PrayerHowToView: View {
                                     .font(.title3.bold())
                             }
                             Text(settings.t(
-                                "Prüfe: Die Gebetszeit hat begonnen, du hast Wudu, dein Körper, deine Kleidung und dein Gebetsplatz sind sauber, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla.",
-                                "Kontrol et: Namaz vakti girmiş olsun, abdestli ol, bedenin, elbisen ve namaz yerin temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön."
+                                "Prüfe: Die Gebetszeit hat begonnen, du bist rituell rein (Wudu; wenn erforderlich auch Ghusl), dein Körper, deine Kleidung und dein Gebetsplatz sind von relevanter Unreinheit gereinigt, die vorgeschriebenen Körperstellen sind bedeckt und du stehst zur Qibla.",
+                                "Kontrol et: Namaz vakti girmiş olsun, hükmen temiz ol (abdestli; gerekiyorsa ayrıca gusüllü), bedenin, elbisen ve namaz yerin namaza engel necasetten temiz olsun, örtülmesi gereken yerler örtülü olsun ve kıbleye dön."
                             ))
                             .font(.subheadline)
                             .fixedSize(horizontal: false, vertical: true)
