@@ -1618,6 +1618,238 @@ private struct PrayerMistakesView: View {
     }
 }
 
+private struct PrayerSpecialSituationsView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Gebet in besonderen Situationen", "Özel durumlarda namaz"), systemImage: "figure.roll")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Die folgenden Regeln sind ausdrücklich als hanafitische/Diyanet-Grunddarstellung formuliert. Bei Reise, Krankheit und eingeschränkter Beweglichkeit gibt es Detailunterschiede zwischen den Rechtsschulen.",
+                        "Aşağıdaki hükümler açıkça Hanefî/Diyanet temel anlatımıdır. Seferîlik, hastalık ve hareket kısıtlılığında mezhepler arasında ayrıntı farkları vardır."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Reise · Seferîlik & Qasr", "Yolculuk · Seferîlik & Kasr"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    specialPrayerPoint(settings.t(
+                        "Hanafi: Wer vorübergehend zu einem mindestens ungefähr 90 km entfernten Ziel reist und dort weniger als 15 Tage Aufenthalt beabsichtigt, gilt grundsätzlich als seferî. Bei 15 Tagen oder mehr beabsichtigtem Aufenthalt gilt man dort als mukīm.",
+                        "Hanefî: Geçici olarak yaklaşık en az 90 km uzaktaki bir yere gidip orada 15 günden az kalmaya niyet eden kişi kural olarak seferîdir. 15 gün veya daha fazla kalmaya niyet edilirse orada mukim sayılır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Als seferî werden die vier-rakʿātigen Farḍ-Gebete Dhuhr, Asr und Isha auf zwei Rakʿāt gekürzt. Fajr bleibt zwei und Maghrib drei Rakʿāt.",
+                        "Seferî iken dört rekâtlı öğle, ikindi ve yatsı farzları iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Betet ein Reisender hinter einem ortsansässigen Imam, folgt er dem Imam und verrichtet das Gebet vollständig.",
+                        "Seferî kişi mukim bir imama uyarsa imama uyar ve namazı tam kılar."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Bei tatsächlichem Bedarf oder Zwang kann Diyanet auf Reisen das Zusammenlegen von Dhuhr+Asr bzw. Maghrib+Isha zulassen. Das ist eine Erleichterung für die konkrete Notwendigkeit, nicht eine zusätzliche tägliche Gebetsart.",
+                        "Gerçek ihtiyaç veya zorunluluk hâlinde Diyanet yolculukta öğle+ikindi veya akşam+yatsı namazlarının cem edilmesine ruhsat vermektedir. Bu, somut ihtiyaç için bir kolaylıktır; yeni bir günlük namaz şekli değildir."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("Krankheit & eingeschränkte Bewegung", "Hastalık & hareket kısıtlılığı"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    specialPrayerPoint(settings.t(
+                        "Wer stehen kann, betet grundsätzlich stehend. Wer dazu nicht fähig ist, darf sitzend beten.",
+                        "Ayakta durabilen kişi kural olarak ayakta namaz kılar. Buna gücü yetmeyen kişi oturarak kılabilir."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Kann die Person keinen normalen Rukūʿ oder Sujūd ausführen, kann sie mit dem Kopf Īmāʾ machen: für Sujūd wird der Kopf stärker geneigt als für Rukūʿ.",
+                        "Normal rükû veya secde yapılamıyorsa baş ile îmâ yapılabilir: secde için baş, rükûdan daha fazla eğilir."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Diyanet/Hanafi: Wer mit dem Kopf keine Īmāʾ-Bewegung ausführen kann, betet nicht nur mit Augen-, Augenbrauen- oder bloßen inneren Zeichen. Hier besteht ein Rechtsschul-Unterschied, insbesondere zur schafiitischen Auffassung.",
+                        "Diyanet/Hanefî: Başıyla îmâ edemeyen kişi yalnız göz, kaş veya kalp işaretiyle namaz kılmaz. Bu konuda özellikle Şafiî görüşünden farklılık vardır."
+                    ))
+
+                    specialPrayerPoint(settings.t(
+                        "Eine leichte Beschwerde, die die normale Gebetsform tatsächlich nicht verhindert, ist nicht automatisch ein Grund, auf die erleichterte Form auszuweichen.",
+                        "Namazı normal şekliyle kılmaya gerçekten engel olmayan hafif bir rahatsızlık, kolaylaştırılmış şekle geçmek için tek başına yeterli değildir."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Diyanet Din İşleri Yüksek Kurulu · Seferilik/Kasr ve Cem; Umreye gidenlerin seferîliği; Hasta Namazı kararları (2026). Einzelfälle können zusätzliche Details haben.",
+                        "Diyanet Din İşleri Yüksek Kurulu · Seferilik/Kasr ve Cem; umre yolcularının seferîliği; Hasta Namazı kararları (2026). Bireysel durumlarda ek ayrıntılar olabilir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Reise & Krankheit", "Seferîlik & Hastalık"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func specialPrayerPoint(_ text: String) -> some View {
+        Label(text, systemImage: "checkmark.circle")
+            .font(.subheadline)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+private struct TilawahSajdahGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private let references: [(String, String)] = [
+        ("Al-Aʿrāf 7:206", "Aʿrâf 7:206"),
+        ("Ar-Raʿd 13:15", "Raʿd 13:15"),
+        ("An-Naḥl 16:49", "Nahl 16:49"),
+        ("Al-Isrāʾ 17:107", "İsrâ 17:107"),
+        ("Maryam 19:58", "Meryem 19:58"),
+        ("Al-Ḥajj 22:18", "Hac 22:18"),
+        ("Ṣād 38:24", "Sâd 38:24"),
+        ("Al-Furqān 25:60", "Furkân 25:60"),
+        ("An-Naml 27:25", "Neml 27:25"),
+        ("As-Sajdah 32:15", "Secde 32:15"),
+        ("Fuṣṣilat 41:37", "Fussilet 41:37"),
+        ("An-Najm 53:62", "Necm 53:62"),
+        ("Al-Inshiqāq 84:21", "İnşikâk 84:21"),
+        ("Al-ʿAlaq 96:19", "Alak 96:19")
+    ]
+
+    var body: some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact")
+                        .font(.title3.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Hanafi/Diyanet: Wer einen der 14 Secde-Ayat auf Arabisch rezitiert oder bewusst hört, für den ist die Tilāwa-Secdesi wājib. Diyanet ordnet sie in den anderen drei sunnitischen Rechtsschulen als Sunnah ein.",
+                        "Hanefî/Diyanet: Kur'an'daki 14 secde âyetinden birini Arapça okuyan veya bilinçli şekilde işiten kişiye tilâvet secdesi vaciptir. Diyanet, diğer üç Sünnî mezhepte bunu sünnet olarak açıklar."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(settings.t("So wird sie außerhalb des Gebets gemacht", "Namaz dışında nasıl yapılır?"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    tilawahStep("1", settings.t(
+                        "Wudu haben, zur Qibla stehen bzw. sich ausrichten, ʿAwrah bedecken und die Absicht für Tilāwa-Secdesi fassen.",
+                        "Abdestli ol, kıbleye yönel, avret yerlerini ört ve tilâvet secdesine niyet et."
+                    ))
+                    tilawahStep("2", settings.t(
+                        "Ohne die Hände zu heben „Allāhu akbar“ sagen und einmal in Sujūd gehen.",
+                        "Elleri kaldırmadan „Allāhu ekber“ diyerek bir kez secdeye git."
+                    ))
+                    tilawahStep("3", settings.t(
+                        "In der Secde dreimal „Sübhâne rabbiyel-aʿlâ“ sagen.",
+                        "Secdede üç kez „Sübhâne rabbiyel-aʿlâ“ de."
+                    ))
+                    tilawahStep("4", settings.t(
+                        "Mit „Allāhu akbar“ wieder aufstehen. Danach gibt es weder Tashahhud noch Salām.",
+                        "„Allāhu ekber“ diyerek kalk. Sonrasında tahiyyat oturuşu veya selâm yoktur."
+                    ))
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(settings.t("Audio, App & Internet", "Ses, uygulama & internet"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Diyanet erklärt ausdrücklich: Wird ein Secde-Ayat über Radio, Fernsehen, Internet oder vergleichbare technische Wiedergabe gehört, gilt in der hanafitischen Darstellung ebenfalls die Tilāwa-Secdesi. SalahPath markiert deshalb diese Ayat im Quran-Reader.",
+                        "Diyanet açıkça belirtir: Secde âyeti radyo, televizyon, internet veya benzeri teknik bir yayından işitilirse Hanefî anlatımda yine tilâvet secdesi gerekir. Bu nedenle SalahPath bu âyetleri Kur'an okuyucusunda işaretler."
+                    ))
+                    .font(.subheadline)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 7) {
+                    Text(settings.t("Die 14 Secde-Ayat", "14 secde âyeti"))
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+
+                    ForEach(Array(references.enumerated()), id: .offset) { index, item in
+                        HStack(spacing: 9) {
+                            Text("\(index + 1)")
+                                .font(.caption.bold().monospacedDigit())
+                                .frame(width: 27, height: 27)
+                                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+                            Text(settings.language == .german ? item.0 : item.1)
+                                .font(.subheadline)
+                            Spacer()
+                        }
+                    }
+                }
+                .cardStyle()
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama"))
+                        .font(.headline)
+                    Text(settings.t(
+                        "Diyanet Kur'an Sözlüğü · Tilâvet Secdesi; Din İşleri Yüksek Kurulu · Namazın dışında veya namazda tilavet secdesi nasıl yapılır?",
+                        "Diyanet Kur'an Sözlüğü · Tilâvet Secdesi; Din İşleri Yüksek Kurulu · Namazın dışında veya namazda tilavet secdesi nasıl yapılır?"
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                }
+                .cardStyle(material: true)
+            }
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func tilawahStep(_ number: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Text(number)
+                .font(.caption.bold())
+                .foregroundStyle(SalahTheme.deepTeal)
+                .frame(width: 26, height: 26)
+                .background(SalahTheme.gold.opacity(0.22), in: Circle())
+            Text(text)
+                .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private func isTilawahSajdahAyah(surah: Int, ayah: Int) -> Bool {
+    let references: Set<String> = [
+        "7:206", "13:15", "16:49", "17:107", "19:58", "22:18", "38:24",
+        "25:60", "27:25", "32:15", "41:37", "53:62", "84:21", "96:19"
+    ]
+    return references.contains("\(surah):\(ayah)")
+}
+
 // MARK: - Wudu
 
 private struct WuduTutorialStep: Identifiable {
@@ -4303,6 +4535,8 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
                 NavigationLink { PrayerMistakesView() } label: { Label(settings.t("Gebetsfehler & Sehiv-Secdesi", "Namaz hataları & Sehiv secdesi"), systemImage: "exclamationmark.arrow.triangle.2.circlepath") }
+                NavigationLink { PrayerSpecialSituationsView() } label: { Label(settings.t("Reise- & Kranken-Gebet", "Seferîlik & Hasta Namazı"), systemImage: "figure.roll") }
+                NavigationLink { TilawahSajdahGuideView() } label: { Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
             }
 
@@ -10104,6 +10338,23 @@ struct QuranPageReaderView: View {
                                             .foregroundStyle(SalahTheme.deepTeal)
                                             .frame(width: 30, height: 30)
                                             .background(SalahTheme.gold.opacity(0.20), in: Circle())
+
+                                        if isTilawahSajdahAyah(surah: ayah.surah.number, ayah: ayah.numberInSurah) {
+                                            NavigationLink {
+                                                TilawahSajdahGuideView()
+                                            } label: {
+                                                Label(
+                                                    settings.t("Secde-Ayat", "Secde âyeti"),
+                                                    systemImage: "arrow.down.to.line.compact"
+                                                )
+                                                .font(.caption2.bold())
+                                                .foregroundStyle(SalahTheme.deepTeal)
+                                                .padding(.horizontal, 7)
+                                                .padding(.vertical, 5)
+                                                .background(SalahTheme.gold.opacity(0.18), in: Capsule())
+                                            }
+                                            .buttonStyle(.plain)
+                                        }
 
                                         Spacer()
 
