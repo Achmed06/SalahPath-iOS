@@ -240,10 +240,10 @@ if '.replacingOccurrences(of: "male_", with: "")' in guide:
 for token in (
     'Image(key)',
     'Image(assetName)',
-    'number: 7, image: "wudu_rightarm", deTitle: "Rechter Arm"',
-    'number: 8, image: "wudu_leftarm", deTitle: "Linker Arm"',
-    'number: 12, image: "wudu_rightfoot", deTitle: "Rechter Fuß"',
-    'number: 13, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
+    'number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm"',
+    'number: 6, image: "wudu_leftarm", deTitle: "Linker Arm"',
+    'number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß"',
+    'number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
     'let isRight = side == .right',
@@ -265,8 +265,8 @@ for obsolete in (
 if 'arrow: isRight ? "arrow.right" : "arrow.left"' in guide or 'Image(systemName: arrow)' in guide:
     fail("Salam direction arrow regression: approved female steps 17/18 must not show decorative arrows")
 
-if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' not in guide:
-    fail("Wudu left-foot mirror regression")
+if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' in guide:
+    fail("Wudu left/right foot assets must not be mirrored in code")
 
 for token in (
     'SalahFeatureIcon(kind: kind)',
