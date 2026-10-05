@@ -671,8 +671,8 @@ private enum PrayerText {
         deLabel: "Allahümme Bârik", trLabel: "Allâhümme Bârik",
         arabic: "اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
         transliteration: "Allâhümme bârik alâ Muhammedin ve alâ âli Muhammed. Kemâ bârekte alâ İbrâhîme ve alâ âli İbrâhîm. İnneke hamîdün mecîd.",
-        deMeaning: "O Allah, schenke Muhammad und der Familie Muhammads Segen, wie Du Ibrahim und der Familie Ibrahims Segen geschenkt hast.",
-        trMeaning: "Allah'ım, İbrahim'e ve ailesine bereket verdiğin gibi Muhammed'e ve ailesine de bereket ver.", deNote: nil, trNote: nil)
+        deMeaning: "O Allah, schenke Muhammad und der Familie Muhammads Segen, wie Du Ibrahim und der Familie Ibrahims Segen geschenkt hast. Du bist wahrlich der Lobenswerte, der Ruhmreiche.",
+        trMeaning: "Allah'ım, İbrahim'e ve ailesine bereket verdiğin gibi Muhammed'e ve ailesine de bereket ver. Şüphesiz övülmeye lâyık yalnız Sensin, şan ve şeref sahibi de Sensin.", deNote: nil, trNote: nil)
 
     static let rabbana = PrayerRecitation(
         deLabel: "Rabbenâ Âtinâ", trLabel: "Rabbenâ Âtinâ",
@@ -1890,8 +1890,8 @@ struct GhuslGuideView: View {
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Ghusl ist die rituelle Ganzkörperwaschung. Sie wird nötig, wenn der Zustand großer ritueller Unreinheit beendet werden muss, zum Beispiel nach Geschlechtsverkehr, nach Samenerguss oder nach einem feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird, sowie nach Ende von Menstruation oder Wochenbett.",
-                        "Gusül, hükmî büyük kirlilik hâlini gidermek için yapılan boy abdestidir. Cinsel ilişki, meni gelmesi veya ihtilamdan sonra uyandığında ıslaklık görülmesi ile hayız ya da nifasın sona ermesi gibi durumlarda gerekir."
+                        "Ghusl ist die rituelle Ganzkörperwaschung. Sie wird nötig, wenn der Zustand großer ritueller Unreinheit beendet werden muss, zum Beispiel nach Geschlechtsverkehr, nach Samenerguss bzw. Orgasmus oder nach einem feuchten Traum, wenn beim Aufwachen entsprechende Flüssigkeit festgestellt wird, sowie nach Ende von Menstruation oder Wochenbett.",
+                        "Gusül, hükmî büyük kirlilik hâlini gidermek için yapılan boy abdestidir. Cinsel ilişki, şehvetle meni gelmesi veya orgazm, ihtilamdan sonra uyandığında ıslaklık görülmesi ile hayız ya da nifasın sona ermesi gibi durumlarda gerekir."
                     ))
                     .fixedSize(horizontal: false, vertical: true)
                 }
@@ -4326,6 +4326,13 @@ struct ThirtyTwoFardView: View {
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+
+                    Text(settings.t(
+                        "„32 Farz“ ist eine traditionelle Lernmethode, mit der zentrale Glaubens- und Pflichtinhalte übersichtlich zusammengefasst werden. Die Zahl 32 ist keine einzelne, im Quran oder in einem Hadith als solche festgelegte Gesamtliste.",
+                        "“32 Farz”, temel iman ve ibadet bilgilerini topluca öğretmek için kullanılan geleneksel bir öğretim yöntemidir. 32 sayısı Kur'an'da veya bir hadiste bu adla belirlenmiş tek bir toplam liste değildir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
                 }
                 .cardStyle(material: true)
 
@@ -5577,7 +5584,7 @@ struct PrayerDuaAudioView: View {
             recitations: [PrayerText.rabbana]
         ),
         .init(
-            deTitle: "Rabbighfirli", trTitle: "Rabbenağfirli / Rabbighfir lî",
+            deTitle: "Rabbighfirli", trTitle: "Rabbighfir lî",
             deDetail: "Kurze Bitte um Vergebung; SalahPath zeigt sie auch zwischen den beiden Secden.",
             trDetail: "Kısa bağışlanma duası; SalahPath iki secde arasındaki oturuşta da gösterir.",
             recitations: [PrayerText.rabbighfirli]
@@ -7906,15 +7913,15 @@ private struct DhikrItem: Identifiable {
 
 struct DhikrView: View {
     @EnvironmentObject private var settings: SettingsStore
-    @State private var counter = 33
+    @State private var counter = 0
     @State private var section = 0
 
     private var tabs: [String] {
         [
-            settings.t("Morgen", "Sabah"),
-            settings.t("Abend", "Akşam"),
-            settings.t("Täglich", "Günlük"),
-            settings.t("Spezial", "Özel")
+            settings.t("Istighfar", "İstiğfar"),
+            settings.t("Tasbih", "Tesbih"),
+            settings.t("Tahlil", "Tehlil"),
+            settings.t("Salawat", "Salavat")
         ]
     }
 
@@ -7955,7 +7962,7 @@ struct DhikrView: View {
                         Button {
                             withAnimation(.easeOut(duration: 0.15)) {
                                 section = index
-                                counter = 33
+                                counter = 0
                             }
                         } label: {
                             Text(title)
@@ -8010,7 +8017,7 @@ struct DhikrView: View {
                             .frame(minWidth: 88)
                             .contextMenu {
                                 Button {
-                                    counter = 33
+                                    counter = 0
                                 } label: {
                                     Label(settings.t("Zurücksetzen", "Sıfırla"), systemImage: "arrow.counterclockwise")
                                 }
@@ -8036,6 +8043,15 @@ struct DhikrView: View {
                 .aspectRatio(1.18, contentMode: .fit)
                 .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                 .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7) }
+
+                Text(settings.t(
+                    "Freier Zähler: SalahPath behauptet für diese vier Kurz-Dhikr hier keine feste überlieferte Wiederholungszahl. Für belegte Morgen-/Abend-Adhkar und deren jeweilige Anzahl öffne die Quellenliste darunter.",
+                    "Serbest sayaç: SalahPath bu dört kısa zikir için burada sabit bir rivayet sayısı iddia etmez. Kaynaklı sabah/akşam zikirleri ve kendi tekrar sayıları için aşağıdaki kaynaklı bölümü aç."
+                ))
+                .font(.caption2)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 8)
 
                 VStack(spacing: 0) {
                     dhikrReferenceRow(
