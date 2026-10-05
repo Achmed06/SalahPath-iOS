@@ -2088,7 +2088,7 @@ struct GhuslGuideView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Die 3 Farz im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"))
+                    Text(settings.t("Die 3 Fard im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"))
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
