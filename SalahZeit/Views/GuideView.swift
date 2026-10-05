@@ -4614,6 +4614,20 @@ struct PrayerDebtTrackerView: View {
                 qadaRow(title: settings.t("Witr", "Vitir"), value: $witr)
                 qadaRow(title: settings.t("Fastentage", "Oruç"), value: $fasting)
 
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(settings.t("Wichtige Ausnahme", "Önemli istisna"), systemImage: "info.circle.fill")
+                        .font(.headline.bold())
+                        .foregroundStyle(SalahTheme.deepTeal)
+                    Text(settings.t(
+                        "Menstruation und Wochenbett/Nifas: In dieser Zeit versäumte Gebete werden nicht als Qada nachgeholt. Nicht gefastete Ramadan-Tage werden nach Ende des Zustands dagegen nachgeholt. Darüber besteht nach Diyanet Konsens der Rechtsschulen.",
+                        "Hayız ve lohusalık/nifas: Bu dönemlerde kılınmayan namazlar kaza edilmez. Ramazan'da tutulmayan oruçlar ise temizlikten sonra kaza edilir. Diyanet bu konuda mezheplerin görüş birliğini aktarır."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+                .cardStyle(material: true)
+
                 Button(role: .destructive) {
                     fajr = 0
                     dhuhr = 0
@@ -6976,8 +6990,8 @@ struct FastingBasicsView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
                 Text(settings.t(
-                    "Hanafi/Diyanet: Für Ramadan kann unter bestimmten Voraussetzungen auch nach Imsak bis vor die islamische Mittagsgrenze niyet gemacht werden, sofern seit Fajr nichts Fastenwidriges getan wurde. Sicherer und besser ist die Absicht in der Nacht. Andere Rechtsschulen können hier strenger sein.",
-                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa belirli şartlarla gündüz kuşluk/öğle sınırından önce de niyet edilebilir. Geceden niyet etmek daha güvenli ve faziletlidir. Diğer mezheplerde hüküm daha sıkı olabilir."
+                    "Hanefî/Diyanet: Für das Ramadan-Fasten kann die Absicht – sofern seit Imsak nichts Fastenwidriges getan wurde – noch bis etwa 10 Minuten vor dem Sonnenhöchststand gefasst werden. Die Absicht in der Nacht ist besser. Für Qada-, Kaffarah- und zeitlich nicht festgelegte Gelübde-Fasten muss die Absicht spätestens bis Imsak gefasst sein. Andere Rechtsschulen unterscheiden sich.",
+                    "Hanefî/Diyanet: Ramazan orucuna, imsaktan sonra oruca aykırı bir şey yapılmamışsa güneşin tepe noktasına gelmesinden yaklaşık 10 dakika öncesine kadar niyet edilebilir. Geceden niyet etmek daha faziletlidir. Kaza, kefaret ve zamanı belirlenmemiş adak oruçlarına ise en geç imsak vaktine kadar niyet edilmiş olmalıdır. Diğer mezheplerde hükümler farklıdır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
