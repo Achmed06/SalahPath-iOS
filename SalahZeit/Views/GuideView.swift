@@ -233,7 +233,7 @@ struct GuideView: View {
             NavigationLink { PrayerCatalogView() } label: {
                 referenceRow(
                     icon: "rectangle.stack.badge.play.fill",
-                    title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek"),
+                    title: settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"),
                     subtitle: settings.t("Fajr bis Jumuʿah, Witr, Tarawih und mehr", "Sabah'tan Cuma'ya, Vitir, Teravih ve daha fazlası")
                 )
             }
@@ -1503,6 +1503,12 @@ private struct QunutDuaView: View {
 
 // MARK: - Wudu
 
+private enum WuduRuling {
+    case fard
+    case sunnah
+    case adab
+}
+
 private struct WuduTutorialStep: Identifiable {
     let id = UUID()
     let number: Int
@@ -1512,7 +1518,7 @@ private struct WuduTutorialStep: Identifiable {
     let deAction: String
     let trAction: String
     let repeatText: String?
-    let hanafiFard: Bool
+    let ruling: WuduRuling
 }
 
 // Standalone asset-backed Wudu/prayer artwork; keep right/left semantics and Guide icon routing consistent.
@@ -1561,17 +1567,17 @@ struct WuduGuideView: View {
     }
 
     private let steps: [WuduTutorialStep] = [
-        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: false),
-        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", hanafiFard: false),
-        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", hanafiFard: false),
-        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", hanafiFard: true),
-        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", hanafiFard: true),
-        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", hanafiFard: false),
-        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", hanafiFard: false),
-        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true),
-        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", hanafiFard: true)
+        .init(number: 1, image: "wudu_hands", deTitle: "Hände", trTitle: "Eller", deAction: "Wasche beide Hände bis zu den Handgelenken und erreiche auch die Fingerzwischenräume.", trAction: "İki eli bileklere kadar yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", ruling: .sunnah),
+        .init(number: 2, image: "wudu_mouth", deTitle: "Mund", trTitle: "Ağız", deAction: "Nimm mit der rechten Hand Wasser in den Mund und spüle gründlich.", trAction: "Sağ elle ağza su alıp iyice çalkala.", repeatText: "3×", ruling: .sunnah),
+        .init(number: 3, image: "wudu_nose", deTitle: "Nase", trTitle: "Burun", deAction: "Nimm mit der rechten Hand Wasser an die Nase, ziehe es vorsichtig hinein und reinige bzw. schnäuze die Nase mit der linken Hand.", trAction: "Sağ avuçla burnuna su verip dikkatlice içine çek; ardından sol elle burnunu temizle ve sümkür.", repeatText: "3×", ruling: .sunnah),
+        .init(number: 4, image: "wudu_face", deTitle: "Gesicht", trTitle: "Yüz", deAction: "Wasche das ganze Gesicht vom normalen Haaransatz bis zum Kinn und seitlich von Ohr zu Ohr.", trAction: "Yüzün tamamını normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar yıka.", repeatText: "3×", ruling: .fard),
+        .init(number: 5, image: "wudu_rightarm", deTitle: "Rechter Arm", trTitle: "Sağ kol", deAction: "Wasche die rechte Hand und den rechten Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.", repeatText: "3×", ruling: .fard),
+        .init(number: 6, image: "wudu_leftarm", deTitle: "Linker Arm", trTitle: "Sol kol", deAction: "Wasche die linke Hand und den linken Arm vollständig bis einschließlich Ellenbogen.", trAction: "Sol eli ve sol kolu dirsek dahil tamamen yıka.", repeatText: "3×", ruling: .fard),
+        .init(number: 7, image: "wudu_head", deTitle: "Kopf abwischen", trTitle: "Başı mesh et", deAction: "Streiche mit feuchten Händen direkt über Kopf bzw. Haar. Die feuchte Hand muss Kopf oder Haar erreichen; die vollständige Masah wird mit beiden feuchten Händen gezeigt.", trAction: "Islak ellerle başı veya saçı doğrudan mesh et. Islak el başa ya da saça ulaşmalıdır.", repeatText: "1×", ruling: .fard),
+        .init(number: 8, image: "wudu_ears", deTitle: "Ohren abwischen", trTitle: "Kulakları mesh et", deAction: "Wische die Ohren mit feuchten Fingern ab: innen mit den Fingern, außen mit den Daumen.", trAction: "Islak parmaklarla kulakların içini, başparmaklarla dışını mesh et.", repeatText: "1×", ruling: .sunnah),
+        .init(number: 9, image: "wudu_neck", deTitle: "Nacken / Ense", trTitle: "Boyun / ense", deAction: "Wische die Nacken- bzw. Ensenpartie mit der Rückseite der feuchten Finger. Nicht die Kehle oder Vorderseite des Halses wischen.", trAction: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.", repeatText: "1×", ruling: .adab),
+        .init(number: 10, image: "wudu_rightfoot", deTitle: "Rechter Fuß", trTitle: "Sağ ayak", deAction: "Wasche den rechten Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sağ ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", ruling: .fard),
+        .init(number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß", trTitle: "Sol ayak", deAction: "Wasche den linken Fuß vollständig bis einschließlich beider Knöchel und erreiche auch die Zehenzwischenräume.", trAction: "Sol ayağı iki aşık kemiği dahil tamamen yıka ve parmak aralarına da su ulaştır.", repeatText: "3×", ruling: .fard)
     ]
 
     var body: some View {
@@ -1631,6 +1637,26 @@ struct WuduGuideView: View {
                         .cardStyle()
 
                         VStack(alignment: .leading, spacing: 9) {
+                            Label(settings.t("Was bricht Wudu? · Hanafi", "Abdesti neler bozar? · Hanefî"), systemImage: "exclamationmark.shield.fill")
+                                .font(.headline.bold())
+                                .foregroundStyle(SalahTheme.deepTeal)
+                            Text(settings.t(
+                                "Zu den häufigen Fällen gehören Ausscheidungen aus den vorderen oder hinteren Körperöffnungen, Blut/Eiter, das über die Austrittsstelle hinausfließt, mundvolles Erbrechen sowie Schlaf in einer Haltung, bei der der feste Sitz verloren geht. Bei dauerhaften Beschwerden gelten besondere Regeln für Entschuldigte (maʿdhūr/özür sahibi).",
+                                "Ön veya arka yoldan çıkan şeyler; çıktığı yerin dışına taşan kan/irin; ağız dolusu kusma ve makadın yere sağlam oturmadığı bir hâlde uyuma abdesti bozan yaygın durumlardandır. Sürekli devam eden mazeretlerde özür sahibi hükümleri ayrıca uygulanır."
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(SalahTheme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            Text(settings.t(
+                                "Hinweis: Einzelheiten unterscheiden sich zwischen Rechtsschulen; diese Kurzfassung folgt der hanafitischen/Diyanet-Einordnung.",
+                                "Not: Ayrıntılar mezheplere göre değişebilir; bu özet Hanefî/Diyanet açıklamasını esas alır."
+                            ))
+                            .font(.caption)
+                            .foregroundStyle(SalahTheme.mutedInk)
+                        }
+                        .cardStyle(material: true)
+
+                        VStack(alignment: .leading, spacing: 9) {
                             Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
@@ -1683,6 +1709,17 @@ struct WuduGuideView: View {
         }
     }
 
+    private func wuduRulingLabel(_ ruling: WuduRuling) -> String {
+        switch ruling {
+        case .fard:
+            return settings.t("FARZ · PFLICHT", "FARZ")
+        case .sunnah:
+            return settings.t("SUNNAH", "SÜNNET")
+        case .adab:
+            return settings.t("ADAB · EMPFOHLENE ETIKETTE", "ÂDÂB")
+        }
+    }
+
     private var wuduStepRail: some View {
         VStack(alignment: .leading, spacing: 9) {
             HStack {
@@ -1690,14 +1727,12 @@ struct WuduGuideView: View {
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
                 Spacer()
-                Text(steps[safeCurrentStepIndex].hanafiFard
-                     ? settings.t("FARZ · PFLICHT", "FARZ")
-                     : settings.t("SUNNAH", "SÜNNET"))
+                Text(wuduRulingLabel(steps[safeCurrentStepIndex].ruling))
                     .font(.caption.bold())
                     .padding(.horizontal, 9)
                     .padding(.vertical, 5)
                     .background(
-                        steps[safeCurrentStepIndex].hanafiFard ? SalahTheme.gold : SalahTheme.softTeal,
+                        steps[safeCurrentStepIndex].ruling == .fard ? SalahTheme.gold : SalahTheme.softTeal,
                         in: Capsule()
                     )
                     .foregroundStyle(SalahTheme.deepTeal)
@@ -2468,6 +2503,48 @@ struct PrayerCatalogView: View {
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
+                id: "sehiv_sajdah", group: "special",
+                deTitle: "Sehiv-Sujud · Vergesslichkeitsniederwerfung", trTitle: "Sehiv Secdesi",
+                deRuling: "Hanafi: wajib, wenn erforderlich", trRuling: "Hanefî: gerektiğinde vacip", rakaLabel: "2 Sujud",
+                deSummary: "Ausgleich am Ende des Gebets bei bestimmten versehentlichen Auslassungen, Verzögerungen oder Veränderungen eines Wajib bzw. der Reihenfolge.",
+                trSummary: "Namazda yanılarak bir vacibin terk, tehir veya değiştirilmesi gibi durumlarda namazın sonunda yapılan telafi secdesi.",
+                deSteps: [
+                    "Im letzten Sitzen Ettehiyyâtü lesen und nach rechts Salām geben.",
+                    "Ohne Unterbrechung mit Takbir in den ersten Sujud gehen, den üblichen Sujud-Dhikr sprechen, aufsetzen und einen zweiten Sujud machen.",
+                    "Danach wieder sitzen: Ettehiyyâtü, Salli, Bârik und Abschlussdua lesen; anschließend Salām nach rechts und links."
+                ],
+                trSteps: [
+                    "Son oturuşta Ettehiyyâtü okunur ve sağ tarafa selâm verilir.",
+                    "Ara vermeden tekbirle birinci secdeye gidilir; normal secde tesbihi okunur, oturulur ve ikinci secde yapılır.",
+                    "Sonra tekrar oturulup Ettehiyyâtü, Salli, Bârik ve kapanış duası okunur; sağa ve sola selâm verilir."
+                ],
+                deNotes: ["Sehiv-Sujud ist nicht für jeden beliebigen Fehler gleich; bei Unsicherheit muss zuerst geklärt werden, welcher Teil des Gebets betroffen war."],
+                trNotes: ["Her hata aynı hükme girmez; tereddütte namazın hangi bölümünün etkilendiği belirlenmelidir."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
+                id: "travel_qasr", group: "special",
+                deTitle: "Reisegebet · Qasr (Hanafi)", trTitle: "Seferî Namaz · Kasr (Hanefî)",
+                deRuling: "Reiseregel", trRuling: "Seferîlik hükmü", rakaLabel: "4→2",
+                deSummary: "Unter hanafitischen Reisebedingungen werden die vier-rakʿātigen Fard-Gebete auf zwei Rakʿāt verkürzt.",
+                trSummary: "Hanefî seferîlik şartları oluştuğunda dört rekâtlı farz namazlar iki rekât kılınır.",
+                deSteps: [
+                    "Hanafi/Diyanet: Eine Reise von ungefähr 90 km oder mehr kann die Reisebestimmungen auslösen; der Reisestatus beginnt nach Verlassen des bewohnten Ortsbereichs.",
+                    "Wer am Ziel 15 Tage oder länger zu bleiben beabsichtigt, gilt dort hanafitisch als ortsansässig; bei kürzer beabsichtigtem Aufenthalt bleibt der Reisestatus bestehen.",
+                    "Dhuhr-, Asr- und Isha-Fard werden als Reisender zwei statt vier Rakʿāt gebetet. Fajr bleibt zwei und Maghrib drei.",
+                    "Betet ein Reisender hinter einem ortsansässigen Imam, folgt er dem Imam und betet das vier-rakʿātige Fard vollständig."
+                ],
+                trSteps: [
+                    "Hanefî/Diyanet ölçüsünde yaklaşık 90 km veya daha uzak yolculuk seferîlik hükümlerini doğurabilir; seferîlik yerleşim alanından çıkınca başlar.",
+                    "Gidilen yerde 15 gün veya daha fazla kalmaya niyet eden Hanefîye göre mukim olur; daha kısa kalmaya niyet eden seferî kalır.",
+                    "Öğle, ikindi ve yatsının dört rekât farzları seferî iken iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır.",
+                    "Seferî kişi mukim imama uyarsa dört rekâtlı farzı imamla birlikte tam kılar."
+                ],
+                deNotes: ["Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch."],
+                trNotes: ["Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir."],
+                source: "Diyanet · Din İşleri Yüksek Kurulu"
+            ),
+            .init(
                 id: "tasbih_prayer", group: "special",
                 deTitle: "Tasbih-Gebet", trTitle: "Tesbih Namazı",
                 deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "4",
@@ -2620,7 +2697,7 @@ struct PrayerCatalogView: View {
                 }
             }
         }
-        .navigationTitle(settings.t("Alle Gebete", "Tüm Namazlar"))
+        .navigationTitle(settings.t("Gebetsarten & Anleitungen", "Namaz Türleri & Anlatımlar"))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -4124,7 +4201,7 @@ struct IlmihalDirectoryView: View {
             }
 
             Section(settings.t("Gebet", "Namaz")) {
-                NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
+                NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"), systemImage: "rectangle.stack.fill") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
                 NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
@@ -6716,7 +6793,7 @@ struct FastingExceptionsView: View {
                 exception(settings.t("Krankheit", "Hastalık"), settings.t("Wenn Fasten die Krankheit verschlimmern, verlängern oder voraussichtlich krank machen würde, darf verschoben und später nachgeholt werden.", "Oruç hastalığı artıracak, uzatacak veya kişiyi hasta edecekse ertelenebilir; daha sonra kaza edilir."))
                 exception(settings.t("Reise", "Yolculuk"), settings.t("Eine religiös als Reise geltende Fahrt kann eine Erleichterung geben. Nach Diyanet/Hanafi gelten konkrete Reisebedingungen; verpasste Tage werden später nachgeholt.", "Dinî sefer sayılan yolculuk ruhsat sebebi olabilir. Diyanet/Hanefî ölçülerinde belirli şartlar vardır; tutulmayan günler sonra kaza edilir."))
                 exception(settings.t("Schwangerschaft / Stillzeit", "Hamilelik / emzirme"), settings.t("Besteht begründete Sorge um Mutter oder Kind, darf nicht gefastet und später Qada gemacht werden.", "Anne veya çocuk için zarar endişesi varsa oruç tutulmayabilir; daha sonra kaza edilir."))
-                exception(settings.t("Menstruation / Nifas", "Hayız / nifas"), settings.t("Während Menstruation und Wochenbett/Nifas wird nicht gefastet; diese Ramadan-Tage werden später als Qada nachgeholt.", "Hayız ve nifas döneminde oruç tutulmaz; Ramazan'da tutulmayan günler daha sonra kaza edilir."))
+                exception(settings.t("Menstruation / Nifas", "Hayız / nifas"), settings.t("Während Menstruation und Wochenbett/Nifas wird nicht gefastet; diese Ramadan-Tage werden später als Qada nachgeholt. Die in dieser Zeit ausfallenden Pflichtgebete werden nicht nachgeholt.", "Hayız ve nifas döneminde oruç tutulmaz; Ramazan'da tutulmayan günler daha sonra kaza edilir. Bu dönemde kılınmayan farz namazlar sonradan kaza edilmez."))
             }
 
             Section(settings.t("Dauerhaft nicht möglich → Fidya", "Kalıcı olarak mümkün değil → fidye")) {
