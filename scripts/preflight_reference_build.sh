@@ -224,7 +224,7 @@ grep -q 'إِنَّكَ أَنْتَ الْوَهَّابُ' "SalahZeit/Views/Gu
 grep -q 'Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst' "SalahZeit/Views/GuideView.swift"
 grep -q 'Angezeigt sind nur die Anfangszeilen' "SalahZeit/Views/GuideView.swift"
 grep -q 'وَإِلَيْكَ الْمَصِيرُ' "SalahZeit/Views/GuideView.swift"
-grep -q 'Hier wird keine bestimmte überlieferte Anzahl behauptet' "SalahZeit/Views/GuideView.swift"
+grep -q 'Freier Zähler: SalahPath behauptet hier keine religiös festgelegte Anzahl' "SalahZeit/Views/GuideView.swift"
 
 if grep -q 'count: 33, source: "Dhikr / İstiğfar"' "SalahZeit/Views/GuideView.swift"; then
   echo "Unsupported fixed Istighfar count regression found." >&2
