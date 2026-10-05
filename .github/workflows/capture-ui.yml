@@ -379,7 +379,9 @@ jobs:
             capture qibla SalahPath-v3.62-B78-DE-Qibla.png
             capture settings SalahPath-v3.62-B78-DE-Settings.png
             capture namaz-howto SalahPath-v3.62-B78-DE-PrayerHowTo.png
+            capture namaz-step-10 SalahPath-v3.62-B78-DE-MalePrayerStep10.png
             capture wudu SalahPath-v3.62-B78-DE-Wudu.png
+            capture wudu-head SalahPath-v3.62-B78-DE-WuduHead.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-FemalePrayerHowTo.png
 
@@ -394,13 +396,15 @@ jobs:
             capture qibla SalahPath-v3.62-B78-DE-Dark-Qibla.png
             capture settings SalahPath-v3.62-B78-DE-Dark-Settings.png
             capture namaz-howto SalahPath-v3.62-B78-DE-Dark-PrayerHowTo.png
+            capture namaz-step-10 SalahPath-v3.62-B78-DE-Dark-MalePrayerStep10.png
             capture wudu SalahPath-v3.62-B78-DE-Dark-Wudu.png
+            capture wudu-head SalahPath-v3.62-B78-DE-Dark-WuduHead.png
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath prayerAudience female
             capture namaz-howto SalahPath-v3.62-B78-DE-Dark-FemalePrayerHowTo.png
 
             # A false dark-mode capture is worse than no dark-mode capture:
             # fail if the screenshots are byte-identical to their light pair.
-            for screen in Home Quran Dhikr Namaz PrayerTimes More Qibla Settings PrayerHowTo Wudu FemalePrayerHowTo; do
+            for screen in Home Quran Dhikr Namaz PrayerTimes More Qibla Settings PrayerHowTo MalePrayerStep10 Wudu WuduHead FemalePrayerHowTo; do
               LIGHT="ui-preview/SalahPath-v3.62-B78-DE-${screen}.png"
               DARK="ui-preview/SalahPath-v3.62-B78-DE-Dark-${screen}.png"
               if cmp -s "$LIGHT" "$DARK"; then
