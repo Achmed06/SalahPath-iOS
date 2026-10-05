@@ -314,8 +314,10 @@ for name in (
     "B78-DE-Dark-Namaz.png",
     "B78-DE-Dark-PrayerTimes.png",
     "B78-DE-Dark-PrayerHowTo.png",
+    "B78-DE-Dark-MalePrayerStep10.png",
     "B78-DE-Dark-FemalePrayerHowTo.png",
     "B78-DE-Dark-Wudu.png",
+    "B78-DE-Dark-WuduHead.png",
 ):
     if name not in capture:
         fail(f"light/dark visual QA coverage missing: {name}")
