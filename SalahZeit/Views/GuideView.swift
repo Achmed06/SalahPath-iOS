@@ -2848,8 +2848,8 @@ struct PrayerCatalogView: View {
                     "2. rekât: İmam Fâtiha + sûre okur → sonra üç zevaid tekbiri alınır ve eller salınır → sonraki tekbirle doğrudan rükûya gidilir.",
                     "2 secdeden sonra son oturuş ve selâm. Bayram hutbesi namazdan sonra okunur."
                 ],
-                deNotes: ["Keine Adhan/Iqama für das Eid-Gebet."],
-                trNotes: ["Bayram namazında ezan ve kamet yoktur."],
+                deNotes: ["Keine Adhan/Iqama für das Eid-Gebet.", "Wichtig zur Verpflichtung: Frauen sind nach Diyanet nicht zum Eid-Gebet verpflichtet, dürfen und sollen bei geeigneten Bedingungen aber teilnehmen. Hanafi ist das Eid-Gebet für diejenigen wajib, für die auch das Freitagsgebet verpflichtend ist."],
+                trNotes: ["Bayram namazında ezan ve kamet yoktur.", "Yükümlülük notu: Diyanet'e göre kadınlar bayram namazıyla yükümlü değildir; uygun şartlarda katılabilir ve katılımları teşvik edilmiştir. Hanefîlerde bayram namazı, cuma namazıyla yükümlü olanlar için vaciptir."],
                 source: "Diyanet · Bayram Namazı"
             ),
             .init(
@@ -2910,8 +2910,8 @@ struct PrayerCatalogView: View {
                     "Hutbeyi dinle; ardından imam arkasında 2 rekât cuma farzı.",
                     "Ardından Ebû Hanîfe'ye göre 4 rekât sünnet; Hanefî imameyn görüşünde ilave 2 rekât da aktarılmıştır."
                 ],
-                deNotes: ["Die 2 Fard werden vom Imam laut rezitiert."],
-                trNotes: ["İki rekât farzda imam kıraati sesli yapar."],
+                deNotes: ["Die 2 Fard werden vom Imam laut rezitiert.", "Frauen, Reisende und weitere Personen, für die Jumuʿah nicht verpflichtend ist, dürfen teilnehmen; wenn sie Jumuʿah gültig mitbeten, ersetzt es für sie an diesem Tag das Dhuhr-Gebet."],
+                trNotes: ["İki rekât farzda imam kıraati sesli yapar.", "Kadınlar, seferîler ve cuma ile yükümlü olmayan diğer kişiler cuma namazına katılabilir; geçerli şekilde cuma kılarlarsa o gün ayrıca öğle namazı kılmazlar."],
                 source: "Diyanet · Cuma Namazı"
             ),
             .init(
