@@ -5780,7 +5780,7 @@ struct ShortSurahLearningView: View {
     @AppStorage("surahRepeatCount") private var repeatCount = 1
 
     private let surahs: [ShortSurahAudio] = [
-        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Grundlage jeder Rakʿah.", trDetail: "Her rekâtın temel kıraatidir."),
+        .init(surahNumber: 1, arabicName: "الفاتحة", latinName: "Al-Fatiha", deDetail: "Zentrale Sura des Gebets. Hanafi: Alleinbetende und Imam rezitieren sie in jeder Rakʿah; Mitbetende hinter dem Imam rezitieren sie nicht selbst.", trDetail: "Namazın temel sûresidir. Hanefî: Yalnız kılan ve imam her rekâtta okur; imama uyan kişi ayrıca okumaz."),
         .init(surahNumber: 105, arabicName: "الفيل", latinName: "Al-Fil", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Fîl sûresi."),
         .init(surahNumber: 106, arabicName: "قريش", latinName: "Quraysh", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Kureyş sûresi."),
         .init(surahNumber: 107, arabicName: "الماعون", latinName: "Al-Maun", deDetail: "Sura aus der Lernliste fürs Gebet.", trDetail: "Namazda öğrenilen kısa sûrelerden Mâûn sûresi."),
