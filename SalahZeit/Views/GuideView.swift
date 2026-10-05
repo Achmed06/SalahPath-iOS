@@ -132,7 +132,7 @@ struct GuideView: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 13)
                 .padding(.vertical, 11)
-                .background(SalahTheme.teal, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .background(SalahTheme.navigationTeal, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
 
@@ -178,7 +178,7 @@ struct GuideView: View {
                         .fill(
                             selected
                                 ? SalahTheme.softTeal.opacity(0.62)
-                                : Color(red: 0.975, green: 0.958, blue: 0.90)
+                                : SalahTheme.cream
                         )
 
                     Image(imageName)
@@ -437,8 +437,8 @@ private struct PrayerPoseArtwork: View {
                     usesNewMaleArtwork
                     ? LinearGradient(
                         colors: [
-                            Color(red: 0.997, green: 0.992, blue: 0.958),
-                            Color(red: 0.957, green: 0.974, blue: 0.951)
+                            SalahTheme.cream,
+                            SalahTheme.softTeal.opacity(0.42)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -987,7 +987,7 @@ struct PrayerHowToView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 14) {
+                VStack(spacing: 14) {
                     Color.clear.frame(height: 1).id("prayer-step-top")
                     prayerLearningHero
 
@@ -1037,9 +1037,7 @@ struct PrayerHowToView: View {
                 .padding()
             }
             .background(
-                settings.prayerAudience == .male
-                ? Color(red: 0.985, green: 0.978, blue: 0.925)
-                : SalahTheme.page
+                SalahTheme.page
             )
             .navigationTitle(settings.t("Gebet lernen", "Namaz öğren"))
             .navigationBarTitleDisplayMode(.inline)
@@ -1048,21 +1046,29 @@ struct PrayerHowToView: View {
             }
             .onAppear {
                 guard safePrayerStepIndex > 0 else { return }
-                Task { @MainActor in
-                    await Task.yield()
-                    proxy.scrollTo("prayer-step-content-top", anchor: .top)
-                }
+                scrollPrayerGuide(proxy, to: "prayer-step-content-top")
             }
             .onChange(of: currentStepIndex) { _, _ in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    proxy.scrollTo("prayer-step-content-top", anchor: .top)
-                }
+                scrollPrayerGuide(proxy, to: "prayer-step-content-top")
             }
             .onChange(of: settings.prayerAudience) { _, _ in
                 currentStepIndex = 0
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    proxy.scrollTo("prayer-step-top", anchor: .top)
-                }
+                scrollPrayerGuide(proxy, to: "prayer-step-top")
+            }
+        }
+    }
+
+    private func scrollPrayerGuide(_ proxy: ScrollViewProxy, to target: String) {
+        Task { @MainActor in
+            // Wait until SwiftUI has laid out the newly selected step before
+            // correcting the scroll position. Animated scroll-to during the
+            // content replacement could leave the viewport beyond the new card.
+            await Task.yield()
+            await Task.yield()
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                proxy.scrollTo(target, anchor: .top)
             }
         }
     }
@@ -1094,7 +1100,7 @@ struct PrayerHowToView: View {
                                 .font(.caption.bold())
                                 .frame(minWidth: 32, minHeight: 32)
                                 .background(
-                                    index == safePrayerStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    index == safePrayerStepIndex ? SalahTheme.navigationTeal : SalahTheme.softTeal,
                                     in: Circle()
                                 )
                                 .foregroundStyle(index == safePrayerStepIndex ? Color.white : SalahTheme.deepTeal)
@@ -1141,7 +1147,7 @@ struct PrayerHowToView: View {
                 .padding(.vertical, 11)
             }
             .buttonStyle(.borderedProminent)
-            .tint(SalahTheme.teal)
+            .tint(SalahTheme.navigationTeal)
         }
         .font(.headline)
         .padding(.horizontal)
@@ -1174,25 +1180,11 @@ private struct PrayerTutorialStepCard: View {
         return "\(audience == .male ? "male" : "female")_\(key)"
     }
 
-    private var maleHeader: Color {
-        Color(red: 0.075, green: 0.34, blue: 0.31)
-    }
-
-    private var maleCream: Color {
-        Color(red: 0.997, green: 0.987, blue: 0.935)
-    }
-
-    private var maleInk: Color {
-        Color(red: 0.035, green: 0.14, blue: 0.20)
-    }
-
-    private var maleMuted: Color {
-        Color(red: 0.34, green: 0.39, blue: 0.40)
-    }
-
-    private var maleSoftTeal: Color {
-        Color(red: 0.91, green: 0.955, blue: 0.95)
-    }
+    private var maleHeader: Color { SalahTheme.navigationTeal }
+    private var maleCream: Color { SalahTheme.cream }
+    private var maleInk: Color { SalahTheme.ink }
+    private var maleMuted: Color { SalahTheme.mutedInk }
+    private var maleSoftTeal: Color { SalahTheme.softTeal }
 
     private var maleTipTitle: String {
         switch step.number {
@@ -1252,8 +1244,8 @@ private struct PrayerTutorialStepCard: View {
             .background(
                 LinearGradient(
                     colors: [
-                        Color(red: 0.995, green: 0.983, blue: 0.925),
-                        Color(red: 0.985, green: 0.962, blue: 0.87)
+                        SalahTheme.cream,
+                        SalahTheme.softTeal.opacity(0.72)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -1281,7 +1273,7 @@ private struct PrayerTutorialStepCard: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
-            .background(isMale ? maleHeader : SalahTheme.teal)
+            .background(isMale ? maleHeader : SalahTheme.navigationTeal)
 
             VStack(alignment: .leading, spacing: 13) {
                 if step.pose == .salam && !isMale {
@@ -1565,7 +1557,7 @@ struct WuduGuideView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 14) {
+                VStack(spacing: 14) {
                     Color.clear.frame(height: 1).id("wudu-step-top")
 
                     if safeCurrentStepIndex == 0 {
@@ -1649,15 +1641,24 @@ struct WuduGuideView: View {
             }
             .onAppear {
                 guard safeCurrentStepIndex > 0 else { return }
-                Task { @MainActor in
-                    await Task.yield()
-                    proxy.scrollTo("wudu-step-content-top", anchor: .top)
-                }
+                scrollWuduGuide(proxy, to: "wudu-step-content-top")
             }
             .onChange(of: currentStepIndex) { _, _ in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    proxy.scrollTo("wudu-step-content-top", anchor: .top)
-                }
+                scrollWuduGuide(proxy, to: "wudu-step-content-top")
+            }
+        }
+    }
+
+    private func scrollWuduGuide(_ proxy: ScrollViewProxy, to target: String) {
+        Task { @MainActor in
+            // Keep the viewport anchored to the newly rendered step instead of
+            // animating from an offset that may no longer exist.
+            await Task.yield()
+            await Task.yield()
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                proxy.scrollTo(target, anchor: .top)
             }
         }
     }
@@ -1695,7 +1696,7 @@ struct WuduGuideView: View {
                                 .font(.caption.bold())
                                 .frame(minWidth: 32, minHeight: 32)
                                 .background(
-                                    index == safeCurrentStepIndex ? SalahTheme.teal : SalahTheme.softTeal,
+                                    index == safeCurrentStepIndex ? SalahTheme.navigationTeal : SalahTheme.softTeal,
                                     in: Circle()
                                 )
                                 .foregroundStyle(index == safeCurrentStepIndex ? Color.white : SalahTheme.deepTeal)
@@ -1742,7 +1743,7 @@ struct WuduGuideView: View {
                 .padding(.vertical, 11)
             }
             .buttonStyle(.borderedProminent)
-            .tint(SalahTheme.teal)
+            .tint(SalahTheme.navigationTeal)
         }
         .font(.headline)
         .padding(.horizontal)
