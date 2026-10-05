@@ -4338,6 +4338,164 @@ private struct IlmihalTopicView: View {
     }
 }
 
+private struct PrayerRestrictedTimesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Drei strenge Kerâhat-Zeiten", "Üç temel kerâhat vakti")) {
+                restriction(
+                    settings.t("Nach Sonnenaufgang", "Güneş doğduktan sonra"),
+                    settings.t(
+                        "Vom Sonnenaufgang bis die Sonne deutlich gestiegen ist. Diyanet nennt für gemäßigte Regionen ungefähr 40–50 Minuten.",
+                        "Güneşin doğmasından belirgin şekilde yükselmesine kadar. Diyanet mutedil bölgeler için yaklaşık 40–50 dakika belirtir."
+                    )
+                )
+                restriction(
+                    settings.t("Kurz vor Dhuhr / Sonnenhöchststand", "Öğle öncesi / güneş tepedeyken"),
+                    settings.t(
+                        "Während die Sonne genau am höchsten Punkt steht, bis sie sich nach Westen neigt. Diyanet beschreibt dies ungefähr als die letzten 10 Minuten vor Eintritt der Dhuhr-Zeit.",
+                        "Güneş tam tepe noktasındayken batıya yönelmeye başlayıncaya kadar. Diyanet bunu yaklaşık öğle vaktinden önceki son 10 dakika olarak açıklar."
+                    )
+                )
+                restriction(
+                    settings.t("Kurz vor Sonnenuntergang", "Güneş batmadan önce"),
+                    settings.t(
+                        "Wenn die Sonne gegen Ende des Tages gelb wird bis zum Sonnenuntergang. Diyanet nennt für gemäßigte Regionen ungefähr die letzten 40–50 Minuten. Wurde das Asr-Fard dieses Tages noch nicht gebetet, wird es dennoch verrichtet; es absichtlich so weit hinauszuzögern ist makruh.",
+                        "Günün sonunda güneş sararmaya başladıktan batıncaya kadar. Diyanet mutedil bölgeler için yaklaşık son 40–50 dakikayı belirtir. O günün ikindi farzı henüz kılınmadıysa yine kılınır; özürsüz şekilde bu kadar geciktirmek mekruhtur."
+                    )
+                )
+            }
+
+            Section(settings.t("Weitere Zeiten für Nafila-Gebete", "Nafile namazlar için diğer vakitler")) {
+                restriction(
+                    settings.t("Nach Imsak bis Sonnenaufgang", "İmsaktan güneş doğana kadar"),
+                    settings.t(
+                        "Außer der Fajr-Sunnah wird in dieser Zeit kein zusätzliches Nafila-Gebet begonnen.",
+                        "Sabah namazının sünneti dışında bu sürede başka nafile namaza başlanmaz."
+                    )
+                )
+                restriction(
+                    settings.t("Nach dem Asr-Gebet", "İkindi namazından sonra"),
+                    settings.t(
+                        "Nach dem verrichteten Asr-Gebet bis Sonnenuntergang werden keine Nafila-Gebete begonnen.",
+                        "İkindi namazı kılındıktan sonra güneş batıncaya kadar nafile namaza başlanmaz."
+                    )
+                )
+                restriction(
+                    settings.t("Maghrib-Zeit vor dem Fard", "Akşam vakti farzdan önce"),
+                    settings.t(
+                        "Wenn die Maghrib-Zeit eingetreten ist, wird das Fard nicht durch ein zusätzliches Nafila-Gebet davor verzögert.",
+                        "Akşam vakti girdikten sonra farzdan önce ek bir nafile namazla farz geciktirilmez."
+                    )
+                )
+                restriction(
+                    settings.t("Freitag nach Besteigen der Minbar", "Cuma günü hatip minbere çıktıktan sonra"),
+                    settings.t(
+                        "Nach Diyanets hanafitischer Darstellung wird dann kein Nafila-Gebet neu begonnen.",
+                        "Diyanet'in Hanefî anlatımına göre bu sırada yeni bir nafile namaza başlanmaz."
+                    )
+                )
+            }
+
+            Section(settings.t("Wichtig", "Önemli")) {
+                Text(settings.t(
+                    "Die ungefähren Minutenangaben sind keine weltweit festen Uhrzeiten; sie beschreiben Diyanets Näherungswerte für gemäßigte Regionen. Maßgeblich sind die tatsächlichen Sonnenstände. Andere Rechtsschulen unterscheiden sich in einzelnen Details, insbesondere bei Gebeten mit besonderem Anlass.",
+                    "Yaklaşık dakika değerleri dünyanın her yerinde sabit saatler değildir; Diyanet'in mutedil bölgeler için verdiği yaklaşık değerlerdir. Esas olan güneşin gerçek konumudur. Diğer mezhepler, özellikle sebebe bağlı namazlarda bazı ayrıntıları farklı değerlendirir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle", "Kaynak")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · „Mekruh vakitler hangileridir? Hangi vakitlerde kaza ve hangi vakitlerde nâfile namaz kılınmaz?“",
+                    "Diyanet Din İşleri Yüksek Kurulu · „Mekruh vakitler hangileridir? Hangi vakitlerde kaza ve hangi vakitlerde nâfile namaz kılınmaz?“"
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Kerâhat-Zeiten", "Kerâhat Vakitleri"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func restriction(_ title: String, _ detail: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title).font(.headline)
+            Text(detail)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+private struct WomensPurityGuideView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    var body: some View {
+        List {
+            Section(settings.t("Hayd & Nifas", "Hayız & Nifas")) {
+                Text(settings.t(
+                    "Während bestätigter Menstruation (Hayd) oder Wochenbettblutung (Nifas) werden Gebet und Fasten nicht verrichtet; auch Tawaf wird nicht durchgeführt. Die in dieser Zeit ausgefallenen Gebete werden später nicht nachgeholt. Ausgefallene Ramadan-Fastentage werden nach Ende des Zustands als Qada nachgeholt.",
+                    "Kesinleşmiş hayız veya nifas hâlinde namaz kılınmaz, oruç tutulmaz ve tavaf yapılmaz. Bu sürede kılınmayan namazlar daha sonra kaza edilmez. Ramazan'da tutulmayan oruçlar ise hâl sona erdikten sonra kaza edilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Wenn Hayd oder Nifas beendet ist, wird Ghusl genommen und die normalen Gottesdienste werden wieder aufgenommen.",
+                    "Hayız veya nifas sona erdiğinde gusül alınır ve normal ibadetlere yeniden başlanır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Istihāda / Blutung außerhalb von Hayd und Nifas", "İstihâze / Hayız ve nifas dışı kanama")) {
+                Text(settings.t(
+                    "Istihāda ist nicht dasselbe wie Hayd oder Nifas. Sie hebt die grundsätzliche Gebets- und Fastenpflicht nicht automatisch auf. Bei fortdauernder Blutung können zusätzlich die Regeln für einen dauerhaften Entschuldigungszustand (maʿdhūr/özür) relevant werden.",
+                    "İstihâze, hayız veya nifas ile aynı değildir. Namaz ve oruç yükümlülüğünü kendiliğinden kaldırmaz. Sürekli kanamada ayrıca özür hâli hükümleri uygulanabilir."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Hanafitische Zeitgrenzen – nicht blind als Rechner benutzen", "Hanefî süreler – otomatik hesap gibi kullanılmamalı")) {
+                Text(settings.t(
+                    "Die klassische hanafitische Grundregel nennt für Hayd mindestens 3 und höchstens 10 Tage sowie mindestens 15 Tage Reinheit zwischen zwei Menstruationen. Diyanet hat 2026 ausdrücklich klargestellt, dass bei seltenen, medizinisch bestätigten regelmäßigen Blutungsmustern auch Sonderfälle anders beurteilt werden können. Deshalb klassifiziert SalahPath deine Blutung nicht automatisch.",
+                    "Klasik Hanefî temel ölçü hayız için en az 3, en fazla 10 gün ve iki hayız arasında en az 15 gün temizlik süresidir. Diyanet 2026'da, tıbbî olarak da doğrulanan bazı nadir ve düzenli kanama örüntülerinin farklı değerlendirilebileceğini açıkça belirtmiştir. Bu nedenle SalahPath kanamanı otomatik olarak sınıflandırmaz."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+
+                Text(settings.t(
+                    "Für Nifas gibt es im hanafitischen Fiqh keine Mindestdauer; die klassische Obergrenze beträgt 40 Tage. Endet die Blutung vorher eindeutig, wird Ghusl genommen und die Gottesdienste werden wieder aufgenommen.",
+                    "Hanefî fıkhında nifasın asgari süresi yoktur; klasik azami süre 40 gündür. Kanama daha önce kesin olarak biterse gusül alınır ve ibadetlere başlanır."
+                ))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Section(settings.t("Bei unklarem Verlauf", "Belirsiz durumda")) {
+                Text(settings.t(
+                    "Farbe, Unterbrechungen, Gewohnheitsdauer, Medikamente, Spirale, Schwangerschaft, Fehlgeburt oder ungewöhnlich lange Blutungen können die Einordnung verändern. Bei solchen Fällen zeigt die App bewusst kein Ja/Nein-Urteil. Notiere den tatsächlichen Verlauf und frage eine qualifizierte religiöse Stelle; bei medizinisch auffälliger Blutung zusätzlich ärztlich abklären.",
+                    "Renk, ara vermeler, mutat süre, ilaçlar, spiral, gebelik, düşük veya olağandışı uzun kanamalar hükmü değiştirebilir. Bu tür durumlarda uygulama bilinçli olarak otomatik evet/hayır hükmü vermez. Gerçek kanama düzenini kaydet, ehil bir dinî merciden sor; tıbbî açıdan olağandışı kanamada ayrıca doktora başvur."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+
+            Section(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")) {
+                Text(settings.t(
+                    "Diyanet Din İşleri Yüksek Kurulu · Kadınlara Özgü Haller: Âdet Döngüsü/Hayız, Lohusalık/Nifas, Abdest ve Namaz sowie aktuelle Kurul-Entscheidungen bis 2026. Darstellung: hanafitischer Grundrahmen mit ausdrücklich genannten aktuellen Ausnahmen.",
+                    "Diyanet Din İşleri Yüksek Kurulu · Kadınlara Özgü Haller: Âdet Döngüsü/Hayız, Lohusalık/Nifas, Abdest ve Namaz ve 2026'ya kadar güncel Kurul kararları. Anlatım: açıkça belirtilen güncel istisnalarla Hanefî temel çerçeve."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle(settings.t("Frauen · Reinheit", "Kadınlara Özgü Haller"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
 struct IlmihalDirectoryView: View {
     @EnvironmentObject private var settings: SettingsStore
 
@@ -4529,12 +4687,14 @@ struct IlmihalDirectoryView: View {
                 NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
                 NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
                 NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+                NavigationLink { WomensPurityGuideView() } label: { Label(settings.t("Frauen · Hayd, Nifas & Istihāda", "Kadınlar · Hayız, Nifas & İstihâze"), systemImage: "person.crop.circle.badge.questionmark") }
             }
 
             Section(settings.t("Gebet", "Namaz")) {
                 NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Alle Gebetsarten", "Tüm namaz türleri"), systemImage: "rectangle.stack.fill") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
                 NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
+                NavigationLink { PrayerRestrictedTimesView() } label: { Label(settings.t("Kerâhat-Zeiten", "Kerâhat Vakitleri"), systemImage: "sun.horizon.fill") }
                 NavigationLink { PrayerMistakesView() } label: { Label(settings.t("Gebetsfehler & Sehiv-Secdesi", "Namaz hataları & Sehiv secdesi"), systemImage: "exclamationmark.arrow.triangle.2.circlepath") }
                 NavigationLink { PrayerSpecialSituationsView() } label: { Label(settings.t("Reise- & Kranken-Gebet", "Seferîlik & Hasta Namazı"), systemImage: "figure.roll") }
                 NavigationLink { TilawahSajdahGuideView() } label: { Label(settings.t("Tilāwa-Secdesi", "Tilâvet Secdesi"), systemImage: "arrow.down.to.line.compact") }
