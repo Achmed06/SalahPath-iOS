@@ -456,6 +456,14 @@ for token in (
     'Fließendes Blut, Eiter oder Wundflüssigkeit',
     'Mundvolles Erbrechen im hanafitischen Fiqh.',
     'Berührung zwischen Mann und Frau allein bricht Wudu im hanafitischen Madhhab nicht automatisch.',
+    'case adab',
+    'classification: .adab',
+    'PFLICHTKERN',
+    '1× Pflicht · 3× Sunnah',
+    'gehört zu den Âdâb des Wudu, nicht zu den Farz',
+    'Wasserbarrieren, Verband & Mest',
+    'gewöhnliche dünne Socken erfüllen diese Voraussetzungen nicht automatisch',
+    'Gebetsarten & Anleitungen',
     'private struct PrayerMistakesView: View',
     'Gebetsfehler & Sehiv-Secdesi',
     'Wann ist Sehiv-Secdesi nötig?',
@@ -469,6 +477,9 @@ for token in (
 for forbidden in (
     'Allein/Imam: beim Hochkommen Semi\'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd.',
     'deTitle: "5 Säulen / Bedingungen des Islam"',
+    'title: settings.t("Alle Gebete einzeln", "Tüm namazlar tek tek")',
+    'dies wird als Sunnah eingeordnet. Die Vorderseite des Halses',
+    'sünnet olarak değerlendirilir. Boğazın ön tarafını',
 ):
     if forbidden in guide:
         fail(f"ambiguous Islamic guidance returned: {forbidden}")
