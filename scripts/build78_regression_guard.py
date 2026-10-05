@@ -354,6 +354,20 @@ home_source_for_labels = read("SalahZeit/Views/HomeView.swift")
 if 'case .sunrise: return "Güneş"' not in home_source_for_labels:
     fail("Turkish prayer-time label regression: sunrise must be Güneş, not Sabah")
 
+for token in (
+    '@State private var counter = 0',
+    'settings.t("Istighfar", "İstiğfar")',
+    'settings.t("Tasbih", "Tesbih")',
+    'settings.t("Tawhid", "Tevhid")',
+    'settings.t("Salawat", "Salavat")',
+    'Freier Zähler: SalahPath behauptet hier keine religiös festgelegte Anzahl.',
+):
+    if token not in guide:
+        fail(f"free dhikr counter regression: missing {token}")
+
+if '@State private var counter = 33' in guide:
+    fail("free dhikr counter must not imply an unsupported fixed count of 33")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
