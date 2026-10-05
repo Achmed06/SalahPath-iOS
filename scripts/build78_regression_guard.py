@@ -368,6 +368,15 @@ for token in (
 if '@State private var counter = 33' in guide:
     fail("free dhikr counter must not imply an unsupported fixed count of 33")
 
+for token in (
+    'Tage, an denen nicht gefastet wird',
+    'Oruç tutulmayan günler',
+    '10.–13. Dhu l-Hijjah · Opferfest & Tashriq',
+    'Kurban Bayramı\'nın dört gününde de oruç tutmak tahrîmen mekruhtur',
+):
+    if token not in guide:
+        fail(f"prohibited fasting-day regression: missing {token}")
+
 # 5a.1) Prayer learning hero keeps male/female choices equally visible and language switching separate.
 for token in (
     'audiencePreviewCard(\n                    .male',
