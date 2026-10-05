@@ -1745,8 +1745,8 @@ private struct TilawahSajdahGuideView: View {
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Hanafi/Diyanet: Wer einen der 14 Secde-Ayat auf Arabisch rezitiert oder bewusst hört, für den ist die Tilāwa-Secdesi wājib. Diyanet ordnet sie in den anderen drei sunnitischen Rechtsschulen als Sunnah ein.",
-                        "Hanefî/Diyanet: Kur'an'daki 14 secde âyetinden birini Arapça okuyan veya bilinçli şekilde işiten kişiye tilâvet secdesi vaciptir. Diyanet, diğer üç Sünnî mezhepte bunu sünnet olarak açıklar."
+                        "Hanafi/Diyanet: Wer einen der 14 Secde-Ayat auf Arabisch rezitiert oder hört, für den ist die Tilāwa-Secdesi wājib. Diyanet ordnet sie in den anderen drei sunnitischen Rechtsschulen als Sunnah ein.",
+                        "Hanefî/Diyanet: Kur'an'daki 14 secde âyetinden birini Arapça okuyan veya işiten kişiye tilâvet secdesi vaciptir. Diyanet, diğer üç Sünnî mezhepte bunu sünnet olarak açıklar."
                     ))
                     .font(.subheadline)
                     .fixedSize(horizontal: false, vertical: true)
