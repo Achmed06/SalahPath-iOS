@@ -1795,6 +1795,13 @@ struct WuduGuideView: View {
                             ))
                             .font(.footnote)
                             .foregroundStyle(.secondary)
+
+                            Text(settings.t(
+                                "Quelle: Diyanet · Abdest / Abdesti Bozan Şeyler (hanafitische Grunddarstellung).",
+                                "Kaynak: Diyanet · Abdest / Abdesti Bozan Şeyler (Hanefî temel anlatım)."
+                            ))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                         }
                         .cardStyle(material: true)
 
