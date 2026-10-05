@@ -537,6 +537,34 @@ for forbidden in (
     if forbidden in guide:
         fail(f"stale fixed-currency Zakat nisab returned: {forbidden}")
 
+# 5a.3e) Fitre, Kurban and Iqamah audit guards.
+for token in (
+    'private struct FitraGuideView: View',
+    'Anders als bei Zakat muss dieses Vermögen für Fitre nicht ertragsfähig',
+    'am ersten Eid-Tag mit Eintritt der Morgendämmerung verpflichtend',
+    'Sie darf bereits im Ramadan gegeben werden.',
+    'kein Zakat-Nisab',
+    'private struct KurbanGuideView: View',
+    '80,18 g 24-karätiges Gold oder dessen Wert',
+    'Hanefî: Die Zeit endet mit Sonnenuntergang am 3. Eid-Tag.',
+    'Kamel: 5 Mondjahre; Rind/Büffel: 2 Mondjahre; Schaf/Ziege: 1 Mondjahr.',
+    'kein Anteil darf kleiner als ein Siebtel sein',
+    'Eine reine Geldspende ohne tatsächliche, gültige Schlachtung ersetzt das Udhiyah-Kurban nicht.',
+    'ist empfohlen, aber hanafitisch kein zwingendes Drittel-Schema',
+    'Ruf unmittelbar vor dem Beginn eines Farḍ-Gebets; nicht begrifflich auf Gemeinschaftsgebete beschränkt.',
+    'für Kaza-Gebete Sunnah',
+):
+    if token not in guide:
+        fail(f"Fitre/Kurban/Iqamah religious-content regression: missing {token}")
+
+for forbidden in (
+    'Iqāmah / Kamet", "Kurzer Ruf unmittelbar vor dem Gemeinschaftsgebet.',
+    'Fitre-Betrag: €',
+    'Fıtır sadakası: €',
+):
+    if forbidden in guide:
+        fail(f"religious-content wording regression returned: {forbidden}")
+
 # 5a.4) High-priority missing fiqh modules must stay present and madhhab-scoped.
 for token in (
     'private struct PrayerSpecialSituationsView: View',
