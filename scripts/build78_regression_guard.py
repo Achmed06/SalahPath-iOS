@@ -432,6 +432,36 @@ for token in (
     if token not in guide:
         fail(f"premium learning-row icon regression: missing {token}")
 
+# 5a.3) Verified Islamic-content audit guards.
+for token in (
+    'Hanafi/Diyanet: Imam und Alleinbetender sagen beim Aufrichten',
+    'nach Abū Hanīfa sagt der Imam den Tahmīd nicht zusätzlich',
+    'Label(settings.t("Was bricht Wudu?", "Abdesti ne bozar?")',
+    'Fließendes Blut, Eiter oder Wundflüssigkeit',
+    'Mundvolles Erbrechen im hanafitischen Fiqh.',
+    'Berührung zwischen Mann und Frau allein bricht Wudu im hanafitischen Madhhab nicht automatisch.',
+    'private struct PrayerMistakesView: View',
+    'Gebetsfehler & Sehiv-Secdesi',
+    'Wann ist Sehiv-Secdesi nötig?',
+    'Im letzten Sitzen Ettehiyyâtü lesen.',
+    '„32 Farz“ ist eine traditionelle Lernformel',
+    'Die konkrete Zählweise hier folgt der hanafitischen/Diyanet-Lehrdarstellung',
+):
+    if token not in guide:
+        fail(f"verified Islamic guidance regression: missing {token}")
+
+for forbidden in (
+    'Allein/Imam: beim Hochkommen Semi\'allāhu limen hamideh; vollständig stehend Rabbenâ lekel-hamd.',
+    'deTitle: "5 Säulen / Bedingungen des Islam"',
+):
+    if forbidden in guide:
+        fail(f"ambiguous Islamic guidance returned: {forbidden}")
+
+if 'case .sunrise: return "Güneş"' not in home:
+    fail("Turkish sunrise label must be Güneş, not Sabah")
+if 'case .sunrise: return "Sabah"' in home:
+    fail("Turkish sunrise/prayer-name confusion returned")
+
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
 for token in (
