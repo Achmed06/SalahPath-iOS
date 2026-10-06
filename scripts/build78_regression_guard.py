@@ -343,9 +343,24 @@ for token in (
     'return "quran_audio"',
     'return "list"',
     'return "info"',
+    'SalahFeatureIcon(kind: "calendar")',
+    'SalahFeatureIcon(kind: "checkmark")',
+    'SalahFeatureIcon(kind: "bookmarks")',
+    'SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))',
+    'SalahFeatureIconLabel(\n                title: settings.t("Nicht verwechseln", "Karıştırma"),\n                kind: "info"',
+    'SalahFeatureIconLabel(\n                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),\n                    kind: "checkmark"',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
+
+for forbidden in (
+    'Image(systemName: "bookmark.fill")',
+    'Label(\n                settings.t("In Apple Kalender eintragen", "Apple Takvim\'e ekle"),\n                systemImage: "calendar.badge.plus"',
+    'Label(\n                settings.t("Nicht verwechseln", "Karıştırma"),\n                systemImage: "exclamationmark.triangle.fill"',
+    'Label(\n                    settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),\n                    systemImage: "checkmark.circle"',
+):
+    if forbidden in guide:
+        fail(f"decorative content SF Symbol regression: found {forbidden}")
 
 # 5a) Prayer/Wudu step navigation must never strand the viewport outside newly rendered content.
 for token in (
@@ -421,6 +436,32 @@ for forbidden in (
     if forbidden in guide:
         fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
 
+release_ui_sources = "\n".join(
+    read(path) for path in (
+        "SalahZeit/Views/GuideView.swift",
+        "SalahZeit/Views/HomeView.swift",
+        "SalahZeit/Views/PrayerDetailView.swift",
+        "SalahZeit/Views/QiblaView.swift",
+        "SalahZeit/Views/RootTabView.swift",
+        "SalahZeit/Views/SettingsView.swift",
+        "SalahZeit/SalahZeitApp.swift",
+    )
+)
+for forbidden in (
+    'LiveContainer',
+    'ChatGPT',
+    'wie in der PDF',
+    'as in the PDF',
+    'KI-generiert',
+    'AI-generated',
+    'SalahPath soll',
+    'SalahPath entscheidet hier nicht',
+    'AlQuran.cloud-API',
+    'CDN-Link',
+):
+    if forbidden in release_ui_sources:
+        fail(f"release UI meta wording regression: found {forbidden}")
+
 # 5a.2) Learning/content row icons must use standalone SalahPath artwork only.
 for token in (
     'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
@@ -477,6 +518,10 @@ for token in (
 home = (ROOT / "SalahZeit/Views/HomeView.swift").read_text(encoding="utf-8")
 root_tabs = (ROOT / "SalahZeit/Views/RootTabView.swift").read_text(encoding="utf-8")
 app_source = (ROOT / "SalahZeit/SalahZeitApp.swift").read_text(encoding="utf-8")
+if 'SalahFeatureIcon(kind: "checkmark")\n                    .frame(width: 54, height: 54)' not in app_source:
+    fail("onboarding completion artwork regression")
+if 'Image(systemName: "checkmark.circle.fill")\n                    .font(.system(size: 50))' in app_source:
+    fail("legacy onboarding completion SF Symbol returned")
 for token in (
     'SalahFeatureIcon(kind: glyphKind)',
     'SalahFeatureIcon(kind: icon)',
@@ -485,10 +530,14 @@ for token in (
     'icon: "quran"',
     'case "quran_audio":',
     'case "bookmarks":',
+    'SalahFeatureIcon(kind: "checkmark")',
     'LinearGradient(',
 ):
     if token not in home:
         fail(f"standalone dashboard icon regression: missing {token}")
+
+if 'Circle().fill(SalahTheme.softTeal).frame(width: 22, height: 22)\n                        Image(systemName: "checkmark.circle.fill")' in home:
+    fail("Home tracker decorative SF Symbol regression")
 
 for token in (
     'init(initialSelection: Int = 0)',
