@@ -9630,11 +9630,9 @@ struct QuranView: View {
                             } label: {
                                 VStack(alignment: .leading, spacing: 10) {
                                     HStack(spacing: 12) {
-                                        Image(systemName: "bookmark.fill")
-                                            .font(.system(size: 18, weight: .bold))
-                                            .foregroundStyle(SalahTheme.gold)
+                                        SalahFeatureIcon(kind: "bookmarks")
                                             .frame(width: 42, height: 42)
-                                            .background(SalahTheme.navigationTeal, in: Circle())
+                                            .accessibilityHidden(true)
 
                                         VStack(alignment: .leading, spacing: 3) {
                                             Text(settings.t("Weiterlesen", "Okumaya devam et"))
