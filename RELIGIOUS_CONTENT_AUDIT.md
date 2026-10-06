@@ -26,6 +26,23 @@ Diyanet references checked include:
 - Fasting intention deadline: https://kurul.diyanet.gov.tr/tr/fetva/oruca-ne-zaman-ve-nasil-niyet-edilir/0193c42d-6bc5-745a-7532-60288956700e
 - Fatiha behind an imam: https://kurul.diyanet.gov.tr/tr/fetva/imama-uyan-bir-kimse-fatiha-okuyabilir-mi/0193c42d-58f7-7851-de88-9e1eaf349583
 - Four-rakʿah non-muʾakkadah sitting details: https://kurul.diyanet.gov.tr/tr/fetva/ikindi-namazinin-sunneti-ile-yatsi-namazinin-ilk-sunnetinin/0193c42d-547b-7b06-0e8e-33a7ee736367
+- Tawaf purity / school difference: https://kurul.diyanet.gov.tr/tr/fetva/tavafin-abdestsiz-cunup-veya-adetli-olarak-yapilmasi/0195dc0b-8cfe-760d-b57b-ca80d2a60bf1
+- Umrah tawaf and saʿy status: https://kurul.diyanet.gov.tr/tr/fetva/tavaf-veya-sayden-herhangi-biri-yapilmadan-umre-tamamlanmis/d1238625-69b9-4114-08ff-08dd1c135351
+- Tawaf prayer: https://kurul.diyanet.gov.tr/tr/fetva/tavaf-namazini-kilmanin-hukmu-nedir-terk-edilmesi-halinde/bf462d13-1df7-4ca3-0918-08dd1c135351
+- Miqat / menstruation and ihram: https://kurul.diyanet.gov.tr/tr/fetva/bir-kadin-adetli-veya-lohusa-oldugu-icin-ihrama-girmeden-mikati-gecip-mekkeye-girerse-ne-yapmalidir/0193c42d-7ca2-7200-bee9-edb85720672b
+- Arafat wuquf / missed Hajj: https://kurul.diyanet.gov.tr/tr/fetva/hac-icin-ihrama-girdigi-halde-arafata-cikmayan-kimsenin/0193f7b5-184e-7eca-e633-b40490a664f2
+- Zakat definition / nisab / hawl: https://kurul.diyanet.gov.tr/tr/fetva/zekat-nedir/0193c42d-650d-7460-b43b-7ad3a03aead3
+- Zakat on trade goods: https://kurul.diyanet.gov.tr/tr/fetva/ticaret-malinin-zekati-nasil-hesaplanir/0193c42d-65f7-72b4-634c-35750c38a3a9
+- Zakat recipients: https://kurul.diyanet.gov.tr/tr/fetva/zekat-kimlere-verilir/0195dc46-f475-7bfe-a6b7-d965178350a2
+- Zakat exclusions: https://kurul.diyanet.gov.tr/tr/fetva/zekat-kimlere-verilmez/0193c42d-68dd-79f0-5170-0e1e12ea9289
+- Current Diyanet treatment of salary income / annual debt: https://kurul.diyanet.gov.tr/tr/kurul/karar/maas-ve-ucret-gibi-gelirlerin-zekati-nasil-hesaplanir-ve-ne/019b7485-db53-7b9e-969c-c981d3fb6081
+- Fitra obligation conditions: https://kurul.diyanet.gov.tr/tr/fetva/kimler-fitir-sadakasi-vermekle-yukumludur/0193c42d-6af1-76fd-2e54-950130801e4e
+- Fitra timing: https://kurul.diyanet.gov.tr/tr/fetva/fitir-sadakasi-nedir-ve-ne-zaman-verilir/0193c42d-6adb-726e-611e-ce66b36552d8
+- Kurban/Udhiyah obligation conditions: https://kurul.diyanet.gov.tr/tr/fetva/kimler-kurban-kesmekle-yukumludur/0193c42d-7d90-709b-3ed8-27c3fbecfd4b
+- Kurban/Udhiyah time window: https://kurul.diyanet.gov.tr/tr/fetva/kurban-kesim-vakti-ne-zaman-baslar-ve-biter/0193c42d-7df6-7211-ea11-b432baabc6c9
+- Kurban animal minimum ages: https://kurul.diyanet.gov.tr/tr/fetva/kurbanlik-hayvanlarin-yaslarinda-aranacak-olan-asgari-sinir-nedir/0193c42d-817f-784b-37b4-9d4b422c3ff9
+- Kurban delegation / shares: https://kurul.diyanet.gov.tr/tr/fetva/vekaletle-kurban-organizasyonlarinda-uyulmasi-gereken-esas-ve-sartlar-nelerdir/698c1483-ec49-4b65-0871-08dd1c135351
+- Kurban meat distribution and common misconceptions: https://kurul.diyanet.gov.tr/tr/duyuru/kurban-ibadetiyle-ilgili/019daaad-c113-739f-93ef-221ef6f09341
 
 Hadith/adhkar reference checked:
 
@@ -49,6 +66,17 @@ Hadith/adhkar reference checked:
 - The adhkar screen no longer creates separate “Daily” and “Special” counter sessions for adhkar whose cited practice is specifically morning/evening. This avoids turning a morning/evening count into an apparent additional third prescription.
 - The fasting-rules screen now lists deliberate intercourse explicitly alongside deliberate eating/drinking because Diyanet treats it as a major Ramadan fast-breaking case that can entail both Qada and Kaffarah.
 - Pregnancy/breastfeeding wording now identifies the Qada-only presentation as Hanafi/Diyanet and notes the Shafiʿi distinction where concern only for the child can add Fidya.
+- Hajj/Umrah now states that tawaf purity is Hanafi wajib and treated more strictly by the other Sunni schools; menstruation/nifas is explicitly not a reason to cross the miqat without entering ihram.
+- The Umrah sequence now explicitly says men may shave/shorten and women shorten hair after tawaf and saʿy; it no longer leaves the women’s exit-from-ihram step implicit.
+- The Hajj overview now marks Arafat wuquf and tawaf az-ziyarah/ifadah as indispensable core rites and warns that missing the valid Arafat window means that year’s Hajj has been missed.
+- Zakat now gives a concrete Diyanet/Hanafi baseline for cash, gold and trade wealth: 80.18 g 24k-gold-equivalent nisab, lunar-year condition and 2.5%, while warning that other asset categories have separate rules.
+- Zakat debt wording no longer suggests that every long-term outstanding balance is automatically deductible; it follows the current Diyanet treatment of amounts due within the relevant zakat year.
+- Zakat recipient wording now distinguishes Qur'an 9:60 eligibility from Hanafi exclusions for one’s own ascendants, descendants and spouse.
+- Fitra is now separated from Zakat: no growth/hawl requirement in the Hanafi/Diyanet presentation, responsibility for self and prepubescent children, and preferred payment before the Eid prayer; unnecessary delay beyond Eid is labelled makruh.
+- Kurban/Udhiyah now gives the Hanafi/Diyanet obligation profile instead of only saying “for sufficiently wealthy people”: sane, pubertal, resident, nisab after basic needs/debts, without a growth or one-year holding requirement.
+- Kurban now states the Hanafi cutting window through sunset of Eid day 3 and notes the Shafiʿi day-4 difference.
+- Kurban animal species, minimum ages, serious-defect rule, one-person small-stock rule, up-to-seven-person large-stock rule and minimum 1/7 share are now explicit.
+- Kurban delegation is explicitly allowed, while mere money donation is not presented as a substitute for Udhiyah. The app also rejects the folk claim that the meat must be split into exact mandatory thirds or given to exactly seven poor people.
 
 ## Areas checked without a required correction in this pass
 
