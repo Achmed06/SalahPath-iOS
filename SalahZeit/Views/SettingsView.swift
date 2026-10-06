@@ -589,11 +589,9 @@ struct SettingsView: View {
                     if let privacyURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md") {
                         Link(destination: privacyURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "hand.raised.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
                                 Text(settings.t("Datenschutzerklärung", "Gizlilik politikası"))
                                     .font(.system(size: 11.5, weight: .semibold))
@@ -614,11 +612,9 @@ struct SettingsView: View {
                     if let supportURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/issues") {
                         Link(destination: supportURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
                                 Text(settings.t("Support", "Destek"))
                                     .font(.system(size: 11.5, weight: .semibold))
