@@ -346,7 +346,8 @@ for token in (
     'SalahFeatureIcon(kind: "calendar")',
     'SalahFeatureIcon(kind: "checkmark")',
     'SalahFeatureIcon(kind: "bookmarks")',
-    'SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))',
+    'private func dhikrFeatureKind(for icon: String) -> String',
+    'SalahFeatureIcon(kind: dhikrFeatureKind(for: icon))',
     'SalahFeatureIconLabel(\n                title: settings.t("Nicht verwechseln", "Karıştırma"),\n                kind: "info"',
     'SalahFeatureIconLabel(\n                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),\n                    kind: "checkmark"',
 ):
