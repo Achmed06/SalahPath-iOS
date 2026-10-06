@@ -1073,6 +1073,9 @@ for token in (
     'Riba ist im Quran verboten.',
     'klassische verzinste Kredite und verzinste Termineinlagen',
     'etwas, das zur Erdsubstanz zählt, die vorgeschriebenen Wischhandlungen',
+    'wegen einer normalen Reise nicht einfach als echtes Jamʿ zusammengelegt',
+    'Witr ist hier nach Hanafi/Diyanet enthalten',
+    'Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
