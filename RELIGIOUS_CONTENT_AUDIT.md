@@ -21,6 +21,7 @@ Diyanet references checked include:
 - Travel prayer / combining prayers: https://kurul.diyanet.gov.tr/tr/fetva/namazlar-cem-edilmek-birlestirilmek-suretiyle-kilinabilir-mi/0193c42d-4df6-7e81-a5ab-dc99c59adece
 - Travel distance / residence rule: https://kurul.diyanet.gov.tr/tr/kurul/karar/umreye-gidenler-seferilik-hukumleri-acisindan-mekke-ve/009d3a5e-4dc0-4a27-090b-08dd1c135351
 - Qada scope including Witr: https://kurul.diyanet.gov.tr/tr/fetva/hangi-namazlar-kaza-edilir/0193c42d-5327-7459-64e7-211baaf5ab8c
+- Sehiv-Sujud triggers and procedure: https://kurul.diyanet.gov.tr/tr/fetva/hangi-sebeplerle-sehiv-secdesi-yapmak-gerekir-sehiv-secdesi-nasil-yapilir/0193c42d-5eb1-7caa-b1ce-6346f72b89fb
 - Qunut when not memorized: https://kurul.diyanet.gov.tr/tr/fetva/kunut-duasini-bilmeyen-bir-kimse-ne-yapar/0193c42d-5d9a-7c56-51a8-e76a981e98a9
 - Eid prayer scope and procedure: https://igdir.diyanet.gov.tr/sayfalar/contentdetail.aspx?ContentId=1850&MenuCategory=Kurumsal
 - Jumuʿah obligation / validity: https://kurul.diyanet.gov.tr/tr/fetva/cuma-namazi-ve-zuhr-i-ahir-namazinin-hukmu/f0ecca63-4fac-4234-b733-08dd1c135350
@@ -137,6 +138,7 @@ Hadith/adhkar reference checked:
 - The remaining Swift surfaces containing religious labels or rules (PrayerModels, prayer details, notification wording, settings, root navigation and prayer-time calculation descriptions) were cross-checked for contradictory Fard/Wajib/Sunnah wording. No additional religious-content contradiction was found in that pass.
 - Second-pass delta audit after the religious-audit merge found a missing Hanafi travel qualification: the Qasr guide now states that ordinary travel does not by itself permit true Jamʿ in the Hanafi baseline; Diyanet limits true Hanafi Jamʿ to the Hajj cases at ʿArafāt/Muzdalifah while allowing reliance on another Sunni school under its conditions in serious need.
 - The Qada tracker now labels its Witr counter as Hanafi/Diyanet-specific: missed Witr is made up because Witr is wajib in the Hanafi school, while the other Sunni schools classify Witr as Sunnah.
+- The Sehiv-Sujud summary now includes the full Hanafi/Diyanet trigger pattern: accidental delay, repetition or advancement of a rukn, as well as omission, delay or alteration of a wajib; the already-correct two-sujud procedure was left unchanged.
 - A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass
