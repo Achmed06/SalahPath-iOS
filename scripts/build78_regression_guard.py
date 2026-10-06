@@ -249,7 +249,9 @@ for token in (
     'SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon"',
     'deLabel: "Salām", trLabel: "Selâm"',
     'deNote: nil, trNote: nil',
-    'step.number == "16" || step.deHanafi != nil',
+    'if isMale, step.number == "16"',
+    'PrayerPoseArtwork(assetName: "male_finger")',
+    'else if isMale, step.deHanafi != nil',
     'if let detail = exactDetail(for: step.number)',
     'private func exactDetail(for number: Int) -> String?',
 ):
