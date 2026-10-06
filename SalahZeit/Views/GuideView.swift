@@ -6990,9 +6990,10 @@ struct FastingTrackerView: View {
                     refresh &+= 1
                 }
             )) {
-                Label(
-                    settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
-                    systemImage: "checkmark.circle"
+                SalahFeatureIconLabel(
+                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
+                    kind: "checkmark",
+                    iconSize: 20
                 )
             }
 
