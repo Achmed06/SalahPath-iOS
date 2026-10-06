@@ -608,13 +608,13 @@ private enum PrayerText {
         deLabel: "Beim Aufrichten", trLabel: "Doğrulurken",
         arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Semi'allāhu limen hamideh",
         deMeaning: "Allah hört den, der Ihn lobt.", trMeaning: "Allah kendisine hamd edeni işitir.",
-        deNote: "Hanafi: Imam und allein Betender sagen dies beim Aufrichten.", trNote: "Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.")
+        deNote: nil, trNote: nil)
 
     static let upright = PrayerRecitation(
         deLabel: "Vollständig aufgerichtet", trLabel: "Tam doğrulunca",
         arabic: "رَبَّنَا لَكَ الْحَمْدُ", transliteration: "Rabbenâ lekel-hamd",
         deMeaning: "Unser Herr, Dir gebührt das Lob.", trMeaning: "Rabbimiz, hamd Sana mahsustur.",
-        deNote: "Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.", trNote: "Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.")
+        deNote: nil, trNote: nil)
 
     static let sujud = PrayerRecitation(
         deLabel: "In der Secde", trLabel: "Secdede",
