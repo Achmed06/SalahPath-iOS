@@ -1829,7 +1829,7 @@ struct HomeView: View {
                 DashboardTile(title: settings.t("Gebets-Tracker", "Namaz Takibi"), subtitle: settings.t("Fortschritt", "İlerleme"), icon: "checkmark")
             }
             NavigationLink { SettingsView() } label: {
-                DashboardTile(title: settings.t("Einstellungen", "Ayarlar"), subtitle: settings.t("Einstellungen", "Ayarlar"), icon: "settings")
+                DashboardTile(title: settings.t("Einstellungen", "Ayarlar"), subtitle: settings.t("Profil & App", "Profil & uygulama"), icon: "settings")
             }
         }
         .buttonStyle(.plain)
@@ -1844,12 +1844,6 @@ struct HomeView: View {
                     .font(.system(size: 10.5, weight: .semibold, design: .serif))
                     .italic()
                     .foregroundStyle(SalahTheme.ink)
-                Text(settings.t(
-                    "Kleine Schritte bringen große Veränderungen.",
-                    "Küçük adımlar büyük değişimler getirir."
-                ))
-                    .font(.system(size: 8.5, weight: .medium))
-                    .foregroundStyle(SalahTheme.mutedInk)
             }
             Spacer(minLength: 0)
         }
