@@ -377,16 +377,8 @@ struct GuideView: View {
 
     private func learnTile(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 7) {
-            Group {
-                if let kind = guideFeatureKind(for: icon) {
-                    SalahFeatureIcon(kind: kind)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 25, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
-                }
-            }
-            .frame(width: 30, height: 30)
+            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+                .frame(width: 30, height: 30)
             .accessibilityHidden(true)
             Text(title)
                 .font(.system(size: 11, weight: .bold))
@@ -405,7 +397,7 @@ struct GuideView: View {
         .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 
-    private func guideFeatureKind(for symbol: String) -> String? {
+    private func guideFeatureKind(for symbol: String) -> String {
         switch symbol {
         case "rectangle.stack.badge.play.fill":
             return "prayer"
@@ -434,23 +426,10 @@ struct GuideView: View {
 
     private func referenceRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 10) {
-            Group {
-                if let kind = guideFeatureKind(for: icon) {
-                    // Premium artwork already carries its own visual identity.
-                    SalahFeatureIcon(kind: kind)
-                        .frame(width: 31, height: 31)
-                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.4, y: 1)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
-                        .frame(width: 29, height: 29)
-                        .background(SalahTheme.softTeal, in: Circle())
-                        .overlay { Circle().stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7) }
-                }
-            }
-            .frame(width: 31, height: 31)
-            .accessibilityHidden(true)
+            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+                .frame(width: 31, height: 31)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.4, y: 1)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.system(size: 12, weight: .bold))
@@ -1032,9 +1011,8 @@ struct PrayerHowToView: View {
 
     private func learningFeature(_ text: String, icon: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))
+                .frame(width: 17, height: 17)
             Text(text)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
