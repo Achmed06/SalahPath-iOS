@@ -956,9 +956,8 @@ struct PrayerHowToView: View {
 
     private func learningFeature(_ text: String, icon: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 15, height: 15)
             Text(text)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -6228,10 +6227,13 @@ struct PrayerTextsHubView: View {
 
             Section(settings.t("Gebetssuren", "Namaz Sûreleri")) {
                 NavigationLink { ShortSurahLearningView() } label: {
-                    Label(settings.t(
-                        "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
-                        "Fâtiha, Fîl, Kureyş, Mâûn, Kevser, Kâfirûn, Nasr, Tebbet, İhlâs, Felak, Nâs"
-                    ), systemImage: "play.square.stack.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t(
+                            "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
+                            "Fâtiha, Fîl, Kureyş, Mâûn, Kevser, Kâfirûn, Nasr, Tebbet, İhlâs, Felak, Nâs"
+                        ),
+                        kind: "quran_audio"
+                    )
                 }
             }
 
@@ -6295,8 +6297,8 @@ private struct QuranReferenceLink: View {
             QuranReferenceJumpView(surahNumber: surah, ayah: ayah)
         } label: {
             HStack(spacing: 10) {
-                Image(systemName: "book.closed.fill")
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "quran")
+                    .frame(width: 24, height: 24)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.headline)
@@ -6737,9 +6739,10 @@ struct MorningEveningAdhkarView: View {
                 NavigationLink {
                     QuranReferenceJumpView(surahNumber: 2, ayah: 255)
                 } label: {
-                    Label(
-                        settings.t("Âyetel-Kürsî vollständig öffnen", "Âyetel Kürsî tam metni aç"),
-                        systemImage: "book.closed.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Âyetel-Kürsî vollständig öffnen", "Âyetel Kürsî tam metni aç"),
+                        kind: "quran",
+                        iconSize: 18
                     )
                     .font(.caption.bold())
                 }
@@ -6749,9 +6752,10 @@ struct MorningEveningAdhkarView: View {
                 NavigationLink {
                     ShortSurahLearningView()
                 } label: {
-                    Label(
-                        settings.t("Ikhlas, Falaq und Nas vollständig öffnen", "İhlâs, Felak ve Nâs tam metni aç"),
-                        systemImage: "books.vertical.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Ikhlas, Falaq und Nas vollständig öffnen", "İhlâs, Felak ve Nâs tam metni aç"),
+                        kind: "quran",
+                        iconSize: 18
                     )
                     .font(.caption.bold())
                 }
@@ -6934,12 +6938,13 @@ struct FastingTrackerView: View {
             .fixedSize(horizontal: false, vertical: true)
 
             if hijriCalendar.component(.month, from: now) == 9 {
-                Label(
-                    settings.t(
+                SalahFeatureIconLabel(
+                    title: settings.t(
                         "Ramadan · Tag \(hijriCalendar.component(.day, from: now))",
                         "Ramazan · \(hijriCalendar.component(.day, from: now)). gün"
                     ),
-                    systemImage: "sparkles"
+                    kind: "sparkles",
+                    iconSize: 21
                 )
                 .font(.headline.bold())
                 .foregroundStyle(SalahTheme.teal)
@@ -6953,21 +6958,21 @@ struct FastingTrackerView: View {
         fastingNavigationCard(
             title: settings.t("1 · Fasten ganz einfach", "1 · Orucu en kolay şekilde öğren"),
             subtitle: settings.t("Absicht, Sahur, Fajr, Tagesablauf und Iftar", "Niyet, sahur, imsak, günün akışı ve iftar"),
-            icon: "1.circle.fill",
+            icon: "1",
             destination: AnyView(FastingBasicsView())
         )
 
         fastingNavigationCard(
             title: settings.t("2 · Was bricht das Fasten?", "2 · Orucu neler bozar?"),
             subtitle: settings.t("Klare Beispiele, Qada, Kaffarah und häufige Fragen", "Açık örnekler, kaza, kefaret ve sık sorulanlar"),
-            icon: "2.circle.fill",
+            icon: "2",
             destination: AnyView(FastingRulesView())
         )
 
         fastingNavigationCard(
             title: settings.t("3 · Krankheit, Reise & besondere Situationen", "3 · Hastalık, yolculuk ve özel durumlar"),
             subtitle: settings.t("Wann verschieben? Wann Qada? Wann Fidya?", "Ne zaman erteleme, kaza veya fidye gerekir?"),
-            icon: "3.circle.fill",
+            icon: "3",
             destination: AnyView(FastingExceptionsView())
         )
     }
@@ -7054,8 +7059,8 @@ struct FastingTrackerView: View {
     private func fastingNavigationCard(title: String, subtitle: String, icon: String, destination: AnyView) -> some View {
         NavigationLink { destination } label: {
             HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.title2)
+                Text(icon)
+                    .font(.headline.bold().monospacedDigit())
                     .foregroundStyle(SalahTheme.gold)
                     .frame(width: 44, height: 44)
                     .background(SalahTheme.navigationTeal, in: Circle())
@@ -7230,9 +7235,8 @@ struct FastingRulesView: View {
     @ViewBuilder
     private func rule(_ icon: String, _ title: String, _ detail: String) -> some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: icon)
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 24)
+            SalahFeatureIcon(kind: "moon")
+                .frame(width: 24, height: 24)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline)
                 Text(detail).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -9498,11 +9502,9 @@ struct QuranView: View {
                             QuranDirectoryView()
                         } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "books.vertical.fill")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.gold)
+                                SalahFeatureIcon(kind: "quran")
                                     .frame(width: 42, height: 42)
-                                    .background(SalahTheme.navigationTeal, in: Circle())
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(settings.t("Vollständiges Quran-Verzeichnis", "Tam Kur'an Dizini"))
