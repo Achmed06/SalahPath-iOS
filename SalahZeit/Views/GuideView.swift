@@ -7438,7 +7438,7 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventHeaderCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label(localizedEventTitle, systemImage: event.symbol)
+            SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon", iconSize: 27)
                 .font(.title2.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
