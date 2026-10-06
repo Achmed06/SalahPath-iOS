@@ -797,7 +797,7 @@ if 'let error = store.error' in guide_source:
 location_source = read("SalahZeit/Services/LocationManager.swift")
 for token in (
     'func localizedLastError(_ language: AppLanguage) -> String?',
-    'Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.',
+    'Konum erişimi kapalı. iPhone ayarlarından konum erişimini etkinleştir.',
     'Lütfen konum, şehir veya posta kodu gir.',
     'Konum bulunamadı.',
     'Konum bulunamadı. Lütfen girişini kontrol et.',
