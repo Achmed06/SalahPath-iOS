@@ -1217,9 +1217,8 @@ struct HomeView: View {
                             ReferenceSunGlyph()
                                 .frame(width: 15, height: 15)
                         } else {
-                            Image(systemName: prayer.kind.systemImage)
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.gold)
+                            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                                .frame(width: 15, height: 15)
                         }
                     }
 
@@ -1270,16 +1269,17 @@ struct HomeView: View {
 
     private var prayerLegendCard: some View {
         HStack(spacing: 8) {
-            legendPill(settings.t("Fard", "Farz"), detail: settings.t("Pflicht", "Zorunlu"), icon: "checkmark.seal.fill")
-            legendPill(settings.t("Sunnah", "Sünnet"), detail: settings.t("Prophetische Praxis", "Peygamber uygulaması"), icon: "star.fill")
-            legendPill(settings.t("Witr", "Vitir"), detail: settings.t("Hanafi: wajib", "Hanefî: vacip"), icon: "moon.stars.fill")
+            legendPill(settings.t("Fard", "Farz"), detail: settings.t("Pflicht", "Zorunlu"), kind: "checkmark")
+            legendPill(settings.t("Sunnah", "Sünnet"), detail: settings.t("Prophetische Praxis", "Peygamber uygulaması"), kind: "sparkles")
+            legendPill(settings.t("Witr", "Vitir"), detail: settings.t("Hanafi: wajib", "Hanefî: vacip"), kind: "moon")
         }
         .salahCard()
     }
 
-    private func legendPill(_ title: String, detail: String, icon: String) -> some View {
+    private func legendPill(_ title: String, detail: String, kind: String) -> some View {
         VStack(spacing: 5) {
-            Image(systemName: icon).foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: kind)
+                .frame(width: 22, height: 22)
             Text(title).font(.caption.bold())
             Text(detail).font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).lineLimit(2)
         }
@@ -1724,9 +1724,8 @@ struct HomeView: View {
     private func streakSummary(_ value: Int) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(SalahTheme.gold)
+                SalahFeatureIcon(kind: "sparkles")
+                    .frame(width: 20, height: 20)
 
                 Text("\(value)")
                     .font(.system(size: 21, weight: .bold).monospacedDigit())
@@ -1756,9 +1755,9 @@ struct HomeView: View {
 
     private var dailyDeenCard: some View {
         let tasks = [
-            ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "book.fill"),
-            ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "circle.grid.cross.fill"),
-            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "graduationcap.fill")
+            ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "quran"),
+            ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "dhikr"),
+            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "duas")
         ]
         let done = tasks.filter { DailyDeenStore.isDone($0.0, now) }.count
         return VStack(alignment: .leading, spacing: 10) {
@@ -1778,7 +1777,8 @@ struct HomeView: View {
                     dailyDeenRefresh &+= 1
                 } label: {
                     HStack(spacing: 10) {
-                        Image(systemName: task.2).frame(width: 22).foregroundStyle(SalahTheme.teal)
+                        SalahFeatureIcon(kind: task.2)
+                            .frame(width: 22, height: 22)
                         Text(task.1).foregroundStyle(SalahTheme.ink)
                         Spacer()
                         Image(systemName: checked ? "checkmark.circle.fill" : "circle")
@@ -3221,9 +3221,8 @@ private struct PrayerRow: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            Image(systemName: prayer.kind.systemImage)
-                .frame(width: 28)
-                .foregroundStyle(isNext ? SalahTheme.gold : SalahTheme.teal)
+            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                .frame(width: 28, height: 28)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(prayer.kind.localizedName(settings.language)).font(.subheadline.bold())
