@@ -1269,16 +1269,17 @@ struct HomeView: View {
 
     private var prayerLegendCard: some View {
         HStack(spacing: 8) {
-            legendPill(settings.t("Fard", "Farz"), detail: settings.t("Pflicht", "Zorunlu"), icon: "checkmark.seal.fill")
-            legendPill(settings.t("Sunnah", "Sünnet"), detail: settings.t("Prophetische Praxis", "Peygamber uygulaması"), icon: "star.fill")
-            legendPill(settings.t("Witr", "Vitir"), detail: settings.t("Hanafi: wajib", "Hanefî: vacip"), icon: "moon.stars.fill")
+            legendPill(settings.t("Fard", "Farz"), detail: settings.t("Pflicht", "Zorunlu"), kind: "checkmark")
+            legendPill(settings.t("Sunnah", "Sünnet"), detail: settings.t("Prophetische Praxis", "Peygamber uygulaması"), kind: "sparkles")
+            legendPill(settings.t("Witr", "Vitir"), detail: settings.t("Hanafi: wajib", "Hanefî: vacip"), kind: "moon")
         }
         .salahCard()
     }
 
-    private func legendPill(_ title: String, detail: String, icon: String) -> some View {
+    private func legendPill(_ title: String, detail: String, kind: String) -> some View {
         VStack(spacing: 5) {
-            Image(systemName: icon).foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: kind)
+                .frame(width: 24, height: 24)
             Text(title).font(.caption.bold())
             Text(detail).font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center).lineLimit(2)
         }
