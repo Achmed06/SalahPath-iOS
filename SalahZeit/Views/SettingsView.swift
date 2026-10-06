@@ -16,6 +16,33 @@ struct SettingsView: View {
     @State private var manualLocationError: String?
     @State private var isResolvingManualLocation = false
 
+    private func settingsFeatureKind(for icon: String) -> String {
+        switch icon {
+        case "language", "globe":
+            return "language"
+        case "profile", "person.2.fill", "person.fill":
+            return "profile"
+        case "wand.and.stars":
+            return "sparkles"
+        case "circle.lefthalf.filled":
+            return "moon"
+        case "clock.fill", "clock.badge.checkmark", "24.circle.fill":
+            return "times"
+        case "fajr", "dhuhr", "asr", "maghrib", "isha":
+            return icon
+        case "waveform", "arrow.down.circle.fill", "speaker.wave.3.fill":
+            return "quran_audio"
+        case "text.bubble.fill", "character.cursor.ibeam", "doc.text.fill":
+            return "quran"
+        case "bell.fill":
+            return "reminder"
+        case "mappin.and.ellipse", "location.fill":
+            return "qibla"
+        default:
+            return "settings"
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 11) {
@@ -95,7 +122,7 @@ struct SettingsView: View {
                             Button(rule.title(settings.language)) { settings.asrRule = rule }
                         }
                     } label: {
-                        profileRow(icon: "sun.max.fill", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
+                        profileRow(icon: "asr", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
                     }
 
                     Text(settings.asrRule.note(settings.language))
@@ -403,11 +430,11 @@ struct SettingsView: View {
                             .padding(.top, 9)
                             .padding(.bottom, 3)
 
-                        referenceToggle(icon: "sun.horizon.fill", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
-                        referenceToggle(icon: "sun.max.fill", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
-                        referenceToggle(icon: "sun.min.fill", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
-                        referenceToggle(icon: "sunset.fill", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
-                        referenceToggle(icon: "moon.stars.fill", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
+                        referenceToggle(icon: "fajr", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
+                        referenceToggle(icon: "dhuhr", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
+                        referenceToggle(icon: "asr", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
+                        referenceToggle(icon: "maghrib", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
+                        referenceToggle(icon: "isha", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
                     }
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
@@ -589,11 +616,8 @@ struct SettingsView: View {
                     if let privacyURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md") {
                         Link(destination: privacyURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "hand.raised.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
 
                                 Text(settings.t("Datenschutzerklärung", "Gizlilik politikası"))
                                     .font(.system(size: 11.5, weight: .semibold))
@@ -614,11 +638,8 @@ struct SettingsView: View {
                     if let supportURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/issues") {
                         Link(destination: supportURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
 
                                 Text(settings.t("Support", "Destek"))
                                     .font(.system(size: 11.5, weight: .semibold))
@@ -849,10 +870,12 @@ struct SettingsView: View {
                     .font(.system(size: 9.5, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.82))
                 HStack(spacing: 5) {
-                    Image(systemName: "globe")
+                    SalahFeatureIcon(kind: "language")
+                        .frame(width: 13, height: 13)
                     Text(settings.language.title)
                     Text("·")
-                    Image(systemName: settings.prayerAudience == .male ? "person.fill" : "person.fill")
+                    SalahFeatureIcon(kind: "profile")
+                        .frame(width: 13, height: 13)
                     Text(settings.prayerAudience.title(settings.language))
                 }
                 .font(.system(size: 8.5, weight: .bold))
@@ -886,11 +909,8 @@ struct SettingsView: View {
 
     private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: settingsFeatureKind(for: icon))
                 .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -914,11 +934,8 @@ struct SettingsView: View {
 
     private func referenceToggle(icon: String, title: String, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: settingsFeatureKind(for: icon))
                 .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
