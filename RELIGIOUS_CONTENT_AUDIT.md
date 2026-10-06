@@ -43,6 +43,17 @@ Diyanet references checked include:
 - Kurban animal minimum ages: https://kurul.diyanet.gov.tr/tr/fetva/kurbanlik-hayvanlarin-yaslarinda-aranacak-olan-asgari-sinir-nedir/0193c42d-817f-784b-37b4-9d4b422c3ff9
 - Kurban delegation / shares: https://kurul.diyanet.gov.tr/tr/fetva/vekaletle-kurban-organizasyonlarinda-uyulmasi-gereken-esas-ve-sartlar-nelerdir/698c1483-ec49-4b65-0871-08dd1c135351
 - Kurban meat distribution and common misconceptions: https://kurul.diyanet.gov.tr/tr/duyuru/kurban-ibadetiyle-ilgili/019daaad-c113-739f-93ef-221ef6f09341
+- Vow/adak validity conditions: https://kurul.diyanet.gov.tr/tr/fetva/adakla-ilgili-sartlar-nelerdir/0193c42d-8299-7efa-c15f-14673447bb22
+- Oath/Yemin kaffarah: https://kurul.diyanet.gov.tr/tr/fetva/yemin-keffareti-nasil-yerine-getirilir/0193c42d-8428-745f-c361-bdb6250a919f
+- Oath to sin / omit obligation: https://kurul.diyanet.gov.tr/tr/fetva/dini-bir-emri-yerine-getirmemeye-veya-bir-harami-islemeye-yemin-eden-kisi-ne-yapmalidir/0193c42d-847a-7c3f-752e-82efb0fc4d22
+- Marriage consent / coercion: https://kurul.diyanet.gov.tr/tr/fetva/tehdit-altinda-yapilan-nikah-akdi-gecerli-midir/0193c42d-8a3b-78f0-946f-7622779d2fac
+- Nikah witnesses: https://kurul.diyanet.gov.tr/tr/fetva/nikahta-sahitligin-hukmu-nedir/0193c42d-89ff-729a-dbd8-0c36052822ed
+- Mahr: https://kurul.diyanet.gov.tr/tr/fetva/mehir-ne-demektir-cesitleri-nelerdir/0193c42d-8a53-7eab-e49b-d7c6e07fe87f
+- Civil/registered marriage and religious validity: https://kurul.diyanet.gov.tr/tr/fetva/resmi-nikah-kiydiran-kimse-ayrica-dini-nikah-kiydirmali-midir/0193c42d-89e7-7773-28aa-9c4b85fde97b
+- Indirect divorce wording / intent: https://kurul.diyanet.gov.tr/tr/fetva/bosama-anlamina-gelebilecek-kinayeli-sozlerle-bosanma/0193c42d-8d69-774d-2ecc-0ab2cfdc1a33
+- Court-final divorce timing: https://kurul.diyanet.gov.tr/tr/fetva/bosanma-davalarinda-dinen-bosanma-hangi-asamada-gerceklesir/0194078f-f57b-7d39-d321-32285143f3e9
+- Estate order before inheritance: https://kurul.diyanet.gov.tr/tr/fetva/olenin-geride-biraktigi-mallar-tereke-hangi-islemlerden/0193c42d-930d-70fd-221b-01d99a337b46
+- Wasiyyah one-third limit and heir consent: https://kurul.diyanet.gov.tr/tr/fetva/vasiyet-ve-hukmu-nedir/0193c42d-9131-74da-5108-e57d37a00a93
 
 Hadith/adhkar reference checked:
 
@@ -77,6 +88,15 @@ Hadith/adhkar reference checked:
 - Kurban now states the Hanafi cutting window through sunset of Eid day 3 and notes the Shafiʿi day-4 difference.
 - Kurban animal species, minimum ages, serious-defect rule, one-person small-stock rule, up-to-seven-person large-stock rule and minimum 1/7 share are now explicit.
 - Kurban delegation is explicitly allowed, while mere money donation is not presented as a substitute for Udhiyah. The app also rejects the folk claim that the meat must be split into exact mandatory thirds or given to exactly seven poor people.
+- Adak/Yemin now distinguishes a valid worship-oriented vow from a vow involving sin and gives the Quran 5:89 oath-kaffarah sequence instead of the previous generic “kaffarah depends” wording.
+- The app now warns that phrases such as “şart olsun” cannot be classified without exact wording, intent and linguistic context.
+- An oath to commit a prohibited act or omit an obligation is explicitly not something to be “kept”; it is broken and the relevant oath kaffarah is due.
+- Nikah guidance now names free consent, valid witnesses and religious marriage impediments instead of leaving “defined requirements” vague.
+- Mahr is explicitly treated as the woman’s marital right and not, in the Hanafi presentation, as a condition whose omission by itself invalidates the nikah.
+- The family-law overview now explains that a civilly registered marriage satisfying the religious contract conditions can also be religiously valid; registration is not presented as religiously irrelevant.
+- Divorce/Talaq is now protected against app-style overconfidence: no ruling should be generated from a shortened sentence because explicit/indirect wording, intent, prior divorces, madhhab and court decisions can change the outcome.
+- Inheritance now states the estate order before division, the default one-third wasiyyah limit, and the rule that a testamentary gift to an existing heir depends on the other heirs’ consent in the presented Diyanet/Hanafi framework.
+- The app now explicitly refuses the idea that a real inheritance can be safely calculated from a short family summary without the complete heir structure and applicable civil law.
 
 ## Areas checked without a required correction in this pass
 
