@@ -1084,6 +1084,9 @@ for token in (
     'Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir',
     "Allâhümme'c-alhü lenâ feratan, vec'alhü lenâ ecran ve zuhran, vec'alhü lenâ şefî'an müşeffe'an.",
     "Allâhümme'c-alhâ lenâ feratan, vec'alhâ lenâ ecran ve zuhran, vec'alhâ lenâ şefî'aten müşeffe'aten.",
+    'Eine Janazah, die erst während dieser Zeit vorbereitet wurde, darf gebetet werden',
+    'Secde ayeti bu vakitte okunmuşsa tilavet secdesi yapılabilir',
+    'Ab dem Zeitpunkt, an dem der Khatīb am Freitag die Minbar besteigt',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
