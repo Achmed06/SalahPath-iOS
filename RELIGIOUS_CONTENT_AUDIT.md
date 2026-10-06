@@ -54,6 +54,29 @@ Diyanet references checked include:
 - Court-final divorce timing: https://kurul.diyanet.gov.tr/tr/fetva/bosanma-davalarinda-dinen-bosanma-hangi-asamada-gerceklesir/0194078f-f57b-7d39-d321-32285143f3e9
 - Estate order before inheritance: https://kurul.diyanet.gov.tr/tr/fetva/olenin-geride-biraktigi-mallar-tereke-hangi-islemlerden/0193c42d-930d-70fd-221b-01d99a337b46
 - Wasiyyah one-third limit and heir consent: https://kurul.diyanet.gov.tr/tr/fetva/vasiyet-ve-hukmu-nedir/0193c42d-9131-74da-5108-e57d37a00a93
+- Tashriq takbirs / Hanafi obligation and time span: https://kurul.diyanet.gov.tr/tr/fetva/tesrik-tekbirlerinin-dini-hukmu-nedir-bu-tekbirleri-kimler/0193c42d-5bea-7d07-79e2-18ca426d1fa5
+- Fasting on Eid and Tashriq days: https://kurul.diyanet.gov.tr/tr/fetva/bayram-gunlerinde-oruc-tutulur-mu/0193c42d-6d17-7546-6958-5372cf808769
+- Days on which fasting is prohibited / strongly prohibited in the Hanafi presentation: https://kurul.diyanet.gov.tr/tr/fetva/oruc-tutulmasi-yasak-olan-gunler-hangileridir/0193c42d-6cf6-779e-de80-7b569030adc4
+- Ashura fasting: https://kurul.diyanet.gov.tr/tr/fetva/muharrem-ayinin-fazileti-ve-bu-ayda-ozellikle-de-10/0193c42d-6c53-745e-7cee-249ac889ef38
+- Six Shawwal fasts: https://kurul.diyanet.gov.tr/tr/fetva/sevval-orucunun-hukmu-nedir-ramazanda-tutulamayan-oruclar/0193c42d-6c0d-746d-2387-7f0c6c28be33
+- Laylat al-Qadr timing: https://kurul.diyanet.gov.tr/tr/fetva/kadir-gecesinin-tayini-hakkindaki-rivayetler-nasil-anlasilmalidir/0193c42d-7447-7040-5b40-24cf245a48a2
+- Tasbih prayer procedure: https://kurul.diyanet.gov.tr/tr/fetva/tesbih-namazi-nasil-kilinir/0193c42d-54ef-74bd-c4dd-55cfc15a6830
+- Allah's well-known 99-name list and the note that the divine names are not limited to 99: https://kurul.diyanet.gov.tr/tr/kurul/karar/allahin-99-ismi-hakkinda-bilgi-verir-misiniz/56aa0e7b-6fe0-45ce-0892-08dd1c135351
+- Farewell Pilgrimage / Farewell Sermon source structure: https://kurul.diyanet.gov.tr/tr/fetva/veda-hacci-ve-veda-hutbesi-nedir/0193c42d-76de-7cb1-8900-944307b08e22
+- Diyanet article noting the compiled nature of the commonly presented Farewell Sermon: https://dijital.diyanet.gov.tr/Dergilik/makale/insan-haklari-baglaminda-nebevi-emanet-veda-hutbesi?id=38185&productId=6376
+- Interest-bearing credit: https://kurul.diyanet.gov.tr/tr/fetva/bir-kisinin-malini-faizli-kredi-kullanarak-satin-almak/0193c42d-a7f6-7f12-9de1-c890d4334681
+- Interest-bearing term deposits / inflation qualification: https://kurul.diyanet.gov.tr/tr/fetva/bankalarin-vadeli-mevduat-hesaplarina-para-yatirmanin-dini-hukmu-nedir/0193c42d-a81d-7f20-2099-0214da1804fd
+- Pre-agreed excess on a loan: https://kurul.diyanet.gov.tr/tr/fetva/yardimlasma-sandigindan-borc-olarak-alinan-para-geri-odenirken-bir-fazlalik-odenmesi-caiz-midir/0193c42d-97b1-7a4f-3e1b-3925a6b498d9
+- Asr-i awwal / Asr-i thani: https://kurul.diyanet.gov.tr/tr/fetva/asr-i-evvel-ve-asr-i-sani-ne-demektir/0193c42d-4d64-7acf-2961-12b0db4e1723
+- Asr prayer time: https://kurul.diyanet.gov.tr/tr/fetva/ikindi-namazinin-vakti-ne-zaman-baslar-ve-ne-zaman-sona-erer/0193c42d-4d7a-7845-4556-cee1e1d23dd6
+
+TDV historical references checked include:
+
+- Zayd ibn Thabit / Quran collection: https://islamansiklopedisi.org.tr/zeyd-b-sabit
+- Quran history: https://islamansiklopedisi.org.tr/kuran
+- Uthman: https://islamansiklopedisi.org.tr/osman
+- Hijra / adoption as calendar epoch: https://islamansiklopedisi.org.tr/hicret
+- Ali: https://islamansiklopedisi.org.tr/ali
 
 Hadith/adhkar reference checked:
 
@@ -97,6 +120,19 @@ Hadith/adhkar reference checked:
 - Divorce/Talaq is now protected against app-style overconfidence: no ruling should be generated from a shortened sentence because explicit/indirect wording, intent, prior divorces, madhhab and court decisions can change the outcome.
 - Inheritance now states the estate order before division, the default one-third wasiyyah limit, and the rule that a testamentary gift to an existing heir depends on the other heirs’ consent in the presented Diyanet/Hanafi framework.
 - The app now explicitly refuses the idea that a real inheritance can be safely calculated from a short family summary without the complete heir structure and applicable civil law.
+- The Hijri-calendar Eid al-Adha card no longer mixes the Hanafi wajib ruling with a generic “obligation or Sunnah” phrase; it identifies Hanafi wajib and notes that other schools may classify Udhiyah as Sunnah.
+- Tashriq takbirs are now explicitly labelled Hanafi wajib for women and men after each of the 23 fard prayer times from Fajr on 9 Dhu l-Hijjah through Asr on 13 Dhu l-Hijjah; the Shafiʿi Sunnah classification is noted separately.
+- The calendar no longer describes 10–13 Dhu l-Hijjah merely as “not ordinary voluntary fast days”; it identifies fasting on the Eid/Tashriq days as tahriman makruh in the presented Hanafi/Diyanet framework.
+- Four duplicated PrayerCatalog records were found and removed: Tahajjud, Duha, Istikhara and Tilawah-Sajdah each now have one canonical catalogue entry.
+- The 32-Farz learning sheet had retained an older, overly broad Tayammum phrase (“earth-like surface”); it now uses the same “earth or material counted as earth substance” qualification as the detailed Tayammum chapter.
+- Riba guidance was strengthened from a vague “modern finance is differentiated” statement: the app now identifies pre-agreed loan excess, classical interest-bearing credit and interest-bearing term deposits as prohibited interest in the checked Diyanet presentation, while still requiring product-level review for genuinely different contract structures.
+- Two invisible soft-hyphen characters embedded in user-visible German religious text were removed to prevent malformed words and source/guard mismatches.
+- The famous 99-name Esmaul Husna sequence was compared item by item against the checked Diyanet list: all 99 Arabic entries and their order matched after normalizing only Arabic diacritics. The existing warning that Allah's names are not limited to 99 was retained.
+- The Farewell Sermon section already correctly warns that the commonly circulated “Veda Hutbesi” is a compilation from multiple speeches/reports rather than one single word-for-word transmitted block; no correction was required.
+- The four-caliph learning section was rechecked against TDV/Diyanet historical references. Core biographical claims reviewed in this pass required no correction, and the existing neutrality warning for disputed early internal conflicts remains.
+- Ashura, six Shawwal fasts, Laylat al-Qadr, Tasbih prayer and the reviewed Hijri-calendar cautions were rechecked; no additional correction was required beyond the Eid/Tashriq changes above.
+- The remaining Swift surfaces containing religious labels or rules (PrayerModels, prayer details, notification wording, settings, root navigation and prayer-time calculation descriptions) were cross-checked for contradictory Fard/Wajib/Sunnah wording. No additional religious-content contradiction was found in that pass.
+- A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass
 
@@ -108,6 +144,11 @@ Hadith/adhkar reference checked:
 - Basic fasting start/end wording: true Fajr/Imsak to sunset.
 - Quranic dua entries reviewed in the earlier pass.
 - Fixed counts on the reviewed morning/evening adhkar entries that are tied to identifiable Hisn al-Muslim references.
+- Ayat al-Kursi morning/evening entry and the reviewed fixed-count adhkar source labels.
+- The 99-name Arabic Esmaul Husna list and order against the checked Diyanet sequence.
+- Farewell Sermon source disclaimer and core themes.
+- Core four-caliph chronology and the reviewed biographical claims.
+- Prayer-time settings text distinguishing Diyanet's Asr-i awwal / Imameyn calculation from Abu Hanifa's later Asr-i thani view.
 
 Hijri-calendar screens already state that the app uses a calculated calendar and that regional moon sighting may shift an actual lunar-month start. This distinction should remain.
 
