@@ -335,6 +335,7 @@ for token in (
     'SalahFeatureIcon(kind: "language")',
     'SalahFeatureIcon(kind: "calendar")',
     'SalahFeatureIcon(kind: "checkmark")',
+    'SalahFeatureIcon(kind: "bookmarks")',
     'SalahFeatureIconLabel(\n                title: settings.t("Nicht verwechseln", "Karıştırma"),\n                kind: "info"',
     'SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))',
 ):
@@ -343,6 +344,7 @@ for token in (
 
 for forbidden in (
     'Image(systemName: "globe")',
+    'Image(systemName: "bookmark.fill")',
     'Label(\n                settings.t("In Apple Kalender eintragen", "Apple Takvim\'e ekle"),\n                systemImage: "calendar.badge.plus"',
     'Label(\n                settings.t("Nicht verwechseln", "Karıştırma"),\n                systemImage: "exclamationmark.triangle.fill"',
 ):
