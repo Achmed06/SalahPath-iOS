@@ -1421,21 +1421,17 @@ private struct PrayerSalamVisual: View {
         salamDirection(
             number: isRight ? "1" : "2",
             direction: isRight ? settings.t("RECHTS", "SAĞA") : settings.t("LINKS", "SOLA"),
-            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")",
-            instruction: isRight
-                ? settings.t(
-                    "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
-                    "Gövde önde kalır. Başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı söyle."
-                )
-                : settings.t(
-                    "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut.",
-                    "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle."
-                )
+            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")"
         )
-        .accessibilityElement(children: .contain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            isRight
+                ? settings.t("Salām nach rechts", "Sağa selâm")
+                : settings.t("Salām nach links", "Sola selâm")
+        )
     }
 
-    private func salamDirection(number: String, direction: String, imageName: String, instruction: String) -> some View {
+    private func salamDirection(number: String, direction: String, imageName: String) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(number)
@@ -1449,17 +1445,11 @@ private struct PrayerSalamVisual: View {
                 Spacer()
             }
 
-            HStack(alignment: .center, spacing: 14) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 118, height: 150)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-
-                Text(instruction)
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            PrayerPoseArtwork(assetName: imageName)
+                .frame(maxWidth: .infinity)
+                .frame(height: 190)
+                .background(SalahTheme.cream)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
 
         }
         .padding(11)
