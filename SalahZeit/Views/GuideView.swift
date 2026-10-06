@@ -1365,7 +1365,7 @@ private struct PrayerTutorialStepCard: View {
                 .background(isMale ? maleSoftTeal : SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
 
                 if !isMale, let note = settings.language == .german ? step.deHanafi : step.trHanafi {
-                    Label(note, systemImage: "info.circle.fill")
+                    SalahFeatureIconLabel(title: note, kind: "info", iconSize: 18)
                         .font(.caption)
                         .foregroundStyle(SalahTheme.mutedInk)
                         .padding(11)
@@ -1553,7 +1553,7 @@ private struct JanazahDuaView: View {
                     "Allahümme Salli ve Allahümme Bârik dualarını oku."
                 ))
                 NavigationLink { PrayerDuaAudioView() } label: {
-                    Label(settings.t("Salli & Bârik öffnen", "Salli & Bârik'i aç"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("Salli & Bârik öffnen", "Salli & Bârik'i aç"), kind: "duas")
                 }
             }
 
@@ -3103,7 +3103,7 @@ struct PrayerCatalogView: View {
 
             Section {
                 NavigationLink { PrayerMakruhTimesView() } label: {
-                    Label(settings.t("Wann kein Gebet begonnen wird · Kerāhat", "Namaza başlanmayan vakitler · Kerahat"), systemImage: "sun.horizon.fill")
+                    SalahFeatureIconLabel(title: settings.t("Wann kein Gebet begonnen wird · Kerāhat", "Namaza başlanmayan vakitler · Kerahat"), kind: "times")
                 }
             }
 
@@ -3428,7 +3428,7 @@ private struct PrayerCatalogDetailView: View {
                             .foregroundStyle(SalahTheme.deepTeal)
 
                         ForEach(Array(notes.enumerated()), id: \.offset) { _, note in
-                            Label(note, systemImage: "checkmark.circle")
+                            SalahFeatureIconLabel(title: note, kind: "checkmark", iconSize: 18)
                                 .font(.footnote)
                                 .foregroundStyle(SalahTheme.ink)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -3675,7 +3675,11 @@ struct HajjUmrahGuideView: View {
 
     private func infoCard(title: String, icon: String, lines: [String]) -> some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(title, systemImage: icon)
+            SalahFeatureIconLabel(
+                title: title,
+                kind: infoCardFeatureKind(for: icon),
+                iconSize: 23
+            )
                 .font(.headline.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3688,6 +3692,21 @@ struct HajjUmrahGuideView: View {
             }
         }
         .cardStyle()
+    }
+
+    private func infoCardFeatureKind(for icon: String) -> String {
+        switch icon {
+        case "hands.sparkles.fill":
+            return "duas"
+        case "map.fill", "arrow.triangle.2.circlepath":
+            return "qibla"
+        case "figure.walk":
+            return "prayer"
+        case "quote.bubble.fill", "info.circle.fill":
+            return "info"
+        default:
+            return "info"
+        }
     }
 
     private func placeGroup(title: String, items: [(String, String, String)]) -> some View {
@@ -4052,7 +4071,7 @@ struct FarewellSermonView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote")
+                    SalahFeatureIconLabel(title: settings.t("Abschiedsrede", "Veda Hutbesi"), kind: "info", iconSize: 26)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4389,7 +4408,7 @@ private struct FourCaliphDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(lesson.source, systemImage: "checkmark.seal.fill")
+                SalahFeatureIconLabel(title: lesson.source, kind: "checkmark", iconSize: 18)
                     .font(.caption)
                     .foregroundStyle(SalahTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -4694,22 +4713,22 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
                 NavigationLink { RamadanGuideIndexView() } label: { SalahFeatureIconLabel(title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"), kind: "moon") }
-                NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
-                NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
-                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
-                NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
+                NavigationLink { IlmihalTopicView(topic: zakat) } label: { SalahFeatureIconLabel(title: settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), kind: "info") }
+                NavigationLink { HajjUmrahGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Hajj & Umrah", "Hac & Umre"), kind: "qibla") }
+                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { SalahFeatureIconLabel(title: settings.t("Kurban / Opfer", "Kurban"), kind: "sparkles") }
+                NavigationLink { IlmihalTopicView(topic: vows) } label: { SalahFeatureIconLabel(title: settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), kind: "duas") }
             }
 
             Section(settings.t("Familie & Vermögen", "Aile & Malî Hayat")) {
-                NavigationLink { IlmihalTopicView(topic: family) } label: { Label(settings.t("Ehe & Familie", "Nikâh & Aile"), systemImage: family.icon) }
-                NavigationLink { IlmihalTopicView(topic: inheritance) } label: { Label(settings.t("Testament & Erbe", "Vasiyet & Miras"), systemImage: inheritance.icon) }
-                NavigationLink { IlmihalTopicView(topic: commerce) } label: { Label(settings.t("Handel & Erwerb", "Ticaret & Kazanç"), systemImage: commerce.icon) }
+                NavigationLink { IlmihalTopicView(topic: family) } label: { SalahFeatureIconLabel(title: settings.t("Ehe & Familie", "Nikâh & Aile"), kind: "community") }
+                NavigationLink { IlmihalTopicView(topic: inheritance) } label: { SalahFeatureIconLabel(title: settings.t("Testament & Erbe", "Vasiyet & Miras"), kind: "list") }
+                NavigationLink { IlmihalTopicView(topic: commerce) } label: { SalahFeatureIconLabel(title: settings.t("Handel & Erwerb", "Ticaret & Kazanç"), kind: "info") }
             }
 
             Section(settings.t("Soziales & Gesundheit", "Sosyal Hayat & Sağlık")) {
-                NavigationLink { IlmihalTopicView(topic: social) } label: { Label(settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), systemImage: social.icon) }
-                NavigationLink { FarewellSermonView() } label: { Label(settings.t("Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote") }
-                NavigationLink { IlmihalTopicView(topic: health) } label: { Label(settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), systemImage: health.icon) }
+                NavigationLink { IlmihalTopicView(topic: social) } label: { SalahFeatureIconLabel(title: settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), kind: "community") }
+                NavigationLink { FarewellSermonView() } label: { SalahFeatureIconLabel(title: settings.t("Abschiedsrede", "Veda Hutbesi"), kind: "info", iconSize: 26) }
+                NavigationLink { IlmihalTopicView(topic: health) } label: { SalahFeatureIconLabel(title: settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), kind: "info") }
             }
 
             Section(settings.t("Quelle & Umfang", "Kaynak & Kapsam")) {
@@ -8277,9 +8296,10 @@ struct IslamLearningHubView: View {
 
     private var islamProgressCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(
-                settings.t("Islam Schritt für Schritt lernen", "İslâm'ı adım adım öğren"),
-                systemImage: "book.pages.fill"
+            SalahFeatureIconLabel(
+                title: settings.t("Islam Schritt für Schritt lernen", "İslâm'ı adım adım öğren"),
+                kind: "info",
+                iconSize: 28
             )
             .font(.title2.bold())
             .foregroundStyle(SalahTheme.deepTeal)
