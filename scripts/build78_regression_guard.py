@@ -294,6 +294,8 @@ for forbidden in (
     'Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.',
     'private struct PrayerSalamVisual: View',
     'PrayerSalamVisual(side:',
+    'Wortlaut und Audio findest du zusätzlich im Quran-Bereich.',
+    'Metin ve ses ayrıca Kur\'an bölümündedir.',
 ):
     if forbidden in guide:
         fail(f"developer/meta or duplicate learning UI regression: found {forbidden}")
