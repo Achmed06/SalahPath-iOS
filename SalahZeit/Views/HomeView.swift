@@ -244,11 +244,12 @@ struct PrayerTrackerOverviewView: View {
 
             Section {
                 HStack {
-                    Label(
-                        isTodaySelected
+                    SalahFeatureIconLabel(
+                        title: isTodaySelected
                             ? settings.t("Heute", "Bugün")
                             : settings.t("Ausgewählter Tag", "Seçili gün"),
-                        systemImage: "checkmark.circle.fill"
+                        kind: "checkmark",
+                        iconSize: 20
                     )
                     Spacer()
                     Text("\(completed)/\(PrayerTrackerStore.requiredKinds.count)")
@@ -280,8 +281,9 @@ struct PrayerTrackerOverviewView: View {
                             Text(kind.localizedName(settings.language))
                                 .foregroundStyle(SalahTheme.ink)
                             Spacer()
-                            Image(systemName: done ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(done ? SalahTheme.teal : .secondary)
+                            SalahFeatureIcon(kind: "checkmark")
+                                .frame(width: 22, height: 22)
+                                .opacity(done ? 1 : 0.18)
                         }
                         .contentShape(Rectangle())
                     }
@@ -1983,9 +1985,9 @@ struct HomeView: View {
                 LazyVStack(spacing: 5) {
                     VStack(alignment: .leading, spacing: 7) {
                         HStack(spacing: 8) {
-                            Image(systemName: "location.slash")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundStyle(SalahTheme.teal)
+                            SalahFeatureIcon(kind: "qibla")
+                                .frame(width: 24, height: 24)
+                                .opacity(0.72)
 
                             VStack(alignment: .leading, spacing: 1) {
                                 Text(settings.t("Standort ist optional", "Konum isteğe bağlı"))
@@ -2406,14 +2408,9 @@ struct PrayerTimesOverviewView: View {
 
     private func referenceToolTile(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 5) {
-            ZStack {
-                Circle()
-                    .fill(SalahTheme.softTeal)
-                    .frame(width: 51, height: 51)
-                Image(systemName: icon)
-                    .font(.system(size: 29, weight: .semibold))
-                    .foregroundStyle(SalahTheme.teal)
-            }
+            SalahFeatureIcon(kind: homeToolFeatureKind(for: icon))
+                .frame(width: 46, height: 46)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 2, y: 1)
             Text(title)
                 .font(.system(size: 10.5, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
@@ -2427,6 +2424,25 @@ struct PrayerTimesOverviewView: View {
         .padding(9)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 0.7) }
+    }
+
+    private func homeToolFeatureKind(for symbol: String) -> String {
+        switch symbol {
+        case "location.north.fill", "location.fill", "mappin", "compass.drawing":
+            return "qibla"
+        case "map.fill", "building.2.fill":
+            return "mosques"
+        case "bell.fill", "bell.badge.fill":
+            return "reminder"
+        case "clock.fill", "clock":
+            return "times"
+        case "checkmark.circle.fill", "checklist":
+            return "checkmark"
+        case "book.fill", "book.closed.fill":
+            return "quran"
+        default:
+            return "info"
+        }
     }
 
     private func referencePrayerName(_ kind: PrayerKind) -> String {
