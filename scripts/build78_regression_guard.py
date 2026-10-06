@@ -266,9 +266,32 @@ for forbidden in (
     'CDN-Link',
     'SalahPath Dua-Sammlung öffnen',
     'Hier findest du die täglichen Gebete',
+    'gegen Diyanet-Lehrmaterial gegengeprüft',
+    'menschliche Audioedition',
+    'insan ses kaydı',
+    'Du siehst immer nur einen Schritt. Unten wechselst du eindeutig',
+    'Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“',
 ):
     if forbidden in guide:
         fail(f"developer/meta learning UI regression: found {forbidden}")
+
+for token in (
+    'Folge Bild, Haltung und Rezitation Schritt für Schritt.',
+    'Görseli, duruşu ve okuyuşu adım adım takip et.',
+    'Hanafitische Qunūt-Texte für Witr. Die Umschrift dient nur als Aussprachehilfe.',
+    'Rezitation: Islamic Network.',
+    'Tilavet: Islamic Network.',
+):
+    if token not in guide:
+        fail(f"clean user-facing learning copy regression: missing {token}")
+
+for token in (
+    'SalahFeatureIconLabel(\n                        title: settings.t("Heute wird beim Streak neutral behandelt."',
+    'SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)',
+    'title: dua.localizedSource(settings.language),\n                    kind: "info"',
+):
+    if token not in home:
+        fail(f"Home content icon regression: missing {token}")
 
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
