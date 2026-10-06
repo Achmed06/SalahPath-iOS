@@ -645,11 +645,10 @@ for token in (
     'case "hands.sparkles.fill":\n            return "duas"',
     'case "circle.grid.cross.fill":\n            return "dhikr"',
     'case "sparkles":\n            return "sparkles"',
-    'case "location.north.circle.fill":\n            return "qibla"',
-    'case "map.fill":\n            return "qibla"',
+    'case "location.north.circle.fill", "map.fill":\n            return "qibla"',
     'case "clock.arrow.circlepath":\n            return "times"',
     'case "building.columns.fill":\n            return "mosques"',
-    'case "text.quote":\n            return "hadith"',
+    'case "text.quote":\n            return "info"',
     'case "moon.stars.fill":\n            return "moon"',
     'case "slider.horizontal.3":\n            return "settings"',
 ):
