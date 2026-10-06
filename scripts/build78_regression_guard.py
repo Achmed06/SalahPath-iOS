@@ -306,14 +306,25 @@ if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' in guide:
     fail("Wudu left/right foot assets must not be mirrored in code")
 
 for token in (
-    'SalahFeatureIcon(kind: kind)',
-    'private func guideFeatureKind(for symbol: String) -> String?',
+    'private func salahContentFeatureKind(for symbol: String) -> String',
+    'private func guideFeatureKind(for symbol: String) -> String',
+    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
+    'return salahContentFeatureKind(for: symbol)',
     'return "wudu"',
     'return "quran_audio"',
     'return "list"',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
+
+for forbidden in (
+    'private func guideFeatureKind(for symbol: String) -> String?',
+    'if let kind = guideFeatureKind(for: icon)',
+    'Premium artwork already carries its own visual identity.',
+    'Image(systemName: icon)\n                        .font(.system(size: 15, weight: .semibold))',
+):
+    if forbidden in guide:
+        fail(f"legacy decorative Guide icon fallback returned: {forbidden}")
 
 # 5a) Prayer/Wudu step navigation must never strand the viewport outside newly rendered content.
 for token in (
@@ -389,14 +400,21 @@ for forbidden in (
     if forbidden in guide:
         fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
 
-# 5a.2) Premium learning-row icons must stay unbadged; only SF fallbacks get a circle.
+# 5a.2) Premium learning-row icons must stay on standalone SalahPath artwork.
 for token in (
-    'Premium artwork already carries its own visual identity.',
-    'SalahFeatureIcon(kind: kind)\n                        .frame(width: 31, height: 31)',
-    'Image(systemName: icon)\n                        .font(.system(size: 15, weight: .semibold))',
+    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))\n                .frame(width: 31, height: 31)',
+    'SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))',
+    'TutorialSectionHeader(',
 ):
     if token not in guide:
         fail(f"premium learning-row icon regression: missing {token}")
+
+for forbidden in (
+    'if let kind = guideFeatureKind(for: icon)',
+    'else {\n                    Image(systemName: icon)',
+):
+    if forbidden in guide:
+        fail(f"generic learning-row icon fallback returned: {forbidden}")
 
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
@@ -480,7 +498,8 @@ for token in (
         fail(f"Turkish Qibla label regression: missing {token}")
 
 for token in (
-    'SalahFeatureIcon(kind: glyphKind)',
+    'private func discoverDashboardGlyphKind(for symbol: String) -> String',
+    'SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: symbol))',
     'return "prayer"',
     'return "wudu"',
     'return "quran"',
@@ -540,13 +559,21 @@ for forbidden in (
         fail(f"atlas-cut icon rendering returned: {forbidden}")
 
 for token in (
-    'Premium artwork is already a finished transparent asset.',
+    'SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: symbol))',
     '.frame(width: size * 0.78, height: size * 0.78)',
-    'SF Symbols are the fallback only.',
+    'private func discoverDashboardGlyphKind(for symbol: String) -> String',
     '.frame(width: 23, height: 23)',
 ):
     if token not in root_tabs:
         fail(f"transparent premium tile rendering regression: missing {token}")
+
+for forbidden in (
+    'if let glyphKind = discoverDashboardGlyphKind(for: symbol)',
+    'SF Symbols are the fallback only.',
+    'Premium artwork is already a finished transparent asset.',
+):
+    if forbidden in root_tabs:
+        fail(f"generic Discover icon fallback returned: {forbidden}")
 
 for forbidden in (
     '.background(SalahTheme.softTeal, in: Circle())\n            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.55), lineWidth: 0.8) }',
