@@ -519,11 +519,13 @@ for token in (
         fail(f"Turkish Qibla label regression: missing {token}")
 
 for token in (
-    'SalahFeatureIcon(kind: glyphKind)',
+    'SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: symbol))',
+    'private func discoverDashboardGlyphKind(for symbol: String) -> String',
     'return "prayer"',
     'return "wudu"',
     'return "quran"',
     'return "qibla"',
+    'return "info"',
     'SalahFeatureIcon(kind: selection == index ? item.active : item.inactive)',
     '("home_active", "home_inactive", settings.t("Start", "Ana Sayfa"))',
     '("quran_active", "quran_inactive", settings.t("Quran", "Kur\'an"))',
@@ -537,6 +539,13 @@ for token in (
 ):
     if token not in root_tabs:
         fail(f"standalone tab/discover icon regression: missing {token}")
+
+for forbidden in (
+    'if let glyphKind = discoverDashboardGlyphKind(for: symbol)',
+    'if let glyphKind = discoverDashboardGlyphKind(for: icon)',
+):
+    if forbidden in root_tabs:
+        fail(f"standalone tab/discover icon regression: decorative SF fallback returned: {forbidden}")
 
 for token in (
     'struct SalahFeatureIcon: View',
