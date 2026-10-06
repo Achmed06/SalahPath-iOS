@@ -257,7 +257,7 @@ struct PrayerTrackerOverviewView: View {
                 }
 
                 HStack {
-                    Label(settings.t("Serie", "Seri"), systemImage: "flame.fill")
+                    SalahFeatureIconLabel(title: settings.t("Serie", "Seri"), kind: "checkmark")
                     Spacer()
                     Text("\(streak) \(settings.t("Tage", "gün"))")
                         .font(.headline.monospacedDigit())
@@ -1935,7 +1935,7 @@ struct HomeView: View {
 
     private var fridayCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(settings.t("Freitag / Jumuʿah", "Cuma"), systemImage: "person.3.fill")
+            SalahFeatureIconLabel(title: settings.t("Freitag / Jumuʿah", "Cuma"), kind: "community")
                 .font(.headline).foregroundStyle(SalahTheme.teal)
             Text(settings.t(
                 "Jumuʿah hat 2 Rakʿāt Fard in Gemeinschaft. Die tatsächliche Jumuʿah-Uhrzeit legt die jeweilige Moschee fest.",
@@ -1949,7 +1949,7 @@ struct HomeView: View {
     private func qiyamCard(_ day: PrayerDay) -> some View {
         if day.middleOfNight != nil || day.lastThirdOfNight != nil {
             VStack(alignment: .leading, spacing: 8) {
-                Label(settings.t("Nacht", "Gece"), systemImage: "moon.stars.fill")
+                SalahFeatureIconLabel(title: settings.t("Nacht", "Gece"), kind: "moon")
                     .font(.headline).foregroundStyle(SalahTheme.teal)
                 if let middle = day.middleOfNight {
                     valueRow(settings.t("Mitte der Nacht", "Gecenin yarısı"), timeString(middle, use24Hour: settings.use24Hour, language: settings.language, timeZone: effectiveTimeZone))
