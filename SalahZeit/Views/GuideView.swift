@@ -8053,11 +8053,12 @@ private struct IslamLearningLessonView: View {
             IslamLearningStore.toggle(lesson.id)
             refresh &+= 1
         } label: {
-            Label(
-                completed
+            SalahFeatureIconLabel(
+                title: completed
                     ? settings.t("Als gelernt markiert", "Öğrenildi olarak işaretli")
                     : settings.t("Als gelernt markieren", "Öğrendim olarak işaretle"),
-                systemImage: completed ? "checkmark.seal.fill" : "checkmark.seal"
+                kind: "checkmark",
+                iconSize: 22
             )
             .font(.headline.bold())
             .frame(maxWidth: .infinity)
@@ -8429,8 +8430,13 @@ struct IslamLearningHubView: View {
 
             Spacer(minLength: 6)
 
-            Image(systemName: IslamLearningStore.isCompleted(lesson.id) ? "checkmark.circle.fill" : "chevron.right")
-                .foregroundStyle(IslamLearningStore.isCompleted(lesson.id) ? .green : SalahTheme.teal)
+            if IslamLearningStore.isCompleted(lesson.id) {
+                SalahFeatureIcon(kind: "checkmark")
+                    .frame(width: 22, height: 22)
+            } else {
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(SalahTheme.teal)
+            }
         }
         .padding(13)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
@@ -10033,9 +10039,23 @@ struct QuranView: View {
 
     private func quranAction(icon: String, title: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 17, weight: .medium))
-                .foregroundStyle(SalahTheme.teal)
+            Group {
+                switch icon {
+                case "square.and.pencil":
+                    SalahFeatureIcon(kind: "quran")
+                case "heart":
+                    SalahFeatureIcon(kind: "bookmarks")
+                case "text.book.closed":
+                    SalahFeatureIcon(kind: "quran")
+                default:
+                    // Play/pause/cancel are live media state controls, not content decoration.
+                    Image(systemName: icon)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 21, height: 21)
+
             Text(title)
                 .font(.custom("AvenirNext-DemiBold", size: 9.2))
                 .foregroundStyle(SalahTheme.ink)
