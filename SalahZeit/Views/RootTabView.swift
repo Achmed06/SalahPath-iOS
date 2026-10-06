@@ -625,9 +625,9 @@ struct NearbyMosquesView: View {
 
                 if usableLocation == nil {
                     VStack(spacing: 10) {
-                        Image(systemName: "location.slash")
-                            .font(.system(size: 30))
-                            .foregroundStyle(SalahTheme.mutedInk)
+                        SalahFeatureIcon(kind: "qibla")
+                            .frame(width: 34, height: 34)
+                            .opacity(0.72)
 
                         Text(settings.t(
                             "Für Moscheen in deiner Nähe wird dein aktueller Gerätestandort benötigt.",
@@ -671,9 +671,8 @@ struct NearbyMosquesView: View {
                         .frame(maxWidth: .infinity)
                 } else if store.searchFailed && store.mapItems.isEmpty {
                     VStack(spacing: 10) {
-                        Image(systemName: "wifi.exclamationmark")
-                            .font(.system(size: 30))
-                            .foregroundStyle(SalahTheme.gold)
+                        SalahFeatureIcon(kind: "info")
+                            .frame(width: 34, height: 34)
 
                         Text(settings.t(
                             "Apple Karten konnte die Moscheensuche gerade nicht laden. Bitte prüfe deine Verbindung und versuche es erneut.",
@@ -886,7 +885,7 @@ struct NearbyMosquesView: View {
                 Button {
                     openRoute(to: item)
                 } label: {
-                    Label(settings.t("Route", "Rota"), systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                    SalahFeatureIconLabel(title: settings.t("Route", "Rota"), kind: "route", iconSize: 19)
                         .font(.subheadline.bold())
                         .frame(maxWidth: .infinity)
                 }
@@ -896,7 +895,7 @@ struct NearbyMosquesView: View {
                 Button {
                     item.openInMaps()
                 } label: {
-                    Label(settings.t("Karte", "Harita"), systemImage: "map.fill")
+                    SalahFeatureIconLabel(title: settings.t("Karte", "Harita"), kind: "map", iconSize: 19)
                         .font(.subheadline.bold())
                         .frame(maxWidth: .infinity)
                 }
