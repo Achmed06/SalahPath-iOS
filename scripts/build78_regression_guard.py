@@ -360,7 +360,9 @@ for token in (
     'return "list"',
     'return "info"',
     'case "hands.sparkles.fill", "circle.grid.cross.fill", "sunrise.fill":',
-    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
+    'private func dhikrFeatureKind(for symbol: String) -> String',
+    'case "sunrise.fill", "hands.sparkles.fill", "circle.grid.cross.fill":',
+    'SalahFeatureIcon(kind: dhikrFeatureKind(for: icon))',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
