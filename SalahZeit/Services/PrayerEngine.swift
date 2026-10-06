@@ -42,13 +42,36 @@ struct PrayerEngine {
             .init(kind: .isha, date: adjusted(prayerTimes.isha, kind: .isha, settings: settings))
         ]
 
-        let sunnah = SunnahTimes(from: prayerTimes)
+        let fallbackSunnah = SunnahTimes(from: prayerTimes)
+        var middleOfNight = fallbackSunnah?.middleOfTheNight
+        var lastThirdOfNight = fallbackSunnah?.lastThirdOfTheNight
+
+        // Keep Qiyam/night markers consistent with the prayer times the user
+        // actually sees. SunnahTimes uses the library's unadjusted Maghrib/Fajr;
+        // SalahPath also allows per-prayer minute corrections.
+        if let nextDate = calendar.date(byAdding: .day, value: 1, to: date) {
+            let nextComponents = calendar.dateComponents([.year, .month, .day], from: nextDate)
+            if let nextPrayerTimes = PrayerTimes(
+                coordinates: coordinates,
+                date: nextComponents,
+                calculationParameters: parameters
+            ) {
+                let adjustedMaghrib = adjusted(prayerTimes.maghrib, kind: .maghrib, settings: settings)
+                let adjustedNextFajr = adjusted(nextPrayerTimes.fajr, kind: .fajr, settings: settings)
+                let nightDuration = adjustedNextFajr.timeIntervalSince(adjustedMaghrib)
+
+                if nightDuration > 0 {
+                    middleOfNight = adjustedMaghrib.addingTimeInterval(nightDuration / 2)
+                    lastThirdOfNight = adjustedMaghrib.addingTimeInterval(nightDuration * 2 / 3)
+                }
+            }
+        }
 
         return PrayerDay(
             date: date,
             prayers: items,
-            middleOfNight: sunnah?.middleOfTheNight,
-            lastThirdOfNight: sunnah?.lastThirdOfTheNight
+            middleOfNight: middleOfNight,
+            lastThirdOfNight: lastThirdOfNight
         )
     }
 

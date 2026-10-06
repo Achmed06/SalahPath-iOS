@@ -2428,7 +2428,7 @@ struct PrayerTimesOverviewView: View {
         if settings.language == .turkish {
             switch kind {
             case .fajr: return "İmsak"
-            case .sunrise: return "Sabah"
+            case .sunrise: return "Güneş"
             case .dhuhr: return "Öğle"
             case .asr: return "İkindi"
             case .maghrib: return "Akşam"

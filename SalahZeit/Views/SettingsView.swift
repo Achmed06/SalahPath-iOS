@@ -84,6 +84,12 @@ struct SettingsView: View {
                         profileRow(icon: "clock.fill", title: settings.t("Berechnung", "Hesaplama"), value: settings.calculationPreset.title(settings.language))
                     }
 
+                    Text(settings.calculationPreset.note(settings.language))
+                        .font(.system(size: 9.5, weight: .medium))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+
                     Menu {
                         ForEach(AsrRule.allCases) { rule in
                             Button(rule.title(settings.language)) { settings.asrRule = rule }
@@ -91,6 +97,21 @@ struct SettingsView: View {
                     } label: {
                         profileRow(icon: "sun.max.fill", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
                     }
+
+                    Text(settings.asrRule.note(settings.language))
+                        .font(.system(size: 9.5, weight: .medium))
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+
+                    Text(settings.t(
+                        "Gebetszeiten werden astronomisch berechnet und können je nach Methode, hoher geografischer Breite und lokalem Kalender abweichen. Wenn deine Moschee oder eine verlässliche lokale Religionsbehörde andere Zeiten veröffentlicht, vergleiche die gewählte Methode und nutze bei Bedarf die Feinabstimmung.",
+                        "Namaz vakitleri astronomik olarak hesaplanır; yöntem, yüksek enlem ve yerel takvime göre farklılık gösterebilir. Camin veya güvenilir yerel bir dinî kurum farklı vakitler yayımlıyorsa seçili yöntemi karşılaştır ve gerekirse ince ayarı kullan."
+                    ))
+                    .font(.system(size: 9.2, weight: .medium))
+                    .foregroundStyle(SalahTheme.mutedInk)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
 
                     referenceToggle(icon: "24.circle.fill", title: settings.t("24-Stunden-Zeit", "24 saat biçimi"), isOn: $settings.use24Hour)
                 }

@@ -914,4 +914,67 @@ for token in (
     if token not in settings_view:
         fail(f"notification permission-sync regression: missing {token}")
 
+# Religious-content audit: keep school-specific rulings and exact qualification wording.
+for token in (
+    'Hanafi: Wajib für Jumuʿah-Pflichtige · gemeinschaftlich',
+    'die Eid-Khutbah ist Sunnah und folgt nach dem Gebet.',
+    'Die Khutbah vor dem Gebet ist eine Gültigkeitsbedingung.',
+    'Hat die Khutbah begonnen, soll keine Sunnah/Nafila mehr begonnen werden',
+    'Dritter Takbir ebenfalls ohne erneutes Händeheben',
+    'Samenabgang mit sexueller Erregung bzw. Orgasmus',
+    'etwas, das zur Erdsubstanz zählt',
+    'Diyanet nennt als Grenze 10 Minuten davor.',
+    'Für Qada, Kaffarah und zeitlich nicht festgelegte Gelübdefasten muss die Absicht spätestens bis Imsak vorliegen.',
+    'Hisn al-Muslim 78 · Morgen-/Abendfassung; Wortlautvarianten überliefert',
+    'Rituelle Reinheit beim Tawaf ist nicht bloß eine Empfehlung',
+    'Menstruation oder Nifas verhindern den Eintritt in den Ihram nicht.',
+    '80,18 g 24-karätigem Gold',
+    'nicht pauschal die gesamte Restschuld abgezogen',
+    "Fitra ist nicht einfach 'kleine Zakat'",
+    'unnötiges Verschieben über den Eid hinaus ist makruh',
+    'Nach Hanafi/Diyanet ist Udhiyah',
+    'endet nach Hanafi mit Sonnenuntergang am 3. Eid-Tag',
+    'Kamel 5, Rind/Büffel 2, Schaf/Ziege 1 Mondjahr',
+    'Geld nur zu spenden ersetzt das Udhiyah-Opfer nicht.',
+    'genau sieben Bedürftige zu verteilen',
+    'zehn Bedürftige speisen oder kleiden',
+    'Haram işlemeye veya farz/vacibi terk etmeye dair yemin yerine getirilmez',
+    'Nikah ist ein Vertrag mit freier Zustimmung',
+    'Mahr ist ein Recht der Frau',
+    'Bei Talak/Scheidung niemals aus einem verkürzten Satz automatisch entscheiden',
+    'höchstens ein Drittel des nach Kosten und Schulden verbleibenden Nachlasses',
+    'Wasiyyah zugunsten eines ohnehin erbberechtigten Erben',
+    'keine individuelle verbindliche Erbverteilung aus einer Kurzbeschreibung erzeugen',
+    'Text(settings.t("Morgen", "Sabah")).tag(0)',
+    'Text(settings.t("Abend", "Akşam")).tag(1)',
+    'category == 0 ? "morning" : "evening"',
+    'source: "Hisn al-Muslim 86"',
+    'source: "Hisn al-Muslim 87"',
+    'Freiwilliger Geschlechtsverkehr während eines gültig begonnenen Ramadan-Fastens',
+    'In der schafiitischen Einordnung kann bei Sorge nur um das Kind zusätzlich Fidya erforderlich sein.',
+    'Tashrīq-Takbīre sind für Frauen und Männer wājib',
+    'insgesamt 23 Gebetszeiten',
+    'Fasten an diesen vier Kurban-/Tashrīq-Tagen ist tahrīman makrūh',
+    'Riba ist im Quran verboten.',
+    'klassische verzinste Kredite und verzinste Termineinlagen',
+    'etwas, das zur Erdsubstanz zählt, die vorgeschriebenen Wischhandlungen',
+):
+    if token not in guide:
+        fail(f"religious-content audit regression: missing {token}")
+
+for forbidden in (
+    'Text(settings.t("Täglich", "Günlük")).tag(2)',
+    'Text(settings.t("Speziell", "Özel")).tag(3)',
+    'case 2: return "daily"',
+    'default: return "special"',
+    'Opferpflicht bzw. Opfer-Sunnah',
+    'erdähnlicher Oberfläche',
+):
+    if forbidden in guide:
+        fail(f"religious-content audit regression: duplicate adhkar session returned: {forbidden}")
+
+for prayer_catalog_id in ('tahajjud', 'duha', 'istikhara', 'tilawah_sajdah'):
+    if guide.count(f'id: "{prayer_catalog_id}"') != 1:
+        fail(f"religious-content audit regression: prayer catalogue ID must be unique: {prayer_catalog_id}")
+
 print("Build 78 regression guard: OK")
