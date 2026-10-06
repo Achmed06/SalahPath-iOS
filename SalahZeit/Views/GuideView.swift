@@ -590,14 +590,14 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
         deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
         trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
-        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
         arabic: "قُلْ هُوَ اللَّهُ أَحَدٌ\nاللَّهُ الصَّمَدُ\nلَمْ يَلِدْ وَلَمْ يُولَدْ\nوَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
         transliteration: "Kul hüvallâhü ehad. Allâhüssamed. Lem yelid ve lem yûled. Ve lem yekün lehû küfüven ehad.",
         deMeaning: "Sprich: Er ist Allah, der Eine. Allah ist der Unabhängige, von dem alles abhängt. Er zeugt nicht und wurde nicht gezeugt. Und niemand ist Ihm ebenbürtig.", trMeaning: "De ki: O Allah birdir. Allah Samed'dir; hiçbir şeye muhtaç değildir, her şey O'na muhtaçtır. Doğurmamış ve doğmamıştır. Hiçbir şey O'na denk değildir.",
-        deNote: "Nur ein Beispiel. Eine andere passende Sura oder Quranverse sind ebenfalls möglich.", trNote: "Sadece örnektir. Başka uygun bir sûre veya ayetler de okunabilir.")
+        deNote: nil, trNote: nil)
 
     static let ruku = PrayerRecitation(
         deLabel: "Im Rukūʿ", trLabel: "Rükûda",
@@ -608,13 +608,13 @@ private enum PrayerText {
         deLabel: "Beim Aufrichten", trLabel: "Doğrulurken",
         arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Semi'allāhu limen hamideh",
         deMeaning: "Allah hört den, der Ihn lobt.", trMeaning: "Allah kendisine hamd edeni işitir.",
-        deNote: "Hanafi: Imam und allein Betender sagen dies beim Aufrichten.", trNote: "Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.")
+        deNote: nil, trNote: nil)
 
     static let upright = PrayerRecitation(
         deLabel: "Vollständig aufgerichtet", trLabel: "Tam doğrulunca",
         arabic: "رَبَّنَا لَكَ الْحَمْدُ", transliteration: "Rabbenâ lekel-hamd",
         deMeaning: "Unser Herr, Dir gebührt das Lob.", trMeaning: "Rabbimiz, hamd Sana mahsustur.",
-        deNote: "Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.", trNote: "Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.")
+        deNote: nil, trNote: nil)
 
     static let sujud = PrayerRecitation(
         deLabel: "In der Secde", trLabel: "Secdede",
@@ -625,7 +625,7 @@ private enum PrayerText {
         deLabel: "Mögliche Dua zwischen den Secden", trLabel: "İki secde arasında okunabilecek dua",
         arabic: "رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir lī",
         deMeaning: "Mein Herr, vergib mir.", trMeaning: "Rabbim, beni bağışla.",
-        deNote: "Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.", trNote: "Zorunlu bir söz değildir; kısa ve sakin oturuş atlanmamalıdır.")
+        deNote: nil, trNote: nil)
 
     static let tahiyyat = PrayerRecitation(
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
@@ -1421,21 +1421,17 @@ private struct PrayerSalamVisual: View {
         salamDirection(
             number: isRight ? "1" : "2",
             direction: isRight ? settings.t("RECHTS", "SAĞA") : settings.t("LINKS", "SOLA"),
-            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")",
-            instruction: isRight
-                ? settings.t(
-                    "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
-                    "Gövde önde kalır. Başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı söyle."
-                )
-                : settings.t(
-                    "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut.",
-                    "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle."
-                )
+            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")"
         )
-        .accessibilityElement(children: .contain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            isRight
+                ? settings.t("Salām nach rechts", "Sağa selâm")
+                : settings.t("Salām nach links", "Sola selâm")
+        )
     }
 
-    private func salamDirection(number: String, direction: String, imageName: String, instruction: String) -> some View {
+    private func salamDirection(number: String, direction: String, imageName: String) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(number)
@@ -1449,17 +1445,11 @@ private struct PrayerSalamVisual: View {
                 Spacer()
             }
 
-            HStack(alignment: .center, spacing: 14) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 118, height: 150)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-
-                Text(instruction)
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            PrayerPoseArtwork(assetName: imageName)
+                .frame(maxWidth: .infinity)
+                .frame(height: 190)
+                .background(SalahTheme.cream)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
 
         }
         .padding(11)

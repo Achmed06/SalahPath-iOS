@@ -248,6 +248,7 @@ for token in (
     'SalahFeatureIconLabel(title: settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), kind: "list"',
     'SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon"',
     'deLabel: "Salām", trLabel: "Selâm"',
+    'deNote: "Âmîn gehört nicht zum Qurantext der Fātiha.", trNote: "Âmin Fâtiha sûresinin Kur\'an metnine dahil değildir.")',
     'deNote: nil, trNote: nil',
 ):
     if token not in guide:
@@ -258,6 +259,13 @@ for forbidden in (
     'Rechts und anschließend links',
     'systemImage: "figure.walk"',
     'systemImage: "text.bubble.fill"',
+    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
+    'Text(instruction)',
+    'Wortlaut und Audio findest du zusätzlich im Quran-Bereich.',
+    'Nur ein Beispiel. Eine andere passende Sura oder Quranverse sind ebenfalls möglich.',
+    'Hanafi: Imam und allein Betender sagen dies beim Aufrichten.',
+    'Hanafi: Der Mitbetende hinter dem Imam sagt dies',
+    'Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.',
     'SalahPath verwendet diesen Bereich',
     'SalahPath entscheidet hier nicht',
     'SalahPath soll',
@@ -316,7 +324,7 @@ for token in (
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
     'let isRight = side == .right',
     'imageName: "\\(prefix)_\\(isRight ? "salam_right" : "salam_left")"',
-    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
+    'private func salamDirection(number: String, direction: String, imageName: String)',
 ):
     if token not in guide:
         fail(f"standalone illustration regression: missing {token}")
@@ -612,7 +620,7 @@ for forbidden in (
 
 for token in (
     '.frame(width: 25, height: 25)',
-    'Küçük adımlar büyük değişimler getirir.',
+    '“Küçük adımlar, büyük değişimler getirir.”',
 ):
     if token not in home:
         fail(f"home premium polish regression: missing {token}")
@@ -1100,6 +1108,14 @@ for forbidden in (
 ):
     if forbidden in guide + home:
         fail(f"visual/copy consistency regression: legacy decorative pattern returned: {forbidden}")
+
+for forbidden in (
+    'DashboardTile(title: settings.t("Einstellungen", "Ayarlar"), subtitle: settings.t("Einstellungen", "Ayarlar"), icon: "settings")',
+    'Kleine Schritte bringen große Veränderungen.',
+    'Küçük adımlar büyük değişimler getirir.',
+):
+    if forbidden in home:
+        fail(f"duplicate home UI regression: found {forbidden}")
 
 for forbidden in (
     'Image(systemName: settings.prayerAudience == audience ? "person.fill" : "person.fill")',
