@@ -96,12 +96,12 @@ struct QiblaView: View {
 
                         HStack(spacing: 8) {
                             compactInfoTile(
-                                icon: "location.north.circle.fill",
+                                icon: "qibla",
                                 title: settings.t("Qibla", "Kıble"),
                                 value: qiblaDegrees.map { "\($0)°" } ?? "—"
                             )
                             compactInfoTile(
-                                icon: "iphone",
+                                icon: "settings",
                                 title: settings.t("Gerät", "Cihaz"),
                                 value: headingDegrees.map { "\($0)°" } ?? "—"
                             )
@@ -173,11 +173,11 @@ struct QiblaView: View {
 
                         VStack(spacing: 0) {
                             infoRow(
-                                icon: "location.fill",
+                                icon: "qibla",
                                 title: qiblaLocationLabel
                             )
-                            infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
-                            infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
+                            infoRow(icon: "settings", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
+                            infoRow(icon: "qibla", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
                         }
                         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1) }
@@ -285,9 +285,8 @@ struct QiblaView: View {
 
     private func compactInfoTile(icon: String, title: String, value: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 21, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: icon)
+                .frame(width: 25, height: 25)
             Text(title)
                 .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(SalahTheme.mutedInk)
@@ -302,13 +301,10 @@ struct QiblaView: View {
 
     private func infoRow(icon: String, title: String) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 20)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 17, height: 17)
+            SalahFeatureIcon(kind: icon)
+                .frame(width: 20, height: 20)
             Text(title)
                 .font(.system(size: 10.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
