@@ -588,13 +588,21 @@ for forbidden in (
         fail(f"atlas-cut icon rendering returned: {forbidden}")
 
 for token in (
-    'Premium artwork is already a finished transparent asset.',
+    'SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: symbol))',
     '.frame(width: size * 0.78, height: size * 0.78)',
-    'SF Symbols are the fallback only.',
     '.frame(width: 23, height: 23)',
+    'default:\n            return "info"',
 ):
     if token not in root_tabs:
         fail(f"transparent premium tile rendering regression: missing {token}")
+
+for forbidden in (
+    'SF Symbols are the fallback only.',
+    'Premium artwork is already a finished transparent asset.',
+    'Image(systemName: symbol)\n                    .symbolRenderingMode(.hierarchical)',
+):
+    if forbidden in root_tabs:
+        fail(f"transparent premium tile rendering regression: legacy decorative fallback returned: {forbidden}")
 
 for forbidden in (
     '.background(SalahTheme.softTeal, in: Circle())\n            .overlay { Circle().stroke(SalahTheme.gold.opacity(0.55), lineWidth: 0.8) }',
