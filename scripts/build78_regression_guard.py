@@ -271,9 +271,17 @@ for forbidden in (
     'insan ses kaydı',
     'Du siehst immer nur einen Schritt. Unten wechselst du eindeutig',
     'Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“',
+    '2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich."',
+    '5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig."',
+    '8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab."',
+    '11: "Wasche danach den linken Fuß genauso vollständig."',
+    '2: "Sağ elle ağza su alıp iyice çalkala."',
+    '5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka."',
+    '8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et."',
+    '11: "Ardından sol ayağı da aynı şekilde tamamen yıka."',
 ):
     if forbidden in guide:
-        fail(f"developer/meta learning UI regression: found {forbidden}")
+        fail(f"developer/meta or duplicate learning UI regression: found {forbidden}")
 
 for token in (
     'Folge Bild, Haltung und Rezitation Schritt für Schritt.',
