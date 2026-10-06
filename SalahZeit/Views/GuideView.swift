@@ -951,8 +951,8 @@ struct PrayerHowToView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Unten wechselst du eindeutig mit „Zurück“ und „Weiter“ zum vorherigen oder nächsten Schritt.",
-                        "Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“ düğmeleriyle önceki veya sonraki adıma geçersin."
+                        "Folge Bild, Haltung und Rezitation Schritt für Schritt.",
+                        "Görseli, duruşu ve okuyuşu adım adım takip et."
                     ))
                     .font(.subheadline)
                     .foregroundStyle(SalahTheme.ink)
@@ -1520,7 +1520,7 @@ private struct QunutDuaView: View {
                 .foregroundStyle(.secondary)
             }
             Section {
-                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Arabischer Text und Lesefassung wurden gegen Diyanet-Lehrmaterial gegengeprüft; die Umschrift ist nur eine Aussprachehilfe.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Arapça metin ve okunuş Diyanet öğretim materyaliyle karşılaştırılmıştır; Latin harfli okunuş yalnız telaffuz yardımcısıdır."))
+                Text(settings.t("Hanafitische Qunūt-Texte für Witr. Die Umschrift dient nur als Aussprachehilfe.", "Vitir için Hanefî Kunut metinleridir. Latin harfli okunuş yalnızca telaffuz yardımcısıdır."))
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
@@ -11702,8 +11702,8 @@ private struct QuranSurahView: View {
 
     private var sourceFooter: some View {
         Text(settings.t(
-            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
-            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
+            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: Islamic Network.",
+            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network."
         ))
         .font(.caption2)
         .foregroundStyle(SalahTheme.mutedInk)
