@@ -122,6 +122,21 @@ struct SalahFeatureIcon: View {
     }
 }
 
+struct SalahFeatureIconLabel: View {
+    let title: String
+    let kind: String
+    var iconSize: CGFloat = 22
+
+    var body: some View {
+        HStack(spacing: 8) {
+            SalahFeatureIcon(kind: kind)
+                .frame(width: iconSize, height: iconSize)
+            Text(title)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 func salahPrayerFeatureKind(for kind: PrayerKind) -> String {
     switch kind {
     case .fajr: return "fajr"
@@ -579,13 +594,13 @@ struct NearbyMosquesView: View {
         ScrollView {
             LazyVStack(spacing: 10) {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Moscheen in der Nähe", "Yakındaki Camiler"), systemImage: "building.columns.fill")
+                    SalahFeatureIconLabel(title: settings.t("Moscheen in der Nähe", "Yakındaki Camiler"), kind: "mosques", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "SalahPath sucht live in Apple Karten rund um deinen aktuellen Gerätestandort. Ein manuell gewählter Ort für Gebetszeiten verändert diese Suche nicht. Die Karte und Entfernungen beziehen sich auf deinen Gerätestandort.",
-                        "SalahPath, Apple Haritalar'da güncel cihaz konumunun çevresinde canlı arama yapar. Namaz vakitleri için elle seçilen konum bu aramayı değiştirmez. Harita ve mesafeler cihaz konumuna göre gösterilir."
+                        "Die Moscheensuche verwendet Apple Karten rund um deinen aktuellen Gerätestandort. Ein manuell gewählter Ort für Gebetszeiten verändert diese Suche nicht. Karte und Entfernungen beziehen sich auf deinen Gerätestandort.",
+                        "Cami araması Apple Haritalar'da güncel cihaz konumunun çevresini kullanır. Namaz vakitleri için elle seçilen konum bu aramayı değiştirmez. Harita ve mesafeler cihaz konumuna göre gösterilir."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -605,8 +620,8 @@ struct NearbyMosquesView: View {
                             .foregroundStyle(SalahTheme.mutedInk)
 
                         Text(settings.t(
-                            "Für Moscheen in deiner Nähe braucht SalahPath deinen aktuellen Gerätestandort.",
-                            "Yakındaki camiler için SalahPath'in güncel cihaz konumuna ihtiyacı var."
+                            "Für Moscheen in deiner Nähe wird dein aktueller Gerätestandort benötigt.",
+                            "Yakındaki camileri göstermek için güncel cihaz konumu gerekir."
                         ))
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
