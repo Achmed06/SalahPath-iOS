@@ -293,6 +293,28 @@ for token in (
     if token not in guide:
         fail(f"clean user-facing learning copy regression: missing {token}")
 
+# Prayer step cards must never repeat the main action as a decorative posture tip.
+for token in (
+    'private var malePoseTipData: (title: String, text: String)?',
+    'if isMale, let imageName, let tip = malePoseTipData',
+    'private var maleSupplementalHanafiNote: String?',
+):
+    if token not in guide:
+        fail(f"prayer tutorial de-duplication regression: missing {token}")
+
+for forbidden in (
+    'private var maleTipText: String',
+    'return settings.language == .german ? step.deAction : step.trAction',
+    'Die folgenden Schritte 17 und 18 beenden ein Gebet',
+    'Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar',
+    'Zuerst rechts. Danach folgt Schritt 18 nach links.',
+    'Önce sağa. Ardından 18. adımda sola dönülür.',
+    'Reihenfolge: rechts, dann links.',
+    'Sıra: önce sağ, sonra sol.',
+):
+    if forbidden in guide:
+        fail(f"duplicate prayer tutorial copy regression: found {forbidden}")
+
 for token in (
     'SalahFeatureIconLabel(\n                        title: settings.t("Heute wird beim Streak neutral behandelt."',
     'SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)',
