@@ -3616,13 +3616,13 @@ struct HajjUmrahGuideView: View {
                     "In al-Masjid al-Haram den Umrah-Tawaf ausführen: sieben Umrundungen ab der Linie des Schwarzen Steins, Kaaba links.",
                     "Nach dem Tawaf zwei Rakʿāt Tawaf-Gebet an einem geeigneten Ort verrichten.",
                     "Saʿy: bei Safa beginnen und sieben Teilstrecken gehen – Safa→Marwa zählt als 1, Marwa→Safa als 2; die siebte endet in Marwa.",
-                    "Danach Haare kürzen bzw. bei Männern rasieren/kürzen. Damit wird der Ihram beendet."
+                    "Nach Tawaf und Saʿy die Haare kürzen: Männer rasieren oder kürzen, Frauen kürzen. Damit wird der Ihram beendet."
                 ] : [
                     "Mikat sınırını geçmeden ihrama gir, umreye niyet et ve telbiye getir.",
                     "Mescid-i Haram'da umre tavafını yap: Hacerülesved hizasından başlayarak Kâbe sol tarafta kalacak şekilde yedi şavt.",
                     "Tavaftan sonra uygun bir yerde iki rekât tavaf namazı kıl.",
                     "Sa'y: Safa'dan başla ve yedi şavt yap; Safa→Merve 1, Merve→Safa 2 sayılır ve 7. şavt Merve'de biter.",
-                    "Ardından saçları kısalt veya erkek için tıraş/kısalt. Böylece ihramdan çıkılır."
+                    "Tavaf ve sa'yden sonra saçları kısalt: erkek tıraş olabilir veya kısaltır, kadın saçını kısaltır. Böylece ihramdan çıkılır."
                 ]
             )
 
@@ -3632,11 +3632,15 @@ struct HajjUmrahGuideView: View {
                 lines: settings.language == .german ? [
                     "Der Umrah-Tawaf ist Farḍ. Saʿy ist im Hanafi-Madhhab wājib und folgt einem gültigen Tawaf.",
                     "Nach dem Tawaf sind zwei Rakʿāt Tawaf-Gebet im Hanafi-Madhhab wājib. Sie gehören nicht zu den Gültigkeitsbedingungen des Tawaf.",
-                    "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen; diese unmittelbare Reihenfolge ist Sunnah."
+                    "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen; diese unmittelbare Reihenfolge ist Sunnah.",
+                    "Rituelle Reinheit beim Tawaf ist nicht bloß eine Empfehlung: Im Hanafi-Madhhab ist Wudu für jeden Tawaf wajib; in den drei anderen sunnitischen Rechtsschulen wird sie als Fard/Bed­ingung behandelt.",
+                    "Menstruation oder Nifas verhindern den Eintritt in den Ihram nicht. Der Ihram wird vor dem Miqat mit Niyyah/Talbiyah begonnen; der Tawaf wird bis zur rituellen Reinheit aufgeschoben."
                 ] : [
                     "Umre tavafı farzdır. Sa'y Hanefî mezhebinde vaciptir ve geçerli bir tavaftan sonra yapılır.",
                     "Tavaftan sonra iki rekât tavaf namazı kılmak Hanefî mezhebinde vaciptir. Bu namaz tavafın geçerlilik şartı değildir.",
-                    "Tavaf, sa'y ve ardından saç tıraşını gereksiz uzun ara vermeden peş peşe yapmak sünnettir."
+                    "Tavaf, sa'y ve ardından saç tıraşını gereksiz uzun ara vermeden peş peşe yapmak sünnettir.",
+                    "Tavafta taharet yalnız tavsiye değildir: Hanefî mezhebinde bütün tavaflarda abdestli olmak vacip, diğer üç Sünnî mezhepte farz/şart kabul edilir.",
+                    "Hayız veya nifas ihrama girmeye engel değildir. Mikat geçilmeden niyet ve telbiye ile ihrama girilir; tavaf ise temizlik gerçekleşene kadar ertelenir."
                 ]
             )
         }
@@ -3649,12 +3653,12 @@ struct HajjUmrahGuideView: View {
                 icon: "map.fill",
                 lines: settings.language == .german ? [
                     "Für Hajj gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
-                    "Zu den zentralen Hajj-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Hajj-Form und Reihenfolge – Saʿy.",
+                    "Zu den zentralen Hajj-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Hajj-Form und Reihenfolge – Saʿy. Arafat-Wuqūf und Tawaf az-Ziyārah gehören zu den unersetzbaren Kernriten; ein verpasster Arafat-Wuqūf bedeutet, dass der Hajj dieses Jahres verpasst wurde.",
                     "Für die konkrete Reise soll der Ablauf der eigenen Hajj-Art und die Anleitung der zuständigen Hajj-Gruppe/Religionsbegleitung beachtet werden.",
                     "SalahPath verwendet diesen Bereich als Lernübersicht und ersetzt keine individuelle Fatwa bei Fehlern, Krankheit, Menstruation oder ausgelassenen Riten."
                 ] : [
                     "Hac; ifrad, kıran ve temettu çeşitlerine ayrılır. Bu nedenle bazı ihram zamanları ve ayrıntılar değişir.",
-                    "Temel hac menasiki arasında ihram/niyet, Arafat vakfesi, Müzdelife, Mina'daki görevler, ziyaret/ifâda tavafı ve hac türüne göre sa'y bulunur.",
+                    "Temel hac menasiki arasında ihram/niyet, Arafat vakfesi, Müzdelife, Mina'daki görevler, ziyaret/ifâda tavafı ve hac türüne göre sa'y bulunur. Arafat vakfesi ile ziyaret tavafı vazgeçilmez temel rükünlerdendir; Arafat vakfesine vaktinde yetişemeyen kişi o yılki haccı kaçırmış olur.",
                     "Gerçek yolculukta kendi hac türünün sırasına ve kafile din görevlisinin rehberliğine uy.",
                     "SalahPath bu alanı öğrenme özeti olarak sunar; eksik menasik, hastalık veya özel hâller için kişisel fetvanın yerini tutmaz."
                 ]
@@ -4537,38 +4541,42 @@ struct IlmihalDirectoryView: View {
     private let zakat = IlmihalTopic(
         id: "zakat", icon: "banknote.fill",
         deTitle: "Zakat & Sadaqa", trTitle: "Zekât & Sadaka",
-        deIntro: "Zakat ist eine verpflichtende Vermögensabgabe, wenn die persönlichen und vermögensbezogenen Voraussetzungen erfüllt sind. Sadaqa bezeichnet freiwillige Wohltätigkeit.",
-        trIntro: "Zekât, kişisel ve malî şartlar oluştuğunda farz olan malî ibadettir. Sadaka ise gönüllü yardımlaşmayı kapsar.",
+        deIntro: "Zakat ist eine verpflichtende Vermögensabgabe, wenn die persönlichen und vermögensbezogenen Voraussetzungen erfüllt sind. Dieser Überblick folgt bei Detailfragen der Hanafi-/Diyanet-Einordnung; Fitra und freiwillige Sadaqa sind davon getrennte Kategorien.",
+        trIntro: "Zekât, kişisel ve malî şartlar oluştuğunda farz olan malî ibadettir. Ayrıntılarda bu özet Hanefî/Diyanet çerçevesini esas alır; fitre ve gönüllü sadaka ayrı hükümlerdir.",
         dePoints: [
-            "Nicht jedes Vermögen wird gleich behandelt; Art des Vermögens, Besitzdauer und Nisab können entscheidend sein.",
-            "Zakat darf nur an die religiös vorgesehenen Empfängergruppen gegeben werden.",
-            "Zakat, Sadaqat al-Fitr/Fitra und freiwillige Sadaqa sind unterschiedliche Kategorien.",
-            "Bei Geschäftswaren, Schulden, Gold, Sparguthaben oder gemischten Vermögen sollte die konkrete Berechnung separat geprüft werden."
+            "Für Geld, Gold und Handelsvermögen verwendet Diyanet als Nisab den Gegenwert von 80,18 g 24-karätigem Gold. Bei erfülltem Nisab und einem vollendeten Mondjahr beträgt die Zakat dieser Vermögensarten grundsätzlich 2,5 %; andere Zakat-Kategorien haben eigene Regeln.",
+            "Grundbedarf und relevante Schulden werden berücksichtigt. Bei langfristigen Raten-/Kreditverbindlichkeiten soll nach aktueller Diyanet-Einordnung nicht pauschal die gesamte Restschuld abgezogen werden, sondern grundsätzlich die im betreffenden Zakat-Jahr fälligen Beträge.",
+            "Zakat geht an die in Quran 9:60 genannten Empfängergruppen. Nach Hanafi-Regel gibt man die eigene Zakat nicht an Eltern/Großeltern, Kinder/Enkel oder den Ehepartner.",
+            "Fitra ist nicht einfach 'kleine Zakat': Nach Hanafi/Diyanet ist sie für denjenigen wajib, der am Ende des Ramadan außerhalb von Grundbedarf und relevanten Schulden Nisab besitzt; Wachstumseigenschaft und ein volles Mondjahr sind dafür nicht erforderlich.",
+            "Nach Hanafi/Diyanet gibt man Fitra für sich selbst und die noch nicht pubertären eigenen Kinder. Sie darf vor Eid gegeben werden und soll möglichst vor dem Eid-Gebet ankommen; unnötiges Verschieben über den Eid hinaus ist makruh. Andere Rechtsschulen unterscheiden sich bei Voraussetzungen und Unterhaltspflicht."
         ],
         trPoints: [
-            "Her mal aynı hükme tabi değildir; malın türü, üzerinden geçen süre ve nisap önemlidir.",
-            "Zekât dinen belirlenen hak sahibi gruplara verilir.",
-            "Zekât, fitre ve gönüllü sadaka farklı hükümlere sahiptir.",
-            "Ticaret malı, borç, altın, birikim ve karma mal varlığında özel hesap ayrıca kontrol edilmelidir."
+            "Para, altın ve ticaret malında Diyanet nisap ölçüsü olarak 24 ayar 80,18 g altın veya değerini esas alır. Nisap ve bir kamerî yıl şartı gerçekleştiğinde bu mallarda genel oran %2,5'tir; diğer zekât mallarının ayrı hükümleri vardır.",
+            "Aslî ihtiyaçlar ve ilgili borçlar dikkate alınır. Uzun vadeli kredi/taksit borçlarının tamamı otomatik olarak düşülmez; güncel Diyanet yaklaşımında esasen o zekât yılı içinde vadesi gelen/gelecek borçlar düşülür.",
+            "Zekât Tevbe 9:60'ta belirtilen hak sahiplerine verilir. Hanefî hükme göre anne-baba ve üst soy, çocuk-torun ve alt soy ile eşe kişinin kendi zekâtı verilmez.",
+            "Fitre, 'küçük zekât' değildir: Hanefî/Diyanet'e göre Ramazan Bayramı'na ulaşıp aslî ihtiyaçlar ve ilgili borçlar dışında nisap miktarı mala sahip olana vaciptir; bu malın artıcı olması ve üzerinden bir kamerî yıl geçmesi şart değildir.",
+            "Hanefî/Diyanet'e göre kişi kendisi ve büluğa ermemiş çocukları için fitre verir. Bayramdan önce verilebilir ve bayram namazından önce ulaştırılması müstehaptır; mazeretsiz şekilde bayram sonrasına bırakmak mekruhtur. Diğer mezheplerde şartlar ve nafaka kapsamı farklı olabilir."
         ]
     )
 
     private let sacrifice = IlmihalTopic(
         id: "sacrifice", icon: "gift.fill",
         deTitle: "Kurban / Opfer", trTitle: "Kurban",
-        deIntro: "Das Opferfest und das rituelle Opfer haben eigene Voraussetzungen, Zeiten und Regeln. Im hanafitischen Fiqh wird die Opferpflicht für entsprechend vermögende Personen als wajib behandelt.",
-        trIntro: "Kurban ibadetinin şartları, vakti ve uygulama hükümleri vardır. Hanefî fıkhında gerekli malî şartları taşıyan kişi için kurban vacip kabul edilir.",
+        deIntro: "Das Opferfest und das rituelle Udhiyah-Opfer haben eigene Voraussetzungen, Zeiten und Regeln. Dieser Abschnitt folgt der Hanafi-/Diyanet-Einordnung: Für die entsprechend verpflichtete Person ist Udhiyah wajib; Rechtsschulunterschiede müssen getrennt betrachtet werden.",
+        trIntro: "Udhiye/kurban ibadetinin şartları, vakti ve uygulama hükümleri vardır. Bu bölüm Hanefî/Diyanet çerçevesini esas alır: gerekli şartları taşıyan kişi için kurban vaciptir; mezhep farklılıkları ayrıca değerlendirilmelidir.",
         dePoints: [
-            "Opferzeit, Opferfähigkeit der Person und Eignung des Tieres müssen zusammen geprüft werden.",
-            "Das Tier darf bestimmte gesundheitliche Mängel nicht aufweisen.",
-            "Vertretung/Vollmacht beim Opfer ist möglich; Absicht und Eigentumsfragen müssen klar sein.",
-            "Fleischverteilung ist Teil guter Praxis; konkrete Pflichtanteile sollten nicht ohne Beleg behauptet werden."
+            "Nach Hanafi/Diyanet ist Udhiyah für einen zurechnungsfähigen, pubertären, nicht reisenden Muslim wajib, wenn er außerhalb von Grundbedarf und Schulden Nisab besitzt. Dafür müssen Vermögen weder 'wachsend' sein noch ein volles Mondjahr gehalten worden sein.",
+            "Als Nisab nennt Diyanet den Gegenwert von 80,18 g 24-karätigem Gold. In Orten mit Eid-Gebet beginnt die Opferzeit nach dem Eid-Gebet und endet nach Hanafi mit Sonnenuntergang am 3. Eid-Tag; nach Shafiʿi erst am 4. Tag.",
+            "Zulässig sind Schaf, Ziege, Rind/Büffel und Kamel. Mindestalter: Kamel 5, Rind/Büffel 2, Schaf/Ziege 1 Mondjahr; Ausnahme: ein mindestens 6 Monate altes Schaf, das wie ein einjähriges entwickelt ist. Erhebliche Krankheit, Blindheit, starke Lahmheit oder vergleichbar schwere Mängel können das Tier ausschließen.",
+            "Schaf/Ziege gelten für eine Person; an Rind/Büffel/Kamel können sich bis zu sieben Personen beteiligen, wobei kein Anteil unter 1/7 liegen darf. Bei Hanafi-Gemeinschaftsopfern müssen alle Beteiligten mit Opfer-/Ibada-Absicht teilnehmen.",
+            "Vollmacht ist zulässig, auch über eine Organisation. Geld nur zu spenden ersetzt das Udhiyah-Opfer nicht. Eine starre Pflicht, das Fleisch in drei exakt gleiche Teile oder an genau sieben Bedürftige zu verteilen, gibt Diyanet nicht vor."
         ],
         trPoints: [
-            "Kurban vakti, kişinin yükümlülüğü ve hayvanın uygunluğu birlikte değerlendirilir.",
-            "Hayvanda kurbana engel olacak belirli kusurlar bulunmamalıdır.",
-            "Vekâletle kurban mümkündür; niyet ve mülkiyet açık olmalıdır.",
-            "Etin paylaşımı güzel bir uygulamadır; delilsiz zorunlu oranlar ileri sürülmemelidir."
+            "Hanefî/Diyanet'e göre akıllı, büluğa ermiş, seferî olmayan ve aslî ihtiyaçları ile borçları dışında nisap miktarı mala sahip Müslümana udhiye kurbanı vaciptir. Bu malın artıcı olması veya üzerinden bir kamerî yıl geçmesi şart değildir.",
+            "Diyanet nisap için 24 ayar 80,18 g altın veya değerini esas alır. Bayram namazı kılınan yerde kesim vakti bayram namazından sonra başlar; Hanefîlere göre 3. gün güneş batımına, Şâfiîlere göre 4. gün güneş batımına kadar sürer.",
+            "Koyun, keçi, sığır/manda ve deve kurban olabilir. Asgarî yaşlar kamerî hesapla deve 5, sığır/manda 2, koyun/keçi 1'dir; yalnız 6 ayını doldurmuş ve bir yaşındaki gibi gelişmiş koyun istisnadır. Belirgin hastalık, körlük, ağır topallık ve benzeri ciddi kusurlar engel olabilir.",
+            "Koyun/keçi bir kişi adına; sığır/manda/deve en fazla yedi kişi adına kesilebilir ve hiçbir hisse 1/7'den az olamaz. Hanefî ortak kurbanda hissedarların tamamının ibadet niyetiyle katılması gerekir.",
+            "Vekâletle kurban caizdir; kurum aracılığıyla da yapılabilir. Yalnız para bağışlamak udhiye kurbanının yerine geçmez. Etin mutlaka üç eşit parçaya veya tam yedi fakire dağıtılması gerektiği şeklinde sabit bir dinî oran yoktur."
         ]
     )
 
