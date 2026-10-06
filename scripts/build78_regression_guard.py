@@ -952,6 +952,12 @@ for token in (
     'source: "Hisn al-Muslim 87"',
     'Freiwilliger Geschlechtsverkehr während eines gültig begonnenen Ramadan-Fastens',
     'In der schafiitischen Einordnung kann bei Sorge nur um das Kind zusätzlich Fidya erforderlich sein.',
+    'Teşrik tekbirleri sind für Frauen und Männer wājib',
+    'insgesamt 23 Gebetszeiten',
+    'Fasten an diesen vier Kurban-/Tashrīq-Tagen ist tahrīman makrūh',
+    'Riba ist im Quran verboten.',
+    'klassische verzinste Kredite und verzinste Termineinlagen',
+    'etwas, das zur Erdsubstanz zählt, die vorgeschriebenen Wischhandlungen',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
@@ -961,8 +967,14 @@ for forbidden in (
     'Text(settings.t("Speziell", "Özel")).tag(3)',
     'case 2: return "daily"',
     'default: return "special"',
+    'Opferpflicht bzw. Opfer-Sunnah',
+    'erdähnlicher Oberfläche',
 ):
     if forbidden in guide:
         fail(f"religious-content audit regression: duplicate adhkar session returned: {forbidden}")
+
+for prayer_catalog_id in ('tahajjud', 'duha', 'istikhara', 'tilawah_sajdah'):
+    if guide.count(f'id: "{prayer_catalog_id}"') != 1:
+        fail(f"religious-content audit regression: prayer catalogue ID must be unique: {prayer_catalog_id}")
 
 print("Build 78 regression guard: OK")
