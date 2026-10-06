@@ -96,12 +96,12 @@ struct QiblaView: View {
 
                         HStack(spacing: 8) {
                             compactInfoTile(
-                                icon: "location.north.circle.fill",
+                                kind: "qibla",
                                 title: settings.t("Qibla", "Kıble"),
                                 value: qiblaDegrees.map { "\($0)°" } ?? "—"
                             )
                             compactInfoTile(
-                                icon: "iphone",
+                                kind: "profile",
                                 title: settings.t("Gerät", "Cihaz"),
                                 value: headingDegrees.map { "\($0)°" } ?? "—"
                             )
@@ -110,8 +110,8 @@ struct QiblaView: View {
                         if locationManager.usesManualLocation && !deviceLocationAuthorized {
                             VStack(alignment: .leading, spacing: 9) {
                                 HStack(alignment: .top, spacing: 9) {
-                                    Image(systemName: "location.slash.fill")
-                                        .foregroundStyle(SalahTheme.gold)
+                                    SalahFeatureIcon(kind: "info")
+                                        .frame(width: 22, height: 22)
                                     Text(settings.t(
                                         "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Dein manuell gewählter Ort für Gebetszeiten bleibt dabei unverändert.",
                                         "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
@@ -156,8 +156,8 @@ struct QiblaView: View {
 
                         if let accuracy = headingAccuracy, accuracy > 20 {
                             HStack(alignment: .top, spacing: 9) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(SalahTheme.gold)
+                                SalahFeatureIcon(kind: "info")
+                                    .frame(width: 22, height: 22)
                                 Text(settings.t(
                                     "Kompassgenauigkeit ist gerade niedrig (±\(Int(accuracy.rounded()))°). Entferne magnetische Hüllen/Zubehör und bewege das iPhone kurz in einer Acht.",
                                     "Pusula doğruluğu şu anda düşük (±\(Int(accuracy.rounded()))°). Manyetik kılıf/aksesuarları uzaklaştır ve iPhone'u kısa süre sekiz şeklinde hareket ettir."
@@ -172,12 +172,9 @@ struct QiblaView: View {
                         }
 
                         VStack(spacing: 0) {
-                            infoRow(
-                                icon: "location.fill",
-                                title: qiblaLocationLabel
-                            )
-                            infoRow(icon: "compass.drawing", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
-                            infoRow(icon: "arrow.triangle.2.circlepath", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
+                            infoRow(kind: "qibla", title: qiblaLocationLabel)
+                            infoRow(kind: "profile", title: settings.t("iPhone flach halten", "iPhone'u düz tut"))
+                            infoRow(kind: "refresh", title: settings.t("Bei Bedarf kurz in einer Acht bewegen", "Gerekirse kısa süre sekiz şeklinde hareket ettir"))
                         }
                         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                         .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 1) }
@@ -188,10 +185,15 @@ struct QiblaView: View {
                 .scrollIndicators(.hidden)
             } else {
                 VStack(spacing: 14) {
-                    ContentUnavailableView(
-                        settings.t("Standort benötigt", "Konum gerekli"),
-                        systemImage: "location.slash",
-                        description: Text(settings.t(
+                    VStack(spacing: 9) {
+                        SalahFeatureIcon(kind: "qibla")
+                            .frame(width: 48, height: 48)
+
+                        Text(settings.t("Standort benötigt", "Konum gerekli"))
+                            .font(.headline.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+
+                        Text(settings.t(
                             locationManager.usesManualLocation
                                 ? "Für die physische Qibla-Richtung wird zusätzlich der aktuelle Gerätestandort benötigt. Dein manuell gewählter Ort für Gebetszeiten bleibt unverändert."
                                 : "Die Qibla-Richtung wird aus deinem aktuellen Gerätestandort berechnet.",
@@ -199,7 +201,17 @@ struct QiblaView: View {
                                 ? "Fiziksel kıble yönü için ayrıca güncel cihaz konumu gerekir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
                                 : "Kıble yönü güncel cihaz konumuna göre hesaplanır."
                         ))
-                    )
+                        .font(.subheadline)
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .multilineTextAlignment(.center)
+                    }
+                    .padding(16)
+                    .frame(maxWidth: .infinity)
+                    .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1)
+                    }
 
                     Button {
                         if locationManager.authorizationStatus == .denied ||
@@ -283,11 +295,10 @@ struct QiblaView: View {
         )
     }
 
-    private func compactInfoTile(icon: String, title: String, value: String) -> some View {
+    private func compactInfoTile(kind: String, title: String, value: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 21, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: kind)
+                .frame(width: 25, height: 25)
             Text(title)
                 .font(.system(size: 9, weight: .bold))
                 .foregroundStyle(SalahTheme.mutedInk)
@@ -300,15 +311,10 @@ struct QiblaView: View {
         .overlay { RoundedRectangle(cornerRadius: 14).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
     }
 
-    private func infoRow(icon: String, title: String) -> some View {
+    private func infoRow(kind: String, title: String) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 20)
+            SalahFeatureIcon(kind: kind)
+                .frame(width: 24, height: 24)
             Text(title)
                 .font(.system(size: 10.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
