@@ -55,7 +55,7 @@ struct SalahFeatureIcon: View {
             return "feature_bookmarks"
         case "dhikr", "duas":
             return "feature_dhikr"
-        case "info", "knowledge", "islamic_knowledge":
+        case "info", "knowledge", "islamic_knowledge", "hadith":
             return "feature_info"
         case "community", "forum":
             return "feature_community"
@@ -1166,19 +1166,9 @@ struct MoreView: View {
 
     private func discoverSectionTitle(_ title: String, icon: String) -> some View {
         HStack(spacing: 7) {
-            Group {
-                if let glyphKind = discoverDashboardGlyphKind(for: icon) {
-                    SalahFeatureIcon(kind: glyphKind)
-                        .frame(width: 23, height: 23)
-                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(SalahTheme.gold)
-                        .frame(width: 23, height: 23)
-                }
-            }
-            .accessibilityHidden(true)
+            SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: icon))
+                .frame(width: 23, height: 23)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
             Text(title)
                 .font(.system(size: 13, weight: .bold, design: .rounded))
@@ -1246,36 +1236,14 @@ struct MoreView: View {
 
     @ViewBuilder
     private func salahFeatureIcon(_ symbol: String, size: CGFloat) -> some View {
-        ZStack {
-            if let glyphKind = discoverDashboardGlyphKind(for: symbol) {
-                // Premium artwork is already a finished transparent asset.
-                // Do not add another circle, badge or faux background around it.
-                SalahFeatureIcon(kind: glyphKind)
-                    .frame(width: size * 0.78, height: size * 0.78)
-                    .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 2.5, y: 1.5)
-            } else {
-                // SF Symbols are the fallback only. Give those a restrained
-                // container so they still belong to the same visual system.
-                RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-                    .fill(SalahTheme.softTeal.opacity(0.72))
-                    .frame(width: size * 0.78, height: size * 0.78)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-                            .stroke(SalahTheme.gold.opacity(0.42), lineWidth: 0.8)
-                    }
-
-                Image(systemName: symbol)
-                    .symbolRenderingMode(.hierarchical)
-                    .font(.system(size: size * 0.34, weight: .semibold))
-                    .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: size * 0.58, height: size * 0.58)
-            }
-        }
-        .frame(width: size, height: size)
-        .accessibilityHidden(true)
+        SalahFeatureIcon(kind: discoverDashboardGlyphKind(for: symbol))
+            .frame(width: size * 0.78, height: size * 0.78)
+            .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 2.5, y: 1.5)
+            .frame(width: size, height: size)
+            .accessibilityHidden(true)
     }
 
-    private func discoverDashboardGlyphKind(for symbol: String) -> String? {
+    private func discoverDashboardGlyphKind(for symbol: String) -> String {
         switch symbol {
         case "figure.mind.and.body", "rectangle.stack.badge.play.fill":
             return "prayer"
@@ -1293,9 +1261,7 @@ struct MoreView: View {
             return "dhikr"
         case "sparkles":
             return "sparkles"
-        case "location.north.circle.fill":
-            return "qibla"
-        case "map.fill":
+        case "location.north.circle.fill", "map.fill":
             return "qibla"
         case "calendar":
             return "calendar"
@@ -1306,7 +1272,7 @@ struct MoreView: View {
         case "building.columns.fill":
             return "mosques"
         case "text.quote":
-            return "hadith"
+            return "info"
         case "person.3.sequence.fill":
             return "community"
         case "moon.stars.fill":
@@ -1318,7 +1284,7 @@ struct MoreView: View {
         case "slider.horizontal.3":
             return "settings"
         default:
-            return nil
+            return "info"
         }
     }
 
