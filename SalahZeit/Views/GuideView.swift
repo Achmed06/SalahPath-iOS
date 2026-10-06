@@ -690,10 +690,10 @@ private enum PrayerText {
         deNote: "Quran 14:41", trNote: "Kur'an 14:41")
 
     static let salam = PrayerRecitation(
-        deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
+        deLabel: "Salām", trLabel: "Selâm",
         arabic: "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ", transliteration: "Es-selâmü aleyküm ve rahmetullâh",
         deMeaning: "Friede und Allahs Barmherzigkeit seien mit euch.", trMeaning: "Allah'ın selâmı ve rahmeti üzerinize olsun.",
-        deNote: "Den Satz einmal beim Drehen nach rechts und danach erneut beim Drehen nach links sprechen.", trNote: "Cümleyi önce sağa dönerken, sonra sola dönerken tekrar söyle.")
+        deNote: nil, trNote: nil)
 }
 
 struct PrayerHowToView: View {
@@ -1166,6 +1166,30 @@ struct PrayerHowToView: View {
 
 }
 
+// Shared premium section header for the step-by-step learning cards.
+// Reuses the same standalone SalahPath artwork as the rest of the app instead
+// of mixing in unrelated SF Symbols.
+private struct TutorialSectionHeader: View {
+    let title: String
+    let iconKind: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: 8) {
+            SalahFeatureIcon(kind: iconKind)
+                .frame(width: 24, height: 24)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
+
+            Text(title)
+                .font(.system(size: 12.5, weight: .bold, design: .rounded))
+                .foregroundStyle(tint)
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 // Prayer tutorial artwork uses the user-approved generated raster assets; gender-specific Hanafi posture details remain in the step data.
 private struct PrayerTutorialStepCard: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -1326,9 +1350,11 @@ private struct PrayerTutorialStepCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")
-                        .font(.caption.bold())
-                        .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
+                    TutorialSectionHeader(
+                        title: settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"),
+                        iconKind: "prayer",
+                        tint: isMale ? maleHeader : SalahTheme.teal
+                    )
                     Text(settings.language == .german ? step.deAction : step.trAction)
                         .font(.subheadline)
                         .foregroundStyle(isMale ? maleInk : SalahTheme.ink)
@@ -1349,9 +1375,11 @@ private struct PrayerTutorialStepCard: View {
 
                 if !step.recitations.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        Label(settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"), systemImage: "text.bubble.fill")
-                            .font(.caption.bold())
-                            .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
+                        TutorialSectionHeader(
+                            title: settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"),
+                            iconKind: "duas",
+                            tint: isMale ? maleHeader : SalahTheme.teal
+                        )
                         ForEach(step.recitations) { rec in
                             PrayerRecitationView(recitation: rec)
                         }
@@ -1975,9 +2003,11 @@ struct WuduGuideView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Label(settings.t("SO MACHST DU ES", "BÖYLE YAP"), systemImage: "hand.point.right.fill")
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.teal)
+                    TutorialSectionHeader(
+                        title: settings.t("SO MACHST DU ES", "BÖYLE YAP"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.teal
+                    )
                     Text(settings.language == .german ? step.deAction : step.trAction)
                         .font(.body)
                         .foregroundStyle(SalahTheme.ink)
@@ -2002,9 +2032,11 @@ struct WuduGuideView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 5)
                 } label: {
-                    Label(settings.t("Ganz genau", "Ayrıntılı anlatım"), systemImage: "magnifyingglass")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Ganz genau", "Ayrıntılı anlatım"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                 }
             }
             .padding(16)
