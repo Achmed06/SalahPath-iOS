@@ -6261,10 +6261,13 @@ struct PrayerTextsHubView: View {
 
             Section(settings.t("Gebetsduas", "Namaz Duaları")) {
                 NavigationLink { PrayerDuaAudioView() } label: {
-                    Label(settings.t(
-                        "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
-                        "Sübhâneke, Ettehiyyâtü, Salli, Bârik, Rabbenâ ve devamı"
-                    ), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t(
+                            "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
+                            "Sübhâneke, Ettehiyyâtü, Salli, Bârik, Rabbenâ ve devamı"
+                        ),
+                        kind: "duas"
+                    )
                 }
 
                 NavigationLink { QunutDuaView() } label: {
