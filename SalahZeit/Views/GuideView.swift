@@ -7860,10 +7860,10 @@ struct HijriCalendarView: View {
                 trTitle: "Kurban Bayramı · 10 Zilhicce",
                 deMeaning: "Eid al-Adha ist das Opferfest und fällt in die Hajj-Zeit.",
                 trMeaning: "Kurban Bayramı hac mevsimindeki büyük bayramdır.",
-                deRecommended: ["Eid-Gebet beachten.", "Opferpflicht bzw. Opfer-Sunnah nach den persönlichen hanafitischen Voraussetzungen prüfen.", "Familie und Bedürftige am Fest teilhaben lassen."],
-                trRecommended: ["Bayram namazını değerlendir.", "Kurban yükümlülüğünü kişisel Hanefî şartlara göre kontrol et.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
-                deCaution: "Am Eid-Tag wird nicht gefastet.",
-                trCaution: "Bayram günü oruç tutulmaz."
+                deRecommended: ["Eid-Gebet beachten.", "Hanafi: Prüfen, ob die persönlichen Voraussetzungen für das wājib Udhiyah-Opfer erfüllt sind; andere Rechtsschulen ordnen Udhiyah teilweise als Sunnah ein.", "Familie und Bedürftige am Fest teilhaben lassen."],
+                trRecommended: ["Bayram namazını değerlendir.", "Hanefî: Vacip udhiye kurbanının kişisel şartlarının oluşup oluşmadığını kontrol et; diğer mezheplerde kurbanın hükmü sünnet olarak değerlendirilebilir.", "Aileyi ve ihtiyaç sahiplerini bayram sevincine ortak et."],
+                deCaution: "Am 10.–13. Dhu l-Hijjah wird nach der hier verwendeten Hanafi/Diyanet-Einordnung nicht gefastet; Fasten an diesen vier Kurban-/Tashrīq-Tagen ist tahrīman makrūh.",
+                trCaution: "10–13 Zilhicce günlerinde Hanefî/Diyanet hükmüne göre oruç tutulmaz; bu dört Kurban/teşrik gününde oruç tutmak tahrîmen mekruhtur."
             )
         }
 
@@ -7874,10 +7874,10 @@ struct HijriCalendarView: View {
                 trTitle: "Teşrik günleri · \(d) Zilhicce",
                 deMeaning: "Die Tage nach dem ersten Opferfesttag heißen Tage des Tashriq.",
                 trMeaning: "Kurban Bayramı'nın ilk gününden sonraki bu günlere teşrik günleri denir.",
-                deRecommended: ["Hanafi: Die Tashrīq-Takbīre laufen bereits seit Fajr am 9. Dhu l-Hijjah und enden nach Asr am 13.; in diesem Zeitraum werden sie nach jedem Fard-Gebet gesprochen.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
-                trRecommended: ["Hanefî uygulamada teşrik tekbirleri 9 Zilhicce sabah farzından başlar ve 13 Zilhicce ikindi farzından sonra biter; bu sürede her farz namazın ardından getirilir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
-                deCaution: "Diese Tage sind keine gewöhnlichen freiwilligen Fastentage.",
-                trCaution: "Bu günler normal nafile oruç günleri değildir."
+                deRecommended: ["Hanafi: Die Tashrīq-Takbīre sind für Frauen und Männer wājib: nach jedem Farḍ-Gebet von Fajr am 9. Dhu l-Hijjah bis einschließlich Asr am 13. – insgesamt 23 Gebetszeiten. Im schafiitischen Madhhab werden sie als Sunnah eingeordnet.", "Allah gedenken, essen, trinken und die Festtage bewusst verbringen."],
+                trRecommended: ["Hanefî: Teşrik tekbirleri kadın ve erkek için vaciptir; 9 Zilhicce sabah farzından 13 Zilhicce ikindi farzı dâhil her farzdan sonra, toplam 23 vakit getirilir. Şâfiî mezhebinde sünnet kabul edilir.", "Allah'ı zikret, yiyip iç ve bayram günlerini bilinçli geçir."],
+                deCaution: "11.–13. Dhu l-Hijjah sind Tashrīq-Tage. Nach Hanafi/Diyanet ist Fasten an ihnen tahrīman makrūh; sie werden als Tage des Essens, Trinkens und Gedenkens Allahs behandelt.",
+                trCaution: "11–13 Zilhicce teşrik günleridir. Hanefî/Diyanet'e göre bu günlerde oruç tutmak tahrîmen mekruhtur; bunlar yeme, içme ve Allah'ı anma günleridir."
             )
         }
 
