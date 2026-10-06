@@ -1753,8 +1753,8 @@ struct WuduGuideView: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh.",
-                                "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla."
+                                "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh. Hanafi/Diyanet: Niyyah und Bismillāh sind Sunnah; das Wudu bleibt ohne sie gültig. In den anderen drei sunnitischen Rechtsschulen ist die Niyyah für Wudu verpflichtend.",
+                                "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla. Hanefî/Diyanet: Niyet ve besmele sünnettir; bunlar olmadan da abdest geçerlidir. Diğer üç Sünnî mezhepte ise abdest için niyet farzdır."
                             ))
                             .font(.subheadline)
                             .fixedSize(horizontal: false, vertical: true)
@@ -2967,8 +2967,14 @@ struct PrayerCatalogView: View {
                     "Elleri kaldırmadan Allâhü ekber diyerek bir kez secdeye git; üç defa „Sübhâne rabbiye'l-a'lâ“ de ve Allâhü ekber diyerek kalk.",
                     "Ardından Ettehiyyâtü oturuşu ve selâm yoktur."
                 ],
-                deNotes: ["Wer nur die Übersetzung einer Secde-Aya liest, liest nicht den Quran-Wortlaut; Diyanet empfiehlt dennoch vorsichtshalber eine Tilāwah-Secde."],
-                trNotes: ["Secde ayetinin yalnız mealini okumak Kur'an lafzını okumak değildir; Diyanet yine de ihtiyaten tilavet secdesi yapılmasını belirtir."],
+                deNotes: [
+                    "Wer nur die Übersetzung einer Secde-Aya liest, liest nicht den Quran-Wortlaut; Diyanet empfiehlt dennoch vorsichtshalber eine Tilāwah-Secde.",
+                    "Die Wajib-Einstufung ist hanafitisch. Die anderen drei sunnitischen Rechtsschulen stufen die Tilāwah-Secde als Sunnah ein."
+                ],
+                trNotes: [
+                    "Secde ayetinin yalnız mealini okumak Kur'an lafzını okumak değildir; Diyanet yine de ihtiyaten tilavet secdesi yapılmasını belirtir.",
+                    "Vacip hükmü Hanefî mezhebine aittir. Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir."
+                ],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
