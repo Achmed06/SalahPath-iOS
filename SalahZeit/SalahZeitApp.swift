@@ -483,8 +483,8 @@ private struct OnboardingFlowView: View {
                     .multilineTextAlignment(.center)
 
                 Text(settings.t(
-                    "Damit die App direkt die passenden Mann- oder Frau-Abbildungen zeigt.",
-                    "Uygulamanın doğrudan uygun erkek veya kadın görsellerini göstermesi için."
+                    "Damit direkt die passenden Mann- oder Frau-Abbildungen angezeigt werden.",
+                    "Doğrudan uygun erkek veya kadın görsellerinin gösterilmesi için."
                 ))
                 .font(.subheadline)
                 .foregroundStyle(SalahTheme.mutedInk)
@@ -626,8 +626,8 @@ private struct OnboardingFlowView: View {
                     .foregroundStyle(SalahTheme.deepTeal)
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.language.title, systemImage: "globe")
-                    Label(settings.prayerAudience.title(settings.language), systemImage: "person.fill")
+                    SalahFeatureIconLabel(title: settings.language.title, kind: "language")
+                    SalahFeatureIconLabel(title: settings.prayerAudience.title(settings.language), kind: "profile")
                     Label(
                         locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
                         systemImage: locationManager.location == nil ? "location.slash" : "location.fill"
