@@ -981,7 +981,7 @@ for token in (
     'Bei Talak/Scheidung niemals aus einem verkürzten Satz automatisch entscheiden',
     'höchstens ein Drittel des nach Kosten und Schulden verbleibenden Nachlasses',
     'Wasiyyah zugunsten eines ohnehin erbberechtigten Erben',
-    'keine individuelle verbindliche Erbverteilung aus einer Kurzbeschreibung erzeugen',
+    'lässt sich aus einer Kurzbeschreibung keine verbindliche individuelle Erbverteilung ableiten',
     'Text(settings.t("Morgen", "Sabah")).tag(0)',
     'Text(settings.t("Abend", "Akşam")).tag(1)',
     'category == 0 ? "morning" : "evening"',
