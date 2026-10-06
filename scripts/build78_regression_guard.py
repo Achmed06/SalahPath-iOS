@@ -1082,6 +1082,8 @@ for token in (
     'Diğer üç Sünnî mezhepte ise abdest için niyet farzdır',
     'Die anderen drei sunnitischen Rechtsschulen stufen die Tilāwah-Secde als Sunnah ein',
     'Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir',
+    "Allâhümme'c-alhü lenâ feratan, vec'alhü lenâ ecran ve zuhran, vec'alhü lenâ şefî'an müşeffe'an.",
+    "Allâhümme'c-alhâ lenâ feratan, vec'alhâ lenâ ecran ve zuhran, vec'alhâ lenâ şefî'aten müşeffe'aten.",
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
@@ -1093,6 +1095,8 @@ for forbidden in (
     'default: return "special"',
     'Opferpflicht bzw. Opfer-Sunnah',
     'erdähnlicher Oberfläche',
+    "Allâhümme'c-alhü lenâ şefî'an müşeffe'an. Birahmetike",
+    "Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten. Birahmetike",
 ):
     if forbidden in guide:
         fail(f"religious-content audit regression: duplicate adhkar session returned: {forbidden}")
