@@ -9590,11 +9590,8 @@ struct QuranView: View {
                             QuranDirectoryView()
                         } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "books.vertical.fill")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.gold)
+                                SalahFeatureIcon(kind: "quran")
                                     .frame(width: 42, height: 42)
-                                    .background(SalahTheme.navigationTeal, in: Circle())
 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(settings.t("Vollständiges Quran-Verzeichnis", "Tam Kur'an Dizini"))
