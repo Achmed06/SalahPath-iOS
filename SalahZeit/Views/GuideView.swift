@@ -2877,8 +2877,16 @@ struct PrayerCatalogView: View {
                     "Öğle, ikindi ve yatsının dört rekât farzları seferî iken iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır.",
                     "Seferî kişi mukim imama uyarsa dört rekâtlı farzı imamla birlikte tam kılar."
                 ],
-                deNotes: ["Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch.", "Hanafi: Ein vier-rakʿātiges Fard, das während echter Seferîlik versäumt wurde, wird später auch als Ortsansässiger mit 2 Rakʿāt nachgeholt. Ein als Ortsansässiger versäumtes vier-rakʿātiges Fard wird dagegen auch auf Reise mit 4 Rakʿāt nachgeholt."],
-                trNotes: ["Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir.", "Hanefî: Seferî iken kazaya kalan dört rekâtlı farz daha sonra mukim olunsa da 2 rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı farz ise seferde kaza edilse bile 4 rekât kılınır."],
+                deNotes: [
+                    "Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch.",
+                    "Hanafi: Ein vier-rakʿātiges Fard, das während echter Seferîlik versäumt wurde, wird später auch als Ortsansässiger mit 2 Rakʿāt nachgeholt. Ein als Ortsansässiger versäumtes vier-rakʿātiges Fard wird dagegen auch auf Reise mit 4 Rakʿāt nachgeholt.",
+                    "Hanafi/Diyanet: Dhuhr und Asr bzw. Maghrib und Isha werden wegen einer normalen Reise nicht einfach als echtes Jamʿ zusammengelegt. Im hanafitischen Grundsatz ist echtes Jamʿ auf ʿArafāt und Muzdalifah beim Hajj beschränkt; bei erheblichem Bedarf nennt Diyanet die Möglichkeit, unter Beachtung ihrer Bedingungen einer anderen sunnitischen Rechtsschule zu folgen."
+                ],
+                trNotes: [
+                    "Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir.",
+                    "Hanefî: Seferî iken kazaya kalan dört rekâtlı farz daha sonra mukim olunsa da 2 rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı farz ise seferde kaza edilse bile 4 rekât kılınır.",
+                    "Hanefî/Diyanet: Normal yolculuk sebebiyle öğle ile ikindi veya akşam ile yatsı doğrudan hakikî cem yapılmaz. Hanefî temel hükmünde hakikî cem hacda Arafat ve Müzdelife ile sınırlıdır; ciddi ihtiyaç hâlinde Diyanet, şartlarına uyularak başka bir Sünnî mezhebin görüşüyle amel edilebileceğini belirtir."
+                ],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
@@ -4782,6 +4790,13 @@ struct PrayerDebtTrackerView: View {
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+
+                    Text(settings.t(
+                        "Witr ist hier nach Hanafi/Diyanet enthalten: Dort ist Witr wajib und ein verpasstes Witr wird nachgeholt. Andere sunnitische Rechtsschulen stufen Witr als Sunnah ein.",
+                        "Vitir burada Hanefî/Diyanet hükmüne göre yer alır: Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir. Diğer Sünnî mezhepler vitri sünnet olarak değerlendirir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
                 }
                 .cardStyle(material: true)
 
