@@ -244,11 +244,12 @@ struct PrayerTrackerOverviewView: View {
 
             Section {
                 HStack {
-                    Label(
-                        isTodaySelected
+                    SalahFeatureIconLabel(
+                        title: isTodaySelected
                             ? settings.t("Heute", "Bugün")
                             : settings.t("Ausgewählter Tag", "Seçili gün"),
-                        systemImage: "checkmark.circle.fill"
+                        kind: "checkmark",
+                        iconSize: 20
                     )
                     Spacer()
                     Text("\(completed)/\(PrayerTrackerStore.requiredKinds.count)")
@@ -280,8 +281,9 @@ struct PrayerTrackerOverviewView: View {
                             Text(kind.localizedName(settings.language))
                                 .foregroundStyle(SalahTheme.ink)
                             Spacer()
-                            Image(systemName: done ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(done ? SalahTheme.teal : .secondary)
+                            SalahFeatureIcon(kind: "checkmark")
+                                .frame(width: 22, height: 22)
+                                .opacity(done ? 1 : 0.18)
                         }
                         .contentShape(Rectangle())
                     }
@@ -1201,9 +1203,8 @@ struct HomeView: View {
                 }
 
                 HStack(spacing: 4) {
-                    Image(systemName: "mappin")
-                        .font(.system(size: 9.5, weight: .bold))
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "qibla")
+                        .frame(width: 13, height: 13)
                     Text(effectiveLocality)
                         .font(.custom("AvenirNext-DemiBold", size: 9.2))
                         .foregroundStyle(SalahTheme.teal)
@@ -1986,9 +1987,9 @@ struct HomeView: View {
                 LazyVStack(spacing: 5) {
                     VStack(alignment: .leading, spacing: 7) {
                         HStack(spacing: 8) {
-                            Image(systemName: "location.slash")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundStyle(SalahTheme.teal)
+                            SalahFeatureIcon(kind: "qibla")
+                                .frame(width: 24, height: 24)
+                                .opacity(0.72)
 
                             VStack(alignment: .leading, spacing: 1) {
                                 Text(settings.t("Standort ist optional", "Konum isteğe bağlı"))
@@ -2626,9 +2627,8 @@ private struct ReferencePosterMapArt: View {
                         .fill(Color.white)
                         .frame(width: min(w, h) * 0.27, height: min(w, h) * 0.27)
                         .shadow(color: SalahTheme.deepTeal.opacity(0.10), radius: 4, y: 2)
-                    Image(systemName: "location.fill")
-                        .font(.system(size: min(w, h) * 0.12, weight: .bold))
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "qibla")
+                        .frame(width: min(w, h) * 0.16, height: min(w, h) * 0.16)
                 }
                 .position(pin)
 
@@ -2640,15 +2640,26 @@ private struct ReferencePosterMapArt: View {
                         .fill(SalahTheme.gold)
                         .frame(width: min(w, h) * 0.20, height: 3)
                         .offset(y: -min(w, h) * 0.035)
-                    Image(systemName: "location.north.fill")
-                        .font(.system(size: min(w, h) * 0.075, weight: .bold))
-                        .foregroundStyle(SalahTheme.gold)
+                    ReferenceTriangle()
+                        .fill(SalahTheme.gold)
+                        .frame(width: min(w, h) * 0.085, height: min(w, h) * 0.10)
                         .offset(y: -min(w, h) * 0.18)
                 }
                 .position(kaaba)
             }
             .frame(width: w, height: h)
         }
+    }
+}
+
+private struct ReferenceTriangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.closeSubpath()
+        return path
     }
 }
 
@@ -2783,8 +2794,8 @@ private struct ReferenceMosqueSkyline: View {
 
     private func minaret(height: CGFloat) -> some View {
         VStack(spacing: 0) {
-            Image(systemName: "triangle.fill")
-                .font(.system(size: 5))
+            ReferenceTriangle()
+                .frame(width: 6, height: 5)
             Capsule()
                 .frame(width: 4, height: height - 7)
         }
