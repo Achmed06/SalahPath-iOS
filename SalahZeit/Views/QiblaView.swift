@@ -110,8 +110,8 @@ struct QiblaView: View {
                         if locationManager.usesManualLocation && !deviceLocationAuthorized {
                             VStack(alignment: .leading, spacing: 9) {
                                 HStack(alignment: .top, spacing: 9) {
-                                    Image(systemName: "location.slash.fill")
-                                        .foregroundStyle(SalahTheme.gold)
+                                    SalahFeatureIcon(kind: "info")
+                                        .frame(width: 22, height: 22)
                                     Text(settings.t(
                                         "Für eine exakt drehende Qibla-Nadel braucht iOS zusätzlich den aktuellen Gerätestandort, damit magnetischer Norden in geografischen Norden umgerechnet werden kann. Dein manuell gewählter Ort für Gebetszeiten bleibt dabei unverändert.",
                                         "Kıble ibresinin doğru dönmesi için iOS ayrıca cihazın güncel konumuna ihtiyaç duyar; böylece manyetik kuzey gerçek kuzeye çevrilebilir. Namaz vakitleri için manuel seçtiğin konum değişmeden kalır."
@@ -156,8 +156,8 @@ struct QiblaView: View {
 
                         if let accuracy = headingAccuracy, accuracy > 20 {
                             HStack(alignment: .top, spacing: 9) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(SalahTheme.gold)
+                                SalahFeatureIcon(kind: "info")
+                                    .frame(width: 22, height: 22)
                                 Text(settings.t(
                                     "Kompassgenauigkeit ist gerade niedrig (±\(Int(accuracy.rounded()))°). Entferne magnetische Hüllen/Zubehör und bewege das iPhone kurz in einer Acht.",
                                     "Pusula doğruluğu şu anda düşük (±\(Int(accuracy.rounded()))°). Manyetik kılıf/aksesuarları uzaklaştır ve iPhone'u kısa süre sekiz şeklinde hareket ettir."
