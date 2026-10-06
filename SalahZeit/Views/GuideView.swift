@@ -570,13 +570,13 @@ private enum PrayerText {
         transliteration: "Sübhânekellâhümme ve bihamdik. Ve tebârakesmük ve teâlâ ceddük. Ve lâ ilâhe ğayruk.",
         deMeaning: "Gepriesen bist Du, o Allah, und Dir gebührt Lob. Gesegnet ist Dein Name, erhaben ist Deine Majestät, und es gibt keinen Gott außer Dir.",
         trMeaning: "Allah'ım! Sen eksik sıfatlardan uzaksın. Seni överim. Senin adın mübarektir, şanın yücedir. Senden başka ilâh yoktur.",
-        deNote: "In der ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
+        deNote: nil, trNote: nil)
 
     static let audhu = PrayerRecitation(
         deLabel: "Eʿūḏu", trLabel: "Eûzü",
         arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", transliteration: "Eʿûzü billâhi mineş-şeytânirracîm",
         deMeaning: "Ich suche Zuflucht bei Allah vor dem verfluchten Satan.", trMeaning: "Kovulmuş şeytandan Allah'a sığınırım.",
-        deNote: "In der ersten Rakʿah vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
+        deNote: nil, trNote: nil)
 
     static let basmala = PrayerRecitation(
         deLabel: "Basmala", trLabel: "Besmele",
