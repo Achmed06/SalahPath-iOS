@@ -1046,4 +1046,59 @@ for prayer_catalog_id in ('tahajjud', 'duha', 'istikhara', 'tilawah_sajdah'):
     if guide.count(f'id: "{prayer_catalog_id}"') != 1:
         fail(f"religious-content audit regression: prayer catalogue ID must be unique: {prayer_catalog_id}")
 
+# Visual/copy consistency audit: instructional and content cards use SalahPath artwork,
+# while SF Symbols remain reserved for native controls, states and status feedback.
+for token in (
+    'private struct TutorialSectionHeader: View',
+    'iconKind: "prayer"',
+    'iconKind: "duas"',
+    'SalahFeatureIcon(kind: "calendar")',
+    'SalahFeatureIcon(kind: lesson.icon)',
+    'SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))',
+    'SalahFeatureIcon(kind: settingsFeatureKind(for: icon))',
+):
+    if token not in guide + home + settings_view:
+        fail(f"visual consistency regression: missing {token}")
+
+for forbidden in (
+    'Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")',
+    'Label(settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"), systemImage: "text.bubble.fill")',
+    'deLabel: "Rechts und anschließend links"',
+    'deNote: "Den Satz einmal beim Drehen nach rechts',
+    'deNote: "In der ersten Rakʿah nach dem Eröffnungstakbir."',
+    'deNote: "In der ersten Rakʿah vor der Fātiha."',
+    'Image(systemName: lesson.icon)',
+    'systemImage: topic.icon',
+    'Image(systemName: item.event.symbol)',
+    'systemImage: event.symbol',
+    'Image(systemName: prayer.kind.systemImage)',
+    'Image(systemName: task.2)',
+):
+    if forbidden in guide + home:
+        fail(f"visual/copy consistency regression: legacy decorative pattern returned: {forbidden}")
+
+for forbidden in (
+    'Image(systemName: settings.prayerAudience == audience ? "person.fill" : "person.fill")',
+    'Image(systemName: "globe")',
+):
+    if forbidden in app + settings_view + guide:
+        fail(f"visual consistency regression: generic profile/language icon returned: {forbidden}")
+
+if 'systemImage: "building.columns"' in root_tabs:
+    fail("visual consistency regression: generic mosque empty-state icon returned")
+
+for forbidden in (
+    "LiveContainer",
+    "wie in der PDF",
+    "wie in PDF",
+    "KI-generiert",
+    "AI-generated",
+    "künstliche Intelligenz",
+):
+    if forbidden in app + guide + home + settings_view + root_tabs:
+        fail(f"release-copy regression: internal/meta wording leaked into UI source: {forbidden}")
+
+if 'Bildanleitung folgt bald' not in guide or 'Görsel anlatım yakında' not in guide:
+    fail("unfinished prayer-guide disclosure regression: translated coming-soon notice missing")
+
 print("Build 78 regression guard: OK")
