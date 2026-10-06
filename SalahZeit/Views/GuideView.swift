@@ -2843,8 +2843,8 @@ struct PrayerCatalogView: View {
                 id: "sehiv_sajdah", group: "special",
                 deTitle: "Sehiv-Sujud · Vergesslichkeitsniederwerfung", trTitle: "Sehiv Secdesi",
                 deRuling: "Hanafi: wajib, wenn erforderlich", trRuling: "Hanefî: gerektiğinde vacip", rakaLabel: "2 Sujud",
-                deSummary: "Ausgleich am Ende des Gebets bei bestimmten versehentlichen Auslassungen, Verzögerungen oder Veränderungen eines Wajib bzw. der Reihenfolge.",
-                trSummary: "Namazda yanılarak bir vacibin terk, tehir veya değiştirilmesi gibi durumlarda namazın sonunda yapılan telafi secdesi.",
+                deSummary: "Hanafi: Ausgleich am Gebetsende, wenn versehentlich ein Rukn verzögert, wiederholt oder vorgezogen oder ein Wajib ausgelassen, verzögert oder verändert wurde.",
+                trSummary: "Hanefî: Bir rüknün yanılarak geciktirilmesi, tekrarlanması veya öne alınması ya da bir vacibin terk, tehir veya değiştirilmesi hâlinde namaz sonunda yapılan telafi secdesi.",
                 deSteps: [
                     "Im letzten Sitzen Ettehiyyâtü lesen und nach rechts Salām geben.",
                     "Ohne Unterbrechung mit Takbir in den ersten Sujud gehen, den üblichen Sujud-Dhikr sprechen, aufsetzen und einen zweiten Sujud machen.",
