@@ -233,6 +233,43 @@ for forbidden in (
     if forbidden in guide or forbidden in root_tab:
         fail(f"German farewell-sermon localization regression: found {forbidden}")
 
+# 4b) Release learning UI must stay user-facing and use SalahPath artwork for content headers.
+for token in (
+    'struct SalahFeatureIconLabel: View',
+):
+    if token not in root_tab:
+        fail(f"shared SalahPath icon label regression: missing {token}")
+
+for token in (
+    'private struct TutorialSectionHeader: View',
+    'iconKind: "prayer"',
+    'iconKind: "duas"',
+    'SalahFeatureIconLabel(title: settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), kind: "wudu"',
+    'SalahFeatureIconLabel(title: settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), kind: "list"',
+    'SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon"',
+    'deLabel: "Salām", trLabel: "Selâm"',
+    'deNote: nil, trNote: nil',
+):
+    if token not in guide:
+        fail(f"learning UI polish regression: missing {token}")
+
+for forbidden in (
+    'Den Satz einmal beim Drehen nach rechts',
+    'Rechts und anschließend links',
+    'systemImage: "figure.walk"',
+    'systemImage: "text.bubble.fill"',
+    'SalahPath verwendet diesen Bereich',
+    'SalahPath entscheidet hier nicht',
+    'SalahPath soll',
+    'Fatwa-Automatik',
+    'AlQuran.cloud-API',
+    'CDN-Link',
+    'SalahPath Dua-Sammlung öffnen',
+    'Hier findest du die täglichen Gebete',
+):
+    if forbidden in guide:
+        fail(f"developer/meta learning UI regression: found {forbidden}")
+
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
     fail("female prayer pose routing regression: male_ substring stripping breaks female_ assets")
@@ -336,7 +373,7 @@ for token in (
 
 for token in (
     'Niyet ettim Allah rızası için bugünkü öğle namazının farzını kılmaya.',
-    'Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")',
+    'SalahFeatureIconLabel(title: settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), kind: "prayer")',
     '2-Rakʿāt-Bildanleitung für Mann/Frau öffnen',
 ):
     if token not in guide:
@@ -760,7 +797,7 @@ if 'let error = store.error' in guide_source:
 location_source = read("SalahZeit/Services/LocationManager.swift")
 for token in (
     'func localizedLastError(_ language: AppLanguage) -> String?',
-    'Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir.',
+    'Konum erişimi kapalı. iPhone ayarlarından konum erişimini etkinleştir.',
     'Lütfen konum, şehir veya posta kodu gir.',
     'Konum bulunamadı.',
     'Konum bulunamadı. Lütfen girişini kontrol et.',
@@ -944,7 +981,7 @@ for token in (
     'Bei Talak/Scheidung niemals aus einem verkürzten Satz automatisch entscheiden',
     'höchstens ein Drittel des nach Kosten und Schulden verbleibenden Nachlasses',
     'Wasiyyah zugunsten eines ohnehin erbberechtigten Erben',
-    'keine individuelle verbindliche Erbverteilung aus einer Kurzbeschreibung erzeugen',
+    'lässt sich aus einer Kurzbeschreibung keine verbindliche individuelle Erbverteilung ableiten',
     'Text(settings.t("Morgen", "Sabah")).tag(0)',
     'Text(settings.t("Abend", "Akşam")).tag(1)',
     'category == 0 ? "morning" : "evening"',

@@ -511,7 +511,7 @@ struct RakatOverviewView: View {
                 ForEach(PrayerKind.allCases.filter { $0 != .sunrise }) { kind in
                     VStack(alignment: .leading, spacing: 7) {
                         HStack {
-                            Label(kind.localizedName(settings.language), systemImage: kind.systemImage)
+                            SalahFeatureIconLabel(title: kind.localizedName(settings.language), kind: salahPrayerFeatureKind(for: kind), iconSize: 24)
                                 .font(.headline)
                             Spacer()
                             if let fard = kind.fardRakats {
@@ -690,10 +690,10 @@ private enum PrayerText {
         deNote: "Quran 14:41", trNote: "Kur'an 14:41")
 
     static let salam = PrayerRecitation(
-        deLabel: "Rechts und anschließend links", trLabel: "Önce sağa, sonra sola",
+        deLabel: "Salām", trLabel: "Selâm",
         arabic: "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ", transliteration: "Es-selâmü aleyküm ve rahmetullâh",
         deMeaning: "Friede und Allahs Barmherzigkeit seien mit euch.", trMeaning: "Allah'ın selâmı ve rahmeti üzerinize olsun.",
-        deNote: "Den Satz einmal beim Drehen nach rechts und danach erneut beim Drehen nach links sprechen.", trNote: "Cümleyi önce sağa dönerken, sonra sola dönerken tekrar söyle.")
+        deNote: nil, trNote: nil)
 }
 
 struct PrayerHowToView: View {
@@ -1166,6 +1166,30 @@ struct PrayerHowToView: View {
 
 }
 
+// Shared premium section header for the step-by-step learning cards.
+// Reuses the same standalone SalahPath artwork as the rest of the app instead
+// of mixing in unrelated SF Symbols.
+private struct TutorialSectionHeader: View {
+    let title: String
+    let iconKind: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: 8) {
+            SalahFeatureIcon(kind: iconKind)
+                .frame(width: 24, height: 24)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
+
+            Text(title)
+                .font(.system(size: 12.5, weight: .bold, design: .rounded))
+                .foregroundStyle(tint)
+
+            Spacer(minLength: 0)
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 // Prayer tutorial artwork uses the user-approved generated raster assets; gender-specific Hanafi posture details remain in the step data.
 private struct PrayerTutorialStepCard: View {
     @EnvironmentObject private var settings: SettingsStore
@@ -1326,9 +1350,11 @@ private struct PrayerTutorialStepCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"), systemImage: "figure.walk")
-                        .font(.caption.bold())
-                        .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
+                    TutorialSectionHeader(
+                        title: settings.t("WAS MACHE ICH?", "NE YAPACAĞIM?"),
+                        iconKind: "prayer",
+                        tint: isMale ? maleHeader : SalahTheme.teal
+                    )
                     Text(settings.language == .german ? step.deAction : step.trAction)
                         .font(.subheadline)
                         .foregroundStyle(isMale ? maleInk : SalahTheme.ink)
@@ -1339,7 +1365,7 @@ private struct PrayerTutorialStepCard: View {
                 .background(isMale ? maleSoftTeal : SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 14))
 
                 if !isMale, let note = settings.language == .german ? step.deHanafi : step.trHanafi {
-                    Label(note, systemImage: "info.circle.fill")
+                    SalahFeatureIconLabel(title: note, kind: "info", iconSize: 18)
                         .font(.caption)
                         .foregroundStyle(SalahTheme.mutedInk)
                         .padding(11)
@@ -1349,9 +1375,11 @@ private struct PrayerTutorialStepCard: View {
 
                 if !step.recitations.isEmpty {
                     VStack(alignment: .leading, spacing: 10) {
-                        Label(settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"), systemImage: "text.bubble.fill")
-                            .font(.caption.bold())
-                            .foregroundStyle(isMale ? maleHeader : SalahTheme.teal)
+                        TutorialSectionHeader(
+                            title: settings.t("WAS SAGE ICH?", "NE SÖYLÜYORUM?"),
+                            iconKind: "duas",
+                            tint: isMale ? maleHeader : SalahTheme.teal
+                        )
                         ForEach(step.recitations) { rec in
                             PrayerRecitationView(recitation: rec)
                         }
@@ -1525,7 +1553,7 @@ private struct JanazahDuaView: View {
                     "Allahümme Salli ve Allahümme Bârik dualarını oku."
                 ))
                 NavigationLink { PrayerDuaAudioView() } label: {
-                    Label(settings.t("Salli & Bârik öffnen", "Salli & Bârik'i aç"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("Salli & Bârik öffnen", "Salli & Bârik'i aç"), kind: "duas")
                 }
             }
 
@@ -1713,7 +1741,7 @@ struct WuduGuideView: View {
 
                     if safeCurrentStepIndex == 0 {
                         VStack(alignment: .leading, spacing: 9) {
-                            Label(settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), systemImage: "drop.fill")
+                            SalahFeatureIconLabel(title: settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), kind: "wudu", iconSize: 26)
                                 .font(.title3.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -1762,7 +1790,7 @@ struct WuduGuideView: View {
                         .cardStyle()
 
                         VStack(alignment: .leading, spacing: 9) {
-                            Label(settings.t("Was bricht Wudu? · Hanafi", "Abdesti neler bozar? · Hanefî"), systemImage: "exclamationmark.shield.fill")
+                            SalahFeatureIconLabel(title: settings.t("Was bricht Wudu? · Hanafi", "Abdesti neler bozar? · Hanefî"), kind: "info", iconSize: 23)
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
                             Text(settings.t(
@@ -1786,21 +1814,21 @@ struct WuduGuideView: View {
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
                             NavigationLink { GhuslGuideView() } label: {
-                                Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
+                                SalahFeatureIconLabel(title: settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), kind: "wudu")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
                             Divider()
                             NavigationLink { TayammumGuideView() } label: {
-                                Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
+                                SalahFeatureIconLabel(title: settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), kind: "wudu")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
                             Divider()
                             NavigationLink { WuduSpecialCasesView() } label: {
-                                Label(settings.t("Wudu-Sonderfälle · Mest, Verband, Nagellack", "Abdest özel durumları · Mest, sargı, oje"), systemImage: "cross.case.fill")
+                                SalahFeatureIconLabel(title: settings.t("Wudu-Sonderfälle · Mest, Verband, Nagellack", "Abdest özel durumları · Mest, sargı, oje"), kind: "info")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -1975,9 +2003,11 @@ struct WuduGuideView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Label(settings.t("SO MACHST DU ES", "BÖYLE YAP"), systemImage: "hand.point.right.fill")
-                        .font(.caption.bold())
-                        .foregroundStyle(SalahTheme.teal)
+                    TutorialSectionHeader(
+                        title: settings.t("SO MACHST DU ES", "BÖYLE YAP"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.teal
+                    )
                     Text(settings.language == .german ? step.deAction : step.trAction)
                         .font(.body)
                         .foregroundStyle(SalahTheme.ink)
@@ -2002,9 +2032,11 @@ struct WuduGuideView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 5)
                 } label: {
-                    Label(settings.t("Ganz genau", "Ayrıntılı anlatım"), systemImage: "magnifyingglass")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Ganz genau", "Ayrıntılı anlatım"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                 }
             }
             .padding(16)
@@ -2140,7 +2172,7 @@ struct GhuslGuideView: View {
         ScrollView {
             LazyVStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Was ist Ghusl?", "Gusül nedir?"), systemImage: "shower.fill")
+                    SalahFeatureIconLabel(title: settings.t("Was ist Ghusl?", "Gusül nedir?"), kind: "wudu", iconSize: 27)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -2268,7 +2300,7 @@ struct TayammumGuideView: View {
         ScrollView {
             LazyVStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Was ist Tayammum?", "Teyemmüm nedir?"), systemImage: "hand.raised.fill")
+                    SalahFeatureIconLabel(title: settings.t("Was ist Tayammum?", "Teyemmüm nedir?"), kind: "wudu", iconSize: 27)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -3030,8 +3062,8 @@ struct PrayerCatalogView: View {
                     "Âyetel Kürsî'yi oku.",
                     "33× Sübhânallah, 33× Elhamdülillah ve 33× Allahü ekber de. Sonra yüze tamamlamak için: Lâ ilâhe illallâhü vahdehû lâ şerîke leh, lehü'l-mülkü ve lehü'l-hamdü ve hüve alâ külli şey'in kadîr."
                 ],
-                deNotes: ["SalahPath hat dafür bereits Dhikr- und Dua-Bereiche; dieser Eintrag verbindet sie mit dem Gebetsablauf."],
-                trNotes: ["SalahPath'te zikir ve dua alanları zaten var; bu bölüm onları namaz akışıyla birleştiriyor."],
+                deNotes: ["Nach dem Gebet können passende Dhikr und Duas gelesen werden. Dafür stehen eigene Dhikr- und Dua-Sammlungen bereit."],
+                trNotes: ["Namazdan sonra uygun zikir ve dualar okunabilir. Bunun için ayrı zikir ve dua koleksiyonları bulunur."],
                 source: "Diyanet · Ezan, Kamet ve Tesbihat"
             )
         ]
@@ -3056,12 +3088,12 @@ struct PrayerCatalogView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), systemImage: "list.bullet.rectangle.portrait.fill")
+                    SalahFeatureIconLabel(title: settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), kind: "list", iconSize: 24)
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Hier findest du die täglichen Gebete und besondere Gebete jeweils einzeln erklärt. Die fertige Bildanleitung ist derzeit für den normalen 2-Rakʿāt-Ablauf verfügbar; weitere Bildanleitungen folgen.",
-                        "Burada vakit namazlarını ve özel namazları ayrı ayrı bulabilirsin. Tam görsel anlatım şu anda normal iki rekât namaz için hazırdır; diğer görsel anlatımlar daha sonra eklenecek."
+                        "Tägliche und besondere Gebete werden jeweils einzeln erklärt. Die Bildanleitung ist derzeit für den normalen 2-Rakʿāt-Ablauf verfügbar; weitere Bildanleitungen folgen.",
+                        "Vakit namazları ve özel namazlar ayrı ayrı açıklanır. Görsel anlatım şu anda normal iki rekât namaz için hazırdır; diğer görsel anlatımlar daha sonra eklenecektir."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -3071,7 +3103,7 @@ struct PrayerCatalogView: View {
 
             Section {
                 NavigationLink { PrayerMakruhTimesView() } label: {
-                    Label(settings.t("Wann kein Gebet begonnen wird · Kerāhat", "Namaza başlanmayan vakitler · Kerahat"), systemImage: "sun.horizon.fill")
+                    SalahFeatureIconLabel(title: settings.t("Wann kein Gebet begonnen wird · Kerāhat", "Namaza başlanmayan vakitler · Kerahat"), kind: "times")
                 }
             }
 
@@ -3368,7 +3400,7 @@ private struct PrayerCatalogDetailView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(settings.t("Ablauf", "Kılınışı"), systemImage: "list.number")
+                    SalahFeatureIconLabel(title: settings.t("Ablauf", "Kılınışı"), kind: "list")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3391,12 +3423,12 @@ private struct PrayerCatalogDetailView: View {
 
                 if !notes.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Label(settings.t("Wichtig", "Önemli"), systemImage: "info.circle.fill")
+                        SalahFeatureIconLabel(title: settings.t("Wichtig", "Önemli"), kind: "info")
                             .font(.headline.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
 
                         ForEach(Array(notes.enumerated()), id: \.offset) { _, note in
-                            Label(note, systemImage: "checkmark.circle")
+                            SalahFeatureIconLabel(title: note, kind: "checkmark", iconSize: 18)
                                 .font(.footnote)
                                 .foregroundStyle(SalahTheme.ink)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -3421,7 +3453,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if item.id == "witr" {
                     NavigationLink { QunutDuaView() } label: {
-                        Label(settings.t("Qunūt 1 & 2 vollständig öffnen", "Kunut 1 ve 2 tam metnini aç"), systemImage: "text.book.closed.fill")
+                        SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2 vollständig öffnen", "Kunut 1 ve 2 tam metnini aç"), kind: "duas")
                             .font(.headline.bold())
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -3431,7 +3463,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if item.id == "janazah" {
                     NavigationLink { JanazahDuaView() } label: {
-                        Label(settings.t("Cenaze-Dua vollständig öffnen", "Cenaze duasını tam aç"), systemImage: "text.book.closed.fill")
+                        SalahFeatureIconLabel(title: settings.t("Cenaze-Dua vollständig öffnen", "Cenaze duasını tam aç"), kind: "duas")
                             .font(.headline.bold())
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -3447,7 +3479,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if !hasCompleteIllustratedGuide && item.group != "after" {
                     VStack(alignment: .leading, spacing: 6) {
-                        Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")
+                        SalahFeatureIconLabel(title: settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), kind: "prayer")
                             .font(.headline.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
                         Text(settings.t(
@@ -3567,12 +3599,12 @@ struct HajjUmrahGuideView: View {
                     "Für Hajj gibt es Ifrād, Qirān und Tamattuʿ; einzelne Schritte und Ihram-Zeitpunkte unterscheiden sich deshalb.",
                     "Zu den zentralen Hajj-Riten gehören Ihram/Niyyah, Arafat-Wuqūf, Muzdalifah, die Riten in Mina, Tawaf az-Ziyārah/Ifāḍah und – je nach Hajj-Form und Reihenfolge – Saʿy. Arafat-Wuqūf und Tawaf az-Ziyārah gehören zu den unersetzbaren Kernriten; ein verpasster Arafat-Wuqūf bedeutet, dass der Hajj dieses Jahres verpasst wurde.",
                     "Für die konkrete Reise soll der Ablauf der eigenen Hajj-Art und die Anleitung der zuständigen Hajj-Gruppe/Religionsbegleitung beachtet werden.",
-                    "SalahPath verwendet diesen Bereich als Lernübersicht und ersetzt keine individuelle Fatwa bei Fehlern, Krankheit, Menstruation oder ausgelassenen Riten."
+                    "Diese Übersicht dient zum Lernen. Bei ausgelassenen Riten, Krankheit, Menstruation oder anderen Sonderfällen ist eine individuelle religiöse Klärung erforderlich."
                 ] : [
                     "Hac; ifrad, kıran ve temettu çeşitlerine ayrılır. Bu nedenle bazı ihram zamanları ve ayrıntılar değişir.",
                     "Temel hac menasiki arasında ihram/niyet, Arafat vakfesi, Müzdelife, Mina'daki görevler, ziyaret/ifâda tavafı ve hac türüne göre sa'y bulunur. Arafat vakfesi ile ziyaret tavafı vazgeçilmez temel rükünlerdendir; Arafat vakfesine vaktinde yetişemeyen kişi o yılki haccı kaçırmış olur.",
                     "Gerçek yolculukta kendi hac türünün sırasına ve kafile din görevlisinin rehberliğine uy.",
-                    "SalahPath bu alanı öğrenme özeti olarak sunar; eksik menasik, hastalık veya özel hâller için kişisel fetvanın yerini tutmaz."
+                    "Bu özet öğrenme amaçlıdır. Eksik menasik, hastalık veya diğer özel durumlarda kişisel dinî değerlendirme gerekir."
                 ]
             )
 
@@ -3631,7 +3663,7 @@ struct HajjUmrahGuideView: View {
             )
 
             NavigationLink { QuranicDuaLibraryView() } label: {
-                Label(settings.t("SalahPath Dua-Sammlung öffnen", "SalahPath dua koleksiyonunu aç"), systemImage: "text.book.closed.fill")
+                SalahFeatureIconLabel(title: settings.t("Dua-Sammlung öffnen", "Dua koleksiyonunu aç"), kind: "duas")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 11)
@@ -3643,7 +3675,11 @@ struct HajjUmrahGuideView: View {
 
     private func infoCard(title: String, icon: String, lines: [String]) -> some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(title, systemImage: icon)
+            SalahFeatureIconLabel(
+                title: title,
+                kind: infoCardFeatureKind(for: icon),
+                iconSize: 23
+            )
                 .font(.headline.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3656,6 +3692,21 @@ struct HajjUmrahGuideView: View {
             }
         }
         .cardStyle()
+    }
+
+    private func infoCardFeatureKind(for icon: String) -> String {
+        switch icon {
+        case "hands.sparkles.fill":
+            return "duas"
+        case "map.fill", "arrow.triangle.2.circlepath":
+            return "qibla"
+        case "figure.walk":
+            return "prayer"
+        case "quote.bubble.fill", "info.circle.fill":
+            return "info"
+        default:
+            return "info"
+        }
     }
 
     private func placeGroup(title: String, items: [(String, String, String)]) -> some View {
@@ -3697,7 +3748,7 @@ struct RamadanGuideIndexView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Hier findest du Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr an einer Stelle.",
+                    "Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr sind in diesem Bereich zusammengefasst.",
                     "Burada oruç bilgisi, teravih, tesbih ve bayram namazı, dualar, ayetler ve Kadir Gecesi ile ilgili bölümleri bir arada bulabilirsin."
                 ))
                 .font(.footnote)
@@ -3706,16 +3757,16 @@ struct RamadanGuideIndexView: View {
 
             Section(settings.t("Fasten", "Oruç")) {
                 NavigationLink { FastingBasicsView() } label: {
-                    Label(settings.t("Grundlagen & Weisheiten", "Temel bilgiler & hikmetler"), systemImage: "moon.stars.fill")
+                    SalahFeatureIconLabel(title: settings.t("Grundlagen & Weisheiten", "Temel bilgiler & hikmetler"), kind: "moon")
                 }
                 NavigationLink { FastingRulesView() } label: {
-                    Label(settings.t("Regeln: was bricht das Fasten?", "Hükümler: orucu ne bozar?"), systemImage: "checklist")
+                    SalahFeatureIconLabel(title: settings.t("Regeln: was bricht das Fasten?", "Hükümler: orucu ne bozar?"), kind: "checkmark")
                 }
                 NavigationLink { FastingExceptionsView() } label: {
-                    Label(settings.t("Ausnahmen & Erleichterungen", "Mazeretler & ruhsatlar"), systemImage: "cross.case.fill")
+                    SalahFeatureIconLabel(title: settings.t("Ausnahmen & Erleichterungen", "Mazeretler & ruhsatlar"), kind: "info")
                 }
                 NavigationLink { FastingTrackerView() } label: {
-                    Label(settings.t("Fasten-Tracker", "Oruç takibi"), systemImage: "checkmark.circle.fill")
+                    SalahFeatureIconLabel(title: settings.t("Fasten-Tracker", "Oruç takibi"), kind: "checkmark")
                 }
             }
 
@@ -3735,7 +3786,7 @@ struct RamadanGuideIndexView: View {
                     title: settings.t("Laylat al-Qadr · Sura 97", "Kadir Gecesi · Kadir Sûresi")
                 )
                 NavigationLink { QuranicDuaLibraryView() } label: {
-                    Label(settings.t("Duas", "Dualar"), systemImage: "hands.sparkles.fill")
+                    SalahFeatureIconLabel(title: settings.t("Duas", "Dualar"), kind: "duas")
                 }
             }
         }
@@ -3877,7 +3928,7 @@ struct EsmaulHusnaView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Allahs schöne Namen", "Esmâü'l-Hüsnâ"), systemImage: "sparkles")
+                    SalahFeatureIconLabel(title: settings.t("Allahs schöne Namen", "Esmâü'l-Hüsnâ"), kind: "sparkles", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3938,8 +3989,8 @@ struct EsmaulHusnaView: View {
 
             Section(settings.t("Quelle", "Kaynak")) {
                 Text(settings.t(
-                    "Namensliste: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. Die kurzen deutschen/türkischen Bedeutungen in SalahPath sind bewusst knapp formulierte Lernhilfen.",
-                    "İsim listesi: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. SalahPath'teki kısa anlamlar öğrenme amaçlı özlü açıklamalardır."
+                    "Namensliste: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. Die kurzen deutschen und türkischen Bedeutungen sind bewusst knapp formulierte Lernhilfen.",
+                    "İsim listesi: Din İşleri Yüksek Kurulu, „Allah'ın 99 ismi“. Kısa anlamlar öğrenme amaçlı özlü açıklamalardır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -4020,7 +4071,7 @@ struct FarewellSermonView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote")
+                    SalahFeatureIconLabel(title: settings.t("Abschiedsrede", "Veda Hutbesi"), kind: "info", iconSize: 26)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4041,13 +4092,13 @@ struct FarewellSermonView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Wichtiger Quellenhinweis", "Önemli kaynak notu"), systemImage: "info.circle.fill")
+                    SalahFeatureIconLabel(title: settings.t("Wichtiger Quellenhinweis", "Önemli kaynak notu"), kind: "info")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "Die heute verbreitete „Veda-Hutbe“ ist kein einzelner wortgleich überlieferter Block. Diyanet weist darauf hin, dass Aussagen aus mehreren Reden der Abschiedspilgerfahrt und aus verschiedenen Hadith- und Sīra-Überlieferungen zusammengeführt wurden. SalahPath präsentiert deshalb die gut belegten Kernaussagen als Lernübersicht und behauptet keinen einzigen verbindlichen Wortlaut.",
-                        "Bugün yaygın biçimde okunan „Veda Hutbesi“ tek parça ve kelimesi kelimesine tek rivayet değildir. Diyanet, Veda Haccı sırasındaki farklı konuşmalardan ve çeşitli hadis/siyer rivayetlerinden bölümlerin bir araya getirildiğini belirtir. Bu yüzden SalahPath iyi belgelenmiş ana mesajları öğrenme özeti olarak sunar ve tek bir zorunlu tam metin iddiasında bulunmaz."
+                        "Die heute verbreitete „Veda-Hutbe“ ist kein einzelner wortgleich überlieferter Block. Diyanet weist darauf hin, dass Aussagen aus mehreren Reden der Abschiedspilgerfahrt und aus verschiedenen Hadith- und Sīra-Überlieferungen zusammengeführt wurden. Deshalb werden die gut belegten Kernaussagen als Lernübersicht dargestellt, ohne einen einzigen verbindlichen Wortlaut zu behaupten.",
+                        "Bugün yaygın biçimde okunan „Veda Hutbesi“ tek parça ve kelimesi kelimesine tek rivayet değildir. Diyanet, Veda Haccı sırasındaki farklı konuşmalardan ve çeşitli hadis/siyer rivayetlerinden bölümlerin bir araya getirildiğini belirtir. Bu nedenle iyi belgelenmiş ana mesajlar, tek bir zorunlu tam metin iddiası olmadan öğrenme özeti olarak sunulur."
                     ))
                     .font(.footnote)
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -4215,14 +4266,14 @@ struct FourCaliphsView: View {
                 "Blieb bei der Hidschra zunächst in Mekka, um ihm anvertraute Güter ihren Eigentümern zurückzugeben, und wanderte anschließend nach Medina aus.",
                 "Heiratete Fātima, die Tochter des Propheten; zu ihren Kindern gehörten Hasan und Husayn.",
                 "War für sein Wissen über Quran, Hadith und Fiqh bekannt und wurde auch von früheren Kalifen in Rechtsfragen konsultiert.",
-                "Seine Amtszeit fiel in eine Phase schwerer innerer Konflikte. SalahPath behandelt die unterschiedlichen historischen und konfessionellen Deutungen nicht als eine einzige unumstrittene Version."
+                "Seine Amtszeit fiel in eine Phase schwerer innerer Konflikte. Die unterschiedlichen historischen und konfessionellen Deutungen werden deshalb nicht als eine einzige unumstrittene Version dargestellt."
             ],
             trPoints: [
                 "Çocukluğundan itibaren Hz. Peygamber'in yanında yetişti ve ilk iman edenler arasında yer aldı.",
                 "Hicret sırasında emanetleri sahiplerine ulaştırmak için önce Mekke'de kaldı, ardından Medine'ye hicret etti.",
                 "Hz. Peygamber'in kızı Fâtıma ile evlendi; Hasan ve Hüseyin çocukları arasındaydı.",
                 "Kur'an, hadis ve özellikle fıkıh bilgisiyle tanındı; önceki halifeler de hukukî konularda görüşüne başvurdu.",
-                "Halifeliği ağır iç çatışmaların yaşandığı bir döneme denk geldi. SalahPath farklı tarihî ve mezhebî yorumları tek ve tartışmasız bir anlatım gibi sunmaz."
+                "Halifeliği ağır iç çatışmaların yaşandığı bir döneme denk geldi. Farklı tarihî ve mezhebî yorumlar bu nedenle tek ve tartışmasız bir anlatım gibi sunulmaz."
             ],
             source: "TDV İslâm Ansiklopedisi · Ali"
         )
@@ -4232,7 +4283,7 @@ struct FourCaliphsView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Die ersten vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                    SalahFeatureIconLabel(title: settings.t("Die ersten vier Kalifen", "Dört Halife"), kind: "community", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4357,7 +4408,7 @@ private struct FourCaliphDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(lesson.source, systemImage: "checkmark.seal.fill")
+                SalahFeatureIconLabel(title: lesson.source, kind: "checkmark", iconSize: 18)
                     .font(.caption)
                     .foregroundStyle(SalahTheme.mutedInk)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -4544,14 +4595,14 @@ struct IlmihalDirectoryView: View {
             "Eine freiwillige Wasiyyah/Vermächtnisregelung ist grundsätzlich auf höchstens ein Drittel des nach Kosten und Schulden verbleibenden Nachlasses begrenzt. Mehr als ein Drittel hängt von der Zustimmung der Erben ab.",
             "Eine Wasiyyah zugunsten eines ohnehin erbberechtigten Erben ist nach der dargestellten Diyanet/Hanafi-Regel grundsätzlich von der Zustimmung der übrigen Erben abhängig; sie ist nicht einfach ein Weg, Quranische Erbanteile einseitig umzuschreiben.",
             "Erbanteile können nicht aus einer allgemeinen Prozenttabelle ohne vollständigen Familienstammbaum berechnet werden: Ehepartner, Eltern, Kinder, Geschwister und weitere Verwandte können einander in der Erbfolge beeinflussen oder ausschließen.",
-            "Staatliches Erb-, Pflichtteils- und Steuerrecht kann zusätzlich gelten. SalahPath darf bei einem echten Nachlass keine individuelle verbindliche Erbverteilung aus einer Kurzbeschreibung erzeugen."
+            "Staatliches Erb-, Pflichtteils- und Steuerrecht kann zusätzlich gelten. Bei einem echten Nachlass lässt sich aus einer Kurzbeschreibung keine verbindliche individuelle Erbverteilung ableiten."
         ],
         trPoints: [
             "Miras paylaşımından önce sıra şöyledir: uygun teçhiz/tekfin ve tereke giderleri, borçların ödenmesi, geçerli vasiyetlerin yerine getirilmesi ve bundan sonra kalan mirasın paylaştırılması.",
             "İhtiyarî vasiyet, masraf ve borçlardan sonra kalan terekenin kural olarak en fazla üçte biriyle sınırlıdır. Üçte biri aşan kısım mirasçıların onayına bağlıdır.",
             "Zaten mirasçı olan bir kişi lehine vasiyet, burada esas alınan Diyanet/Hanefî hükme göre diğer mirasçıların onayına bağlıdır; vasiyet Kur'an'daki miras paylarını tek taraflı değiştirme yolu değildir.",
             "Miras payları tam aile tablosu bilinmeden genel bir yüzde listesiyle hesaplanamaz; eş, anne-baba, çocuk, kardeş ve diğer mirasçılar birbirlerinin payını veya mirasçılığını etkileyebilir.",
-            "Devletin miras, saklı pay ve vergi hukuku ayrıca uygulanabilir. SalahPath gerçek bir tereke için kısa bilgiye dayanarak bağlayıcı kişisel miras taksimi yapmamalıdır."
+            "Devletin miras, saklı pay ve vergi hukuku ayrıca uygulanabilir. Gerçek bir tereke için kısa bilgiye dayanarak bağlayıcı kişisel miras taksimi yapılamaz."
         ]
     )
 
@@ -4618,7 +4669,7 @@ struct IlmihalDirectoryView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("İlmihal · Alltag des Glaubens", "İlmihal · Dini hayat rehberi"), systemImage: "books.vertical.fill")
+                    SalahFeatureIconLabel(title: settings.t("İlmihal · Alltag des Glaubens", "İlmihal · Dini hayat rehberi"), kind: "info", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -4633,51 +4684,51 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Glaube & Grundlagen", "İman & Temel Bilgiler")) {
                 NavigationLink { IslamLearningHubView() } label: {
-                    Label(settings.t("Glaubenslehre, Islam & Charakter", "İman, İslâm & Ahlâk"), systemImage: "book.pages.fill")
+                    SalahFeatureIconLabel(title: settings.t("Glaubenslehre, Islam & Charakter", "İman, İslâm & Ahlâk"), kind: "info")
                 }
                 NavigationLink { ThirtyTwoFardView() } label: {
-                    Label("32 Farz", systemImage: "checklist")
+                    SalahFeatureIconLabel(title: "32 Farz", kind: "list")
                 }
                 NavigationLink { EsmaulHusnaView() } label: {
-                    Label(settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), systemImage: "sparkles")
+                    SalahFeatureIconLabel(title: settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), kind: "sparkles")
                 }
                 NavigationLink { FourCaliphsView() } label: {
-                    Label(settings.t("Die vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                    SalahFeatureIconLabel(title: settings.t("Die vier Kalifen", "Dört Halife"), kind: "community")
                 }
             }
 
             Section(settings.t("Reinheit", "Taharet")) {
-                NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
-                NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
-                NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+                NavigationLink { WuduGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Wudu", "Abdest"), kind: "wudu") }
+                NavigationLink { GhuslGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Ghusl", "Gusül"), kind: "wudu") }
+                NavigationLink { TayammumGuideView() } label: { SalahFeatureIconLabel(title: "Tayammum", kind: "wudu") }
             }
 
             Section(settings.t("Gebet", "Namaz")) {
-                NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"), systemImage: "rectangle.stack.fill") }
+                NavigationLink { PrayerCatalogView() } label: { SalahFeatureIconLabel(title: settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"), kind: "prayer") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
-                NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
-                NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
-                NavigationLink { PrayerMakruhTimesView() } label: { Label(settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"), systemImage: "sun.horizon.fill") }
+                NavigationLink { PrayerTextsHubView() } label: { SalahFeatureIconLabel(title: settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), kind: "quran") }
+                NavigationLink { PrayerDebtTrackerView() } label: { SalahFeatureIconLabel(title: settings.t("Qada-Tracker", "Kaza Takibi"), kind: "times") }
+                NavigationLink { PrayerMakruhTimesView() } label: { SalahFeatureIconLabel(title: settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"), kind: "times") }
             }
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
-                NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
-                NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
-                NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
-                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
-                NavigationLink { IlmihalTopicView(topic: vows) } label: { Label(settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), systemImage: vows.icon) }
+                NavigationLink { RamadanGuideIndexView() } label: { SalahFeatureIconLabel(title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"), kind: "moon") }
+                NavigationLink { IlmihalTopicView(topic: zakat) } label: { SalahFeatureIconLabel(title: settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), kind: "info") }
+                NavigationLink { HajjUmrahGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Hajj & Umrah", "Hac & Umre"), kind: "qibla") }
+                NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { SalahFeatureIconLabel(title: settings.t("Kurban / Opfer", "Kurban"), kind: "sparkles") }
+                NavigationLink { IlmihalTopicView(topic: vows) } label: { SalahFeatureIconLabel(title: settings.t("Gelübde, Eide & Sühne", "Adak, Yemin & Kefaret"), kind: "duas") }
             }
 
             Section(settings.t("Familie & Vermögen", "Aile & Malî Hayat")) {
-                NavigationLink { IlmihalTopicView(topic: family) } label: { Label(settings.t("Ehe & Familie", "Nikâh & Aile"), systemImage: family.icon) }
-                NavigationLink { IlmihalTopicView(topic: inheritance) } label: { Label(settings.t("Testament & Erbe", "Vasiyet & Miras"), systemImage: inheritance.icon) }
-                NavigationLink { IlmihalTopicView(topic: commerce) } label: { Label(settings.t("Handel & Erwerb", "Ticaret & Kazanç"), systemImage: commerce.icon) }
+                NavigationLink { IlmihalTopicView(topic: family) } label: { SalahFeatureIconLabel(title: settings.t("Ehe & Familie", "Nikâh & Aile"), kind: "community") }
+                NavigationLink { IlmihalTopicView(topic: inheritance) } label: { SalahFeatureIconLabel(title: settings.t("Testament & Erbe", "Vasiyet & Miras"), kind: "list") }
+                NavigationLink { IlmihalTopicView(topic: commerce) } label: { SalahFeatureIconLabel(title: settings.t("Handel & Erwerb", "Ticaret & Kazanç"), kind: "info") }
             }
 
             Section(settings.t("Soziales & Gesundheit", "Sosyal Hayat & Sağlık")) {
-                NavigationLink { IlmihalTopicView(topic: social) } label: { Label(settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), systemImage: social.icon) }
-                NavigationLink { FarewellSermonView() } label: { Label(settings.t("Abschiedsrede", "Veda Hutbesi"), systemImage: "text.quote") }
-                NavigationLink { IlmihalTopicView(topic: health) } label: { Label(settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), systemImage: health.icon) }
+                NavigationLink { IlmihalTopicView(topic: social) } label: { SalahFeatureIconLabel(title: settings.t("Soziale Rechte & Verhalten", "Sosyal Haklar & Davranış"), kind: "community") }
+                NavigationLink { FarewellSermonView() } label: { SalahFeatureIconLabel(title: settings.t("Abschiedsrede", "Veda Hutbesi"), kind: "info", iconSize: 26) }
+                NavigationLink { IlmihalTopicView(topic: health) } label: { SalahFeatureIconLabel(title: settings.t("Medizin & Gesundheit", "Tıp & Sağlık"), kind: "info") }
             }
 
             Section(settings.t("Quelle & Umfang", "Kaynak & Kapsam")) {
@@ -4713,12 +4764,12 @@ struct PrayerDebtTrackerView: View {
         ScrollView {
             VStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath")
+                    SalahFeatureIconLabel(title: settings.t("Qada-Tracker", "Kaza Takibi"), kind: "times")
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Ein persönlicher Zähler für nachzuholende Gebete und Fastentage. SalahPath entscheidet hier nicht, ob oder wie viele Qada-Pflichten bei dir bestehen.",
-                        "Kaza namazları ve oruç günleri için kişisel sayaç. SalahPath burada sende kaç kaza bulunduğuna dair hüküm vermez."
+                        "Ein persönlicher Zähler für nachzuholende Gebete und Fastentage. Ob und wie viele Qada-Pflichten bestehen, muss anhand der eigenen Situation geklärt werden.",
+                        "Kaza namazları ve oruç günleri için kişisel sayaç. Kaç kaza bulunduğu kişinin kendi durumuna göre belirlenmelidir."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -4867,12 +4918,12 @@ struct ThirtyTwoFardView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Label(settings.t("32 Farz – kompakter Lernzettel", "32 Farz – kısa öğrenme özeti"), systemImage: "checklist")
+                    SalahFeatureIconLabel(title: settings.t("32 Farz – kompakter Lernzettel", "32 Farz – kısa öğrenme özeti"), kind: "list", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Diese Ansicht ergänzt die ausführlichen SalahPath-Lernbereiche. Für die praktische Ausführung öffnest du weiterhin Wudu, Ghusl, Tayammum oder Gebet lernen.",
-                        "Bu ekran ayrıntılı SalahPath derslerini tamamlar. Uygulama için yine Abdest, Gusül, Teyemmüm veya Namaz Öğren bölümlerini kullan."
+                        "Diese kompakte Übersicht ergänzt die ausführlichen Lernbereiche. Für die praktische Ausführung stehen Wudu, Ghusl, Tayammum und Gebet lernen separat bereit.",
+                        "Bu kısa özet ayrıntılı öğrenme bölümlerini tamamlar. Uygulama için Abdest, Gusül, Teyemmüm ve Namaz Öğren bölümleri ayrıca bulunur."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -6135,8 +6186,8 @@ struct PrayerDuaAudioView: View {
         ),
         .init(
             deTitle: "Rabbighfirli", trTitle: "Rabbighfir lî",
-            deDetail: "Kurze Bitte um Vergebung; SalahPath zeigt sie auch zwischen den beiden Secden.",
-            trDetail: "Kısa bağışlanma duası; SalahPath iki secde arasındaki oturuşta da gösterir.",
+            deDetail: "Kurze Bitte um Vergebung; sie kann auch zwischen den beiden Secden gesprochen werden.",
+            trDetail: "Kısa bağışlanma duası; iki secde arasındaki oturuşta da okunabilir.",
             recitations: [PrayerText.rabbighfirli]
         )
     ]
@@ -6145,8 +6196,8 @@ struct PrayerDuaAudioView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Alle Gebetsduas stehen direkt in SalahPath: Arabisch, Umschrift und Bedeutung. Es wird keine externe Webseite geöffnet. Ein Audio-Button wird nur dort angezeigt, wo SalahPath auch wirklich Audio abspielen kann.",
-                    "Namaz dualarının tamamı doğrudan SalahPath içinde yer alır: Arapça, okunuş ve anlam. Harici web sitesi açılmaz. Ses düğmesi yalnız SalahPath gerçekten ses çalabildiğinde gösterilir."
+                    "Alle Gebetsduas sind mit Arabisch, Umschrift und Bedeutung direkt verfügbar. Es wird keine externe Webseite benötigt. Ein Audio-Button erscheint nur dort, wo eine Rezitation verfügbar ist.",
+                    "Namaz dualarının tamamı Arapça, okunuş ve anlamıyla doğrudan kullanılabilir. Harici web sitesi gerekmez. Ses düğmesi yalnız bir kıraat mevcut olduğunda görünür."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -6165,7 +6216,7 @@ struct PrayerDuaAudioView: View {
 
             Section(settings.t("Witr", "Vitir")) {
                 NavigationLink { QunutDuaView() } label: {
-                    Label(settings.t("Qunūt 1 & 2 vollständig", "Kunut 1 ve 2 tam metin"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2 vollständig", "Kunut 1 ve 2 tam metin"), kind: "duas")
                 }
             }
 
@@ -6210,14 +6261,17 @@ struct PrayerTextsHubView: View {
 
             Section(settings.t("Gebetsduas", "Namaz Duaları")) {
                 NavigationLink { PrayerDuaAudioView() } label: {
-                    Label(settings.t(
-                        "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
-                        "Sübhâneke, Ettehiyyâtü, Salli, Bârik, Rabbenâ ve devamı"
-                    ), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t(
+                            "Sübhaneke, Ettehiyyâtü, Salli, Bârik, Rabbena und mehr",
+                            "Sübhâneke, Ettehiyyâtü, Salli, Bârik, Rabbenâ ve devamı"
+                        ),
+                        kind: "duas"
+                    )
                 }
 
                 NavigationLink { QunutDuaView() } label: {
-                    Label(settings.t("Qunūt 1 & 2", "Kunut Duaları 1 & 2"), systemImage: "text.quote")
+                    SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2", "Kunut Duaları 1 & 2"), kind: "duas")
                 }
             }
 
@@ -6354,8 +6408,8 @@ struct ShortSurahLearningView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Tippe auf Play: SalahPath fragt die aktuelle Audio-URL über die AlQuran.cloud-API ab und spielt danach die Ayat nacheinander. Dadurch sind wir nicht mehr von einem fest eingebauten CDN-Link abhängig.",
-                    "Oynat'a dokun: SalahPath güncel ses bağlantılarını AlQuran.cloud API üzerinden alır ve ayetleri sırayla çalar. Böylece sabit bir CDN bağlantısına bağlı kalmaz."
+                    "Tippe auf Play, um die Rezitation Ayah für Ayah abzuspielen. Bereits geladene Audiodaten werden nach Möglichkeit wiederverwendet.",
+                    "Kıraati ayet ayet dinlemek için Oynat'a dokun. Daha önce yüklenen ses verileri mümkün olduğunda yeniden kullanılır."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -6892,7 +6946,7 @@ struct FastingTrackerView: View {
 
     private var fastingHeaderCard: some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(settings.t("Fasten & Ramadan", "Oruç ve Ramazan"), systemImage: "moon.stars.fill")
+            SalahFeatureIconLabel(title: settings.t("Fasten & Ramadan", "Oruç ve Ramazan"), kind: "moon", iconSize: 27)
                 .font(.title2.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -7110,8 +7164,8 @@ struct FastingBasicsView: View {
 
             Section(settings.t("Verhalten im Ramadan", "Ramazan'da davranış")) {
                 Text(settings.t(
-                    "Fasten bedeutet mehr als Hunger und Durst. Lügen, Beleidigungen, Streit, üble Nachrede und andere Sünden widersprechen dem Sinn des Fastens und können seinen Lohn stark schmälern. Sie machen den Fastentag aber nicht automatisch in jedem Fall fiqh-rechtlich ungültig. Deshalb trennt SalahPath 'Fasten ungültig' von 'Belohnung schädigen'.",
-                    "Oruç yalnız açlık ve susuzluk değildir. Yalan, hakaret, kavga, gıybet ve diğer günahlar orucun ruhuna aykırıdır ve sevabını ciddi şekilde azaltabilir. Ancak bunlar her durumda fıkhen orucu otomatik olarak bozmaz. Bu nedenle SalahPath 'orucu bozar' ile 'sevabını azaltır' ifadelerini ayırır."
+                    "Fasten bedeutet mehr als Hunger und Durst. Lügen, Beleidigungen, Streit, üble Nachrede und andere Sünden widersprechen dem Sinn des Fastens und können seinen Lohn stark schmälern. Sie machen den Fastentag aber nicht automatisch in jedem Fall fiqh-rechtlich ungültig. Deshalb muss zwischen „Fasten ungültig“ und „Belohnung schädigen“ unterschieden werden.",
+                    "Oruç yalnız açlık ve susuzluk değildir. Yalan, hakaret, kavga, gıybet ve diğer günahlar orucun ruhuna aykırıdır ve sevabını ciddi şekilde azaltabilir. Ancak bunlar her durumda fıkhen orucu otomatik olarak bozmaz. Bu nedenle „orucu bozar“ ile „sevabını azaltır“ ifadeleri birbirinden ayrılmalıdır."
                 ))
                 .fixedSize(horizontal: false, vertical: true)
             }
@@ -7186,8 +7240,8 @@ struct FastingRulesView: View {
 
             Section(settings.t("Wichtig", "Önemli")) {
                 Text(settings.t(
-                    "Bei einem konkreten medizinischen Eingriff oder einer persönlichen Sonderlage zeigt SalahPath keine pauschale 'Fatwa-Automatik'. Nutze die allgemeinen Regeln hier und kläre einen unklaren Einzelfall mit einer qualifizierten religiösen Stelle und bei Gesundheitsthemen mit medizinischem Fachpersonal.",
-                    "Belirli bir tıbbî işlem veya kişisel özel durumda SalahPath otomatik fetva vermez. Buradaki genel kuralları kullan; belirsiz bireysel durumu ehil bir dinî merciden, sağlık konusunu da sağlık uzmanından doğrula."
+                    "Bei einem konkreten medizinischen Eingriff oder einer persönlichen Sonderlage reichen allgemeine Regeln nicht immer aus. Kläre unklare Einzelfälle mit einer qualifizierten religiösen Stelle und Gesundheitsthemen zusätzlich mit medizinischem Fachpersonal.",
+                    "Belirli bir tıbbî işlem veya kişisel özel durumda genel kurallar her zaman yeterli olmayabilir. Belirsiz bireysel durumları ehil bir dinî merciden, sağlık konularını ayrıca sağlık uzmanından doğrula."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -7251,8 +7305,8 @@ struct FastingExceptionsView: View {
 
             Section(settings.t("Nicht pauschal entscheiden", "Genelleme yapma")) {
                 Text(settings.t(
-                    "Gesundheit ist individuell. Bei Krankheit, Schwangerschaft, Medikamenten oder anderen medizinischen Fragen darf die App keine Diagnose ersetzen. Religiöse Erleichterung und medizinische Belastbarkeit müssen im konkreten Fall sauber beurteilt werden.",
-                    "Sağlık kişiye özeldir. Hastalık, hamilelik, ilaç veya diğer tıbbî konularda uygulama teşhis yerine geçmez. Dinî ruhsat ve sağlık açısından dayanıklılık somut durumda doğru değerlendirilmelidir."
+                    "Gesundheit ist individuell. Bei Krankheit, Schwangerschaft, Medikamenten oder anderen medizinischen Fragen ist eine medizinische Einschätzung wichtig. Religiöse Erleichterung und körperliche Belastbarkeit müssen im konkreten Fall getrennt und sorgfältig beurteilt werden.",
+                    "Sağlık kişiye özeldir. Hastalık, hamilelik, ilaç veya diğer tıbbî konularda tıbbî değerlendirme önemlidir. Dinî ruhsat ile sağlık açısından dayanıklılık somut durumda ayrı ve dikkatli değerlendirilmelidir."
                 ))
             }
 
@@ -7387,7 +7441,7 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventHeaderCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label(localizedEventTitle, systemImage: event.symbol)
+            SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon", iconSize: 27)
                 .font(.title2.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -7407,8 +7461,8 @@ private struct IslamicCalendarEventDetailView: View {
                 title: localizedEventTitle,
                 date: date,
                 notes: settings.t(
-                    "SalahPath · berechnetes Hijri-Datum nach Umm al-Qura. Regionale Mondsichtung kann abweichen.",
-                    "SalahPath · Ummü'l-Kurâ'ya göre hesaplanan hicrî tarih. Bölgesel hilal gözlemi farklı olabilir."
+                    "Berechnetes Hijri-Datum nach Umm al-Qura. Regionale Mondsichtung kann abweichen.",
+                    "Ummü'l-Kurâ'ya göre hesaplanan hicrî tarih. Bölgesel hilal gözlemi farklı olabilir."
                 )
             )
         } label: {
@@ -7542,8 +7596,8 @@ struct HijriCalendarView: View {
             .padding(.vertical, 4)
 
             Text(settings.t(
-                "Umm-al-Qura ist ein berechneter Kalender. Tatsächliche Monatsanfänge können je nach regionaler Mondsichtung abweichen. SalahPath kennzeichnet deshalb zukünftige religiöse Daten als berechnet.",
-                "Ummü'l-Kurâ hesaplanmış bir takvimdir. Gerçek ay başlangıçları bölgesel hilal gözlemine göre değişebilir. Bu nedenle SalahPath gelecekteki dinî tarihleri hesaplanan tarih olarak gösterir."
+                "Umm-al-Qura ist ein berechneter Kalender. Tatsächliche Monatsanfänge können je nach regionaler Mondsichtung abweichen. Zukünftige religiöse Daten werden deshalb als berechnet gekennzeichnet.",
+                "Ummü'l-Kurâ hesaplanmış bir takvimdir. Gerçek ay başlangıçları bölgesel hilal gözlemine göre değişebilir. Bu nedenle gelecekteki dinî tarihler hesaplanan tarih olarak işaretlenir."
             ))
             .font(.footnote)
             .foregroundStyle(.secondary)
@@ -7720,8 +7774,8 @@ struct HijriCalendarView: View {
                 trMeaning: "Ramazan hicrî takvimin dokuzuncu ayıdır. Şartları taşıyanlar için bu ayın orucu İslâm'ın beş şartından biridir.",
                 deRecommended: ["Das Fasten mit bewusster Absicht beginnen.", "Gebete, Qur'an, Dua, Dhikr und Sadaqah bewusst verstärken.", "Sahur und Iftar ohne Verschwendung gestalten."],
                 trRecommended: ["Niyet ederek oruca başla.", "Namaz, Kur'an, dua, zikir ve sadakayı artır.", "Sahur ve iftarda israftan kaçın."],
-                deCaution: "Der genaue Beginn kann regional von der Mondsichtung abhängen. SalahPath zeigt hier ein berechnetes Datum.",
-                trCaution: "Kesin başlangıç bölgesel hilal gözlemine göre değişebilir. SalahPath burada hesaplanan tarihi gösterir."
+                deCaution: "Der genaue Beginn kann regional von der Mondsichtung abhängen. Angezeigt wird ein berechnetes Datum.",
+                trCaution: "Kesin başlangıç bölgesel hilal gözlemine göre değişebilir. Gösterilen tarih hesaplanmıştır."
             )
         }
 
@@ -8030,8 +8084,8 @@ struct IslamLearningHubView: View {
                 "Oruç: Ramazan orucu.",
                 "Hac: şartları oluşan kişinin ömründe bir kez Mekke'ye hac yapması."
             ],
-            deDetail: "Nicht jede Säule gilt in jeder Lebenssituation identisch. Zakat und Hajj haben z. B. finanzielle und weitere Voraussetzungen. Fasten kennt erlaubte Entschuldigungsgründe. Salah bleibt die tägliche zentrale körperliche Pflicht; Details lernst du in den eigenen SalahPath-Bereichen.",
-            trDetail: "Her şart her durumda aynı şekilde yükümlülük doğurmaz. Örneğin zekât ve hac için malî ve başka şartlar vardır. Oruçta ruhsat sebepleri bulunur. Namaz günlük temel bedenî ibadettir; ayrıntıları SalahPath'in ilgili bölümlerinde öğrenebilirsin."
+            deDetail: "Nicht jede Säule gilt in jeder Lebenssituation identisch. Zakat und Hajj haben z. B. finanzielle und weitere Voraussetzungen. Fasten kennt erlaubte Entschuldigungsgründe. Salah bleibt die tägliche zentrale körperliche Pflicht; die Einzelheiten sind in den jeweiligen Lernbereichen erklärt.",
+            trDetail: "Her şart her durumda aynı şekilde yükümlülük doğurmaz. Örneğin zekât ve hac için malî ve başka şartlar vardır. Oruçta ruhsat sebepleri bulunur. Namaz günlük temel bedenî ibadettir; ayrıntılar ilgili öğrenme bölümlerinde açıklanır."
         ),
         .init(
             id: "six_beliefs",
@@ -8096,8 +8150,8 @@ struct IslamLearningHubView: View {
                 "Müslümanlar onu sever ve saygı gösterir; fakat ona ibadet etmez.",
                 "Sünnet, onun sahih şekilde aktarılan örnekliğidir."
             ],
-            deDetail: "Seine Biografie heißt Sira. Für religiöse Regeln ist wichtig, zwischen authentisch überlieferten Hadithen, schwachen Berichten und späteren kulturellen Geschichten zu unterscheiden. SalahPath soll deshalb keine beliebte Geschichte automatisch als religiöse Tatsache behandeln.",
-            trDetail: "Hayatını anlatan alana siyer denir. Dinî hükümler açısından sahih hadisleri, zayıf rivayetleri ve sonradan oluşmuş kültürel anlatıları ayırmak önemlidir. SalahPath popüler bir hikâyeyi otomatik olarak dinî gerçek gibi sunmamalıdır."
+            deDetail: "Seine Biografie heißt Sira. Für religiöse Regeln ist wichtig, zwischen authentisch überlieferten Hadithen, schwachen Berichten und späteren kulturellen Geschichten zu unterscheiden. Beliebte Erzählungen dürfen deshalb nicht automatisch als religiöse Tatsachen behandelt werden.",
+            trDetail: "Hayatını anlatan alana siyer denir. Dinî hükümler açısından sahih hadisleri, zayıf rivayetleri ve sonradan oluşmuş kültürel anlatıları ayırmak önemlidir. Popüler bir hikâye bu nedenle otomatik olarak dinî gerçek kabul edilmemelidir."
         ),
         .init(
             id: "quran",
@@ -8116,8 +8170,8 @@ struct IslamLearningHubView: View {
                 "Meal anlamayı kolaylaştırır; fakat Arapça Kur'an metninin kendisiyle aynı değildir.",
                 "Okumak, anlamak ve yaşamak birlikte düşünülmelidir."
             ],
-            deDetail: "Für Anfänger ist es sinnvoll, kurze Suren, Al-Fatiha und grundlegende Bedeutungen zu lernen. SalahPath trennt deshalb arabischen Text, Umschrift und Übersetzung. Die Umschrift ist nur eine Lernhilfe und ersetzt das korrekte arabische Lesen nicht dauerhaft.",
-            trDetail: "Yeni başlayanlar için kısa sûreleri, Fâtiha'yı ve temel anlamları öğrenmek faydalıdır. SalahPath bu nedenle Arapça metni, okunuşu ve meali ayırır. Latin harfli okunuş yalnız öğrenme yardımıdır; doğru Arapça okumanın kalıcı olarak yerini tutmaz."
+            deDetail: "Für Anfänger ist es sinnvoll, kurze Suren, Al-Fatiha und grundlegende Bedeutungen zu lernen. Arabischer Text, Umschrift und Übersetzung werden deshalb getrennt dargestellt. Die Umschrift ist nur eine Lernhilfe und ersetzt das korrekte arabische Lesen nicht dauerhaft.",
+            trDetail: "Yeni başlayanlar için kısa sûreleri, Fâtiha'yı ve temel anlamları öğrenmek faydalıdır. Arapça metin, okunuş ve meal bu nedenle ayrı gösterilir. Latin harfli okunuş yalnız öğrenme yardımıdır; doğru Arapça okumanın kalıcı olarak yerini tutmaz."
         ),
         .init(
             id: "purity_worship",
@@ -8176,8 +8230,8 @@ struct IslamLearningHubView: View {
                 "Farz, vacip, sünnet, mekruh, mubah ve haramı birbirinden ayır.",
                 "İhtilaflı konularda kesin genelleme yerine mezhep ve delili belirt."
             ],
-            deDetail: "SalahPath soll Begriffe nicht inflationär verwenden. 'Haram' ist eine rechtliche Bewertung, nicht bloß 'ich finde es schlecht'. Ebenso bedeutet 'Sunnah' nicht automatisch Pflicht. In Hanafi-Fiqh gibt es zusätzlich die Kategorie Wajib, die von Fard unterschieden wird.",
-            trDetail: "SalahPath kavramları gelişigüzel kullanmamalıdır. 'Haram' fıkhî bir hükümdür; yalnız 'bence kötü' anlamına gelmez. 'Sünnet' de otomatik olarak farz değildir. Hanefî fıkhında ayrıca farzdan ayrı 'vacip' kategorisi vardır."
+            deDetail: "Begriffe sollten präzise verwendet werden. „Haram“ ist eine rechtliche Bewertung, nicht bloß „ich finde es schlecht“. Ebenso bedeutet „Sunnah“ nicht automatisch Pflicht. Im Hanafi-Fiqh gibt es zusätzlich die von Fard unterschiedene Kategorie Wajib.",
+            trDetail: "Kavramlar dikkatli kullanılmalıdır. „Haram“ fıkhî bir hükümdür; yalnız „bence kötü“ anlamına gelmez. „Sünnet“ de otomatik olarak farz değildir. Hanefî fıkhında ayrıca farzdan ayrı „vacip“ kategorisi vardır."
         ),
         .init(
             id: "repentance",
@@ -8218,8 +8272,8 @@ struct IslamLearningHubView: View {
                 "İnsanlar diriltilecek ve yaptıklarından hesaba çekilecektir.",
                 "Cennet ve cehennem İslâm'ın âhiret inancının parçalarıdır."
             ],
-            deDetail: "Jenseitswissen kommt aus Offenbarung. SalahPath soll deshalb keine spekulativen Geschichten über Grab, Engel oder Endzeit als sichere Tatsachen erzählen, wenn sie nicht zuverlässig belegt sind. Details werden nur mit sauberer Quellenlage ergänzt.",
-            trDetail: "Âhiret bilgisi vahye dayanır. Bu yüzden SalahPath kabir, melekler veya kıyametle ilgili güvenilir delili olmayan hikâyeleri kesin gerçek gibi anlatmamalıdır. Ayrıntılar ancak sağlam kaynakla eklenir."
+            deDetail: "Jenseitswissen kommt aus Offenbarung. Spekulative Geschichten über Grab, Engel oder Endzeit dürfen deshalb nicht als sichere Tatsachen dargestellt werden, wenn sie nicht zuverlässig belegt sind. Einzelheiten brauchen eine belastbare Quellenlage.",
+            trDetail: "Âhiret bilgisi vahye dayanır. Bu yüzden kabir, melekler veya kıyametle ilgili güvenilir delili olmayan hikâyeler kesin gerçek gibi anlatılmamalıdır. Ayrıntılar sağlam kaynak gerektirir."
         )
     ]
 
@@ -8245,16 +8299,17 @@ struct IslamLearningHubView: View {
 
     private var islamProgressCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label(
-                settings.t("Islam Schritt für Schritt lernen", "İslâm'ı adım adım öğren"),
-                systemImage: "book.pages.fill"
+            SalahFeatureIconLabel(
+                title: settings.t("Islam Schritt für Schritt lernen", "İslâm'ı adım adım öğren"),
+                kind: "info",
+                iconSize: 28
             )
             .font(.title2.bold())
             .foregroundStyle(SalahTheme.deepTeal)
 
             Text(settings.t(
-                "Du musst nicht alles auf einmal verstehen. Beginne oben und arbeite dich Modul für Modul weiter. Gebet, Wudu, Quran und Fasten haben zusätzlich eigene ausführliche Bereiche in SalahPath.",
-                "Her şeyi bir anda öğrenmek zorunda değilsin. Yukarıdan başla ve modül modül ilerle. Namaz, abdest, Kur'an ve oruç için SalahPath'te ayrıca ayrıntılı bölümler var."
+                "Du musst nicht alles auf einmal verstehen. Beginne oben und arbeite dich Modul für Modul weiter. Für Gebet, Wudu, Quran und Fasten gibt es zusätzlich eigene ausführliche Lernbereiche.",
+                "Her şeyi bir anda öğrenmek zorunda değilsin. Yukarıdan başla ve modül modül ilerle. Namaz, abdest, Kur'an ve oruç için ayrıca ayrıntılı öğrenme bölümleri vardır."
             ))
             .font(.subheadline)
             .fixedSize(horizontal: false, vertical: true)
@@ -8320,8 +8375,8 @@ struct IslamLearningHubView: View {
             Text(settings.t("Wichtig", "Önemli"))
                 .font(.headline)
             Text(settings.t(
-                "Dieser Kurs ist eine strukturierte Einführung. Er ersetzt kein vollständiges jahrelanges Studium. Bei komplexen Fiqh-, Glaubens- oder persönlichen Lebensfragen zeigt SalahPath Unterschiede und Grenzen, statt eine unbelegte Schnellantwort als sicher auszugeben.",
-                "Bu kurs düzenli bir başlangıçtır; yıllar süren kapsamlı din eğitiminin yerini tutmaz. Karmaşık fıkıh, akaid veya kişisel meselelerde SalahPath delilsiz hızlı cevabı kesin hüküm gibi sunmak yerine farklılıkları ve sınırları gösterir."
+                "Dieser Kurs ist eine strukturierte Einführung und ersetzt kein vollständiges jahrelanges Studium. Bei komplexen Fiqh-, Glaubens- oder persönlichen Lebensfragen müssen Unterschiede, Grenzen und belastbare Quellen berücksichtigt werden.",
+                "Bu kurs düzenli bir başlangıçtır ve yıllar süren kapsamlı din eğitiminin yerini tutmaz. Karmaşık fıkıh, akaid veya kişisel meselelerde farklılıklar, sınırlar ve sağlam kaynaklar dikkate alınmalıdır."
             ))
             .font(.footnote)
             .foregroundStyle(.secondary)
@@ -8434,8 +8489,8 @@ struct PrayerSequenceReferenceView: View {
                 }
 
                 Text(settings.t(
-                    "Beim Salām dreht sich nur der Kopf: zuerst zur eigenen rechten Schulter, danach zur eigenen linken Schulter. Der Oberkörper bleibt zur Qibla. Die männlichen und weiblichen Haltungen werden in SalahPath getrennt nach der hanafitischen/Diyanet-Lernpraxis dargestellt; andere Rechtsschulen können einzelne Sunnah-Details anders lehren.",
-                    "Selâm verirken yalnız baş çevrilir: önce kendi sağ omzuna, sonra kendi sol omzuna. Gövde kıbleye dönük kalır. SalahPath erkek ve kadın duruşlarını Hanefî/Diyanet öğrenme uygulamasına göre ayrı gösterir; diğer mezhepler bazı sünnet ayrıntılarını farklı öğretebilir."
+                    "Beim Salām dreht sich nur der Kopf: zuerst zur eigenen rechten Schulter, danach zur eigenen linken Schulter. Der Oberkörper bleibt zur Qibla. Männliche und weibliche Haltungen werden getrennt nach der hanafitischen/Diyanet-Lernpraxis dargestellt; andere Rechtsschulen können einzelne Sunnah-Details anders lehren.",
+                    "Selâm verirken yalnız baş çevrilir: önce kendi sağ omzuna, sonra kendi sol omzuna. Gövde kıbleye dönük kalır. Erkek ve kadın duruşları Hanefî/Diyanet öğrenme uygulamasına göre ayrı gösterilir; diğer mezhepler bazı sünnet ayrıntılarını farklı öğretebilir."
                 ))
                 .font(.footnote)
                 .foregroundStyle(SalahTheme.mutedInk)
@@ -8590,8 +8645,8 @@ struct DhikrView: View {
                 .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.44), lineWidth: 0.7) }
 
                 Text(settings.t(
-                    "Freier Zähler: SalahPath behauptet für diese vier Kurz-Dhikr hier keine feste überlieferte Wiederholungszahl. Für belegte Morgen-/Abend-Adhkar und deren jeweilige Anzahl öffne die Quellenliste darunter.",
-                    "Serbest sayaç: SalahPath bu dört kısa zikir için burada sabit bir rivayet sayısı iddia etmez. Kaynaklı sabah/akşam zikirleri ve kendi tekrar sayıları için aşağıdaki kaynaklı bölümü aç."
+                    "Freier Zähler: Für diese vier Kurz-Dhikr ist keine feste überlieferte Wiederholungszahl hinterlegt. Belegte Morgen-/Abend-Adhkar mit ihren jeweiligen Wiederholungszahlen stehen in der Quellenliste darunter.",
+                    "Serbest sayaç: Bu dört kısa zikir için sabit bir rivayet sayısı belirtilmez. Kaynaklı sabah/akşam zikirleri ve tekrar sayıları aşağıdaki kaynak listesinde yer alır."
                 ))
                 .font(.caption2)
                 .foregroundStyle(SalahTheme.mutedInk)
@@ -10580,8 +10635,8 @@ struct QuranPageReaderView: View {
                         pageNavigation(top: false)
 
                         Text(settings.t(
-                            "Der vollständige arabische Uthmani-Text ist im SalahPath-App-Bundle enthalten und steht für alle 604 Mushaf-Seiten offline bereit. Übersetzung und Transliteration werden bei Bedarf über AlQuran.cloud geladen und lokal gecacht. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben SalahPath-Quran-Einstellungen wie der Suren-Reader.",
-                            "Tam Uthmani Arapça metin SalahPath uygulamasına gömülüdür ve 604 Mushaf sayfasının tamamı çevrimdışı okunabilir. Meal ve Latin harfli okunuş gerektiğinde AlQuran.cloud üzerinden yüklenir ve yerel olarak önbelleğe alınır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı SalahPath Kur'an ayarlarını kullanır."
+                            "Der vollständige arabische Uthmani-Text aller 604 Mushaf-Seiten ist offline verfügbar. Übersetzung und Transliteration werden bei Bedarf geladen und lokal gespeichert. Schriftgröße, Übersetzungsanzeige, Lesezeichen und Lesefortschritt verwenden dieselben Quran-Einstellungen wie der Suren-Reader.",
+                            "604 Mushaf sayfasının tam Uthmani Arapça metni çevrimdışı kullanılabilir. Meal ve Latin harfli okunuş gerektiğinde yüklenir ve yerel olarak saklanır. Yazı boyutu, meal görünümü, yer imleri ve okuma ilerlemesi sûre okuyucusuyla aynı Kur'an ayarlarını kullanır."
                         ))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
@@ -11137,13 +11192,13 @@ private struct QuranJuzLandingView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), kind: "quran", iconSize: 24)
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
                     Text(settings.t(
-                        "Tippe auf einen Juz. SalahPath öffnet direkt die Ayah, an der dieser Juz beginnt. Von dort kannst du normal weiterlesen, hören und Lesezeichen setzen.",
-                        "Bir cüze dokun. SalahPath doğrudan o cüzün başladığı ayeti açar. Oradan normal şekilde okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
+                        "Tippe auf einen Juz, um direkt die Ayah zu öffnen, an der er beginnt. Von dort kannst du weiterlesen, hören und Lesezeichen setzen.",
+                        "Bir cüze dokunarak o cüzün başladığı ayeti doğrudan açabilirsin. Oradan okumaya, dinlemeye ve yer imi eklemeye devam edebilirsin."
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)

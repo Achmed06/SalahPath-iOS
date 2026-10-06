@@ -340,7 +340,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         center.removePendingNotificationRequests(withIdentifiers: [notificationPreviewIdentifier])
 
         let content = UNMutableNotificationContent()
-        content.title = settings.t("SalahPath Test", "SalahPath Test")
+        content.title = settings.t("Adhan-Test", "Ezan Testi")
         content.body = settings.t(
             "Wenn du diese Mitteilung siehst, funktioniert die iOS-Zustellung.",
             "Bu bildirimi görüyorsan iOS teslimatı çalışıyor."
