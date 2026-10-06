@@ -438,8 +438,12 @@ struct TrackerPauseView: View {
 
             if paused {
                 Section {
-                    Label(settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."), systemImage: "checkmark.shield.fill")
-                        .foregroundStyle(.green)
+                    SalahFeatureIconLabel(
+                        title: settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."),
+                        kind: "checkmark",
+                        iconSize: 18
+                    )
+                    .foregroundStyle(SalahTheme.teal)
                 }
             }
         }
@@ -584,7 +588,7 @@ private struct DailyDuaDetailView: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             if let repetition = dua.repetition {
-                                Label(repetition, systemImage: "repeat")
+                                SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)
                                     .font(.caption.bold())
                                     .foregroundStyle(SalahTheme.teal)
                             }
@@ -1719,9 +1723,8 @@ struct HomeView: View {
     private func streakSummary(_ value: Int) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(SalahTheme.gold)
+                SalahFeatureIcon(kind: "sparkles")
+                    .frame(width: 21, height: 21)
 
                 Text("\(value)")
                     .font(.system(size: 21, weight: .bold).monospacedDigit())
