@@ -625,13 +625,13 @@ private enum PrayerText {
         transliteration: "Sübhânekellâhümme ve bihamdik. Ve tebârakesmük ve teâlâ ceddük. Ve lâ ilâhe ğayruk.",
         deMeaning: "Gepriesen bist Du, o Allah, und Dir gebührt Lob. Gesegnet ist Dein Name, erhaben ist Deine Majestät, und es gibt keinen Gott außer Dir.",
         trMeaning: "Allah'ım! Sen eksik sıfatlardan uzaksın. Seni överim. Senin adın mübarektir, şanın yücedir. Senden başka ilâh yoktur.",
-        deNote: "In der ersten Rakʿah nach dem Eröffnungstakbir.", trNote: "İlk rekâtta iftitah tekbirinden sonra.")
+        deNote: nil, trNote: nil)
 
     static let audhu = PrayerRecitation(
         deLabel: "Eʿūḏu", trLabel: "Eûzü",
         arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ", transliteration: "Eʿûzü billâhi mineş-şeytânirracîm",
         deMeaning: "Ich suche Zuflucht bei Allah vor dem verfluchten Satan.", trMeaning: "Kovulmuş şeytandan Allah'a sığınırım.",
-        deNote: "In der ersten Rakʿah vor der Fātiha.", trNote: "İlk rekâtta Fâtiha'dan önce.")
+        deNote: nil, trNote: nil)
 
     static let basmala = PrayerRecitation(
         deLabel: "Basmala", trLabel: "Besmele",
@@ -645,7 +645,7 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
         deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
         trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
-        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Metin ve ses ayrıca Kur'an bölümündedir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -663,13 +663,13 @@ private enum PrayerText {
         deLabel: "Beim Aufrichten", trLabel: "Doğrulurken",
         arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Semi'allāhu limen hamideh",
         deMeaning: "Allah hört den, der Ihn lobt.", trMeaning: "Allah kendisine hamd edeni işitir.",
-        deNote: "Hanafi: Imam und allein Betender sagen dies beim Aufrichten.", trNote: "Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.")
+        deNote: nil, trNote: nil)
 
     static let upright = PrayerRecitation(
         deLabel: "Vollständig aufgerichtet", trLabel: "Tam doğrulunca",
         arabic: "رَبَّنَا لَكَ الْحَمْدُ", transliteration: "Rabbenâ lekel-hamd",
         deMeaning: "Unser Herr, Dir gebührt das Lob.", trMeaning: "Rabbimiz, hamd Sana mahsustur.",
-        deNote: "Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.", trNote: "Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.")
+        deNote: nil, trNote: nil)
 
     static let sujud = PrayerRecitation(
         deLabel: "In der Secde", trLabel: "Secdede",
@@ -928,8 +928,8 @@ struct PrayerHowToView: View {
                 trTitle: "2. rekâttan sonra oturuş",
                 deAction: "Bleibe nach der zweiten Secde sitzen. Endet dein Gebet nach zwei Rakʿāt, ist dies das vollständige Schluss-Sitzen: Ettehiyyâtü, danach Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Bei einem 3-/4-Rakʿāt-Fard liest du hier Ettehiyyâtü und stehst anschließend mit Allāhu akbar zur nächsten Rakʿah auf.",
                 trAction: "İkinci secdeden sonra oturmaya devam et. Namazın iki rekâtta bitiyorsa bu son oturuştur: Ettehiyyâtü, ardından Allâhümme Salli, Allâhümme Bârik ve Rabbenâ Âtinâ gibi bir dua okunur. 3/4 rekât farz devam ediyorsa burada Ettehiyyâtü okunur ve sonra Allāhu ekber diyerek sonraki rekâta kalkılır.",
-                deHanafi: "Die folgenden Schritte 17 und 18 beenden ein Gebet, das an dieser Stelle endet.",
-                trHanafi: "Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.tahiyyat, PrayerText.salli, PrayerText.barik, PrayerText.rabbana]
             ),
             .init(
@@ -940,8 +940,8 @@ struct PrayerHowToView: View {
                 trTitle: "Selâm – önce sağa",
                 deAction: "Der Oberkörper bleibt nach vorn. Drehe nur Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām einmal.",
                 trAction: "Gövde önde kalır. Yalnız başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı bir kez söyle.",
-                deHanafi: "Zuerst rechts. Danach folgt Schritt 18 nach links.",
-                trHanafi: "Önce sağa. Ardından 18. adımda sola dönülür.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.salam]
             ),
             .init(
@@ -952,8 +952,8 @@ struct PrayerHowToView: View {
                 trTitle: "Selâm – sonra sola",
                 deAction: "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut. Damit ist das Gebet beendet.",
                 trAction: "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle. Böylece namaz tamamlanır.",
-                deHanafi: "Reihenfolge: rechts, dann links.",
-                trHanafi: "Sıra: önce sağ, sonra sol.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.salam]
             )
         ]
@@ -1246,53 +1246,80 @@ private struct PrayerTutorialStepCard: View {
     private var maleMuted: Color { SalahTheme.mutedInk }
     private var maleSoftTeal: Color { SalahTheme.softTeal }
 
-    private var maleTipTitle: String {
+    private var malePoseTipData: (title: String, text: String)? {
         switch step.number {
-        case "1": return settings.t("Aufrecht stehen", "Dik dur")
-        case "2": return settings.t("Hanafi Mann", "Hanefî erkek")
-        case "3": return settings.t("Mann: rechte Hand über die linke unterhalb des Nabels", "Erkek: sağ el sol elin üzerinde, göbek altında")
-        case "4", "11": return settings.t("Mann: Rücken möglichst gerade", "Erkek: sırt mümkün olduğunca düz")
-        case "5", "12": return settings.t("Vollständig aufgerichtet stehen", "Tam doğrulmuş şekilde dur")
-        case "6", "13": return settings.t("Mann: Unterarme vom Boden und Arme vom Körper fernhalten", "Erkek: dirsekler yerden, kollar gövdeden uzak")
-        case "7", "14": return settings.t("Mann: auf dem linken Fuß sitzen", "Erkek: sol ayak üzerine otur")
-        case "8", "15": return settings.t("Zweite Secde", "İkinci secde")
-        case "9": return settings.t("Aufstehen zur 2. Rakʿah", "2. rekâta kalkış")
-        case "10": return settings.t("Hände unter dem Nabel gebunden", "Eller göbek altında bağlı")
-        case "16": return settings.t("Zeigefinger im Tashahhud", "Teşehhüdde işaret parmağı")
-        case "17": return settings.t("Oberkörper bleibt nach vorn.", "Gövde önde kalır.")
-        case "18": return settings.t("Kehre über die Mitte zurück", "Ortadan geri dön")
-        default: return settings.t("Gebetshaltung", "Namaz duruşu")
+        case "2":
+            return (
+                settings.t("Hanafi Mann", "Hanefî erkek"),
+                settings.t("Daumen ungefähr auf Höhe der Ohrläppchen.", "Başparmaklar yaklaşık kulak memesi hizasında.")
+            )
+        case "3":
+            return (
+                settings.t("Hände unterhalb des Nabels", "Eller göbek altında"),
+                settings.t(
+                    "Rechte Hand über die linke legen und das linke Handgelenk mit der rechten Hand umfassen.",
+                    "Sağ eli sol elin üzerine koy ve sağ elle sol bileği kavra."
+                )
+            )
+        case "4", "11":
+            return (
+                settings.t("Rücken möglichst gerade", "Sırt mümkün olduğunca düz"),
+                settings.t("Hände auf die Knie legen und die Knie gestreckt halten.", "Elleri dizlere koy ve dizleri dik tut.")
+            )
+        case "6", "13":
+            return (
+                settings.t("Arme vom Körper lösen", "Kolları gövdeden ayır"),
+                settings.t(
+                    "Unterarme vom Boden und Arme vom Körper fernhalten, sofern das ohne Mühe möglich ist.",
+                    "Mümkünse dirsekleri yerden ve kolları gövdeden uzak tut."
+                )
+            )
+        case "7", "14":
+            return (
+                settings.t("Auf dem linken Fuß sitzen", "Sol ayak üzerine otur"),
+                settings.t(
+                    "Rechter Fuß aufgestellt; die Zehen zeigen Richtung Qibla.",
+                    "Sağ ayak dik tutulur; parmaklar kıbleye yönelir."
+                )
+            )
+        case "10":
+            return (
+                settings.t("Hände wie zuvor binden", "Elleri önceki gibi bağla"),
+                settings.t("Rechte Hand wieder über die linke unterhalb des Nabels legen.", "Sağ eli yeniden sol elin üzerine, göbek altında koy.")
+            )
+        case "16":
+            return (
+                settings.t("Zeigefinger im Tashahhud", "Teşehhüdde işaret parmağı"),
+                settings.t(
+                    "Hanefî: Bei „Lā ilāha“ den rechten Zeigefinger heben; bei „illallāh“ wieder senken.",
+                    "Hanefî: „Lâ ilâhe“ derken sağ işaret parmağını kaldır; „illallah“ derken tekrar indir."
+                )
+            )
+        default:
+            return nil
         }
     }
 
-    private var maleTipText: String {
-        if step.number == "16" {
-            return settings.t(
-                "Hanefî: Beim „Lā ilāha“ im Schahada-Abschnitt des Ettehiyyâtü hebst du den rechten Zeigefinger; bei „illallāh“ senkst du ihn wieder.",
-                "Hanefî: Ettehiyyâtü içindeki kelime-i şehadette „Lâ ilâhe“ derken sağ işaret parmağını kaldır; „illallah“ derken tekrar indir."
-            )
-        }
-        if let note = settings.language == .german ? step.deHanafi : step.trHanafi {
-            return note
-        }
-        return settings.language == .german ? step.deAction : step.trAction
+    private var maleSupplementalHanafiNote: String? {
+        guard ["5", "10", "12"].contains(step.number) else { return nil }
+        return settings.language == .german ? step.deHanafi : step.trHanafi
     }
 
     @ViewBuilder
     private var malePoseTip: some View {
-        if isMale, let imageName {
+        if isMale, let imageName, let tip = malePoseTipData {
             HStack(alignment: .center, spacing: 13) {
                 PrayerPoseArtwork(assetName: imageName)
                     .frame(width: 108, height: 118)
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text(maleTipTitle)
+                    Text(tip.title)
                         .font(.subheadline.bold())
                         .foregroundStyle(maleHeader)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Text(maleTipText)
+                    Text(tip.text)
                         .font(.caption)
                         .foregroundStyle(maleMuted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -1396,6 +1423,13 @@ private struct PrayerTutorialStepCard: View {
                     SalahFeatureIconLabel(title: note, kind: "info", iconSize: 18)
                         .font(.caption)
                         .foregroundStyle(SalahTheme.mutedInk)
+                        .padding(11)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13))
+                } else if isMale, let note = maleSupplementalHanafiNote {
+                    SalahFeatureIconLabel(title: note, kind: "info", iconSize: 18)
+                        .font(.caption)
+                        .foregroundStyle(maleMuted)
                         .padding(11)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13))
