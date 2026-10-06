@@ -332,9 +332,22 @@ for token in (
     'return "wudu"',
     'return "quran_audio"',
     'return "list"',
+    'SalahFeatureIcon(kind: "language")',
+    'SalahFeatureIcon(kind: "calendar")',
+    'SalahFeatureIcon(kind: "checkmark")',
+    'SalahFeatureIconLabel(\n                title: settings.t("Nicht verwechseln", "Karıştırma"),\n                kind: "info"',
+    'SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
+
+for forbidden in (
+    'Image(systemName: "globe")',
+    'Label(\n                settings.t("In Apple Kalender eintragen", "Apple Takvim\'e ekle"),\n                systemImage: "calendar.badge.plus"',
+    'Label(\n                settings.t("Nicht verwechseln", "Karıştırma"),\n                systemImage: "exclamationmark.triangle.fill"',
+):
+    if forbidden in guide:
+        fail(f"decorative learning SF Symbol regression: found {forbidden}")
 
 # 5a) Prayer/Wudu step navigation must never strand the viewport outside newly rendered content.
 for token in (
@@ -386,7 +399,7 @@ for token in (
     'audiencePreviewCard(\n                    .female',
     'Text(settings.t("Wähle deine Anleitung", "Rehberini seç"))',
     'Text(settings.t("2 Rakʿāt Schritt für Schritt", "2 rekât adım adım"))',
-    'Image(systemName: "globe")',
+    'SalahFeatureIcon(kind: "language")',
     '.accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))',
 ):
     if token not in guide:
@@ -409,6 +422,28 @@ for forbidden in (
 ):
     if forbidden in guide:
         fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
+
+release_ui_sources = "\n".join(
+    read(path) for path in (
+        "SalahZeit/Views/GuideView.swift",
+        "SalahZeit/Views/HomeView.swift",
+        "SalahZeit/Views/PrayerDetailView.swift",
+        "SalahZeit/Views/QiblaView.swift",
+        "SalahZeit/Views/RootTabView.swift",
+        "SalahZeit/Views/SettingsView.swift",
+        "SalahZeit/SalahZeitApp.swift",
+    )
+)
+for forbidden in (
+    'LiveContainer',
+    'ChatGPT',
+    'wie in der PDF',
+    'as in the PDF',
+    'KI-generiert',
+    'AI-generated',
+):
+    if forbidden in release_ui_sources:
+        fail(f"release UI meta wording regression: found {forbidden}")
 
 # 5a.2) Premium learning-row icons must stay unbadged; only SF fallbacks get a circle.
 for token in (
@@ -467,10 +502,20 @@ for token in (
     'icon: "quran"',
     'case "quran_audio":',
     'case "bookmarks":',
+    'SalahFeatureIcon(kind: "quran_audio")',
+    'SalahFeatureIcon(kind: "bookmarks")',
+    'SalahFeatureIcon(kind: "checkmark")',
     'LinearGradient(',
 ):
     if token not in home:
         fail(f"standalone dashboard icon regression: missing {token}")
+
+for forbidden in (
+    'Image(systemName: "speaker.wave.2.fill")',
+    'Image(systemName: "bookmark.fill")',
+):
+    if forbidden in home:
+        fail(f"decorative Home SF Symbol regression: found {forbidden}")
 
 for token in (
     'init(initialSelection: Int = 0)',
