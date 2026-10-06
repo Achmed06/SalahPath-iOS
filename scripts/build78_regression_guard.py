@@ -249,6 +249,9 @@ for token in (
     'SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon"',
     'deLabel: "Salām", trLabel: "Selâm"',
     'deNote: nil, trNote: nil',
+    'step.number == "16" || step.deHanafi != nil',
+    'if let detail = exactDetail(for: step.number)',
+    'private func exactDetail(for number: Int) -> String?',
 ):
     if token not in guide:
         fail(f"learning UI polish regression: missing {token}")
@@ -279,6 +282,18 @@ for forbidden in (
     '5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka."',
     '8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et."',
     '11: "Ardından sol ayağı da aynı şekilde tamamen yıka."',
+    'Die folgenden Schritte 17 und 18 beenden ein Gebet',
+    'Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar.',
+    'Zuerst rechts. Danach folgt Schritt 18 nach links.',
+    'Önce sağa. Ardından 18. adımda sola dönülür.',
+    'Reihenfolge: rechts, dann links.',
+    'Sıra: önce sağ, sonra sol.',
+    'Hanafi: Imam und allein Betender sagen dies beim Aufrichten.',
+    'Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.',
+    'Hanafi: Der Mitbetende hinter dem Imam sagt dies',
+    'Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.',
+    'private struct PrayerSalamVisual: View',
+    'PrayerSalamVisual(side:',
 ):
     if forbidden in guide:
         fail(f"developer/meta or duplicate learning UI regression: found {forbidden}")
@@ -314,9 +329,8 @@ for token in (
     'number: 11, image: "wudu_leftfoot", deTitle: "Linker Fuß"',
     'imageKey: "salam_right",\n                deTitle: "Salām – zuerst rechts"',
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
-    'let isRight = side == .right',
-    'imageName: "\\(prefix)_\\(isRight ? "salam_right" : "salam_left")"',
-    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
+    'if let imageName {',
+    'PrayerPoseArtwork(assetName: imageName)',
 ):
     if token not in guide:
         fail(f"standalone illustration regression: missing {token}")
@@ -331,7 +345,7 @@ for obsolete in (
         fail(f"obsolete generated illustration fallback returned: {obsolete}")
 
 if 'arrow: isRight ? "arrow.right" : "arrow.left"' in guide or 'Image(systemName: arrow)' in guide:
-    fail("Salam direction arrow regression: approved female steps 17/18 must not show decorative arrows")
+    fail("Salam direction arrow regression: approved steps 17/18 must not show decorative arrows")
 
 if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' in guide:
     fail("Wudu left/right foot assets must not be mirrored in code")
@@ -343,9 +357,19 @@ for token in (
     'return "quran_audio"',
     'return "list"',
     'return "info"',
+    'case "hands.sparkles.fill", "circle.grid.cross.fill", "sunrise.fill":',
+    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
+
+qibla_source = read("SalahZeit/Views/QiblaView.swift")
+for forbidden in (
+    '"Köln · QA-Teststandort"',
+    '"Köln · QA test konumu"',
+):
+    if forbidden in qibla_source:
+        fail(f"internal QA wording leaked into visible Qibla UI: {forbidden}")
 
 # 5a) Prayer/Wudu step navigation must never strand the viewport outside newly rendered content.
 for token in (
