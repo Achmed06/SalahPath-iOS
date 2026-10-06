@@ -258,6 +258,8 @@ for forbidden in (
     'Rechts und anschließend links',
     'systemImage: "figure.walk"',
     'systemImage: "text.bubble.fill"',
+    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
+    'Text(instruction)',
     'SalahPath verwendet diesen Bereich',
     'SalahPath entscheidet hier nicht',
     'SalahPath soll',
@@ -306,7 +308,7 @@ for token in (
     'imageKey: "salam_left",\n                deTitle: "Salām – danach links"',
     'let isRight = side == .right',
     'imageName: "\\(prefix)_\\(isRight ? "salam_right" : "salam_left")"',
-    'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
+    'private func salamDirection(number: String, direction: String, imageName: String)',
 ):
     if token not in guide:
         fail(f"standalone illustration regression: missing {token}")
