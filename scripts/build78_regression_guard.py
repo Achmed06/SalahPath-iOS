@@ -373,7 +373,7 @@ for token in (
 
 for token in (
     'Niyet ettim Allah rızası için bugünkü öğle namazının farzını kılmaya.',
-    'Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")',
+    'SalahFeatureIconLabel(title: settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), kind: "prayer")',
     '2-Rakʿāt-Bildanleitung für Mann/Frau öffnen',
 ):
     if token not in guide:
