@@ -717,7 +717,7 @@ for token in (
     'func localizedSource(_ language: AppLanguage) -> String',
     'with: language == .german ? "Auszug" : "alıntı"',
     'Text(dua.localizedSource(settings.language))',
-    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
+    'SalahFeatureIconLabel(\n                    title: dua.localizedSource(settings.language),\n                    kind: "checkmark"',
     'context: dua.localizedSource(settings.language)',
 ):
     if token not in home:
