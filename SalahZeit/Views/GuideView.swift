@@ -123,8 +123,8 @@ struct GuideView: View {
                     settings.language = settings.language == .german ? .turkish : .german
                 } label: {
                     HStack(spacing: 5) {
-                        Image(systemName: "globe")
-                            .font(.system(size: 10.5, weight: .bold))
+                        SalahFeatureIcon(kind: "language")
+                            .frame(width: 18, height: 18)
                         Text(settings.language == .german ? "Türkçe" : "Deutsch")
                             .font(.system(size: 10.4, weight: .bold))
                     }
@@ -2456,9 +2456,10 @@ struct TayammumGuideView: View {
     @ViewBuilder
     private func bullet(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 9) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(SalahTheme.teal)
-                .padding(.top, 2)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 19, height: 19)
+                .padding(.top, 1)
+                .accessibilityHidden(true)
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -7535,11 +7536,12 @@ private struct IslamicCalendarEventDetailView: View {
                 )
             )
         } label: {
-            Label(
-                settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"),
-                systemImage: "calendar.badge.plus"
-            )
-            .font(.headline.bold())
+            HStack(spacing: 9) {
+                SalahFeatureIcon(kind: "calendar")
+                    .frame(width: 24, height: 24)
+                Text(settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"))
+                    .font(.headline.bold())
+            }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 13)
         }
@@ -7569,8 +7571,9 @@ private struct IslamicCalendarEventDetailView: View {
 
             ForEach(items.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 9) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 20, height: 20)
+                        .accessibilityHidden(true)
                     Text(items[index])
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -7581,9 +7584,10 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventCautionCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(
-                settings.t("Nicht verwechseln", "Karıştırma"),
-                systemImage: "exclamationmark.triangle.fill"
+            SalahFeatureIconLabel(
+                title: settings.t("Nicht verwechseln", "Karıştırma"),
+                kind: "info",
+                iconSize: 22
             )
             .font(.headline)
             .foregroundStyle(SalahTheme.gold)
@@ -8795,9 +8799,8 @@ struct DhikrView: View {
 
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))
+                .frame(width: 23, height: 23)
                 .accessibilityHidden(true)
 
             Text(title)
