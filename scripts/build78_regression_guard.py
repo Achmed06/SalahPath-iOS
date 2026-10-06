@@ -720,8 +720,8 @@ for legacy_prefix in ("sp_icon_", "ref_dash_"):
 for token in (
     'func localizedSource(_ language: AppLanguage) -> String',
     'with: language == .german ? "Auszug" : "alıntı"',
-    'Text(dua.localizedSource(settings.language))',
-    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
+    'title: dua.localizedSource(settings.language)',
+    'kind: "info"',
     'context: dua.localizedSource(settings.language)',
 ):
     if token not in home:
@@ -730,10 +730,11 @@ for token in (
 for forbidden in (
     'Text(dua.source)',
     'Label(dua.source, systemImage: "checkmark.seal.fill")',
+    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
     'context: dua.source',
 ):
     if forbidden in home:
-        fail(f"bilingual daily dua source rendering returned: {forbidden}")
+        fail(f"bilingual or generic-icon daily dua source rendering returned: {forbidden}")
 
 # 6a.2) Audio runtime errors must follow the selected app language.
 for token in (
