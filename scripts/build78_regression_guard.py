@@ -1076,6 +1076,8 @@ for token in (
     'wegen einer normalen Reise nicht einfach als echtes Jamʿ zusammengelegt',
     'Witr ist hier nach Hanafi/Diyanet enthalten',
     'Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir',
+    'wenn versehentlich ein Rukn verzögert, wiederholt oder vorgezogen',
+    'Bir rüknün yanılarak geciktirilmesi, tekrarlanması veya öne alınması',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
