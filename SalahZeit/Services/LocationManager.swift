@@ -90,7 +90,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         case .authorizedWhenInUse, .authorizedAlways:
             startUpdates()
         case .denied, .restricted:
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen."
         @unknown default:
             break
         }
@@ -112,7 +112,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         case .authorizedWhenInUse, .authorizedAlways:
             prepareQiblaHeading()
         case .denied, .restricted:
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen."
         @unknown default:
             break
         }
@@ -125,7 +125,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         case .authorizedWhenInUse, .authorizedAlways:
             manager.requestLocation()
         case .denied, .restricted:
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen."
         @unknown default:
             break
         }
@@ -161,7 +161,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
             manager.requestLocation()
         case .denied, .restricted:
             pendingDeviceLocationSwitch = false
-            lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+            lastError = "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen."
         @unknown default:
             pendingDeviceLocationSwitch = false
         }
@@ -239,10 +239,10 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
         guard let lastError, !lastError.isEmpty else { return nil }
 
         switch lastError {
-        case "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath.":
+        case "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen.":
             return language == .german
                 ? lastError
-                : "Konum erişimi kapalı. SalahPath için iPhone ayarlarından etkinleştir."
+                : "Konum erişimi kapalı. iPhone ayarlarından konum erişimini etkinleştir."
         case "Bitte Ort, Stadt oder Postleitzahl eingeben.":
             return language == .german
                 ? lastError
@@ -340,7 +340,7 @@ final class LocationManager: NSObject, ObservableObject, CLLocationManagerDelega
                 self.heading = nil
                 self.manager.stopUpdatingHeading()
                 self.manager.stopUpdatingLocation()
-                self.lastError = "Standortzugriff ist deaktiviert. Aktiviere ihn in den iPhone-Einstellungen für SalahPath."
+                self.lastError = "Standortzugriff ist deaktiviert. Aktiviere den Standortzugriff in den iPhone-Einstellungen."
             default:
                 break
             }
