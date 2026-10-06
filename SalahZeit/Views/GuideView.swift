@@ -31,6 +31,58 @@ private struct PrayerGuideIconLabel: View {
     }
 }
 
+// Maps decorative/content symbols onto the checked-in SalahPath artwork.
+// Native SF Symbols remain reserved for controls, state, search, media,
+// permissions and other system affordances.
+private func salahContentFeatureKind(for symbol: String) -> String {
+    switch symbol {
+    case "rectangle.stack.badge.play.fill", "figure.walk":
+        return "prayer"
+    case "drop.fill":
+        return "wudu"
+    case "books.vertical.fill", "text.book.closed.fill", "book.closed.fill", "book.pages.fill", "character.book.closed.fill":
+        return "quran"
+    case "play.square.stack.fill", "waveform":
+        return "quran_audio"
+    case "hands.sparkles.fill", "quote.bubble.fill", "signature":
+        return "duas"
+    case "circle.grid.cross.fill":
+        return "dhikr"
+    case "map.fill", "arrow.triangle.2.circlepath", "mountain.2.fill":
+        return "qibla"
+    case "calendar.badge.plus", "calendar.badge.clock":
+        return "calendar"
+    case "person.3.sequence.fill", "person.3.fill", "person.text.rectangle.fill", "house.and.flag.fill", "heart.fill":
+        return "community"
+    case "moon.stars.fill", "moon.stars", "moon.fill", "sun.max.fill":
+        return "moon"
+    case "clock.fill", "hourglass.bottomhalf.filled", "arrow.uturn.backward.circle.fill":
+        return "times"
+    case "sparkles", "gift.fill", "party.popper.fill":
+        return "sparkles"
+    case "checkmark.circle.fill", "checkmark.circle", "checkmark.seal.fill", "checkmark.seal":
+        return "checkmark"
+    case "list.number", "doc.text.fill":
+        return "list"
+    case "globe":
+        return "language"
+    case "person.fill", "person.2.fill":
+        return "profile"
+    case "banknote.fill", "cart.fill", "cross.case.fill", "scale.3d", "hexagon.fill",
+         "info.circle.fill", "fork.knife", "heart.slash.fill", "smoke.fill", "drop.triangle.fill",
+         "arrow.uturn.down", "brain.head.profile", "mouth.fill", "arrow.up.to.line":
+        return "info"
+    case "1.circle.fill":
+        return "moon"
+    case "2.circle.fill":
+        return "checkmark"
+    case "3.circle.fill":
+        return "info"
+    default:
+        return "info"
+    }
+}
+
 
 // MARK: - Learning hub
 
@@ -280,9 +332,8 @@ struct GuideView: View {
 
     private func referenceLearnFeature(turkish: String, german: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 18, height: 18)
                 .padding(.top, 1)
                 .accessibilityHidden(true)
 
@@ -315,9 +366,8 @@ struct GuideView: View {
 
     private func learnFeature(_ text: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 17, height: 17)
             Text(text)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -378,7 +428,7 @@ struct GuideView: View {
         case "moon.stars.fill":
             return "moon"
         default:
-            return nil
+            return salahContentFeatureKind(for: symbol)
         }
     }
 
@@ -4114,9 +4164,10 @@ struct FarewellSermonView: View {
 
                 ForEach(Array(principles.enumerated()), id: \.offset) { _, item in
                     VStack(alignment: .leading, spacing: 8) {
-                        Label(
-                            settings.language == .german ? item.1 : item.2,
-                            systemImage: item.0
+                        SalahFeatureIconLabel(
+                            title: settings.language == .german ? item.1 : item.2,
+                            kind: salahContentFeatureKind(for: item.0),
+                            iconSize: 23
                         )
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
@@ -4442,9 +4493,10 @@ private struct IlmihalTopicView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        settings.language == .german ? topic.deTitle : topic.trTitle,
-                        systemImage: topic.icon
+                    SalahFeatureIconLabel(
+                        title: settings.language == .german ? topic.deTitle : topic.trTitle,
+                        kind: salahContentFeatureKind(for: topic.icon),
+                        iconSize: 27
                     )
                     .font(.title2.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
@@ -6252,10 +6304,13 @@ struct PrayerTextsHubView: View {
 
             Section(settings.t("Gebetssuren", "Namaz Sûreleri")) {
                 NavigationLink { ShortSurahLearningView() } label: {
-                    Label(settings.t(
-                        "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
-                        "Fâtiha, Fîl, Kureyş, Mâûn, Kevser, Kâfirûn, Nasr, Tebbet, İhlâs, Felak, Nâs"
-                    ), systemImage: "play.square.stack.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t(
+                            "Fātiha, Fil, Quraysh, Maun, Kawthar, Kafirun, Nasr, Tebbet, Ikhlas, Falaq, Nas",
+                            "Fâtiha, Fîl, Kureyş, Mâûn, Kevser, Kâfirûn, Nasr, Tebbet, İhlâs, Felak, Nâs"
+                        ),
+                        kind: "quran_audio"
+                    )
                 }
             }
 
@@ -6319,8 +6374,8 @@ private struct QuranReferenceLink: View {
             QuranReferenceJumpView(surahNumber: surah, ayah: ayah)
         } label: {
             HStack(spacing: 10) {
-                Image(systemName: "book.closed.fill")
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "quran")
+                    .frame(width: 25, height: 25)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.headline)
@@ -6761,9 +6816,10 @@ struct MorningEveningAdhkarView: View {
                 NavigationLink {
                     QuranReferenceJumpView(surahNumber: 2, ayah: 255)
                 } label: {
-                    Label(
-                        settings.t("Âyetel-Kürsî vollständig öffnen", "Âyetel Kürsî tam metni aç"),
-                        systemImage: "book.closed.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Âyetel-Kürsî vollständig öffnen", "Âyetel Kürsî tam metni aç"),
+                        kind: "quran",
+                        iconSize: 18
                     )
                     .font(.caption.bold())
                 }
@@ -6773,9 +6829,10 @@ struct MorningEveningAdhkarView: View {
                 NavigationLink {
                     ShortSurahLearningView()
                 } label: {
-                    Label(
-                        settings.t("Ikhlas, Falaq und Nas vollständig öffnen", "İhlâs, Felak ve Nâs tam metni aç"),
-                        systemImage: "books.vertical.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Ikhlas, Falaq und Nas vollständig öffnen", "İhlâs, Felak ve Nâs tam metni aç"),
+                        kind: "quran",
+                        iconSize: 18
                     )
                     .font(.caption.bold())
                 }
@@ -6958,12 +7015,13 @@ struct FastingTrackerView: View {
             .fixedSize(horizontal: false, vertical: true)
 
             if hijriCalendar.component(.month, from: now) == 9 {
-                Label(
-                    settings.t(
+                SalahFeatureIconLabel(
+                    title: settings.t(
                         "Ramadan · Tag \(hijriCalendar.component(.day, from: now))",
                         "Ramazan · \(hijriCalendar.component(.day, from: now)). gün"
                     ),
-                    systemImage: "sparkles"
+                    kind: "sparkles",
+                    iconSize: 21
                 )
                 .font(.headline.bold())
                 .foregroundStyle(SalahTheme.teal)
@@ -7009,9 +7067,10 @@ struct FastingTrackerView: View {
                     refresh &+= 1
                 }
             )) {
-                Label(
-                    settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
-                    systemImage: "checkmark.circle"
+                SalahFeatureIconLabel(
+                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
+                    kind: "checkmark",
+                    iconSize: 20
                 )
             }
 
@@ -7078,11 +7137,10 @@ struct FastingTrackerView: View {
     private func fastingNavigationCard(title: String, subtitle: String, icon: String, destination: AnyView) -> some View {
         NavigationLink { destination } label: {
             HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundStyle(SalahTheme.gold)
+                SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))
+                    .frame(width: 38, height: 38)
+                    .padding(3)
                     .frame(width: 44, height: 44)
-                    .background(SalahTheme.navigationTeal, in: Circle())
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.headline.bold())
@@ -7254,9 +7312,8 @@ struct FastingRulesView: View {
     @ViewBuilder
     private func rule(_ icon: String, _ title: String, _ detail: String) -> some View {
         HStack(alignment: .top, spacing: 10) {
-            Image(systemName: icon)
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 24)
+            SalahFeatureIcon(kind: salahContentFeatureKind(for: icon))
+                .frame(width: 24, height: 24)
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.headline)
                 Text(detail).font(.subheadline).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
@@ -7619,10 +7676,8 @@ struct HijriCalendarView: View {
 
     private func importantEventRow(_ item: DatedEvent) -> some View {
         HStack(spacing: 11) {
-            Image(systemName: item.event.symbol)
-                .font(.title3)
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 30)
+            SalahFeatureIcon(kind: salahContentFeatureKind(for: item.event.symbol))
+                .frame(width: 30, height: 30)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(settings.language == .german ? item.event.deTitle : item.event.trTitle)
@@ -7653,9 +7708,10 @@ struct HijriCalendarView: View {
                 Text(hijriDateString(date, language: settings.language))
                     .font(.headline)
                 if let event = eventInfo(date) {
-                    Label(
-                        settings.language == .german ? event.deTitle : event.trTitle,
-                        systemImage: event.symbol
+                    SalahFeatureIconLabel(
+                        title: settings.language == .german ? event.deTitle : event.trTitle,
+                        kind: salahContentFeatureKind(for: event.symbol),
+                        iconSize: 17
                     )
                     .font(.caption)
                     .foregroundStyle(SalahTheme.teal)
@@ -7929,9 +7985,10 @@ private struct IslamLearningLessonView: View {
 
     private var lessonHeaderCard: some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(
-                settings.language == .german ? lesson.deTitle : lesson.trTitle,
-                systemImage: lesson.icon
+            SalahFeatureIconLabel(
+                title: settings.language == .german ? lesson.deTitle : lesson.trTitle,
+                kind: salahContentFeatureKind(for: lesson.icon),
+                iconSize: 27
             )
             .font(.title2.bold())
             .foregroundStyle(SalahTheme.deepTeal)
@@ -7952,8 +8009,8 @@ private struct IslamLearningLessonView: View {
 
             ForEach(points.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 10) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 20, height: 20)
                         .padding(.top, 2)
                     Text(points[index])
                         .fixedSize(horizontal: false, vertical: true)
@@ -8341,11 +8398,8 @@ struct IslamLearningHubView: View {
 
     private func islamLessonRow(_ lesson: IslamLearningLesson) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: lesson.icon)
-                .font(.title3)
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: salahContentFeatureKind(for: lesson.icon))
                 .frame(width: 34, height: 34)
-                .background(SalahTheme.softTeal.opacity(0.55), in: Circle())
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(settings.language == .german ? lesson.deTitle : lesson.trTitle)
@@ -8432,9 +8486,10 @@ struct PrayerSequenceReferenceView: View {
                 .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        settings.t("Wichtig: Das Gebet besteht nicht nur aus 1 Rakʿa", "Önemli: Namaz yalnız 1 rekâttan oluşmaz"),
-                        systemImage: "info.circle.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Wichtig: Das Gebet besteht nicht nur aus 1 Rakʿa", "Önemli: Namaz yalnız 1 rekâttan oluşmaz"),
+                        kind: "info",
+                        iconSize: 22
                     )
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
