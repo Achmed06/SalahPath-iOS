@@ -2407,31 +2407,6 @@ struct PrayerTimesOverviewView: View {
             .accessibilityHidden(true)
     }
 
-    private func referenceToolTile(icon: String, title: String, subtitle: String) -> some View {
-        VStack(spacing: 5) {
-            ZStack {
-                Circle()
-                    .fill(SalahTheme.softTeal)
-                    .frame(width: 51, height: 51)
-                Image(systemName: icon)
-                    .font(.system(size: 29, weight: .semibold))
-                    .foregroundStyle(SalahTheme.teal)
-            }
-            Text(title)
-                .font(.system(size: 10.5, weight: .bold))
-                .foregroundStyle(SalahTheme.ink)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-            Text(subtitle)
-                .font(.system(size: 8.5, weight: .semibold))
-                .foregroundStyle(SalahTheme.mutedInk)
-        }
-        .frame(maxWidth: .infinity, minHeight: 94)
-        .padding(9)
-        .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 10).stroke(SalahTheme.gold.opacity(0.34), lineWidth: 0.7) }
-    }
-
     private func referencePrayerName(_ kind: PrayerKind) -> String {
         if settings.language == .turkish {
             switch kind {
@@ -2946,28 +2921,14 @@ struct ReferenceDashboardGlyph: View {
 
         case "quran_audio":
             return AnyView(
-                ZStack {
-                    ReferenceDashboardGlyph(kind: "quran")
-                        .scaleEffect(0.78)
-                        .offset(x: -3, y: 1)
-                    Image(systemName: "speaker.wave.2.fill")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(SalahTheme.gold)
-                        .offset(x: 10, y: -9)
-                }
+                SalahFeatureIcon(kind: "quran_audio")
+                    .padding(2)
             )
 
         case "bookmarks":
             return AnyView(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(SalahTheme.teal)
-                        .frame(width: 23, height: 28)
-                    Image(systemName: "bookmark.fill")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(SalahTheme.cream)
-                        .offset(y: -1)
-                }
+                SalahFeatureIcon(kind: "bookmarks")
+                    .padding(2)
             )
 
         case "dhikr":
