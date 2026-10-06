@@ -8681,9 +8681,22 @@ struct DhikrView: View {
         dhikrRowBody(icon: icon, title: title, subtitle: subtitle)
     }
 
+    private func dhikrFeatureKind(for symbol: String) -> String {
+        switch symbol {
+        case "sunrise.fill", "hands.sparkles.fill", "circle.grid.cross.fill":
+            return "dhikr"
+        case "character.book.closed.fill":
+            return "language"
+        case "text.book.closed.fill":
+            return "quran"
+        default:
+            return "info"
+        }
+    }
+
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 10) {
-            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+            SalahFeatureIcon(kind: dhikrFeatureKind(for: icon))
                 .frame(width: 24, height: 24)
                 .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
