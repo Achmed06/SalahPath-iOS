@@ -684,14 +684,20 @@ struct NearbyMosquesView: View {
                     .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 } else if store.mapItems.isEmpty {
                     VStack(spacing: 12) {
-                        ContentUnavailableView(
-                            settings.t("Keine Moschee gefunden", "Cami bulunamadı"),
-                            systemImage: "building.columns",
-                            description: Text(settings.t(
-                                "Apple Karten hat im Umkreis von bis zu 50 km keine passenden Moscheen geliefert.",
-                                "Apple Haritalar 50 km'ye kadar olan çevrede uygun cami sonucu döndürmedi."
-                            ))
-                        )
+                        SalahFeatureIcon(kind: "mosques")
+                            .frame(width: 58, height: 58)
+
+                        Text(settings.t("Keine Moschee gefunden", "Cami bulunamadı"))
+                            .font(.title3.bold())
+                            .foregroundStyle(SalahTheme.deepTeal)
+
+                        Text(settings.t(
+                            "Apple Karten hat im Umkreis von bis zu 50 km keine passenden Moscheen geliefert.",
+                            "Apple Haritalar 50 km'ye kadar olan çevrede uygun cami sonucu döndürmedi."
+                        ))
+                        .font(.subheadline)
+                        .foregroundStyle(SalahTheme.mutedInk)
+                        .multilineTextAlignment(.center)
 
                         Button {
                             Task {
