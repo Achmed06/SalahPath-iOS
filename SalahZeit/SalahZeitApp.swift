@@ -494,8 +494,14 @@ private struct OnboardingFlowView: View {
                     Button {
                         settings.prayerAudience = audience
                     } label: {
-                        HStack {
-                            Image(systemName: audience == .male ? "person.fill" : "person.fill")
+                        HStack(spacing: 10) {
+                            Image(audience == .male ? "male_intention" : "female_intention")
+                                .resizable()
+                                .interpolation(.high)
+                                .scaledToFit()
+                                .frame(width: 34, height: 34)
+                                .accessibilityHidden(true)
+
                             Text(audience.title(settings.language))
                                 .font(.headline)
                             Spacer()

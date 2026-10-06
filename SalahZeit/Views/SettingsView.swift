@@ -95,7 +95,7 @@ struct SettingsView: View {
                             Button(rule.title(settings.language)) { settings.asrRule = rule }
                         }
                     } label: {
-                        profileRow(icon: "sun.max.fill", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
+                        profileRow(icon: "asr", title: settings.t("Asr-Regel", "İkindi kuralı"), value: settings.asrRule.title(settings.language))
                     }
 
                     Text(settings.asrRule.note(settings.language))
@@ -403,11 +403,11 @@ struct SettingsView: View {
                             .padding(.top, 9)
                             .padding(.bottom, 3)
 
-                        referenceToggle(icon: "sun.horizon.fill", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
-                        referenceToggle(icon: "sun.max.fill", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
-                        referenceToggle(icon: "sun.min.fill", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
-                        referenceToggle(icon: "sunset.fill", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
-                        referenceToggle(icon: "moon.stars.fill", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
+                        referenceToggle(icon: "fajr", title: settings.t("Fajr", "Sabah"), isOn: $settings.fajrNotificationEnabled)
+                        referenceToggle(icon: "dhuhr", title: settings.t("Dhuhr", "Öğle"), isOn: $settings.dhuhrNotificationEnabled)
+                        referenceToggle(icon: "asr", title: settings.t("Asr", "İkindi"), isOn: $settings.asrNotificationEnabled)
+                        referenceToggle(icon: "maghrib", title: settings.t("Maghrib", "Akşam"), isOn: $settings.maghribNotificationEnabled)
+                        referenceToggle(icon: "isha", title: settings.t("Isha", "Yatsı"), isOn: $settings.ishaNotificationEnabled)
                     }
                     .disabled(!settings.notificationsEnabled)
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
@@ -589,11 +589,9 @@ struct SettingsView: View {
                     if let privacyURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md") {
                         Link(destination: privacyURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "hand.raised.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
                                 Text(settings.t("Datenschutzerklärung", "Gizlilik politikası"))
                                     .font(.system(size: 11.5, weight: .semibold))
@@ -614,11 +612,9 @@ struct SettingsView: View {
                     if let supportURL = URL(string: "https://github.com/Achmed06/SalahPath-iOS/issues") {
                         Link(destination: supportURL) {
                             HStack(spacing: 9) {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(SalahTheme.teal)
+                                SalahFeatureIcon(kind: "info")
                                     .frame(width: 28, height: 28)
-                                    .background(SalahTheme.softTeal, in: Circle())
+                                    .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
                                 Text(settings.t("Support", "Destek"))
                                     .font(.system(size: 11.5, weight: .semibold))
@@ -849,10 +845,12 @@ struct SettingsView: View {
                     .font(.system(size: 9.5, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.82))
                 HStack(spacing: 5) {
-                    Image(systemName: "globe")
+                    SalahFeatureIcon(kind: "language")
+                        .frame(width: 13, height: 13)
                     Text(settings.language.title)
                     Text("·")
-                    Image(systemName: settings.prayerAudience == .male ? "person.fill" : "person.fill")
+                    SalahFeatureIcon(kind: "profile")
+                        .frame(width: 13, height: 13)
                     Text(settings.prayerAudience.title(settings.language))
                 }
                 .font(.system(size: 8.5, weight: .bold))
@@ -886,11 +884,9 @@ struct SettingsView: View {
 
     private func profileRow(icon: String, title: String, value: String, showsChevron: Bool = true) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: settingsFeatureKind(for: icon))
                 .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -914,11 +910,9 @@ struct SettingsView: View {
 
     private func referenceToggle(icon: String, title: String, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 9) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: settingsFeatureKind(for: icon))
                 .frame(width: 28, height: 28)
-                .background(SalahTheme.softTeal, in: Circle())
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
             Text(title)
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -951,6 +945,37 @@ struct SettingsView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 7)
         .overlay(alignment: .bottom) { Divider().padding(.leading, 12).opacity(0.34) }
+    }
+
+    private func settingsFeatureKind(for icon: String) -> String {
+        switch icon {
+        case "globe":
+            return "language"
+        case "person.2.fill":
+            return "profile"
+        case "wand.and.stars":
+            return "sparkles"
+        case "circle.lefthalf.filled":
+            return "settings"
+        case "clock.fill", "24.circle.fill", "clock.badge.checkmark":
+            return "times"
+        case "waveform":
+            return "quran_audio"
+        case "text.bubble.fill", "character.cursor.ibeam", "doc.text.fill":
+            return "quran"
+        case "arrow.down.circle.fill":
+            return "quran_audio"
+        case "bell.fill":
+            return "reminder"
+        case "speaker.wave.3.fill":
+            return "sound"
+        case "fajr", "dhuhr", "asr", "maghrib", "isha":
+            return icon
+        case "location.fill", "mappin.and.ellipse":
+            return "qibla"
+        default:
+            return "info"
+        }
     }
 
     private var statusText: String {
