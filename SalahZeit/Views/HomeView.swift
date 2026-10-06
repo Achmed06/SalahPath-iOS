@@ -1341,12 +1341,9 @@ struct HomeView: View {
                 PrayerTrackerOverviewView()
             } label: {
                 HStack(spacing: 7) {
-                    ZStack {
-                        Circle().fill(SalahTheme.softTeal).frame(width: 22, height: 22)
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(SalahTheme.teal)
-                    }
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 24, height: 24)
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 1) {
                         Text(settings.t("Heutige Gebete markieren", "Bugün namazları işaretle"))
@@ -2946,28 +2943,14 @@ struct ReferenceDashboardGlyph: View {
 
         case "quran_audio":
             return AnyView(
-                ZStack {
-                    ReferenceDashboardGlyph(kind: "quran")
-                        .scaleEffect(0.78)
-                        .offset(x: -3, y: 1)
-                    Image(systemName: "speaker.wave.2.fill")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(SalahTheme.gold)
-                        .offset(x: 10, y: -9)
-                }
+                SalahFeatureIcon(kind: "quran_audio")
+                    .frame(width: 31, height: 31)
             )
 
         case "bookmarks":
             return AnyView(
-                ZStack {
-                    RoundedRectangle(cornerRadius: 5, style: .continuous)
-                        .fill(SalahTheme.teal)
-                        .frame(width: 23, height: 28)
-                    Image(systemName: "bookmark.fill")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(SalahTheme.cream)
-                        .offset(y: -1)
-                }
+                SalahFeatureIcon(kind: "bookmarks")
+                    .frame(width: 31, height: 31)
             )
 
         case "dhikr":
