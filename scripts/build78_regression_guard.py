@@ -1078,6 +1078,10 @@ for token in (
     'Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir',
     'wenn versehentlich ein Rukn verzögert, wiederholt oder vorgezogen',
     'Bir rüknün yanılarak geciktirilmesi, tekrarlanması veya öne alınması',
+    'Niyyah und Bismillāh sind Sunnah; das Wudu bleibt ohne sie gültig',
+    'Diğer üç Sünnî mezhepte ise abdest için niyet farzdır',
+    'Die anderen drei sunnitischen Rechtsschulen stufen die Tilāwah-Secde als Sunnah ein',
+    'Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
