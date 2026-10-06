@@ -1110,6 +1110,14 @@ for forbidden in (
         fail(f"visual/copy consistency regression: legacy decorative pattern returned: {forbidden}")
 
 for forbidden in (
+    'DashboardTile(title: settings.t("Einstellungen", "Ayarlar"), subtitle: settings.t("Einstellungen", "Ayarlar"), icon: "settings")',
+    'Kleine Schritte bringen große Veränderungen.',
+    'Küçük adımlar büyük değişimler getirir.',
+):
+    if forbidden in home:
+        fail(f"duplicate home UI regression: found {forbidden}")
+
+for forbidden in (
     'Image(systemName: settings.prayerAudience == audience ? "person.fill" : "person.fill")',
     'Image(systemName: "globe")',
 ):
