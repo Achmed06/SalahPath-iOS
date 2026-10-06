@@ -620,7 +620,7 @@ for forbidden in (
 
 for token in (
     '.frame(width: 25, height: 25)',
-    'Küçük adımlar büyük değişimler getirir.',
+    '“Küçük adımlar, büyük değişimler getirir.”',
 ):
     if token not in home:
         fail(f"home premium polish regression: missing {token}")
