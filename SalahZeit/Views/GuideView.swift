@@ -355,8 +355,10 @@ struct GuideView: View {
             return "quran"
         case "play.square.stack.fill":
             return "quran_audio"
-        case "hands.sparkles.fill":
+        case "hands.sparkles.fill", "circle.grid.cross.fill", "sunrise.fill":
             return "dhikr"
+        case "character.book.closed.fill":
+            return "language"
         case "map.fill":
             return "qibla"
         case "calendar.badge.plus":
@@ -2095,9 +2097,11 @@ struct GhuslGuideView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Die 3 Fard im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Die 3 Fard im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"),
+                        iconKind: "checkmark",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     numbered("1", settings.t(
                         "Den Mund vollständig ausspülen, sodass Wasser den ganzen Mundraum erreicht.",
@@ -2122,8 +2126,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Vollständiger Sunnah-Ablauf", "Sünnete uygun tam uygulama"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Vollständiger Sunnah-Ablauf", "Sünnete uygun tam uygulama"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     step("1", settings.t("Absicht fassen und Bismillah sagen.", "Niyet et ve besmele çek."))
                     step("2", settings.t("Hände waschen. Sichtbare Verunreinigung am Körper entfernen und Intimbereich reinigen.", "Ellerini yıka. Bedendeki görünen necaseti gider ve avret bölgesini temizle."))
@@ -2137,8 +2144,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(settings.t("Haare & Frauen", "Saç ve kadınlar"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Haare & Frauen", "Saç ve kadınlar"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     Text(settings.t(
                         "Das Wasser muss die Kopfhaut und die Haarwurzeln erreichen. Bei zusammengebundenen oder geflochtenen Haaren ist entscheidend, dass Wasser die Wurzeln erreicht; unnötiges Erschweren soll vermieden werden. Bei konkreten Fragen zu sehr dichtem Haar, Extensions oder wasserundurchlässigen Produkten die hanafitische Regel gezielt prüfen.",
                         "Su saç derisine ve saç diplerine ulaşmalıdır. Toplu veya örgülü saçta önemli olan suyun köklere ulaşmasıdır; gereksiz zorluk çıkarılmaz. Çok sık saç, ek saç veya su geçirmeyen ürünler gibi özel durumda Hanefî hükmü ayrıca kontrol edilmelidir."
@@ -2148,8 +2158,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(settings.t("Brauche ich danach noch Wudu?", "Sonra yeniden abdest gerekir mi?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Brauche ich danach noch Wudu?", "Sonra yeniden abdest gerekir mi?"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
                     Text(settings.t(
                         "Ein gültiger Ghusl umfasst auch Wudu. Wenn während oder nach dem Ghusl nichts passiert, was Wudu bricht, ist danach kein zusätzliches Wudu nötig.",
                         "Geçerli bir gusül abdesti de kapsar. Gusül sırasında veya sonrasında abdesti bozan bir durum olmazsa ayrıca yeniden abdest almak gerekmez."
@@ -2192,7 +2205,11 @@ struct GhuslGuideView: View {
 
     private var sourceNote: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Quelle & Einordnung", "Kaynak ve açıklama"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.t(
                 "Qur'an 4:43 und 5:6 · Diyanet Din İşleri Yüksek Kurulu: Ghusl/Boy abdesti. Darstellung: hanafitischer Grundablauf.",
                 "Kur'an 4:43 ve 5:6 · Diyanet Din İşleri Yüksek Kurulu: Gusül/boy abdesti. Anlatım: Hanefî temel uygulama."
@@ -2223,8 +2240,11 @@ struct TayammumGuideView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Wann darf ich Tayammum machen?", "Ne zaman teyemmüm yapılır?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Wann darf ich Tayammum machen?", "Ne zaman teyemmüm yapılır?"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     bullet(settings.t("Es ist kein ausreichendes Wasser erreichbar.", "Yeterli su bulunamıyor veya ulaşılamıyor."))
                     bullet(settings.t("Wasser zu benutzen würde wegen Krankheit oder Verletzung voraussichtlich schaden.", "Hastalık veya yara nedeniyle su kullanmak zarar verecek."))
                     bullet(settings.t("Eine anerkannte Unmöglichkeit der Wassernutzung liegt vor; bloße Bequemlichkeit reicht nicht.", "Suyu kullanmaya gerçek bir engel var; yalnız kolaylık istemek yeterli değildir."))
@@ -2232,9 +2252,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Tayammum Schritt für Schritt", "Teyemmüm adım adım"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Tayammum Schritt für Schritt", "Teyemmüm adım adım"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     step("1", settings.t(
                         "Fasse die Absicht, Tayammum für Wudu oder Ghusl zu machen.",
@@ -2264,8 +2286,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Was beendet Tayammum?", "Teyemmümü ne bozar?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Was beendet Tayammum?", "Teyemmümü ne bozar?"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     bullet(settings.t("Alles, was normalerweise Wudu bricht, beendet auch Tayammum.", "Abdesti bozan şeyler teyemmümü de bozar."))
                     bullet(settings.t("Wenn wieder ausreichend Wasser verfügbar und nutzbar wird, endet die Tayammum-Erlaubnis.", "Yeterli su bulunur ve kullanılabilir hale gelirse teyemmüm ruhsatı sona erer."))
                     bullet(settings.t("Wenn der medizinische oder andere Grund entfällt, der Wasser unmöglich machte, endet die Ersatzregel.", "Suyu kullanmaya engel olan hastalık veya diğer mazeret ortadan kalkarsa teyemmüm hükmü sona erer."))
@@ -2273,7 +2298,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
+                    TutorialSectionHeader(
+                title: settings.t("Quelle & Einordnung", "Kaynak ve açıklama"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
                     Text(settings.t(
                         "Qur'an 4:43 und 5:6 · Diyanet Din İşleri Yüksek Kurulu: Tayammum. Darstellung: hanafitischer Grundablauf.",
                         "Kur'an 4:43 ve 5:6 · Diyanet Din İşleri Yüksek Kurulu: Teyemmüm. Anlatım: Hanefî temel uygulama."
@@ -7402,8 +7431,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventMeaningCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text(settings.t("Was bedeutet dieser Tag?", "Bu gün ne anlama gelir?"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Was bedeutet dieser Tag?", "Bu gün ne anlama gelir?"),
+                iconKind: "calendar",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.language == .german ? event.deMeaning : event.trMeaning)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -7413,13 +7445,17 @@ private struct IslamicCalendarEventDetailView: View {
     private var eventRecommendationsCard: some View {
         let items = settings.language == .german ? event.deRecommended : event.trRecommended
         return VStack(alignment: .leading, spacing: 10) {
-            Text(settings.t("Was ist empfohlen?", "Neler tavsiye edilir?"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Was ist empfohlen?", "Neler tavsiye edilir?"),
+                iconKind: "checkmark",
+                tint: SalahTheme.deepTeal
+            )
 
             ForEach(items.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 9) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 18, height: 18)
+                        .padding(.top, 1)
                     Text(items[index])
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -7430,12 +7466,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventCautionCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(
-                settings.t("Nicht verwechseln", "Karıştırma"),
-                systemImage: "exclamationmark.triangle.fill"
+            TutorialSectionHeader(
+                title: settings.t("Nicht verwechseln", "Karıştırma"),
+                iconKind: "info",
+                tint: SalahTheme.gold
             )
-            .font(.headline)
-            .foregroundStyle(SalahTheme.gold)
 
             Text(settings.language == .german ? event.deCaution : event.trCaution)
                 .font(.subheadline)
@@ -7446,8 +7481,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventSourceCard: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(settings.t("Quelle & Kalenderhinweis", "Kaynak ve takvim notu"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Quelle & Kalenderhinweis", "Kaynak ve takvim notu"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.t(
                 "Religiöse Einordnung nach Qur'an, Hadithquellen und Diyanet-Grunddarstellung. Bei Überlieferungen können unterschiedliche Einstufungen bestehen. Das angezeigte Hijri-Datum wird mit Umm-al-Qura berechnet; regionale Mondsichtung kann den tatsächlichen Monatsbeginn verschieben.",
                 "Dinî açıklama Kur'an, hadis kaynakları ve Diyanet temel anlatımına dayanır. Rivayetlerin değerlendirilmesinde farklılıklar bulunabilir. Gösterilen hicrî tarih Ummü'l-Kurâ hesabıdır; bölgesel hilal gözlemi gerçek ay başlangıcını değiştirebilir."
@@ -8644,11 +8682,10 @@ struct DhikrView: View {
     }
 
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .accessibilityHidden(true)
+        HStack(spacing: 10) {
+            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+                .frame(width: 24, height: 24)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
             Text(title)
                 .font(.custom("AvenirNext-DemiBold", size: 13.1))
