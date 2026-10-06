@@ -1615,10 +1615,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Jungen:",
                     "Erkek çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhü lenâ feratan, Allâhümme'c-alhü lenâ ecran ve zuhran, Allâhümme'c-alhü lenâ şefî'an müşeffe'an. Birahmetike yâ erhamer-râhimîn.")
+                Text("Allâhümme'c-alhü lenâ feratan, vec'alhü lenâ ecran ve zuhran, vec'alhü lenâ şefî'an müşeffe'an.")
 
                 Divider()
 
@@ -1626,10 +1626,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Mädchen:",
                     "Kız çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhâ lenâ feratan, Allâhümme'c-alhâ lenâ ecran ve zuhran, Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten. Birahmetike yâ erhamer-râhimîn.")
+                Text("Allâhümme'c-alhâ lenâ feratan, vec'alhâ lenâ ecran ve zuhran, vec'alhâ lenâ şefî'aten müşeffe'aten.")
 
                 Text(settings.t(
                     "Sinngemäß: O Allah, mache dieses Kind zu einem vorausgesandten Lohn und Vorrat für uns und zu einem Fürsprecher, dessen Fürsprache angenommen wird.",
