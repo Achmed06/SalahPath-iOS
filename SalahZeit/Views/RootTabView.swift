@@ -63,14 +63,33 @@ struct SalahFeatureIcon: View {
             return "feature_moon"
         case "language":
             return "feature_language"
-        case "more":
+        case "more", "downloads":
             return "feature_more"
-        case "sparkles":
+        case "sparkles", "backgrounds", "mindfulness":
             return "feature_sparkles"
         case "mosques", "map":
             return "home_mosque"
-        default:
+        case "videos":
+            return "feature_quran_audio"
+        case "history":
+            return "feature_times"
+        case "hadith", "articles", "courses":
+            return "feature_info"
+        case "donations":
+            return "feature_community"
+        case "light_mode":
+            return "feature_moon"
+        case "font_size":
+            return "feature_quran"
+        case "backup":
+            return "feature_settings"
+        case "back", "forward":
             return nil
+        default:
+            // Decorative/content icons must stay inside the SalahPath visual
+            // system. Unknown content therefore falls back to our own info
+            // artwork rather than an unrelated SF Symbol.
+            return "feature_info"
         }
     }
 
@@ -96,7 +115,7 @@ struct SalahFeatureIcon: View {
         case "sync": return "arrow.triangle.2.circlepath"
         case "back": return "chevron.left"
         case "forward": return "chevron.right"
-        default: return "square.dashed"
+        default: return "info.circle.fill"
         }
     }
 
