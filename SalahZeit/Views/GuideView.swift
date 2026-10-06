@@ -645,7 +645,7 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
         deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
         trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
-        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -680,7 +680,7 @@ private enum PrayerText {
         deLabel: "Mögliche Dua zwischen den Secden", trLabel: "İki secde arasında okunabilecek dua",
         arabic: "رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir lī",
         deMeaning: "Mein Herr, vergib mir.", trMeaning: "Rabbim, beni bağışla.",
-        deNote: "Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.", trNote: "Zorunlu bir söz değildir; kısa ve sakin oturuş atlanmamalıdır.")
+        deNote: "Freiwillige Dua.", trNote: "İsteğe bağlı duadır.")
 
     static let tahiyyat = PrayerRecitation(
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
@@ -980,8 +980,8 @@ struct PrayerHowToView: View {
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
-                        "Du siehst immer nur einen Schritt. Unten wechselst du eindeutig mit „Zurück“ und „Weiter“ zum vorherigen oder nächsten Schritt.",
-                        "Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“ düğmeleriyle önceki veya sonraki adıma geçersin."
+                        "Folge Bild, Haltung und Rezitation Schritt für Schritt.",
+                        "Görseli, duruşu ve okuyuşu adım adım takip et."
                     ))
                     .font(.subheadline)
                     .foregroundStyle(SalahTheme.ink)
@@ -1582,7 +1582,7 @@ private struct QunutDuaView: View {
                 .foregroundStyle(.secondary)
             }
             Section {
-                Text(settings.t("Die in der Türkei verbreiteten hanafitischen Qunūt-Texte für Witr. Arabischer Text und Lesefassung wurden gegen Diyanet-Lehrmaterial gegengeprüft; die Umschrift ist nur eine Aussprachehilfe.", "Türkiye'de yaygın Hanefî vitir Kunut metinleridir. Arapça metin ve okunuş Diyanet öğretim materyaliyle karşılaştırılmıştır; Latin harfli okunuş yalnız telaffuz yardımcısıdır."))
+                Text(settings.t("Hanafitische Qunūt-Texte für Witr. Die Umschrift dient nur als Aussprachehilfe.", "Vitir için Hanefî Kunut metinleridir. Latin harfli okunuş yalnızca telaffuz yardımcısıdır."))
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
@@ -11766,7 +11766,7 @@ private struct QuranSurahView: View {
 
     private var sourceFooter: some View {
         Text(settings.t(
-            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: menschliche Audioedition des Islamic Network.",
+            "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: Islamic Network.",
             "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
         ))
         .font(.caption2)
