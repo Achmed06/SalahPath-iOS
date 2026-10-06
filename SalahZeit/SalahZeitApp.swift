@@ -504,7 +504,9 @@ private struct OnboardingFlowView: View {
                             Text(audience.title(settings.language))
                                 .font(.headline)
                             Spacer()
-                            Image(systemName: settings.prayerAudience == audience ? "checkmark.circle.fill" : "circle")
+                            SalahFeatureIcon(kind: "checkmark")
+                                .frame(width: 22, height: 22)
+                                .opacity(settings.prayerAudience == audience ? 1 : 0.18)
                         }
                         .padding(12)
                     }
@@ -543,7 +545,11 @@ private struct OnboardingFlowView: View {
                     locationError = nil
                     locationManager.useDeviceLocation()
                 } label: {
-                    Label(settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"), systemImage: "location.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"),
+                        kind: "qibla",
+                        iconSize: 22
+                    )
                         .font(.headline.bold())
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
