@@ -3545,7 +3545,7 @@ struct HajjUmrahGuideView: View {
                     "Der Umrah-Tawaf ist Farḍ. Saʿy ist im Hanafi-Madhhab wājib und folgt einem gültigen Tawaf.",
                     "Nach dem Tawaf sind zwei Rakʿāt Tawaf-Gebet im Hanafi-Madhhab wājib. Sie gehören nicht zu den Gültigkeitsbedingungen des Tawaf.",
                     "Tawaf, Saʿy und anschließendes Haarkürzen möglichst ohne unnötige lange Unterbrechung nacheinander durchführen; diese unmittelbare Reihenfolge ist Sunnah.",
-                    "Rituelle Reinheit beim Tawaf ist nicht bloß eine Empfehlung: Im Hanafi-Madhhab ist Wudu für jeden Tawaf wajib; in den drei anderen sunnitischen Rechtsschulen wird sie als Fard/Bed­ingung behandelt.",
+                    "Rituelle Reinheit beim Tawaf ist nicht bloß eine Empfehlung: Im Hanafi-Madhhab ist Wudu für jeden Tawaf wajib; in den drei anderen sunnitischen Rechtsschulen wird sie als Fard/Bedingung behandelt.",
                     "Menstruation oder Nifas verhindern den Eintritt in den Ihram nicht. Der Ihram wird vor dem Miqat mit Niyyah/Talbiyah begonnen; der Tawaf wird bis zur rituellen Reinheit aufgeschoben."
                 ] : [
                     "Umre tavafı farzdır. Sa'y Hanefî mezhebinde vaciptir ve geçerli bir tavaftan sonra yapılır.",
@@ -4563,13 +4563,15 @@ struct IlmihalDirectoryView: View {
         dePoints: [
             "Täuschung, Betrug, Bestechung und unrechtmäßige Aneignung sind keine legitimen Erwerbswege.",
             "Verträge und Versprechen sollen klar und eingehalten werden.",
-            "Riba/Zinsfragen sind juristisch differenziert; konkrete moderne Finanzprodukte müssen einzeln geprüft werden.",
+            "Riba ist im Quran verboten. Diyanet ordnet insbesondere vertraglich vereinbarte Mehrleistung auf ein Darlehen sowie klassische verzinste Kredite und verzinste Termineinlagen als verbotenen Zins ein; die Höhe im Verhältnis zur Inflation ändert diese Einordnung nicht.",
+            "Moderne Finanzprodukte dürfen trotzdem nicht nur nach ihrem Werbenamen beurteilt werden: Vertragsstruktur, Kauf/Verkauf, tatsächliches Risiko, Gebühren und Finanzierung müssen im konkreten Produkt geprüft werden.",
             "Arbeitnehmer und Arbeitgeber tragen wechselseitige Rechte und Pflichten."
         ],
         trPoints: [
             "Aldatma, hile, rüşvet ve haksız mal edinme meşru kazanç değildir.",
             "Akitler ve verilen sözler açık olmalı ve yerine getirilmelidir.",
-            "Faiz/riba meseleleri ayrıntılıdır; modern finans ürünleri tek tek değerlendirilmelidir.",
+            "Riba Kur'an'da yasaklanmıştır. Diyanet özellikle borç karşılığında önceden şart koşulan fazlalığı, klasik faizli kredileri ve faizli vadeli mevduatı haram faiz olarak değerlendirir; oranın enflasyonun altında veya üstünde olması bu hükmü değiştirmez.",
+            "Bununla birlikte modern finans ürünleri yalnız pazarlama adına bakılarak sınıflandırılmamalıdır; akit yapısı, gerçek alım-satım, risk, ücret ve finansman biçimi ürün bazında incelenmelidir.",
             "İşçi ve işverenin karşılıklı hak ve sorumlulukları vardır."
         ]
     )
@@ -7070,7 +7072,7 @@ struct FastingBasicsView: View {
                 learningText(
                     settings.t("Wann beginnt es?", "Ne zaman başlar?"),
                     settings.t(
-                        "Das Fasten beginnt mit dem echten Fajr / Im­sak. Suhoor muss vorher beendet sein. 'Sonnenaufgang' ist zu spät.",
+                        "Das Fasten beginnt mit dem echten Fajr / Imsak. Suhoor muss vorher beendet sein. 'Sonnenaufgang' ist zu spät.",
                         "Oruç fecr-i sâdık / imsak ile başlar. Sahur bundan önce bitmiş olmalıdır. Güneşin doğuşunu beklemek doğru değildir."
                     )
                 )
