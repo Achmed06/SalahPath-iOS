@@ -625,7 +625,7 @@ private enum PrayerText {
         deLabel: "Mögliche Dua zwischen den Secden", trLabel: "İki secde arasında okunabilecek dua",
         arabic: "رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir lī",
         deMeaning: "Mein Herr, vergib mir.", trMeaning: "Rabbim, beni bağışla.",
-        deNote: "Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.", trNote: "Zorunlu bir söz değildir; kısa ve sakin oturuş atlanmamalıdır.")
+        deNote: "Hanafi/Diyanet: „Rabbighfir lī“ ist hier keine Pflichtformel. Die ruhige Calsa zwischen den zwei Sujūd ist nach der bevorzugten hanafitischen Auffassung wajib; andere sunnitische Rechtsschulen stufen sie als Fard ein.", trNote: "Hanefî/Diyanet: „Rabbighfir lî“ burada zorunlu bir söz değildir. İki secde arasındaki sakin celse, Hanefî mezhebinde tercih edilen görüşe göre vaciptir; diğer Sünnî mezheplerde farzdır.")
 
     static let tahiyyat = PrayerRecitation(
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
