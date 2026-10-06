@@ -2947,94 +2947,6 @@ struct PrayerCatalogView: View {
                 source: "Diyanet · Din İşleri Yüksek Kurulu · 2026 Hasta Namazı"
             ),
             .init(
-                id: "tilawah_sajdah", group: "special",
-                deTitle: "Tilāwah-Sujud · Rezitationsniederwerfung", trTitle: "Tilâvet Secdesi",
-                deRuling: "Hanafi: wajib bei entsprechender Ayah", trRuling: "Hanefî: secde ayetinde vacip", rakaLabel: "1 Sujud",
-                deSummary: "Eine einzelne Niederwerfung nach dem Lesen oder Hören einer Sajdah-Ayah; sie ist kein eigenständiges Gebet mit Rakʿāt.",
-                trSummary: "Secde ayeti okununca veya dinlenince yapılan tek secdedir; rekâtlı ayrı bir namaz değildir.",
-                deSteps: [
-                    "Außerhalb des Gebets gelten Tahāra, Qibla, Niyyah und Bedeckung der ʿAwrah wie beim Gebet.",
-                    "Ohne Händeheben „Allāhu akbar“ sagen und einmal in den Sujud gehen.",
-                    "Im Sujud dreimal „Subḥāna rabbiyal-aʿlā“ sagen.",
-                    "Mit „Allāhu akbar“ wieder aufstehen. Danach gibt es weder Tashahhud-Sitzen noch Salām."
-                ],
-                trSteps: [
-                    "Namaz dışında abdest, kıble, niyet ve avret yerlerinin örtülü olması gibi namaz şartları aranır.",
-                    "Elleri kaldırmadan „Allāhu ekber“ diyerek bir defa secdeye gidilir.",
-                    "Secdede üç defa „Sübhâne rabbiye'l-a'lâ“ denir.",
-                    "„Allāhu ekber“ diyerek kalkılır. Sonrasında teşehhüt oturuşu ve selâm yoktur."
-                ],
-                deNotes: ["Im laufenden Gebet gelten besondere Regeln dafür, ob unmittelbar Sujud gemacht oder bei zeitnahem Rukūʿ die Tilāwah-Sujud-Niyyah mit dem Rukūʿ verbunden wird."],
-                trNotes: ["Namaz içinde secde ayetinden sonra kıraate devam edilip edilmeyeceğine göre doğrudan secde veya rükû ile ilgili ayrı hükümler vardır."],
-                source: "Diyanet · Din İşleri Yüksek Kurulu"
-            ),
-            .init(
-                id: "tahajjud", group: "special",
-                deTitle: "Tahajjud · Nachtgebet", trTitle: "Teheccüd Namazı",
-                deRuling: "Nafila / Sunnah", trRuling: "Nafile / sünnet", rakaLabel: "2–8+",
-                deSummary: "Freiwilliges Nachtgebet nach Isha, klassisch nach einer Schlafphase in der Nacht.",
-                trSummary: "Yatsıdan sonra, klasik tarifte bir süre uyuyup gece kalkarak kılınan nafile namaz.",
-                deSteps: [
-                    "Niyyah für Tahajjud fassen.",
-                    "Diyanet empfiehlt zwei bis acht Rakʿāt in gerader Zahl; mehr ist ebenfalls möglich.",
-                    "Jeweils zwei Rakʿāt mit Salām zu beenden ist vorzugswürdig.",
-                    "Eine 2-Rakʿāt-Einheit folgt dem normalen Nafila-Ablauf mit Fātiha und zusätzlicher Sura/Versen in beiden Rakʿāt."
-                ],
-                trSteps: [
-                    "Teheccüd namazına niyet et.",
-                    "Diyanet iki ile sekiz rekât arasında çift sayıda kılınmasını tavsiye eder; daha fazla da kılınabilir.",
-                    "İkişer rekâtta bir selâm vermek daha faziletlidir.",
-                    "Her iki rekâtlık bölüm normal nafile düzenine göre, iki rekâtta da Fâtiha ve zamm-ı sûre/ayetle kılınır."
-                ],
-                deNotes: ["Vor dem Schlaf gebetete freiwillige Nachtgebete werden eher allgemein als Nachtgebet bezeichnet; Tahajjud bezeichnet klassisch das Aufstehen nach Schlaf."],
-                trNotes: ["Uyumadan önce kılınan nafile gece namazı genel olarak gece namazıdır; teheccüd klasik olarak uykudan kalktıktan sonra kılınır."],
-                source: "Diyanet · Din İşleri Yüksek Kurulu"
-            ),
-            .init(
-                id: "duha", group: "special",
-                deTitle: "Duha / Kuşluk", trTitle: "Duha / Kuşluk Namazı",
-                deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "2–12",
-                deSummary: "Freiwilliges Vormittagsgebet nach Ende der verbotenen Sonnenaufgangszeit und vor Dhuhr.",
-                trSummary: "Güneş doğuşundaki kerahat vakti çıktıktan sonra öğle vaktinden önce kılınan nafile namaz.",
-                deSteps: [
-                    "Diyanet nennt als praktische Zeit ungefähr 40–50 Minuten nach Sonnenaufgang bis ungefähr 10 Minuten vor Dhuhr.",
-                    "Es können zwei bis zwölf Rakʿāt gebetet werden.",
-                    "Jeweils zwei Rakʿāt mit Salām zu beenden ist eine einfache und empfohlene Form.",
-                    "Die einzelnen 2-Rakʿāt-Einheiten folgen dem normalen Nafila-Ablauf."
-                ],
-                trSteps: [
-                    "Diyanet uygulamada güneş doğduktan yaklaşık 40–50 dakika sonrasından öğleye yaklaşık 10 dakika kalıncaya kadar olan vakti belirtir.",
-                    "İki rekâttan on iki rekâta kadar kılınabilir.",
-                    "İkişer rekâtta bir selâm vermek kolay ve tavsiye edilen uygulamadır.",
-                    "Her iki rekâtlık bölüm normal nafile namaz düzenine göre kılınır."
-                ],
-                deNotes: ["Nicht direkt während der verbotenen Zeit um den Sonnenaufgang beginnen."],
-                trNotes: ["Güneşin doğuşundaki kerahat vaktinde başlanmaz."],
-                source: "Diyanet · Din İşleri Yüksek Kurulu"
-            ),
-            .init(
-                id: "istikhara", group: "special",
-                deTitle: "Istikhāra · Entscheidungsgebet", trTitle: "İstihâre Namazı",
-                deRuling: "Mendūb / Nafila", trRuling: "Mendup / nafile", rakaLabel: "2",
-                deSummary: "Zwei freiwillige Rakʿāt und anschließend Istikhāra-Dua, wenn bei einer erlaubten Entscheidung unklar ist, was besser ist.",
-                trSummary: "Mubah bir konuda hangisinin hayırlı olduğu bilinmediğinde iki rekât namaz ve ardından istihâre duası.",
-                deSteps: [
-                    "Zwei Rakʿāt Nafila mit Istikhāra-Niyyah beten.",
-                    "Diyanet nennt in der ersten Rakʿah nach Fātiha Al-Kāfirūn und in der zweiten nach Fātiha Al-Ikhlāṣ als empfohlene Rezitation.",
-                    "Nach dem Gebet die Istikhāra-Dua sprechen und Allah um das Gute in der betreffenden Angelegenheit bitten.",
-                    "Istikhāra ist nicht dafür gedacht, zwischen eindeutig erlaubtem Guten und eindeutig Verbotenem zu entscheiden."
-                ],
-                trSteps: [
-                    "İstihâre niyetiyle iki rekât nafile namaz kıl.",
-                    "Diyanet birinci rekâtta Fâtiha'dan sonra Kâfirûn, ikinci rekâtta Fâtiha'dan sonra İhlâs okunmasını tavsiye eder.",
-                    "Namazdan sonra istihâre duasını okuyup söz konusu işin hayırlısını Allah'tan iste.",
-                    "İyi olduğu açık olan ibadetlerle haram olduğu açık olan işler arasında karar vermek için istihâre yapılmaz."
-                ],
-                deNotes: ["Ein Traum nach Istikhāra ist keine Voraussetzung; Diyanet sagt ausdrücklich, dass die verbreitete Traumdeutung dafür keine Grundlage hat."],
-                trNotes: ["İstihâreden sonra rüya görmek şart değildir; Diyanet rüyayı iyiye veya kötüye yormanın dayanağı olmadığını açıkça belirtir."],
-                source: "Diyanet · Din İşleri Yüksek Kurulu"
-            ),
-            .init(
                 id: "tasbih_prayer", group: "special",
                 deTitle: "Tasbih-Gebet", trTitle: "Tesbih Namazı",
                 deRuling: "Nafila", trRuling: "Nafile", rakaLabel: "4",
@@ -4931,7 +4843,7 @@ struct ThirtyTwoFardView: View {
             .init(
                 deTitle: "2 Fard des Tayammum",
                 trTitle: "Teyemmümün 2 farzı",
-                deItems: ["Absicht fassen", "Mit sauberer Erde oder erdähnlicher Oberfläche die vorgeschriebenen Wischhandlungen ausführen"],
+                deItems: ["Absicht fassen", "Mit sauberer Erde oder etwas, das zur Erdsubstanz zählt, die vorgeschriebenen Wischhandlungen ausführen"],
                 trItems: ["Niyet etmek", "Temiz toprağa elleri vurup gerekli meshleri yapmak"]
             ),
             .init(
