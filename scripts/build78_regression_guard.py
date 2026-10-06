@@ -1087,6 +1087,8 @@ for token in (
     'Eine Janazah, die erst während dieser Zeit vorbereitet wurde, darf gebetet werden',
     'Secde ayeti bu vakitte okunmuşsa tilavet secdesi yapılabilir',
     'Ab dem Zeitpunkt, an dem der Khatīb am Freitag die Minbar besteigt',
+    'Die ruhige Calsa zwischen den zwei Sujūd ist nach der bevorzugten hanafitischen Auffassung wajib',
+    'İki secde arasındaki sakin celse, Hanefî mezhebinde tercih edilen görüşe göre vaciptir',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
