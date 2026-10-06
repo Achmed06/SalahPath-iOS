@@ -952,7 +952,7 @@ for token in (
     'source: "Hisn al-Muslim 87"',
     'Freiwilliger Geschlechtsverkehr während eines gültig begonnenen Ramadan-Fastens',
     'In der schafiitischen Einordnung kann bei Sorge nur um das Kind zusätzlich Fidya erforderlich sein.',
-    'Teşrik tekbirleri sind für Frauen und Männer wājib',
+    'Tashrīq-Takbīre sind für Frauen und Männer wājib',
     'insgesamt 23 Gebetszeiten',
     'Fasten an diesen vier Kurban-/Tashrīq-Tagen ist tahrīman makrūh',
     'Riba ist im Quran verboten.',
