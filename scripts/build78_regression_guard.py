@@ -248,6 +248,7 @@ for token in (
     'SalahFeatureIconLabel(title: settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), kind: "list"',
     'SalahFeatureIconLabel(title: localizedEventTitle, kind: "moon"',
     'deLabel: "Salām", trLabel: "Selâm"',
+    'deNote: "Âmîn gehört nicht zum Qurantext der Fātiha.", trNote: "Âmin Fâtiha sûresinin Kur\'an metnine dahil değildir.")',
     'deNote: nil, trNote: nil',
 ):
     if token not in guide:
@@ -260,6 +261,11 @@ for forbidden in (
     'systemImage: "text.bubble.fill"',
     'private func salamDirection(number: String, direction: String, imageName: String, instruction: String)',
     'Text(instruction)',
+    'Wortlaut und Audio findest du zusätzlich im Quran-Bereich.',
+    'Nur ein Beispiel. Eine andere passende Sura oder Quranverse sind ebenfalls möglich.',
+    'Hanafi: Imam und allein Betender sagen dies beim Aufrichten.',
+    'Hanafi: Der Mitbetende hinter dem Imam sagt dies',
+    'Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.',
     'SalahPath verwendet diesen Bereich',
     'SalahPath entscheidet hier nicht',
     'SalahPath soll',
