@@ -348,7 +348,7 @@ struct QiblaView: View {
 
     private var qiblaLocationLabel: String {
         if isScreenshotQA {
-            return settings.t("Köln · QA-Teststandort", "Köln · QA test konumu")
+            return "Köln"
         }
 
         if locationManager.usesManualLocation,

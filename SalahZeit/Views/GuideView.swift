@@ -355,8 +355,10 @@ struct GuideView: View {
             return "quran"
         case "play.square.stack.fill":
             return "quran_audio"
-        case "hands.sparkles.fill":
+        case "hands.sparkles.fill", "circle.grid.cross.fill", "sunrise.fill":
             return "dhikr"
+        case "character.book.closed.fill":
+            return "language"
         case "map.fill":
             return "qibla"
         case "calendar.badge.plus":
@@ -590,7 +592,7 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
         deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
         trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
-        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Hanafi: Wer einem Imam folgt, rezitiert Fātiha und Zusatzsura nicht selbst. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Hanefî: İmama uyan kişi Fâtiha ve zamm-ı sûreyi kendisi okumaz. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
@@ -608,13 +610,13 @@ private enum PrayerText {
         deLabel: "Beim Aufrichten", trLabel: "Doğrulurken",
         arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Semi'allāhu limen hamideh",
         deMeaning: "Allah hört den, der Ihn lobt.", trMeaning: "Allah kendisine hamd edeni işitir.",
-        deNote: "Hanafi: Imam und allein Betender sagen dies beim Aufrichten.", trNote: "Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.")
+        deNote: nil, trNote: nil)
 
     static let upright = PrayerRecitation(
         deLabel: "Vollständig aufgerichtet", trLabel: "Tam doğrulunca",
         arabic: "رَبَّنَا لَكَ الْحَمْدُ", transliteration: "Rabbenâ lekel-hamd",
         deMeaning: "Unser Herr, Dir gebührt das Lob.", trMeaning: "Rabbimiz, hamd Sana mahsustur.",
-        deNote: "Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.", trNote: "Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.")
+        deNote: nil, trNote: nil)
 
     static let sujud = PrayerRecitation(
         deLabel: "In der Secde", trLabel: "Secdede",
@@ -873,8 +875,8 @@ struct PrayerHowToView: View {
                 trTitle: "2. rekâttan sonra oturuş",
                 deAction: "Bleibe nach der zweiten Secde sitzen. Endet dein Gebet nach zwei Rakʿāt, ist dies das vollständige Schluss-Sitzen: Ettehiyyâtü, danach Allahümme Salli, Allahümme Bârik und eine Abschlussdua wie Rabbenâ Âtinâ. Bei einem 3-/4-Rakʿāt-Fard liest du hier Ettehiyyâtü und stehst anschließend mit Allāhu akbar zur nächsten Rakʿah auf.",
                 trAction: "İkinci secdeden sonra oturmaya devam et. Namazın iki rekâtta bitiyorsa bu son oturuştur: Ettehiyyâtü, ardından Allâhümme Salli, Allâhümme Bârik ve Rabbenâ Âtinâ gibi bir dua okunur. 3/4 rekât farz devam ediyorsa burada Ettehiyyâtü okunur ve sonra Allāhu ekber diyerek sonraki rekâta kalkılır.",
-                deHanafi: "Die folgenden Schritte 17 und 18 beenden ein Gebet, das an dieser Stelle endet.",
-                trHanafi: "Aşağıdaki 17. ve 18. adımlar burada biten namazı selâmla tamamlar.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.tahiyyat, PrayerText.salli, PrayerText.barik, PrayerText.rabbana]
             ),
             .init(
@@ -885,8 +887,8 @@ struct PrayerHowToView: View {
                 trTitle: "Selâm – önce sağa",
                 deAction: "Der Oberkörper bleibt nach vorn. Drehe nur Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām einmal.",
                 trAction: "Gövde önde kalır. Yalnız başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı bir kez söyle.",
-                deHanafi: "Zuerst rechts. Danach folgt Schritt 18 nach links.",
-                trHanafi: "Önce sağa. Ardından 18. adımda sola dönülür.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.salam]
             ),
             .init(
@@ -897,8 +899,8 @@ struct PrayerHowToView: View {
                 trTitle: "Selâm – sonra sola",
                 deAction: "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut. Damit ist das Gebet beendet.",
                 trAction: "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle. Böylece namaz tamamlanır.",
-                deHanafi: "Reihenfolge: rechts, dann links.",
-                trHanafi: "Sıra: önce sağ, sonra sol.",
+                deHanafi: nil,
+                trHanafi: nil,
                 recitations: [PrayerText.salam]
             )
         ]
@@ -1225,17 +1227,17 @@ private struct PrayerTutorialStepCard: View {
 
     @ViewBuilder
     private var malePoseTip: some View {
-        if isMale, let imageName {
-            HStack(alignment: .center, spacing: 13) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 108, height: 118)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        if isMale, step.number == "16" {
+            HStack(alignment: .center, spacing: 12) {
+                PrayerPoseArtwork(assetName: "male_finger")
+                    .frame(width: 92, height: 120)
+                    .background(SalahTheme.cream)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(maleTipTitle)
                         .font(.subheadline.bold())
                         .foregroundStyle(maleHeader)
-                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(maleTipText)
                         .font(.caption)
@@ -1245,18 +1247,24 @@ private struct PrayerTutorialStepCard: View {
 
                 Spacer(minLength: 0)
             }
+            .padding(10)
+            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+        } else if isMale, step.deHanafi != nil {
+            VStack(alignment: .leading, spacing: 6) {
+                TutorialSectionHeader(
+                    title: maleTipTitle,
+                    iconKind: "info",
+                    tint: maleHeader
+                )
+
+                Text(maleTipText)
+                    .font(.caption)
+                    .foregroundStyle(maleMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             .padding(11)
-            .background(
-                LinearGradient(
-                    colors: [
-                        SalahTheme.cream,
-                        SalahTheme.softTeal.opacity(0.72)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 15, style: .continuous)
-            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
         }
     }
 
@@ -1281,9 +1289,7 @@ private struct PrayerTutorialStepCard: View {
             .background(isMale ? maleHeader : SalahTheme.navigationTeal)
 
             VStack(alignment: .leading, spacing: 13) {
-                if step.pose == .salam && !isMale {
-                    PrayerSalamVisual(side: step.imageKey == "salam_left" ? .left : .right)
-                } else if let imageName {
+                if let imageName {
                     PrayerPoseArtwork(assetName: imageName)
                         .frame(maxWidth: .infinity)
                         .frame(height: isMale ? 255 : (standingStylePose ? 236 : 220))
@@ -1402,69 +1408,6 @@ private struct PrayerRecitationView: View {
         }
         .padding(10)
         .background(SalahTheme.gold.opacity(0.07), in: RoundedRectangle(cornerRadius: 12))
-    }
-}
-
-private struct PrayerSalamVisual: View {
-    enum Side: Equatable {
-        case right
-        case left
-    }
-
-    @EnvironmentObject private var settings: SettingsStore
-    let side: Side
-
-    private var prefix: String { settings.prayerAudience == .male ? "male" : "female" }
-
-    var body: some View {
-        let isRight = side == .right
-        salamDirection(
-            number: isRight ? "1" : "2",
-            direction: isRight ? settings.t("RECHTS", "SAĞA") : settings.t("LINKS", "SOLA"),
-            imageName: "\(prefix)_\(isRight ? "salam_right" : "salam_left")",
-            instruction: isRight
-                ? settings.t(
-                    "Oberkörper bleibt nach vorn. Drehe Kopf und Gesicht zu deiner EIGENEN rechten Schulter und sprich den Salām.",
-                    "Gövde önde kalır. Başını ve yüzünü KENDİ sağ omzuna çevir ve selâmı söyle."
-                )
-                : settings.t(
-                    "Kehre über die Mitte zurück und drehe Kopf und Gesicht zu deiner EIGENEN linken Schulter. Sprich denselben Salām erneut.",
-                    "Ortadan geçerek başını ve yüzünü KENDİ sol omzuna çevir. Aynı selâmı tekrar söyle."
-                )
-        )
-        .accessibilityElement(children: .contain)
-    }
-
-    private func salamDirection(number: String, direction: String, imageName: String, instruction: String) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text(number)
-                    .font(.headline.bold())
-                    .foregroundStyle(SalahTheme.deepTeal)
-                    .frame(width: 32, height: 32)
-                    .background(SalahTheme.gold.opacity(0.82), in: Circle())
-                Text(direction)
-                    .font(.title2.bold())
-                    .foregroundStyle(SalahTheme.teal)
-                Spacer()
-            }
-
-            HStack(alignment: .center, spacing: 14) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 118, height: 150)
-                    .background(SalahTheme.cream)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-
-                Text(instruction)
-                    .font(.subheadline)
-                    .foregroundStyle(SalahTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-        }
-        .padding(11)
-        .background(SalahTheme.softTeal, in: RoundedRectangle(cornerRadius: 16))
-        .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 }
 
@@ -1745,8 +1688,11 @@ struct WuduGuideView: View {
 
                     if safeCurrentStepIndex == steps.count - 1 {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text(settings.t("Nach dem Wudu", "Abdestten sonra"))
-                                .font(.headline)
+                            TutorialSectionHeader(
+                                title: settings.t("Nach dem Wudu", "Abdestten sonra"),
+                                iconKind: "duas",
+                                tint: SalahTheme.deepTeal
+                            )
                             Text("أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ")
                                 .font(.title3)
                                 .multilineTextAlignment(.trailing)
@@ -1783,9 +1729,11 @@ struct WuduGuideView: View {
                         .cardStyle(material: true)
 
                         VStack(alignment: .leading, spacing: 9) {
-                            Text(settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"))
-                                .font(.headline.bold())
-                                .foregroundStyle(SalahTheme.deepTeal)
+                            TutorialSectionHeader(
+                                title: settings.t("Weitere rituelle Reinigung", "Diğer hükmî temizlikler"),
+                                iconKind: "wudu",
+                                tint: SalahTheme.deepTeal
+                            )
                             NavigationLink { GhuslGuideView() } label: {
                                 SalahFeatureIconLabel(title: settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), kind: "wudu")
                                     .font(.headline)
@@ -1987,29 +1935,31 @@ struct WuduGuideView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                DisclosureGroup(
-                    isExpanded: Binding(
-                        get: { expandedWuduSteps.contains(step.number) },
-                        set: { isExpanded in
-                            if isExpanded {
-                                expandedWuduSteps.insert(step.number)
-                            } else {
-                                expandedWuduSteps.remove(step.number)
+                if let detail = exactDetail(for: step.number) {
+                    DisclosureGroup(
+                        isExpanded: Binding(
+                            get: { expandedWuduSteps.contains(step.number) },
+                            set: { isExpanded in
+                                if isExpanded {
+                                    expandedWuduSteps.insert(step.number)
+                                } else {
+                                    expandedWuduSteps.remove(step.number)
+                                }
                             }
-                        }
-                    )
-                ) {
-                    Text(exactDetail(for: step.number))
-                        .font(.subheadline)
-                        .foregroundStyle(SalahTheme.mutedInk)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 5)
-                } label: {
-                    TutorialSectionHeader(
-                        title: settings.t("Ganz genau", "Ayrıntılı anlatım"),
-                        iconKind: "info",
-                        tint: SalahTheme.deepTeal
-                    )
+                        )
+                    ) {
+                        Text(detail)
+                            .font(.subheadline)
+                            .foregroundStyle(SalahTheme.mutedInk)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 5)
+                    } label: {
+                        TutorialSectionHeader(
+                            title: settings.t("Ganz genau", "Ayrıntılı anlatım"),
+                            iconKind: "info",
+                            tint: SalahTheme.deepTeal
+                        )
+                    }
                 }
             }
             .padding(16)
@@ -2033,34 +1983,28 @@ struct WuduGuideView: View {
         return settings.t("3× Sunnah", "3× Sünnet")
     }
 
-    private func exactDetail(for number: Int) -> String {
+    private func exactDetail(for number: Int) -> String? {
         let de: [Int: String] = [
             1: "Wasche Handflächen, Handrücken, Finger und Fingerzwischenräume bis einschließlich Handgelenk.",
             2: "Verteile das Wasser im ganzen Mundraum. Beim Fasten nicht so stark spülen oder gurgeln, dass Wasser verschluckt werden könnte.",
-            3: "Nimm das Wasser mit der rechten Hand zur Nase. Danach wird die Nase mit der linken Hand gereinigt bzw. geschnäuzt.",
-            4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
             5: "Wasche den Arm von allen Seiten. Achte besonders auf Ellenbogen und Hautfalten, damit keine trockene Stelle bleibt.",
-            6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
-            7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für den Fard das Wischen von mindestens einem Viertel des Kopfes. Den ganzen Kopf einmal zu wischen ist Sunnah.",
+            6: "Die rechte Hand unterstützt beim vollständigen Waschen des linken Arms bis einschließlich Ellenbogen.",
+            7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für den Fard das Wischen von mindestens einem Viertel des Kopfes; den ganzen Kopf einmal zu wischen ist Sunnah.",
             8: "Fahre mit feuchten Fingern vorsichtig durch die inneren Ohrkonturen und mit den Daumen über die Außenseiten; nichts tief in den Gehörgang einführen.",
-            9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
-            10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
-            11: "Reinige den linken Fuß genauso sorgfältig: Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume."
+            10: "Achte zusätzlich auf Oberseite, Sohle und Ferse; Knöchel und Zehenzwischenräume dürfen nicht trocken bleiben.",
+            11: "Achte zusätzlich auf Oberseite, Sohle und Ferse; Knöchel und Zehenzwischenräume dürfen nicht trocken bleiben."
         ]
         let tr: [Int: String] = [
             1: "Avuçları, el üstlerini, parmakları ve parmak aralarını bileklerle birlikte yıka.",
             2: "Suyu ağzın tamamında dolaştır. Oruçluyken suyun boğaza kaçmasına yol açacak kadar kuvvetli çalkalama veya gargara yapma.",
-            3: "Suyu sağ elinle burnuna ver. Ardından sol elle burnunu temizleyip sümkür.",
-            4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
             5: "Sağ kolu her tarafından yıka; dirsek ve deri kıvrımlarında kuru yer kalmamasına dikkat et.",
-            6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
-            7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî mezhebinde farz için başın en az dörtte birini mesh etmek yeterlidir; başın tamamını bir defa mesh etmek sünnettir.",
+            6: "Sağ el, sol kolu dirsek dahil tamamen yıkarken yardımcı olur.",
+            7: "Mesh, yıkamak değil ıslak elle silmektir. Hanefî mezhebinde farz için başın en az dörtte birini mesh etmek yeterlidir; başın tamamını bir defa mesh etmek sünnettir.",
             8: "Islak parmaklarla kulakların iç kıvrımlarını, başparmaklarla dış kısmını nazikçe mesh et; parmakları kulak kanalının derinine sokma.",
-            9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
-            10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
-            11: "Sol ayağı da aynı titizlikle yıka: üst, taban, topuk, iki aşık kemiği ve parmak araları."
+            10: "Ayrıca ayağın üstüne, tabanına ve topuğuna dikkat et; aşık kemikleri ve parmak aralarında kuru yer kalmasın.",
+            11: "Ayrıca ayağın üstüne, tabanına ve topuğuna dikkat et; aşık kemikleri ve parmak aralarında kuru yer kalmasın."
         ]
-        return settings.language == .german ? (de[number] ?? "") : (tr[number] ?? "")
+        return settings.language == .german ? de[number] : tr[number]
     }
 
     private func accessibilityDescription(for step: WuduTutorialStep) -> String {
@@ -2157,9 +2101,11 @@ struct GhuslGuideView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Die 3 Fard im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Die 3 Fard im Hanafi/Diyanet-Ablauf", "Hanefî/Diyanet'e göre 3 farz"),
+                        iconKind: "checkmark",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     numbered("1", settings.t(
                         "Den Mund vollständig ausspülen, sodass Wasser den ganzen Mundraum erreicht.",
@@ -2184,8 +2130,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Vollständiger Sunnah-Ablauf", "Sünnete uygun tam uygulama"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Vollständiger Sunnah-Ablauf", "Sünnete uygun tam uygulama"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     step("1", settings.t("Absicht fassen und Bismillah sagen.", "Niyet et ve besmele çek."))
                     step("2", settings.t("Hände waschen. Sichtbare Verunreinigung am Körper entfernen und Intimbereich reinigen.", "Ellerini yıka. Bedendeki görünen necaseti gider ve avret bölgesini temizle."))
@@ -2199,8 +2148,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(settings.t("Haare & Frauen", "Saç ve kadınlar"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Haare & Frauen", "Saç ve kadınlar"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     Text(settings.t(
                         "Das Wasser muss die Kopfhaut und die Haarwurzeln erreichen. Bei zusammengebundenen oder geflochtenen Haaren ist entscheidend, dass Wasser die Wurzeln erreicht; unnötiges Erschweren soll vermieden werden. Bei konkreten Fragen zu sehr dichtem Haar, Extensions oder wasserundurchlässigen Produkten die hanafitische Regel gezielt prüfen.",
                         "Su saç derisine ve saç diplerine ulaşmalıdır. Toplu veya örgülü saçta önemli olan suyun köklere ulaşmasıdır; gereksiz zorluk çıkarılmaz. Çok sık saç, ek saç veya su geçirmeyen ürünler gibi özel durumda Hanefî hükmü ayrıca kontrol edilmelidir."
@@ -2210,8 +2162,11 @@ struct GhuslGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(settings.t("Brauche ich danach noch Wudu?", "Sonra yeniden abdest gerekir mi?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Brauche ich danach noch Wudu?", "Sonra yeniden abdest gerekir mi?"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
                     Text(settings.t(
                         "Ein gültiger Ghusl umfasst auch Wudu. Wenn während oder nach dem Ghusl nichts passiert, was Wudu bricht, ist danach kein zusätzliches Wudu nötig.",
                         "Geçerli bir gusül abdesti de kapsar. Gusül sırasında veya sonrasında abdesti bozan bir durum olmazsa ayrıca yeniden abdest almak gerekmez."
@@ -2254,7 +2209,11 @@ struct GhuslGuideView: View {
 
     private var sourceNote: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Quelle & Einordnung", "Kaynak ve açıklama"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.t(
                 "Qur'an 4:43 und 5:6 · Diyanet Din İşleri Yüksek Kurulu: Ghusl/Boy abdesti. Darstellung: hanafitischer Grundablauf.",
                 "Kur'an 4:43 ve 5:6 · Diyanet Din İşleri Yüksek Kurulu: Gusül/boy abdesti. Anlatım: Hanefî temel uygulama."
@@ -2285,8 +2244,11 @@ struct TayammumGuideView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Wann darf ich Tayammum machen?", "Ne zaman teyemmüm yapılır?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Wann darf ich Tayammum machen?", "Ne zaman teyemmüm yapılır?"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     bullet(settings.t("Es ist kein ausreichendes Wasser erreichbar.", "Yeterli su bulunamıyor veya ulaşılamıyor."))
                     bullet(settings.t("Wasser zu benutzen würde wegen Krankheit oder Verletzung voraussichtlich schaden.", "Hastalık veya yara nedeniyle su kullanmak zarar verecek."))
                     bullet(settings.t("Eine anerkannte Unmöglichkeit der Wassernutzung liegt vor; bloße Bequemlichkeit reicht nicht.", "Suyu kullanmaya gerçek bir engel var; yalnız kolaylık istemek yeterli değildir."))
@@ -2294,9 +2256,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(settings.t("Tayammum Schritt für Schritt", "Teyemmüm adım adım"))
-                        .font(.headline.bold())
-                        .foregroundStyle(SalahTheme.deepTeal)
+                    TutorialSectionHeader(
+                        title: settings.t("Tayammum Schritt für Schritt", "Teyemmüm adım adım"),
+                        iconKind: "wudu",
+                        tint: SalahTheme.deepTeal
+                    )
 
                     step("1", settings.t(
                         "Fasse die Absicht, Tayammum für Wudu oder Ghusl zu machen.",
@@ -2326,8 +2290,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 9) {
-                    Text(settings.t("Was beendet Tayammum?", "Teyemmümü ne bozar?"))
-                        .font(.headline.bold())
+                    TutorialSectionHeader(
+                        title: settings.t("Was beendet Tayammum?", "Teyemmümü ne bozar?"),
+                        iconKind: "info",
+                        tint: SalahTheme.deepTeal
+                    )
                     bullet(settings.t("Alles, was normalerweise Wudu bricht, beendet auch Tayammum.", "Abdesti bozan şeyler teyemmümü de bozar."))
                     bullet(settings.t("Wenn wieder ausreichend Wasser verfügbar und nutzbar wird, endet die Tayammum-Erlaubnis.", "Yeterli su bulunur ve kullanılabilir hale gelirse teyemmüm ruhsatı sona erer."))
                     bullet(settings.t("Wenn der medizinische oder andere Grund entfällt, der Wasser unmöglich machte, endet die Ersatzregel.", "Suyu kullanmaya engel olan hastalık veya diğer mazeret ortadan kalkarsa teyemmüm hükmü sona erer."))
@@ -2335,7 +2302,11 @@ struct TayammumGuideView: View {
                 .cardStyle()
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(settings.t("Quelle & Einordnung", "Kaynak ve açıklama")).font(.headline)
+                    TutorialSectionHeader(
+                title: settings.t("Quelle & Einordnung", "Kaynak ve açıklama"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
                     Text(settings.t(
                         "Qur'an 4:43 und 5:6 · Diyanet Din İşleri Yüksek Kurulu: Tayammum. Darstellung: hanafitischer Grundablauf.",
                         "Kur'an 4:43 ve 5:6 · Diyanet Din İşleri Yüksek Kurulu: Teyemmüm. Anlatım: Hanefî temel uygulama."
@@ -7464,8 +7435,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventMeaningCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text(settings.t("Was bedeutet dieser Tag?", "Bu gün ne anlama gelir?"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Was bedeutet dieser Tag?", "Bu gün ne anlama gelir?"),
+                iconKind: "calendar",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.language == .german ? event.deMeaning : event.trMeaning)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -7475,13 +7449,17 @@ private struct IslamicCalendarEventDetailView: View {
     private var eventRecommendationsCard: some View {
         let items = settings.language == .german ? event.deRecommended : event.trRecommended
         return VStack(alignment: .leading, spacing: 10) {
-            Text(settings.t("Was ist empfohlen?", "Neler tavsiye edilir?"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Was ist empfohlen?", "Neler tavsiye edilir?"),
+                iconKind: "checkmark",
+                tint: SalahTheme.deepTeal
+            )
 
             ForEach(items.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 9) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 18, height: 18)
+                        .padding(.top, 1)
                     Text(items[index])
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -7492,12 +7470,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventCautionCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(
-                settings.t("Nicht verwechseln", "Karıştırma"),
-                systemImage: "exclamationmark.triangle.fill"
+            TutorialSectionHeader(
+                title: settings.t("Nicht verwechseln", "Karıştırma"),
+                iconKind: "info",
+                tint: SalahTheme.gold
             )
-            .font(.headline)
-            .foregroundStyle(SalahTheme.gold)
 
             Text(settings.language == .german ? event.deCaution : event.trCaution)
                 .font(.subheadline)
@@ -7508,8 +7485,11 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventSourceCard: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(settings.t("Quelle & Kalenderhinweis", "Kaynak ve takvim notu"))
-                .font(.headline)
+            TutorialSectionHeader(
+                title: settings.t("Quelle & Kalenderhinweis", "Kaynak ve takvim notu"),
+                iconKind: "info",
+                tint: SalahTheme.deepTeal
+            )
             Text(settings.t(
                 "Religiöse Einordnung nach Qur'an, Hadithquellen und Diyanet-Grunddarstellung. Bei Überlieferungen können unterschiedliche Einstufungen bestehen. Das angezeigte Hijri-Datum wird mit Umm-al-Qura berechnet; regionale Mondsichtung kann den tatsächlichen Monatsbeginn verschieben.",
                 "Dinî açıklama Kur'an, hadis kaynakları ve Diyanet temel anlatımına dayanır. Rivayetlerin değerlendirilmesinde farklılıklar bulunabilir. Gösterilen hicrî tarih Ummü'l-Kurâ hesabıdır; bölgesel hilal gözlemi gerçek ay başlangıcını değiştirebilir."
@@ -8705,12 +8685,24 @@ struct DhikrView: View {
         dhikrRowBody(icon: icon, title: title, subtitle: subtitle)
     }
 
+    private func dhikrFeatureKind(for symbol: String) -> String {
+        switch symbol {
+        case "sunrise.fill", "hands.sparkles.fill", "circle.grid.cross.fill":
+            return "dhikr"
+        case "character.book.closed.fill":
+            return "language"
+        case "text.book.closed.fill":
+            return "quran"
+        default:
+            return "info"
+        }
+    }
+
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .accessibilityHidden(true)
+        HStack(spacing: 10) {
+            SalahFeatureIcon(kind: dhikrFeatureKind(for: icon))
+                .frame(width: 24, height: 24)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.2, y: 1)
 
             Text(title)
                 .font(.custom("AvenirNext-DemiBold", size: 13.1))
