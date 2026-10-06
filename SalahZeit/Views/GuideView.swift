@@ -608,13 +608,13 @@ private enum PrayerText {
         deLabel: "Beim Aufrichten", trLabel: "Doğrulurken",
         arabic: "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ", transliteration: "Semi'allāhu limen hamideh",
         deMeaning: "Allah hört den, der Ihn lobt.", trMeaning: "Allah kendisine hamd edeni işitir.",
-        deNote: "Hanafi: Imam und allein Betender sagen dies beim Aufrichten.", trNote: "Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.")
+        deNote: nil, trNote: nil)
 
     static let upright = PrayerRecitation(
         deLabel: "Vollständig aufgerichtet", trLabel: "Tam doğrulunca",
         arabic: "رَبَّنَا لَكَ الْحَمْدُ", transliteration: "Rabbenâ lekel-hamd",
         deMeaning: "Unser Herr, Dir gebührt das Lob.", trMeaning: "Rabbimiz, hamd Sana mahsustur.",
-        deNote: "Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.", trNote: "Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.")
+        deNote: nil, trNote: nil)
 
     static let sujud = PrayerRecitation(
         deLabel: "In der Secde", trLabel: "Secdede",
@@ -6990,9 +6990,10 @@ struct FastingTrackerView: View {
                     refresh &+= 1
                 }
             )) {
-                Label(
-                    settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
-                    systemImage: "checkmark.circle"
+                SalahFeatureIconLabel(
+                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
+                    kind: "checkmark",
+                    iconSize: 20
                 )
             }
 
@@ -7446,11 +7447,12 @@ private struct IslamicCalendarEventDetailView: View {
                 )
             )
         } label: {
-            Label(
-                settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"),
-                systemImage: "calendar.badge.plus"
-            )
-            .font(.headline.bold())
+            HStack(spacing: 9) {
+                SalahFeatureIcon(kind: "calendar")
+                    .frame(width: 24, height: 24)
+                Text(settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"))
+                    .font(.headline.bold())
+            }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 13)
         }
@@ -7480,8 +7482,9 @@ private struct IslamicCalendarEventDetailView: View {
 
             ForEach(items.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 9) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 20, height: 20)
+                        .accessibilityHidden(true)
                     Text(items[index])
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -7492,9 +7495,10 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventCautionCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(
-                settings.t("Nicht verwechseln", "Karıştırma"),
-                systemImage: "exclamationmark.triangle.fill"
+            SalahFeatureIconLabel(
+                title: settings.t("Nicht verwechseln", "Karıştırma"),
+                kind: "info",
+                iconSize: 22
             )
             .font(.headline)
             .foregroundStyle(SalahTheme.gold)
@@ -8705,11 +8709,27 @@ struct DhikrView: View {
         dhikrRowBody(icon: icon, title: title, subtitle: subtitle)
     }
 
+    private func dhikrFeatureKind(for icon: String) -> String {
+        switch icon {
+        case "sunrise.fill":
+            return "moon"
+        case "hands.sparkles.fill":
+            return "duas"
+        case "circle.grid.cross.fill":
+            return "dhikr"
+        case "character.book.closed.fill":
+            return "language"
+        case "text.book.closed.fill":
+            return "duas"
+        default:
+            return "info"
+        }
+    }
+
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: dhikrFeatureKind(for: icon))
+                .frame(width: 23, height: 23)
                 .accessibilityHidden(true)
 
             Text(title)
@@ -9540,11 +9560,9 @@ struct QuranView: View {
                             } label: {
                                 VStack(alignment: .leading, spacing: 10) {
                                     HStack(spacing: 12) {
-                                        Image(systemName: "bookmark.fill")
-                                            .font(.system(size: 18, weight: .bold))
-                                            .foregroundStyle(SalahTheme.gold)
+                                        SalahFeatureIcon(kind: "bookmarks")
                                             .frame(width: 42, height: 42)
-                                            .background(SalahTheme.navigationTeal, in: Circle())
+                                            .accessibilityHidden(true)
 
                                         VStack(alignment: .leading, spacing: 3) {
                                             Text(settings.t("Weiterlesen", "Okumaya devam et"))

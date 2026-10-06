@@ -623,9 +623,9 @@ private struct OnboardingFlowView: View {
     private var readyStep: some View {
         setupCard {
             VStack(spacing: 14) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "checkmark")
+                    .frame(width: 54, height: 54)
+                    .accessibilityHidden(true)
 
                 Text(settings.t("Fertig eingerichtet", "Kurulum tamam"))
                     .font(.title2.bold())
