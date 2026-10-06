@@ -30,6 +30,7 @@ Diyanet references checked include:
 - Jumuʿah obligation / validity: https://kurul.diyanet.gov.tr/tr/fetva/cuma-namazi-ve-zuhr-i-ahir-namazinin-hukmu/f0ecca63-4fac-4234-b733-08dd1c135350
 - Jumuʿah after the khutbah has begun: https://kurul.diyanet.gov.tr/tr/fetva/mekke-ve-medinede-cuma-namazi-vaktinde-ezanin-hemen/0193f3cd-bcef-7474-9985-d1ca582d1acd
 - Janazah procedure: https://kurul.diyanet.gov.tr/tr/fetva/cenaze-namazi-nasil-kilinir/0193c42d-5ff0-7a8b-b744-96f510e9362a
+- Diyanet child Janazah dua forms checked against the Diyanet Temel Dini Bilgiler / İslam İlmihali teaching text (official Diyanet publication).
 - Fasting intention deadline: https://kurul.diyanet.gov.tr/tr/fetva/oruca-ne-zaman-ve-nasil-niyet-edilir/0193c42d-6bc5-745a-7532-60288956700e
 - Fatiha behind an imam: https://kurul.diyanet.gov.tr/tr/fetva/imama-uyan-bir-kimse-fatiha-okuyabilir-mi/0193c42d-58f7-7851-de88-9e1eaf349583
 - Four-rakʿah non-muʾakkadah sitting details: https://kurul.diyanet.gov.tr/tr/fetva/ikindi-namazinin-sunneti-ile-yatsi-namazinin-ilk-sunnetinin/0193c42d-547b-7b06-0e8e-33a7ee736367
@@ -144,6 +145,7 @@ Hadith/adhkar reference checked:
 - The Sehiv-Sujud summary now includes the full Hanafi/Diyanet trigger pattern: accidental delay, repetition or advancement of a rukn, as well as omission, delay or alteration of a wajib; the already-correct two-sujud procedure was left unchanged.
 - Wudu opening guidance now states the material school difference for niyyah: Hanafi/Diyanet treats intention and basmala as Sunnah and the Wudu remains valid without them, while the other three Sunni schools require intention for Wudu.
 - Tilawah-Sajdah now states that its Wajib classification is specifically Hanafi; the other three Sunni schools classify it as Sunnah.
+- The child Janazah dua cards had appended “bi-raḥmatika yā arḥama-r-rāḥimīn” to the Diyanet boys'/girls' formula. The additional phrase is a permissible general supplication, but it is not part of the checked Diyanet child formula; it was removed so the displayed sourced text matches the reference exactly.
 - A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass
