@@ -2063,29 +2063,29 @@ struct WuduGuideView: View {
     private func exactDetail(for number: Int) -> String {
         let de: [Int: String] = [
             1: "Wasche Handflächen, Handrücken, Finger und Fingerzwischenräume bis einschließlich Handgelenk.",
-            2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich.",
+            2: "Verteile das Wasser im ganzen Mundraum. Beim Fasten nicht so stark spülen oder gurgeln, dass Wasser verschluckt werden könnte.",
             3: "Nimm das Wasser mit der rechten Hand zur Nase. Danach wird die Nase mit der linken Hand gereinigt bzw. geschnäuzt.",
             4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
-            5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
+            5: "Wasche den Arm von allen Seiten. Achte besonders auf Ellenbogen und Hautfalten, damit keine trockene Stelle bleibt.",
             6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
             7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für den Fard das Wischen von mindestens einem Viertel des Kopfes. Den ganzen Kopf einmal zu wischen ist Sunnah.",
-            8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
+            8: "Fahre mit feuchten Fingern vorsichtig durch die inneren Ohrkonturen und mit den Daumen über die Außenseiten; nichts tief in den Gehörgang einführen.",
             9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
             10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
-            11: "Wasche danach den linken Fuß genauso vollständig."
+            11: "Reinige den linken Fuß genauso sorgfältig: Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume."
         ]
         let tr: [Int: String] = [
             1: "Avuçları, el üstlerini, parmakları ve parmak aralarını bileklerle birlikte yıka.",
-            2: "Sağ elle ağza su alıp iyice çalkala.",
+            2: "Suyu ağzın tamamında dolaştır. Oruçluyken suyun boğaza kaçmasına yol açacak kadar kuvvetli çalkalama veya gargara yapma.",
             3: "Suyu sağ elinle burnuna ver. Ardından sol elle burnunu temizleyip sümkür.",
             4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
-            5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.",
+            5: "Sağ kolu her tarafından yıka; dirsek ve deri kıvrımlarında kuru yer kalmamasına dikkat et.",
             6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
             7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî mezhebinde farz için başın en az dörtte birini mesh etmek yeterlidir; başın tamamını bir defa mesh etmek sünnettir.",
-            8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
+            8: "Islak parmaklarla kulakların iç kıvrımlarını, başparmaklarla dış kısmını nazikçe mesh et; parmakları kulak kanalının derinine sokma.",
             9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
             10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
-            11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
+            11: "Sol ayağı da aynı titizlikle yıka: üst, taban, topuk, iki aşık kemiği ve parmak araları."
         ]
         return settings.language == .german ? (de[number] ?? "") : (tr[number] ?? "")
     }
