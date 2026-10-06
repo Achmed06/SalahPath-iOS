@@ -495,7 +495,12 @@ private struct OnboardingFlowView: View {
                         settings.prayerAudience = audience
                     } label: {
                         HStack {
-                            Image(systemName: audience == .male ? "person.fill" : "person.fill")
+                            Image(audience == .male ? "male_intention" : "female_intention")
+                                .resizable()
+                                .interpolation(.high)
+                                .scaledToFit()
+                                .frame(width: 34, height: 34)
+                                .accessibilityHidden(true)
                             Text(audience.title(settings.language))
                                 .font(.headline)
                             Spacer()
@@ -617,9 +622,8 @@ private struct OnboardingFlowView: View {
     private var readyStep: some View {
         setupCard {
             VStack(spacing: 14) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "checkmark")
+                    .frame(width: 58, height: 58)
 
                 Text(settings.t("Fertig eingerichtet", "Kurulum tamam"))
                     .font(.title2.bold())
@@ -628,9 +632,10 @@ private struct OnboardingFlowView: View {
                 VStack(alignment: .leading, spacing: 7) {
                     SalahFeatureIconLabel(title: settings.language.title, kind: "language")
                     SalahFeatureIconLabel(title: settings.prayerAudience.title(settings.language), kind: "profile")
-                    Label(
-                        locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
-                        systemImage: locationManager.location == nil ? "location.slash" : "location.fill"
+                    SalahFeatureIconLabel(
+                        title: locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
+                        kind: "qibla",
+                        iconSize: 20
                     )
                 }
                 .font(.subheadline.weight(.semibold))

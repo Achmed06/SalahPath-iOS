@@ -438,8 +438,12 @@ struct TrackerPauseView: View {
 
             if paused {
                 Section {
-                    Label(settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."), systemImage: "checkmark.shield.fill")
-                        .foregroundStyle(.green)
+                    SalahFeatureIconLabel(
+                        title: settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."),
+                        kind: "checkmark",
+                        iconSize: 18
+                    )
+                    .foregroundStyle(SalahTheme.teal)
                 }
             }
         }
@@ -584,7 +588,7 @@ private struct DailyDuaDetailView: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             if let repetition = dua.repetition {
-                                Label(repetition, systemImage: "repeat")
+                                SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)
                                     .font(.caption.bold())
                                     .foregroundStyle(SalahTheme.teal)
                             }
@@ -670,11 +674,15 @@ private struct DailyDuaDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")
-                    .font(.footnote)
-                    .foregroundStyle(SalahTheme.mutedInk)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 2)
+                SalahFeatureIconLabel(
+                    title: dua.localizedSource(settings.language),
+                    kind: "checkmark",
+                    iconSize: 17
+                )
+                .font(.footnote)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 2)
             }
             .padding()
         }
@@ -1209,9 +1217,8 @@ struct HomeView: View {
                             ReferenceSunGlyph()
                                 .frame(width: 15, height: 15)
                         } else {
-                            Image(systemName: prayer.kind.systemImage)
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(SalahTheme.gold)
+                            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                                .frame(width: 15, height: 15)
                         }
                     }
 
@@ -1716,9 +1723,8 @@ struct HomeView: View {
     private func streakSummary(_ value: Int) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(SalahTheme.gold)
+                SalahFeatureIcon(kind: "sparkles")
+                    .frame(width: 21, height: 21)
 
                 Text("\(value)")
                     .font(.system(size: 21, weight: .bold).monospacedDigit())
@@ -1748,9 +1754,9 @@ struct HomeView: View {
 
     private var dailyDeenCard: some View {
         let tasks = [
-            ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "book.fill"),
-            ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "circle.grid.cross.fill"),
-            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "graduationcap.fill")
+            ("quran", settings.t("5 Min. Quran", "5 dk Kur'an"), "quran"),
+            ("dhikr", settings.t("Kurzer Dhikr", "Kısa zikir"), "dhikr"),
+            ("learn", settings.t("1 Dua/Sura wiederholen", "1 dua/sure tekrarla"), "duas")
         ]
         let done = tasks.filter { DailyDeenStore.isDone($0.0, now) }.count
         return VStack(alignment: .leading, spacing: 10) {
@@ -1770,7 +1776,8 @@ struct HomeView: View {
                     dailyDeenRefresh &+= 1
                 } label: {
                     HStack(spacing: 10) {
-                        Image(systemName: task.2).frame(width: 22).foregroundStyle(SalahTheme.teal)
+                        SalahFeatureIcon(kind: task.2)
+                            .frame(width: 24, height: 24)
                         Text(task.1).foregroundStyle(SalahTheme.ink)
                         Spacer()
                         Image(systemName: checked ? "checkmark.circle.fill" : "circle")
@@ -3213,9 +3220,8 @@ private struct PrayerRow: View {
 
     var body: some View {
         HStack(spacing: 11) {
-            Image(systemName: prayer.kind.systemImage)
-                .frame(width: 28)
-                .foregroundStyle(isNext ? SalahTheme.gold : SalahTheme.teal)
+            SalahFeatureIcon(kind: salahPrayerFeatureKind(for: prayer.kind))
+                .frame(width: 28, height: 28)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(prayer.kind.localizedName(settings.language)).font(.subheadline.bold())
