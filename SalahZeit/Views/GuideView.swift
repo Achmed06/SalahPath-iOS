@@ -2124,30 +2124,30 @@ struct WuduGuideView: View {
 
     private func exactDetail(for number: Int) -> String {
         let de: [Int: String] = [
-            1: "Wasche Handflächen, Handrücken, Finger und Fingerzwischenräume bis einschließlich Handgelenk.",
-            2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich.",
-            3: "Nimm das Wasser mit der rechten Hand zur Nase. Danach wird die Nase mit der linken Hand gereinigt bzw. geschnäuzt.",
-            4: "Gesichtsgrenze: vom normalen Haaransatz bis zum Kinn und seitlich ungefähr von Ohr zu Ohr.",
-            5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig.",
-            6: "Wasche die linke Hand und den linken Arm bis einschließlich Ellenbogen vollständig. Die rechte Hand unterstützt beim Waschen des linken Arms.",
+            1: "Achte besonders auf Handrücken, Fingerseiten und Fingerzwischenräume; bis zum Handgelenk soll überall Wasser ankommen.",
+            2: "Verteile das Wasser im ganzen Mundraum. Beim Fasten nicht so stark spülen oder gurgeln, dass Wasser verschluckt werden könnte.",
+            3: "Ziehe das Wasser behutsam in die Nase und reinige sie anschließend mit der linken Hand. Beim Fasten das Wasser nicht tief hochziehen.",
+            4: "Achte darauf, dass auch die Bereiche neben Nase und Lippen, das Kinn und die seitlichen Gesichtsgrenzen vollständig nass werden.",
+            5: "Wasche den Arm von allen Seiten. Achte besonders auf Ellenbogen und Hautfalten, damit keine trockene Stelle bleibt.",
+            6: "Wasche den linken Arm ebenfalls von allen Seiten bis einschließlich Ellenbogen; die rechte Hand kann beim Verteilen des Wassers helfen.",
             7: "Masḥ bedeutet wischen, nicht waschen. Hanafi genügt für den Fard das Wischen von mindestens einem Viertel des Kopfes. Den ganzen Kopf einmal zu wischen ist Sunnah.",
-            8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab.",
-            9: "Wische die Ense/Nackenpartie mit feuchten Fingerrücken. Die Vorderseite des Halses bzw. Kehle nicht wischen.",
-            10: "Wasche beim rechten Fuß Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume vollständig.",
-            11: "Wasche danach den linken Fuß genauso vollständig."
+            8: "Fahre mit feuchten Fingern vorsichtig durch die inneren Ohrkonturen und mit den Daumen über die Außenseiten; nichts tief in den Gehörgang einführen.",
+            9: "Führe die Rückseiten der feuchten Finger über die Ense. Die Kehle und Vorderseite des Halses bleiben dabei aus.",
+            10: "Achte beim rechten Fuß besonders auf Oberseite, Sohle, Ferse, beide Knöchel und die Zwischenräume der Zehen.",
+            11: "Reinige den linken Fuß genauso sorgfältig: Oberseite, Sohle, Ferse, beide Knöchel und die Zehenzwischenräume."
         ]
         let tr: [Int: String] = [
-            1: "Avuçları, el üstlerini, parmakları ve parmak aralarını bileklerle birlikte yıka.",
-            2: "Sağ elle ağza su alıp iyice çalkala.",
-            3: "Suyu sağ elinle burnuna ver. Ardından sol elle burnunu temizleyip sümkür.",
-            4: "Yüzü normal saç çizgisinden çeneye ve bir kulaktan diğer kulağa kadar tamamen yıka.",
-            5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka.",
-            6: "Sol eli ve sol kolu dirsek dahil tamamen yıka. Sağ el, sol kolu yıkarken yardımcı olur.",
+            1: "El üstleri, parmakların yanları ve parmak aralarına özellikle dikkat et; bileğe kadar her yere su ulaşsın.",
+            2: "Suyu ağzın tamamında dolaştır. Oruçluyken suyun boğaza kaçmasına yol açacak kadar kuvvetli çalkalama veya gargara yapma.",
+            3: "Suyu burnuna nazikçe çek ve ardından sol elle temizle. Oruçluyken suyu burnun içine fazla çekme.",
+            4: "Burun ve dudak kenarları, çene ve yüzün yan sınırları dahil hiçbir kuru bölge kalmamasına dikkat et.",
+            5: "Sağ kolu her tarafından yıka; dirsek ve deri kıvrımlarında kuru yer kalmamasına dikkat et.",
+            6: "Sol kolu da dirsek dahil her tarafından yıka; sağ el suyu yaymaya yardımcı olabilir.",
             7: "Mesh, başı yüz gibi yıkamak değil, ıslak elle silmektir. Hanefî mezhebinde farz için başın en az dörtte birini mesh etmek yeterlidir; başın tamamını bir defa mesh etmek sünnettir.",
-            8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et.",
-            9: "Enseyi ıslak parmakların dış kısmıyla mesh et. Boğazın ön tarafını mesh etme.",
-            10: "Sağ ayağın üstünü, tabanını, topuğunu, iki aşık kemiğini ve parmak aralarını tamamen yıka.",
-            11: "Ardından sol ayağı da aynı şekilde tamamen yıka."
+            8: "Islak parmaklarla kulakların iç kıvrımlarını, başparmaklarla dış kısmını nazikçe mesh et; parmakları kulak kanalının derinine sokma.",
+            9: "Islak parmakların dış kısmını ense üzerinde gezdir. Boğazın ve boynun ön tarafını mesh etme.",
+            10: "Sağ ayağın üstü, tabanı, topuğu, iki aşık kemiği ve parmak aralarına özellikle dikkat et.",
+            11: "Sol ayağı da aynı titizlikle yıka: üst, taban, topuk, iki aşık kemiği ve parmak araları."
         ]
         return settings.language == .german ? (de[number] ?? "") : (tr[number] ?? "")
     }
@@ -11767,7 +11767,7 @@ private struct QuranSurahView: View {
     private var sourceFooter: some View {
         Text(settings.t(
             "Quran: lokal gebündelter Uthmani-Text · Quelle AlQuran.cloud / Islamic Network. Türkisch: Diyanet. Deutsch: Bubenheim & Elyas. Rezitation: Islamic Network.",
-            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network insan ses kaydı."
+            "Kur'an: uygulamaya gömülü Uthmani metin · kaynak AlQuran.cloud / Islamic Network. Türkçe: Diyanet. Almanca: Bubenheim & Elyas. Tilavet: Islamic Network."
         ))
         .font(.caption2)
         .foregroundStyle(SalahTheme.mutedInk)
