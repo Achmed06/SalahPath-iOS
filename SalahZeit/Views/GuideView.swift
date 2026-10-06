@@ -1227,19 +1227,17 @@ private struct PrayerTutorialStepCard: View {
 
     @ViewBuilder
     private var malePoseTip: some View {
-        if isMale,
-           let imageName,
-           step.number == "16" || step.deHanafi != nil {
-            HStack(alignment: .center, spacing: 13) {
-                PrayerPoseArtwork(assetName: imageName)
-                    .frame(width: 108, height: 118)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        if isMale, step.number == "16" {
+            HStack(alignment: .center, spacing: 12) {
+                PrayerPoseArtwork(assetName: "male_finger")
+                    .frame(width: 92, height: 120)
+                    .background(SalahTheme.cream)
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-                VStack(alignment: .leading, spacing: 5) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(maleTipTitle)
                         .font(.subheadline.bold())
                         .foregroundStyle(maleHeader)
-                        .fixedSize(horizontal: false, vertical: true)
 
                     Text(maleTipText)
                         .font(.caption)
@@ -1249,18 +1247,24 @@ private struct PrayerTutorialStepCard: View {
 
                 Spacer(minLength: 0)
             }
+            .padding(10)
+            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+        } else if isMale, step.deHanafi != nil {
+            VStack(alignment: .leading, spacing: 6) {
+                TutorialSectionHeader(
+                    title: maleTipTitle,
+                    iconKind: "info",
+                    tint: maleHeader
+                )
+
+                Text(maleTipText)
+                    .font(.caption)
+                    .foregroundStyle(maleMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             .padding(11)
-            .background(
-                LinearGradient(
-                    colors: [
-                        SalahTheme.cream,
-                        SalahTheme.softTeal.opacity(0.72)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ),
-                in: RoundedRectangle(cornerRadius: 15, style: .continuous)
-            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(SalahTheme.gold.opacity(0.10), in: RoundedRectangle(cornerRadius: 13, style: .continuous))
         }
     }
 
