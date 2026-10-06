@@ -71,8 +71,8 @@ struct GuideView: View {
                     settings.language = settings.language == .german ? .turkish : .german
                 } label: {
                     HStack(spacing: 5) {
-                        Image(systemName: "globe")
-                            .font(.system(size: 10.5, weight: .bold))
+                        SalahFeatureIcon(kind: "language")
+                            .frame(width: 17, height: 17)
                         Text(settings.language == .german ? "Türkçe" : "Deutsch")
                             .font(.system(size: 10.4, weight: .bold))
                     }
@@ -280,11 +280,9 @@ struct GuideView: View {
 
     private func referenceLearnFeature(turkish: String, german: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 17, height: 17)
                 .padding(.top, 1)
-                .accessibilityHidden(true)
 
             Text(settings.language == .german ? german : turkish)
                 .font(.custom("AvenirNext-DemiBold", size: 12.0))
@@ -315,9 +313,8 @@ struct GuideView: View {
 
     private func learnFeature(_ text: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 15, height: 15)
             Text(text)
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(SalahTheme.ink)
@@ -327,17 +324,8 @@ struct GuideView: View {
 
     private func learnTile(icon: String, title: String, subtitle: String) -> some View {
         VStack(spacing: 7) {
-            Group {
-                if let kind = guideFeatureKind(for: icon) {
-                    SalahFeatureIcon(kind: kind)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 25, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
-                }
-            }
-            .frame(width: 30, height: 30)
-            .accessibilityHidden(true)
+            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+                .frame(width: 30, height: 30)
             Text(title)
                 .font(.system(size: 11, weight: .bold))
                 .foregroundStyle(SalahTheme.ink)
@@ -355,7 +343,7 @@ struct GuideView: View {
         .overlay { RoundedRectangle(cornerRadius: 16).stroke(SalahTheme.gold.opacity(0.38), lineWidth: 1) }
     }
 
-    private func guideFeatureKind(for symbol: String) -> String? {
+    private func guideFeatureKind(for symbol: String) -> String {
         switch symbol {
         case "rectangle.stack.badge.play.fill":
             return "prayer"
@@ -378,29 +366,15 @@ struct GuideView: View {
         case "moon.stars.fill":
             return "moon"
         default:
-            return nil
+            return "info"
         }
     }
 
     private func referenceRow(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 10) {
-            Group {
-                if let kind = guideFeatureKind(for: icon) {
-                    // Premium artwork already carries its own visual identity.
-                    SalahFeatureIcon(kind: kind)
-                        .frame(width: 31, height: 31)
-                        .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.4, y: 1)
-                } else {
-                    Image(systemName: icon)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(SalahTheme.teal)
-                        .frame(width: 29, height: 29)
-                        .background(SalahTheme.softTeal, in: Circle())
-                        .overlay { Circle().stroke(SalahTheme.gold.opacity(0.38), lineWidth: 0.7) }
-                }
-            }
-            .frame(width: 31, height: 31)
-            .accessibilityHidden(true)
+            SalahFeatureIcon(kind: guideFeatureKind(for: icon))
+                .frame(width: 31, height: 31)
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.4, y: 1)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.system(size: 12, weight: .bold))
@@ -2394,8 +2368,8 @@ struct TayammumGuideView: View {
     @ViewBuilder
     private func bullet(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 9) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 17, height: 17)
                 .padding(.top, 2)
             Text(text).fixedSize(horizontal: false, vertical: true)
         }
@@ -4011,7 +3985,7 @@ struct FarewellSermonView: View {
     private var principles: [(String, String, String, String)] {
         [
             (
-                "shield.lefthalf.filled",
+                "info",
                 "Schutz von Leben, Vermögen und Würde",
                 "Can, mal ve onur dokunulmazlığı",
                 settings.t(
@@ -4020,7 +3994,7 @@ struct FarewellSermonView: View {
                 )
             ),
             (
-                "banknote.fill",
+                "info",
                 "Ende von Riba und alten Vergeltungsforderungen",
                 "Faiz ve eski kan davalarının kaldırılması",
                 settings.t(
@@ -4029,7 +4003,7 @@ struct FarewellSermonView: View {
                 )
             ),
             (
-                "person.2.fill",
+                "community",
                 "Rechte und Verantwortung in der Familie",
                 "Ailede hak ve sorumluluk",
                 settings.t(
@@ -4038,7 +4012,7 @@ struct FarewellSermonView: View {
                 )
             ),
             (
-                "hand.raised.fill",
+                "checkmark",
                 "Treuhand, Schulden und Eigentum",
                 "Emanet, borç ve mülkiyet",
                 settings.t(
@@ -4047,7 +4021,7 @@ struct FarewellSermonView: View {
                 )
             ),
             (
-                "person.3.fill",
+                "community",
                 "Gemeinschaft ohne Stammesüberheblichkeit",
                 "Irk ve sınıf üstünlüğünü reddeden toplum",
                 settings.t(
@@ -4056,7 +4030,7 @@ struct FarewellSermonView: View {
                 )
             ),
             (
-                "book.closed.fill",
+                "quran",
                 "An Offenbarung und prophetischer Orientierung festhalten",
                 "Vahye ve peygamberî rehberliğe bağlılık",
                 settings.t(
@@ -4114,9 +4088,10 @@ struct FarewellSermonView: View {
 
                 ForEach(Array(principles.enumerated()), id: \.offset) { _, item in
                     VStack(alignment: .leading, spacing: 8) {
-                        Label(
-                            settings.language == .german ? item.1 : item.2,
-                            systemImage: item.0
+                        SalahFeatureIconLabel(
+                            title: settings.language == .german ? item.1 : item.2,
+                            kind: item.0,
+                            iconSize: 22
                         )
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
@@ -4442,9 +4417,10 @@ private struct IlmihalTopicView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        settings.language == .german ? topic.deTitle : topic.trTitle,
-                        systemImage: topic.icon
+                    SalahFeatureIconLabel(
+                        title: settings.language == .german ? topic.deTitle : topic.trTitle,
+                        kind: topic.icon,
+                        iconSize: 26
                     )
                     .font(.title2.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
@@ -4502,7 +4478,7 @@ struct IlmihalDirectoryView: View {
     @EnvironmentObject private var settings: SettingsStore
 
     private let zakat = IlmihalTopic(
-        id: "zakat", icon: "banknote.fill",
+        id: "zakat", icon: "info",
         deTitle: "Zakat & Sadaqa", trTitle: "Zekât & Sadaka",
         deIntro: "Zakat ist eine verpflichtende Vermögensabgabe, wenn die persönlichen und vermögensbezogenen Voraussetzungen erfüllt sind. Dieser Überblick folgt bei Detailfragen der Hanafi-/Diyanet-Einordnung; Fitra und freiwillige Sadaqa sind davon getrennte Kategorien.",
         trIntro: "Zekât, kişisel ve malî şartlar oluştuğunda farz olan malî ibadettir. Ayrıntılarda bu özet Hanefî/Diyanet çerçevesini esas alır; fitre ve gönüllü sadaka ayrı hükümlerdir.",
@@ -4523,7 +4499,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let sacrifice = IlmihalTopic(
-        id: "sacrifice", icon: "gift.fill",
+        id: "sacrifice", icon: "sparkles",
         deTitle: "Kurban / Opfer", trTitle: "Kurban",
         deIntro: "Das Opferfest und das rituelle Udhiyah-Opfer haben eigene Voraussetzungen, Zeiten und Regeln. Dieser Abschnitt folgt der Hanafi-/Diyanet-Einordnung: Für die entsprechend verpflichtete Person ist Udhiyah wajib; Rechtsschulunterschiede müssen getrennt betrachtet werden.",
         trIntro: "Udhiye/kurban ibadetinin şartları, vakti ve uygulama hükümleri vardır. Bu bölüm Hanefî/Diyanet çerçevesini esas alır: gerekli şartları taşıyan kişi için kurban vaciptir; mezhep farklılıkları ayrıca değerlendirilmelidir.",
@@ -4544,7 +4520,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let vows = IlmihalTopic(
-        id: "vows", icon: "signature",
+        id: "vows", icon: "duas",
         deTitle: "Gelübde, Eide & Sühne", trTitle: "Adak, Yemin & Kefaret",
         deIntro: "Gelübde, Eide und Kaffara haben unterschiedliche Voraussetzungen. Umgangssprache und rechtlich bindende Formulierungen sind nicht automatisch dasselbe.",
         trIntro: "Adak, yemin ve kefaretin şartları farklıdır. Günlük konuşmadaki her söz fıkhen bağlayıcı yemin veya adak sayılmaz.",
@@ -4565,7 +4541,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let family = IlmihalTopic(
-        id: "family", icon: "house.and.flag.fill",
+        id: "family", icon: "community",
         deTitle: "Familie, Ehe & Scheidung", trTitle: "Aile, Nikâh & Boşanma",
         deIntro: "Das islamische Familienrecht behandelt Ehe, Ehehindernisse, gegenseitige Rechte, Unterhalt, Scheidung, Wartezeit und verwandte Themen.",
         trIntro: "İslâm aile hukuku nikâh, evlenme engelleri, karşılıklı haklar, nafaka, boşanma, iddet ve ilgili konuları kapsar.",
@@ -4586,7 +4562,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let inheritance = IlmihalTopic(
-        id: "inheritance", icon: "doc.text.fill",
+        id: "inheritance", icon: "list",
         deTitle: "Testament, Erbe & Stiftung", trTitle: "Vasiyet, Miras & Vakıf",
         deIntro: "Vermögensnachfolge umfasst Schulden, Testament/Vermächtnis, Erbanteile und gegebenenfalls Stiftungen. Diese Themen sind rechnerisch und rechtlich sensibel.",
         trIntro: "Malın ölüm sonrası intikali; borçlar, vasiyet, miras payları ve vakıf gibi konuları kapsar. Bu alan hem hesap hem hukuk bakımından hassastır.",
@@ -4607,7 +4583,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let commerce = IlmihalTopic(
-        id: "commerce", icon: "cart.fill",
+        id: "commerce", icon: "info",
         deTitle: "Handel & Erwerb", trTitle: "Ticaret & Kazanç",
         deIntro: "Islamische Handelsregeln betonen freiwillige Zustimmung, Klarheit, Ehrlichkeit und den Schutz vor unrechtmäßiger Vermögensaneignung.",
         trIntro: "İslâm ticaret ahlakı rızayı, açıklığı, dürüstlüğü ve haksız mal edinmekten kaçınmayı öne çıkarır.",
@@ -4628,7 +4604,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let social = IlmihalTopic(
-        id: "social", icon: "person.3.fill",
+        id: "social", icon: "community",
         deTitle: "Soziales Leben & Rechte", trTitle: "Sosyal Hayat & Haklar",
         deIntro: "Nachbarschaft, Familie, Öffentlichkeit, Eigentum und persönliche Würde gehören ebenfalls zum praktischen islamischen Leben.",
         trIntro: "Komşuluk, aile, toplum, mülkiyet ve insan onuru da günlük dinî hayatın konularındandır.",
@@ -4647,7 +4623,7 @@ struct IlmihalDirectoryView: View {
     )
 
     private let health = IlmihalTopic(
-        id: "health", icon: "cross.case.fill",
+        id: "health", icon: "info",
         deTitle: "Medizin & Gesundheit", trTitle: "Tıp & Sağlık",
         deIntro: "Krankheit kann Einfluss auf Reinheit, Gebet, Fasten und andere Pflichten haben. Medizinische und religiöse Fragen sollten dabei getrennt, aber gemeinsam berücksichtigt werden.",
         trIntro: "Hastalık; abdest, namaz, oruç ve diğer ibadetleri etkileyebilir. Tıbbî ve dinî değerlendirme birbirine karıştırılmadan birlikte ele alınmalıdır.",
@@ -7619,10 +7595,8 @@ struct HijriCalendarView: View {
 
     private func importantEventRow(_ item: DatedEvent) -> some View {
         HStack(spacing: 11) {
-            Image(systemName: item.event.symbol)
-                .font(.title3)
-                .foregroundStyle(SalahTheme.teal)
-                .frame(width: 30)
+            SalahFeatureIcon(kind: "calendar")
+                .frame(width: 30, height: 30)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(settings.language == .german ? item.event.deTitle : item.event.trTitle)
@@ -7653,9 +7627,10 @@ struct HijriCalendarView: View {
                 Text(hijriDateString(date, language: settings.language))
                     .font(.headline)
                 if let event = eventInfo(date) {
-                    Label(
-                        settings.language == .german ? event.deTitle : event.trTitle,
-                        systemImage: event.symbol
+                    SalahFeatureIconLabel(
+                        title: settings.language == .german ? event.deTitle : event.trTitle,
+                        kind: "calendar",
+                        iconSize: 16
                     )
                     .font(.caption)
                     .foregroundStyle(SalahTheme.teal)
@@ -7929,9 +7904,10 @@ private struct IslamLearningLessonView: View {
 
     private var lessonHeaderCard: some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(
-                settings.language == .german ? lesson.deTitle : lesson.trTitle,
-                systemImage: lesson.icon
+            SalahFeatureIconLabel(
+                title: settings.language == .german ? lesson.deTitle : lesson.trTitle,
+                kind: lesson.icon,
+                iconSize: 26
             )
             .font(.title2.bold())
             .foregroundStyle(SalahTheme.deepTeal)
@@ -7952,8 +7928,8 @@ private struct IslamLearningLessonView: View {
 
             ForEach(points.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 10) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 18, height: 18)
                         .padding(.top, 2)
                     Text(points[index])
                         .fixedSize(horizontal: false, vertical: true)
@@ -8025,7 +8001,7 @@ struct IslamLearningHubView: View {
     private let lessons: [IslamLearningLesson] = [
         .init(
             id: "what_is_islam",
-            icon: "moon.stars.fill",
+            icon: "moon",
             deTitle: "Was bedeutet Islam?",
             trTitle: "İslâm ne demektir?",
             deIntro: "Islam bedeutet, sich Allah anzuvertrauen, Ihm allein zu dienen und Seiner Rechtleitung zu folgen.",
@@ -8045,7 +8021,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "shahada",
-            icon: "quote.bubble.fill",
+            icon: "duas",
             deTitle: "Shahada · Glaubensbekenntnis",
             trTitle: "Kelime-i şehadet",
             deIntro: "Die Shahada fasst den Kern des islamischen Glaubens zusammen: Allah allein ist anbetungswürdig und Muhammad ﷺ ist Sein Gesandter.",
@@ -8065,7 +8041,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "five_pillars",
-            icon: "building.columns.fill",
+            icon: "list",
             deTitle: "Die fünf Säulen",
             trTitle: "İslâm'ın beş şartı",
             deIntro: "Die fünf Säulen beschreiben die grundlegenden praktischen Pflichten des muslimischen Lebens.",
@@ -8089,7 +8065,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "six_beliefs",
-            icon: "hexagon.fill",
+            icon: "list",
             deTitle: "Die sechs Glaubensgrundsätze",
             trTitle: "İmanın altı esası",
             deIntro: "In der bekannten Zusammenfassung werden sechs grundlegende Glaubensbereiche genannt.",
@@ -8135,7 +8111,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "prophet",
-            icon: "person.text.rectangle.fill",
+            icon: "info",
             deTitle: "Prophet Muhammad ﷺ",
             trTitle: "Hz. Muhammed ﷺ",
             deIntro: "Muhammad ﷺ ist im Islam der letzte Prophet und Gesandte Allahs.",
@@ -8155,7 +8131,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "quran",
-            icon: "book.closed.fill",
+            icon: "quran",
             deTitle: "Der Qur'an",
             trTitle: "Kur'an",
             deIntro: "Der Qur'an ist für Muslime Allahs Offenbarung an Muhammad ﷺ in arabischer Sprache.",
@@ -8175,7 +8151,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "purity_worship",
-            icon: "drop.fill",
+            icon: "wudu",
             deTitle: "Reinheit & Gottesdienst",
             trTitle: "Temizlik ve ibadet",
             deIntro: "Rituelle Reinheit ist eine Voraussetzung für bestimmte Gottesdienste, besonders das Gebet.",
@@ -8195,7 +8171,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "akhlaq",
-            icon: "heart.fill",
+            icon: "community",
             deTitle: "Akhlaq · guter Charakter",
             trTitle: "Ahlâk",
             deIntro: "Islamische Religiosität betrifft nicht nur Gebet und Fasten, sondern auch den Umgang mit Menschen.",
@@ -8215,7 +8191,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "halal_haram",
-            icon: "scale.3d",
+            icon: "info",
             deTitle: "Halal, Haram & Zweifel",
             trTitle: "Helâl, haram ve şüpheli şeyler",
             deIntro: "Halal bedeutet religiös erlaubt; Haram bedeutet religiös verboten. Nicht jede persönliche Abneigung ist automatisch Haram.",
@@ -8235,7 +8211,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "repentance",
-            icon: "arrow.uturn.backward.circle.fill",
+            icon: "duas",
             deTitle: "Tawbah · Reue und Neubeginn",
             trTitle: "Tövbe ve yeniden başlamak",
             deIntro: "Ein Muslim, der einen Fehler macht, soll nicht glauben, dass Rückkehr zu Allah unmöglich geworden ist.",
@@ -8257,7 +8233,7 @@ struct IslamLearningHubView: View {
         ),
         .init(
             id: "afterlife",
-            icon: "hourglass.bottomhalf.filled",
+            icon: "moon",
             deTitle: "Tod & Jenseits",
             trTitle: "Ölüm ve âhiret",
             deIntro: "Der Glaube an Auferstehung, Gericht und das Jenseits gehört zu den Grundlagen des islamischen Glaubens.",
@@ -8341,11 +8317,9 @@ struct IslamLearningHubView: View {
 
     private func islamLessonRow(_ lesson: IslamLearningLesson) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: lesson.icon)
-                .font(.title3)
-                .foregroundStyle(SalahTheme.teal)
+            SalahFeatureIcon(kind: lesson.icon)
                 .frame(width: 34, height: 34)
-                .background(SalahTheme.softTeal.opacity(0.55), in: Circle())
+                .shadow(color: SalahTheme.deepTeal.opacity(0.08), radius: 1.5, y: 1)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(settings.language == .german ? lesson.deTitle : lesson.trTitle)
@@ -8432,9 +8406,10 @@ struct PrayerSequenceReferenceView: View {
                 .overlay { RoundedRectangle(cornerRadius: 15).stroke(SalahTheme.gold.opacity(0.40), lineWidth: 1) }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(
-                        settings.t("Wichtig: Das Gebet besteht nicht nur aus 1 Rakʿa", "Önemli: Namaz yalnız 1 rekâttan oluşmaz"),
-                        systemImage: "info.circle.fill"
+                    SalahFeatureIconLabel(
+                        title: settings.t("Wichtig: Das Gebet besteht nicht nur aus 1 Rakʿa", "Önemli: Namaz yalnız 1 rekâttan oluşmaz"),
+                        kind: "info",
+                        iconSize: 22
                     )
                     .font(.headline.bold())
                     .foregroundStyle(SalahTheme.deepTeal)
