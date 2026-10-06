@@ -592,7 +592,7 @@ private enum PrayerText {
         transliteration: "Elhamdülillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na'büdü ve iyyâke neste'în. İhdinessırâtal müstakîm. Sırâtallezîne en'amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.",
         deMeaning: "Alles Lob gebührt Allah, dem Herrn der Welten, dem Allerbarmer, dem Barmherzigen, dem Herrscher am Tag des Gerichts. Dir allein dienen wir und Dich allein bitten wir um Hilfe. Führe uns den geraden Weg: den Weg derer, denen Du Gnade erwiesen hast, nicht den Weg derer, die Zorn auf sich gezogen haben, und nicht den der Irregehenden.",
         trMeaning: "Hamd âlemlerin Rabbi Allah'a mahsustur. O Rahmân ve Rahîm'dir, hesap gününün sahibidir. Yalnız Sana kulluk eder ve yalnız Senden yardım dileriz. Bizi dosdoğru yola; nimet verdiklerinin yoluna ilet, gazaba uğrayanların ve sapmışların yoluna değil.",
-        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen. Wortlaut und Audio findest du zusätzlich im Quran-Bereich.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir. Metin ve ses ayrıca Kur'an bölümündedir.")
+        deNote: "Âmîn gehört nicht zum Qurantext der Fātiha; es wird danach gesprochen.", trNote: "Âmin Fâtiha sûresinin Kur'an metnine dahil değildir; sûreden sonra söylenir.")
 
     static let ikhlas = PrayerRecitation(
         deLabel: "Beispiel Zusatzsura: Al-Ikhlāṣ", trLabel: "Örnek zamm-ı sûre: İhlâs",
