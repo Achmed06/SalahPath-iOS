@@ -66,8 +66,8 @@ struct SettingsView: View {
                     }
 
                     Text(settings.t(
-                        "System folgt automatisch der iPhone-Einstellung. Hell und Dunkel erzwingen das gewählte SalahPath-Farbschema.",
-                        "Sistem seçeneği iPhone görünümünü otomatik izler. Açık ve Koyu seçenekleri SalahPath görünümünü sabitler."
+                        "System folgt automatisch der iPhone-Einstellung. Hell und Dunkel verwenden das gewählte Farbschema unabhängig von der iPhone-Einstellung.",
+                        "Sistem seçeneği iPhone görünümünü otomatik izler. Açık ve Koyu seçenekleri seçilen görünümü iPhone ayarından bağımsız kullanır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -127,7 +127,7 @@ struct SettingsView: View {
 
                     VStack(spacing: 8) {
                         HStack {
-                            Label(settings.t("Arabische Schriftgröße", "Arapça yazı boyutu"), systemImage: "textformat.size")
+                            SalahFeatureIconLabel(title: settings.t("Arabische Schriftgröße", "Arapça yazı boyutu"), kind: "quran")
                                 .font(.system(size: 11.5, weight: .semibold))
                                 .foregroundStyle(SalahTheme.ink)
                             Spacer()
@@ -317,8 +317,8 @@ struct SettingsView: View {
                                 let scheduled = await NotificationManager.shared.scheduleAdhanPreview(settings: settings, fajr: false)
                                 notificationStatusText = scheduled
                                     ? settings.t(
-                                        "Adhan-Test kommt in 5 Sekunden. Sperre das iPhone oder verlasse SalahPath kurz.",
-                                        "Ezan testi 5 saniye içinde gelecek. iPhone'u kilitle veya SalahPath'ten kısa süre çık."
+                                        "Der Adhan-Test kommt in 5 Sekunden. Sperre das iPhone oder wechsle kurz auf den Home-Bildschirm.",
+                                        "Ezan testi 5 saniye içinde gelecek. iPhone'u kilitle veya kısa süre ana ekrana geç."
                                     )
                                     : settings.t(
                                         "Adhan-Test konnte nicht bei iOS registriert werden.",
@@ -413,8 +413,8 @@ struct SettingsView: View {
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
                     Text(settings.t(
-                        "Wenn eine Vorwarnung gewählt ist, kann SalahPath zweimal erinnern: einmal vorher und – falls aktiviert – noch einmal genau zum Gebetsbeginn.",
-                        "Ön hatırlatma seçilirse SalahPath iki kez bildirebilir: önce seçilen dakika kadar önce ve açıksa tam namaz vaktinde."
+                        "Bei gewählter Vorwarnung können zwei Erinnerungen gesendet werden: einmal vorher und – falls aktiviert – noch einmal genau zum Gebetsbeginn.",
+                        "Ön hatırlatma seçilirse iki bildirim gönderilebilir: biri seçilen dakika kadar önce, diğeri açıksa tam namaz vaktinde."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
