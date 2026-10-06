@@ -438,8 +438,12 @@ struct TrackerPauseView: View {
 
             if paused {
                 Section {
-                    Label(settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."), systemImage: "checkmark.shield.fill")
-                        .foregroundStyle(.green)
+                    SalahFeatureIconLabel(
+                        title: settings.t("Heute wird beim Streak neutral behandelt.", "Bugün seri hesabında nötr sayılır."),
+                        kind: "checkmark",
+                        iconSize: 18
+                    )
+                    .foregroundStyle(.green)
                 }
             }
         }
@@ -584,7 +588,7 @@ private struct DailyDuaDetailView: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             if let repetition = dua.repetition {
-                                Label(repetition, systemImage: "repeat")
+                                SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)
                                     .font(.caption.bold())
                                     .foregroundStyle(SalahTheme.teal)
                             }
@@ -670,11 +674,15 @@ private struct DailyDuaDetailView: View {
                         .stroke(SalahTheme.cardStroke(), lineWidth: 1)
                 }
 
-                Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")
-                    .font(.footnote)
-                    .foregroundStyle(SalahTheme.mutedInk)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 2)
+                SalahFeatureIconLabel(
+                    title: dua.localizedSource(settings.language),
+                    kind: "info",
+                    iconSize: 18
+                )
+                .font(.footnote)
+                .foregroundStyle(SalahTheme.mutedInk)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 2)
             }
             .padding()
         }

@@ -266,9 +266,40 @@ for forbidden in (
     'CDN-Link',
     'SalahPath Dua-Sammlung öffnen',
     'Hier findest du die täglichen Gebete',
+    'gegen Diyanet-Lehrmaterial gegengeprüft',
+    'menschliche Audioedition',
+    'insan ses kaydı',
+    'Du siehst immer nur einen Schritt. Unten wechselst du eindeutig',
+    'Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“',
+    '2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich."',
+    '5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig."',
+    '8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab."',
+    '11: "Wasche danach den linken Fuß genauso vollständig."',
+    '2: "Sağ elle ağza su alıp iyice çalkala."',
+    '5: "Sağ eli ve sağ kolu dirsek dahil tamamen yıka."',
+    '8: "Islak parmaklarla kulakların içini ve dışını nazikçe mesh et."',
+    '11: "Ardından sol ayağı da aynı şekilde tamamen yıka."',
 ):
     if forbidden in guide:
-        fail(f"developer/meta learning UI regression: found {forbidden}")
+        fail(f"developer/meta or duplicate learning UI regression: found {forbidden}")
+
+for token in (
+    'Folge Bild, Haltung und Rezitation Schritt für Schritt.',
+    'Görseli, duruşu ve okuyuşu adım adım takip et.',
+    'Hanafitische Qunūt-Texte für Witr. Die Umschrift dient nur als Aussprachehilfe.',
+    'Rezitation: Islamic Network.',
+    'Tilavet: Islamic Network.',
+):
+    if token not in guide:
+        fail(f"clean user-facing learning copy regression: missing {token}")
+
+for token in (
+    'SalahFeatureIconLabel(\n                        title: settings.t("Heute wird beim Streak neutral behandelt."',
+    'SalahFeatureIconLabel(title: repetition, kind: "dhikr", iconSize: 17)',
+    'title: dua.localizedSource(settings.language),\n                    kind: "info"',
+):
+    if token not in home:
+        fail(f"Home content icon regression: missing {token}")
 
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
@@ -689,8 +720,8 @@ for legacy_prefix in ("sp_icon_", "ref_dash_"):
 for token in (
     'func localizedSource(_ language: AppLanguage) -> String',
     'with: language == .german ? "Auszug" : "alıntı"',
-    'Text(dua.localizedSource(settings.language))',
-    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
+    'title: dua.localizedSource(settings.language)',
+    'kind: "info"',
     'context: dua.localizedSource(settings.language)',
 ):
     if token not in home:
@@ -699,10 +730,11 @@ for token in (
 for forbidden in (
     'Text(dua.source)',
     'Label(dua.source, systemImage: "checkmark.seal.fill")',
+    'Label(dua.localizedSource(settings.language), systemImage: "checkmark.seal.fill")',
     'context: dua.source',
 ):
     if forbidden in home:
-        fail(f"bilingual daily dua source rendering returned: {forbidden}")
+        fail(f"bilingual or generic-icon daily dua source rendering returned: {forbidden}")
 
 # 6a.2) Audio runtime errors must follow the selected app language.
 for token in (
