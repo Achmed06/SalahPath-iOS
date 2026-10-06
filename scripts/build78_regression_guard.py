@@ -337,11 +337,12 @@ if '.scaleEffect(x: key == "wudu_leftfoot" ? -1 : 1, y: 1)' in guide:
     fail("Wudu left/right foot assets must not be mirrored in code")
 
 for token in (
-    'SalahFeatureIcon(kind: kind)',
-    'private func guideFeatureKind(for symbol: String) -> String?',
+    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
+    'private func guideFeatureKind(for symbol: String) -> String',
     'return "wudu"',
     'return "quran_audio"',
     'return "list"',
+    'return "info"',
 ):
     if token not in guide:
         fail(f"Guide content icon regression: missing {token}")
@@ -396,7 +397,7 @@ for token in (
     'audiencePreviewCard(\n                    .female',
     'Text(settings.t("Wähle deine Anleitung", "Rehberini seç"))',
     'Text(settings.t("2 Rakʿāt Schritt für Schritt", "2 rekât adım adım"))',
-    'Image(systemName: "globe")',
+    'SalahFeatureIcon(kind: "language")',
     '.accessibilityLabel(settings.t("Sprache wechseln", "Dili değiştir"))',
 ):
     if token not in guide:
@@ -420,14 +421,21 @@ for forbidden in (
     if forbidden in guide:
         fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
 
-# 5a.2) Premium learning-row icons must stay unbadged; only SF fallbacks get a circle.
+# 5a.2) Learning/content row icons must use standalone SalahPath artwork only.
 for token in (
-    'Premium artwork already carries its own visual identity.',
-    'SalahFeatureIcon(kind: kind)\n                        .frame(width: 31, height: 31)',
-    'Image(systemName: icon)\n                        .font(.system(size: 15, weight: .semibold))',
+    'SalahFeatureIcon(kind: guideFeatureKind(for: icon))',
+    '.frame(width: 31, height: 31)',
+    'private func guideFeatureKind(for symbol: String) -> String',
 ):
     if token not in guide:
         fail(f"premium learning-row icon regression: missing {token}")
+
+for forbidden in (
+    'if let kind = guideFeatureKind(for: icon)',
+    'Image(systemName: icon)\n                        .font(.system(size: 15, weight: .semibold))',
+):
+    if forbidden in guide:
+        fail(f"premium learning-row icon regression: generic decorative fallback returned: {forbidden}")
 
 # 5b) Nearby mosque filtering must reject substring false positives.
 root_tab_source = read("SalahZeit/Views/RootTabView.swift")
