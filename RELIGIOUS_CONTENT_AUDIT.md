@@ -18,6 +18,9 @@ Diyanet references checked include:
 - Ghusl triggers / sexual discharge wording: https://kurul.diyanet.gov.tr/tr/fetva/bir-kadinin-jinekolojik-muayene-olmasi-ya-da-rahim/0195dc3a-5579-76ec-b042-4c180f3f4e4a
 - Tayammum: https://kurul.diyanet.gov.tr/tr/fetva/teyemmum-nedir-nasil-yapilir-teyemmumu-bozan-seyler-nelerdir/0193c42d-4a83-7216-84a3-951c2fa115aa
 - Witr: https://kurul.diyanet.gov.tr/tr/fetva/vitir-namazi-nedir-nasil-kilinir/0193c42d-5d22-7a98-69e2-22aa16cc28f1
+- Travel prayer / combining prayers: https://kurul.diyanet.gov.tr/tr/fetva/namazlar-cem-edilmek-birlestirilmek-suretiyle-kilinabilir-mi/0193c42d-4df6-7e81-a5ab-dc99c59adece
+- Travel distance / residence rule: https://kurul.diyanet.gov.tr/tr/kurul/karar/umreye-gidenler-seferilik-hukumleri-acisindan-mekke-ve/009d3a5e-4dc0-4a27-090b-08dd1c135351
+- Qada scope including Witr: https://kurul.diyanet.gov.tr/tr/fetva/hangi-namazlar-kaza-edilir/0193c42d-5327-7459-64e7-211baaf5ab8c
 - Qunut when not memorized: https://kurul.diyanet.gov.tr/tr/fetva/kunut-duasini-bilmeyen-bir-kimse-ne-yapar/0193c42d-5d9a-7c56-51a8-e76a981e98a9
 - Eid prayer scope and procedure: https://igdir.diyanet.gov.tr/sayfalar/contentdetail.aspx?ContentId=1850&MenuCategory=Kurumsal
 - Jumuʿah obligation / validity: https://kurul.diyanet.gov.tr/tr/fetva/cuma-namazi-ve-zuhr-i-ahir-namazinin-hukmu/f0ecca63-4fac-4234-b733-08dd1c135350
@@ -132,6 +135,8 @@ Hadith/adhkar reference checked:
 - The four-caliph learning section was rechecked against TDV/Diyanet historical references. Core biographical claims reviewed in this pass required no correction, and the existing neutrality warning for disputed early internal conflicts remains.
 - Ashura, six Shawwal fasts, Laylat al-Qadr, Tasbih prayer and the reviewed Hijri-calendar cautions were rechecked; no additional correction was required beyond the Eid/Tashriq changes above.
 - The remaining Swift surfaces containing religious labels or rules (PrayerModels, prayer details, notification wording, settings, root navigation and prayer-time calculation descriptions) were cross-checked for contradictory Fard/Wajib/Sunnah wording. No additional religious-content contradiction was found in that pass.
+- Second-pass delta audit after the religious-audit merge found a missing Hanafi travel qualification: the Qasr guide now states that ordinary travel does not by itself permit true Jamʿ in the Hanafi baseline; Diyanet limits true Hanafi Jamʿ to the Hajj cases at ʿArafāt/Muzdalifah while allowing reliance on another Sunni school under its conditions in serious need.
+- The Qada tracker now labels its Witr counter as Hanafi/Diyanet-specific: missed Witr is made up because Witr is wajib in the Hanafi school, while the other Sunni schools classify Witr as Sunnah.
 - A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass
