@@ -1341,12 +1341,9 @@ struct HomeView: View {
                 PrayerTrackerOverviewView()
             } label: {
                 HStack(spacing: 7) {
-                    ZStack {
-                        Circle().fill(SalahTheme.softTeal).frame(width: 22, height: 22)
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(SalahTheme.teal)
-                    }
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 24, height: 24)
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 1) {
                         Text(settings.t("Heutige Gebete markieren", "Bugün namazları işaretle"))
