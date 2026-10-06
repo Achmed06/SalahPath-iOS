@@ -511,7 +511,7 @@ struct RakatOverviewView: View {
                 ForEach(PrayerKind.allCases.filter { $0 != .sunrise }) { kind in
                     VStack(alignment: .leading, spacing: 7) {
                         HStack {
-                            Label(kind.localizedName(settings.language), systemImage: kind.systemImage)
+                            SalahFeatureIconLabel(title: kind.localizedName(settings.language), kind: salahPrayerFeatureKind(for: kind), iconSize: 24)
                                 .font(.headline)
                             Spacer()
                             if let fard = kind.fardRakats {
@@ -1741,7 +1741,7 @@ struct WuduGuideView: View {
 
                     if safeCurrentStepIndex == 0 {
                         VStack(alignment: .leading, spacing: 9) {
-                            Label(settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), systemImage: "drop.fill")
+                            SalahFeatureIconLabel(title: settings.t("Wudu Schritt für Schritt", "Abdest adım adım"), kind: "wudu", iconSize: 26)
                                 .font(.title3.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -1790,7 +1790,7 @@ struct WuduGuideView: View {
                         .cardStyle()
 
                         VStack(alignment: .leading, spacing: 9) {
-                            Label(settings.t("Was bricht Wudu? · Hanafi", "Abdesti neler bozar? · Hanefî"), systemImage: "exclamationmark.shield.fill")
+                            SalahFeatureIconLabel(title: settings.t("Was bricht Wudu? · Hanafi", "Abdesti neler bozar? · Hanefî"), kind: "info", iconSize: 23)
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
                             Text(settings.t(
@@ -1814,21 +1814,21 @@ struct WuduGuideView: View {
                                 .font(.headline.bold())
                                 .foregroundStyle(SalahTheme.deepTeal)
                             NavigationLink { GhuslGuideView() } label: {
-                                Label(settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), systemImage: "shower.fill")
+                                SalahFeatureIconLabel(title: settings.t("Ghusl · Ganzkörperwaschung", "Gusül · boy abdesti"), kind: "wudu")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
                             Divider()
                             NavigationLink { TayammumGuideView() } label: {
-                                Label(settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), systemImage: "hand.raised.fill")
+                                SalahFeatureIconLabel(title: settings.t("Tayammum · wenn Wasser nicht nutzbar ist", "Teyemmüm · su kullanılamadığında"), kind: "wudu")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             .buttonStyle(.plain)
                             Divider()
                             NavigationLink { WuduSpecialCasesView() } label: {
-                                Label(settings.t("Wudu-Sonderfälle · Mest, Verband, Nagellack", "Abdest özel durumları · Mest, sargı, oje"), systemImage: "cross.case.fill")
+                                SalahFeatureIconLabel(title: settings.t("Wudu-Sonderfälle · Mest, Verband, Nagellack", "Abdest özel durumları · Mest, sargı, oje"), kind: "info")
                                     .font(.headline)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -2172,7 +2172,7 @@ struct GhuslGuideView: View {
         ScrollView {
             LazyVStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Was ist Ghusl?", "Gusül nedir?"), systemImage: "shower.fill")
+                    SalahFeatureIconLabel(title: settings.t("Was ist Ghusl?", "Gusül nedir?"), kind: "wudu", iconSize: 27)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -2300,7 +2300,7 @@ struct TayammumGuideView: View {
         ScrollView {
             LazyVStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Was ist Tayammum?", "Teyemmüm nedir?"), systemImage: "hand.raised.fill")
+                    SalahFeatureIconLabel(title: settings.t("Was ist Tayammum?", "Teyemmüm nedir?"), kind: "wudu", iconSize: 27)
                         .font(.title2.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -3088,7 +3088,7 @@ struct PrayerCatalogView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), systemImage: "list.bullet.rectangle.portrait.fill")
+                    SalahFeatureIconLabel(title: settings.t("Gebete einzeln erklärt", "Namazlar tek tek anlatılıyor"), kind: "list", iconSize: 24)
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -3400,7 +3400,7 @@ private struct PrayerCatalogDetailView: View {
                 .cardStyle(material: true)
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Label(settings.t("Ablauf", "Kılınışı"), systemImage: "list.number")
+                    SalahFeatureIconLabel(title: settings.t("Ablauf", "Kılınışı"), kind: "list")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3423,7 +3423,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if !notes.isEmpty {
                     VStack(alignment: .leading, spacing: 8) {
-                        Label(settings.t("Wichtig", "Önemli"), systemImage: "info.circle.fill")
+                        SalahFeatureIconLabel(title: settings.t("Wichtig", "Önemli"), kind: "info")
                             .font(.headline.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
 
@@ -3453,7 +3453,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if item.id == "witr" {
                     NavigationLink { QunutDuaView() } label: {
-                        Label(settings.t("Qunūt 1 & 2 vollständig öffnen", "Kunut 1 ve 2 tam metnini aç"), systemImage: "text.book.closed.fill")
+                        SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2 vollständig öffnen", "Kunut 1 ve 2 tam metnini aç"), kind: "duas")
                             .font(.headline.bold())
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -3463,7 +3463,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if item.id == "janazah" {
                     NavigationLink { JanazahDuaView() } label: {
-                        Label(settings.t("Cenaze-Dua vollständig öffnen", "Cenaze duasını tam aç"), systemImage: "text.book.closed.fill")
+                        SalahFeatureIconLabel(title: settings.t("Cenaze-Dua vollständig öffnen", "Cenaze duasını tam aç"), kind: "duas")
                             .font(.headline.bold())
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
@@ -3479,7 +3479,7 @@ private struct PrayerCatalogDetailView: View {
 
                 if !hasCompleteIllustratedGuide && item.group != "after" {
                     VStack(alignment: .leading, spacing: 6) {
-                        Label(settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), systemImage: "clock.badge")
+                        SalahFeatureIconLabel(title: settings.t("Bildanleitung folgt bald", "Görsel anlatım yakında"), kind: "prayer")
                             .font(.headline.bold())
                             .foregroundStyle(SalahTheme.deepTeal)
                         Text(settings.t(
@@ -3663,7 +3663,7 @@ struct HajjUmrahGuideView: View {
             )
 
             NavigationLink { QuranicDuaLibraryView() } label: {
-                Label(settings.t("SalahPath Dua-Sammlung öffnen", "SalahPath dua koleksiyonunu aç"), systemImage: "text.book.closed.fill")
+                SalahFeatureIconLabel(title: settings.t("Dua-Sammlung öffnen", "Dua koleksiyonunu aç"), kind: "duas")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 11)
@@ -3729,7 +3729,7 @@ struct RamadanGuideIndexView: View {
         List {
             Section {
                 Text(settings.t(
-                    "Hier findest du Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr an einer Stelle.",
+                    "Fastenwissen, Tarawih, Tasbih- und Eid-Gebet, Duas, Quran-Ayat und Laylat al-Qadr sind in diesem Bereich zusammengefasst.",
                     "Burada oruç bilgisi, teravih, tesbih ve bayram namazı, dualar, ayetler ve Kadir Gecesi ile ilgili bölümleri bir arada bulabilirsin."
                 ))
                 .font(.footnote)
@@ -3738,16 +3738,16 @@ struct RamadanGuideIndexView: View {
 
             Section(settings.t("Fasten", "Oruç")) {
                 NavigationLink { FastingBasicsView() } label: {
-                    Label(settings.t("Grundlagen & Weisheiten", "Temel bilgiler & hikmetler"), systemImage: "moon.stars.fill")
+                    SalahFeatureIconLabel(title: settings.t("Grundlagen & Weisheiten", "Temel bilgiler & hikmetler"), kind: "moon")
                 }
                 NavigationLink { FastingRulesView() } label: {
-                    Label(settings.t("Regeln: was bricht das Fasten?", "Hükümler: orucu ne bozar?"), systemImage: "checklist")
+                    SalahFeatureIconLabel(title: settings.t("Regeln: was bricht das Fasten?", "Hükümler: orucu ne bozar?"), kind: "checkmark")
                 }
                 NavigationLink { FastingExceptionsView() } label: {
-                    Label(settings.t("Ausnahmen & Erleichterungen", "Mazeretler & ruhsatlar"), systemImage: "cross.case.fill")
+                    SalahFeatureIconLabel(title: settings.t("Ausnahmen & Erleichterungen", "Mazeretler & ruhsatlar"), kind: "info")
                 }
                 NavigationLink { FastingTrackerView() } label: {
-                    Label(settings.t("Fasten-Tracker", "Oruç takibi"), systemImage: "checkmark.circle.fill")
+                    SalahFeatureIconLabel(title: settings.t("Fasten-Tracker", "Oruç takibi"), kind: "checkmark")
                 }
             }
 
@@ -3767,7 +3767,7 @@ struct RamadanGuideIndexView: View {
                     title: settings.t("Laylat al-Qadr · Sura 97", "Kadir Gecesi · Kadir Sûresi")
                 )
                 NavigationLink { QuranicDuaLibraryView() } label: {
-                    Label(settings.t("Duas", "Dualar"), systemImage: "hands.sparkles.fill")
+                    SalahFeatureIconLabel(title: settings.t("Duas", "Dualar"), kind: "duas")
                 }
             }
         }
@@ -3909,7 +3909,7 @@ struct EsmaulHusnaView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Allahs schöne Namen", "Esmâü'l-Hüsnâ"), systemImage: "sparkles")
+                    SalahFeatureIconLabel(title: settings.t("Allahs schöne Namen", "Esmâü'l-Hüsnâ"), kind: "sparkles", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4073,7 +4073,7 @@ struct FarewellSermonView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Label(settings.t("Wichtiger Quellenhinweis", "Önemli kaynak notu"), systemImage: "info.circle.fill")
+                    SalahFeatureIconLabel(title: settings.t("Wichtiger Quellenhinweis", "Önemli kaynak notu"), kind: "info")
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4264,7 +4264,7 @@ struct FourCaliphsView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Die ersten vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                    SalahFeatureIconLabel(title: settings.t("Die ersten vier Kalifen", "Dört Halife"), kind: "community", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
@@ -4650,7 +4650,7 @@ struct IlmihalDirectoryView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("İlmihal · Alltag des Glaubens", "İlmihal · Dini hayat rehberi"), systemImage: "books.vertical.fill")
+                    SalahFeatureIconLabel(title: settings.t("İlmihal · Alltag des Glaubens", "İlmihal · Dini hayat rehberi"), kind: "info", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -4665,35 +4665,35 @@ struct IlmihalDirectoryView: View {
 
             Section(settings.t("Glaube & Grundlagen", "İman & Temel Bilgiler")) {
                 NavigationLink { IslamLearningHubView() } label: {
-                    Label(settings.t("Glaubenslehre, Islam & Charakter", "İman, İslâm & Ahlâk"), systemImage: "book.pages.fill")
+                    SalahFeatureIconLabel(title: settings.t("Glaubenslehre, Islam & Charakter", "İman, İslâm & Ahlâk"), kind: "info")
                 }
                 NavigationLink { ThirtyTwoFardView() } label: {
-                    Label("32 Farz", systemImage: "checklist")
+                    SalahFeatureIconLabel(title: "32 Farz", kind: "list")
                 }
                 NavigationLink { EsmaulHusnaView() } label: {
-                    Label(settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), systemImage: "sparkles")
+                    SalahFeatureIconLabel(title: settings.t("Esmaül Hüsna · 99 Namen", "Esmâü'l-Hüsnâ · 99 İsim"), kind: "sparkles")
                 }
                 NavigationLink { FourCaliphsView() } label: {
-                    Label(settings.t("Die vier Kalifen", "Dört Halife"), systemImage: "person.3.sequence.fill")
+                    SalahFeatureIconLabel(title: settings.t("Die vier Kalifen", "Dört Halife"), kind: "community")
                 }
             }
 
             Section(settings.t("Reinheit", "Taharet")) {
-                NavigationLink { WuduGuideView() } label: { Label(settings.t("Wudu", "Abdest"), systemImage: "drop.fill") }
-                NavigationLink { GhuslGuideView() } label: { Label(settings.t("Ghusl", "Gusül"), systemImage: "shower.fill") }
-                NavigationLink { TayammumGuideView() } label: { Label("Tayammum", systemImage: "hand.raised.fill") }
+                NavigationLink { WuduGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Wudu", "Abdest"), kind: "wudu") }
+                NavigationLink { GhuslGuideView() } label: { SalahFeatureIconLabel(title: settings.t("Ghusl", "Gusül"), kind: "wudu") }
+                NavigationLink { TayammumGuideView() } label: { SalahFeatureIconLabel(title: "Tayammum", kind: "wudu") }
             }
 
             Section(settings.t("Gebet", "Namaz")) {
-                NavigationLink { PrayerCatalogView() } label: { Label(settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"), systemImage: "rectangle.stack.fill") }
+                NavigationLink { PrayerCatalogView() } label: { SalahFeatureIconLabel(title: settings.t("Gebetsarten & Anleitungen", "Namaz türleri & anlatımlar"), kind: "prayer") }
                 NavigationLink { PrayerHowToView() } label: { PrayerGuideIconLabel(title: settings.t("Körperhaltungen & Rezitation", "Hareketler & kıraat")) }
-                NavigationLink { PrayerTextsHubView() } label: { Label(settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), systemImage: "text.book.closed.fill") }
-                NavigationLink { PrayerDebtTrackerView() } label: { Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath") }
-                NavigationLink { PrayerMakruhTimesView() } label: { Label(settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"), systemImage: "sun.horizon.fill") }
+                NavigationLink { PrayerTextsHubView() } label: { SalahFeatureIconLabel(title: settings.t("Suren, Duas & Ayat", "Sûre, dua & ayetler"), kind: "quran") }
+                NavigationLink { PrayerDebtTrackerView() } label: { SalahFeatureIconLabel(title: settings.t("Qada-Tracker", "Kaza Takibi"), kind: "times") }
+                NavigationLink { PrayerMakruhTimesView() } label: { SalahFeatureIconLabel(title: settings.t("Kerāhat-Zeiten", "Kerahat Vakitleri"), kind: "times") }
             }
 
             Section(settings.t("Fasten, Zakat & Hajj", "Oruç, Zekât & Hac")) {
-                NavigationLink { RamadanGuideIndexView() } label: { Label(settings.t("Fasten & Ramadan", "Oruç & Ramazan"), systemImage: "moon.stars.fill") }
+                NavigationLink { RamadanGuideIndexView() } label: { SalahFeatureIconLabel(title: settings.t("Fasten & Ramadan", "Oruç & Ramazan"), kind: "moon") }
                 NavigationLink { IlmihalTopicView(topic: zakat) } label: { Label(settings.t("Zakat & Sadaqa", "Zekât & Sadaka"), systemImage: zakat.icon) }
                 NavigationLink { HajjUmrahGuideView() } label: { Label(settings.t("Hajj & Umrah", "Hac & Umre"), systemImage: "map.fill") }
                 NavigationLink { IlmihalTopicView(topic: sacrifice) } label: { Label(settings.t("Kurban / Opfer", "Kurban"), systemImage: sacrifice.icon) }
@@ -4745,7 +4745,7 @@ struct PrayerDebtTrackerView: View {
         ScrollView {
             VStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("Qada-Tracker", "Kaza Takibi"), systemImage: "clock.arrow.circlepath")
+                    SalahFeatureIconLabel(title: settings.t("Qada-Tracker", "Kaza Takibi"), kind: "times")
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -4899,7 +4899,7 @@ struct ThirtyTwoFardView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Label(settings.t("32 Farz – kompakter Lernzettel", "32 Farz – kısa öğrenme özeti"), systemImage: "checklist")
+                    SalahFeatureIconLabel(title: settings.t("32 Farz – kompakter Lernzettel", "32 Farz – kısa öğrenme özeti"), kind: "list", iconSize: 25)
                         .font(.title3.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
                     Text(settings.t(
@@ -6197,7 +6197,7 @@ struct PrayerDuaAudioView: View {
 
             Section(settings.t("Witr", "Vitir")) {
                 NavigationLink { QunutDuaView() } label: {
-                    Label(settings.t("Qunūt 1 & 2 vollständig", "Kunut 1 ve 2 tam metin"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2 vollständig", "Kunut 1 ve 2 tam metin"), kind: "duas")
                 }
             }
 
@@ -6249,7 +6249,7 @@ struct PrayerTextsHubView: View {
                 }
 
                 NavigationLink { QunutDuaView() } label: {
-                    Label(settings.t("Qunūt 1 & 2", "Kunut Duaları 1 & 2"), systemImage: "text.quote")
+                    SalahFeatureIconLabel(title: settings.t("Qunūt 1 & 2", "Kunut Duaları 1 & 2"), kind: "duas")
                 }
             }
 
@@ -6924,7 +6924,7 @@ struct FastingTrackerView: View {
 
     private var fastingHeaderCard: some View {
         VStack(alignment: .leading, spacing: 9) {
-            Label(settings.t("Fasten & Ramadan", "Oruç ve Ramazan"), systemImage: "moon.stars.fill")
+            SalahFeatureIconLabel(title: settings.t("Fasten & Ramadan", "Oruç ve Ramazan"), kind: "moon", iconSize: 27)
                 .font(.title2.bold())
                 .foregroundStyle(SalahTheme.deepTeal)
 
@@ -11169,7 +11169,7 @@ private struct QuranJuzLandingView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 7) {
-                    Label(settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), systemImage: "text.book.closed.fill")
+                    SalahFeatureIconLabel(title: settings.t("30 Juz des Quran", "Kur'an'ın 30 cüzü"), kind: "quran", iconSize: 24)
                         .font(.headline.bold())
                         .foregroundStyle(SalahTheme.deepTeal)
 
