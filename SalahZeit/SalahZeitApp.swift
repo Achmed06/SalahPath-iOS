@@ -25,6 +25,7 @@ struct SalahPathApp: App {
             appRoot
                 .environmentObject(locationManager)
                 .environmentObject(settings)
+                .environment(\.locale, Locale(identifier: settings.language == .german ? "de" : "tr"))
                 .task(id: prayerNotificationScheduleID) {
                     await refreshPrayerNotificationSchedule()
                 }
@@ -292,6 +293,8 @@ struct SalahPathApp: App {
             NavigationStack { PrayerDuaAudioView() }
         case "qibla":
             NavigationStack { QiblaView() }
+        case "licenses":
+            NavigationStack { ThirdPartyNoticesView() }
         case "settings":
             RootTabView(initialSelection: 4)
         case "more":

@@ -38,6 +38,10 @@ require_file "scripts/build_unsigned_ipa.sh"
 require_file "SalahZeit/Views/RootTabView.swift"
 require_file "SalahZeit/Views/GuideView.swift"
 require_file "SalahZeit/PrivacyInfo.xcprivacy"
+require_file "SalahZeit/Info.plist"
+require_file "SalahZeit/Resources/ThirdPartyNotices.txt"
+require_file "SalahZeit/Resources/de.lproj/InfoPlist.strings"
+require_file "SalahZeit/Resources/tr.lproj/InfoPlist.strings"
 require_file "SalahZeit/SalahZeit.entitlements"
 require_file "PRIVACY.md"
 require_file "SUPPORT.md"
@@ -58,13 +62,11 @@ if grep -RInE '^(<<<<<<<|=======|>>>>>>>)' SalahZeit scripts 2>/dev/null; then
   fail "merge-conflict markers found"
 fi
 
-# Release checkpoint: SalahPath v3.62 build 78
+# Release checkpoint: SalahPath v3.62 build 79
 grep -q 'MARKETING_VERSION = 3.62;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'CURRENT_PROJECT_VERSION = 78;' "SalahZeit.xcodeproj/project.pbxproj"
+grep -q 'CURRENT_PROJECT_VERSION = 79;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_STRICT_CONCURRENCY = complete;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;' "SalahZeit.xcodeproj/project.pbxproj"
-grep -q 'MARKETING_VERSION="3.62"' "scripts/build_unsigned_ipa.sh"
-grep -q 'CURRENT_PROJECT_VERSION="78"' "scripts/build_unsigned_ipa.sh"
 grep -q 'PRODUCT_BUNDLE_IDENTIFIER = com.achmed06.salahpath;' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'repositoryURL = "https://github.com/batoulapps/adhan-swift.git";' "SalahZeit.xcodeproj/project.pbxproj"
 grep -q 'kind = exactVersion;' "SalahZeit.xcodeproj/project.pbxproj"
@@ -391,5 +393,6 @@ print("Asset JSON + PNG + SVG structural integrity: OK")
 PY
 
 python3 scripts/build78_regression_guard.py
+python3 scripts/test_release_bundle.py
 
-printf 'Reference build checks passed for SalahPath v3.62 build 78\n'
+printf 'Reference build checks passed for SalahPath v3.62 build 79\n'

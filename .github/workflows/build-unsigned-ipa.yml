@@ -47,8 +47,15 @@ jobs:
           {
             echo "source_commit=$GITHUB_SHA"
             echo "ipa_sha256=$IPA_SHA256"
-            echo "marketing_version=3.62"
-            echo "build_number=78"
+            python3 - <<'PY_META'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('build/unsigned/release-verification.json').read_text())
+          print('marketing_version=' + str(report['version']))
+          print('build_number=' + str(report['build']))
+          print('sdk=' + str(report['sdk']))
+          print('artifact_kind=unsigned-test-ipa')
+          PY_META
           } > SalahPath-unsigned.provenance.txt
           cat SalahPath-unsigned.provenance.txt
 
@@ -59,4 +66,5 @@ jobs:
           path: |
             SalahPath-unsigned.ipa
             SalahPath-unsigned.provenance.txt
+            build/unsigned/release-verification.json
           if-no-files-found: error

@@ -4,7 +4,7 @@ SalahPath is a native iPhone prayer, Quran, Qibla, and Islamic learning app.
 
 ## Get help
 
-Open a support request here:
+For non-sensitive issues, open a public support request here (a GitHub account is required to post):
 
 https://github.com/Achmed06/SalahPath-iOS/issues
 
@@ -12,7 +12,7 @@ When reporting a problem, include the iPhone model, iOS version, SalahPath versi
 
 ## Common checks
 
-If prayer times or Qibla are unavailable, verify that SalahPath has Location access set to "While Using the App" in iOS Settings.
+For prayer times, either select a city/postal code manually in Profile or allow Location access while using the app. The live Qibla compass and nearby mosque search require the current device location; a saved prayer-time city does not replace it.
 
 If prayer reminders are missing, verify notification permission in iOS Settings, then open SalahPath again so the local prayer-notification schedule can refresh.
 

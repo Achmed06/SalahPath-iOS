@@ -135,7 +135,7 @@ struct SettingsView: View {
                                 .font(.system(size: 11, weight: .bold).monospacedDigit())
                                 .foregroundStyle(SalahTheme.teal)
                         }
-                        Stepper("", value: $settings.quranFontSize, in: 20...40, step: 2)
+                        Stepper(settings.t("Arabische Schriftgröße", "Arapça yazı boyutu"), value: $settings.quranFontSize, in: 20...40, step: 2)
                             .labelsHidden()
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
@@ -147,7 +147,7 @@ struct SettingsView: View {
 
                     profileRow(
                         icon: "doc.text.fill",
-                        title: settings.t("Offline-Qurantext", "Çevrimdışı Kur'an metni"),
+                        title: settings.t("Gespeicherte Übersetzungen", "Kayıtlı mealler"),
                         value: quranTextCacheText,
                         showsChevron: false
                     )
@@ -222,8 +222,8 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Text(settings.t(
-                        "Bereits geöffnete Quran-Suren und Mushaf-Seiten werden automatisch lokal gespeichert und funktionieren danach offline. Der Text-Cache wird auf etwa 48 MB begrenzt. Bereits gehörte Quran-Audios werden separat gespeichert; der Audio-Cache wird automatisch auf etwa 300 MB begrenzt.",
-                        "Açtığın Kur'an sûreleri ve Mushaf sayfaları otomatik olarak cihazda saklanır ve daha sonra çevrimdışı çalışır. Metin önbelleği yaklaşık 48 MB ile sınırlandırılır. Dinlediğin Kur'an sesleri ayrı saklanır; ses önbelleği yaklaşık 300 MB ile sınırlandırılır."
+                        "Der vollständige arabische Quran ist von Anfang an offline verfügbar. Geladene Übersetzungen und Umschriften werden zusätzlich gespeichert. Ihr Speicher ist auf etwa 48 MB begrenzt; für geladene Rezitationen stehen etwa 300 MB zur Verfügung. Beim Leeren bleibt der arabische Quran erhalten.",
+                        "Kur'an'ın Arapça metninin tamamı ilk açılıştan itibaren çevrimdışı kullanılabilir. İndirilen mealler ve Latin harfli okunuşlar ayrıca saklanır. Bunlar için yaklaşık 48 MB, indirilen tilavetler için yaklaşık 300 MB ayrılır. Önbelleği temizlemek Arapça metni silmez."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -248,7 +248,7 @@ struct SettingsView: View {
 
                     referenceToggle(
                         icon: "speaker.wave.3.fill",
-                        title: settings.t("Gebetsruf (Adhan) abspielen", "Ezan sesi çal"),
+                        title: settings.t("Kurzen Gebetsruf abspielen", "Kısa ezan sesi çal"),
                         isOn: $settings.adhanSoundEnabled
                     )
                     .disabled(!settings.notificationsEnabled || !settings.notifyAtPrayerTime)
@@ -343,7 +343,7 @@ struct SettingsView: View {
                     .opacity(settings.notificationsEnabled ? 1 : 0.45)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(settings.t("iOS-Systemstatus", "iOS sistem durumu"))
+                        Text(settings.t("Mitteilungseinstellungen", "Bildirim ayarları"))
                             .font(.system(size: 9.5, weight: .bold))
                             .foregroundStyle(SalahTheme.teal)
                         Text(notificationSystemStatusText)
@@ -375,8 +375,8 @@ struct SettingsView: View {
                     }
 
                     Text(settings.t(
-                        "Der Gebetsbeginn wird als zeitkritische Mitteilung geplant; so kann iOS ihn – wenn erlaubt – sofort und durch Fokus-Modi zustellen. Der Lautlos-Schalter wird nicht umgangen. Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Vorwarnungen bleiben normale iOS-Mitteilungen.",
-                        "Namaz başlangıcı zamana duyarlı bildirim olarak planlanır; iOS izin verirse bildirimi hemen ve Odak modlarından geçirerek teslim edebilir. Sessiz anahtarı aşılmaz. Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Ön hatırlatmalar normal iOS bildirimleri olarak kalır."
+                        "Der Gebetsruf ist ein 28 Sekunden langer Ausschnitt. Der Gebetsbeginn wird als zeitkritische Mitteilung geplant; so kann iOS ihn – wenn erlaubt – sofort und durch Fokus-Modi zustellen. Der Lautlos-Schalter wird nicht umgangen. Fajr verwendet einen eigenen Sabah-Ezan; Dhuhr, Asr, Maghrib und Isha verwenden den Standard-Ezan. Vorwarnungen bleiben normale iOS-Mitteilungen.",
+                        "Ezan sesi 28 saniyelik bir kesittir. Namaz başlangıcı zamana duyarlı bildirim olarak planlanır; iOS izin verirse bildirimi hemen ve Odak modlarından geçirerek teslim edebilir. Sessiz anahtarı aşılmaz. Sabah namazında ayrı Sabah ezanı; öğle, ikindi, akşam ve yatsıda standart ezan kullanılır. Ön hatırlatmalar normal iOS bildirimleri olarak kalır."
                     ))
                     .font(.system(size: 9.5, weight: .medium))
                     .foregroundStyle(SalahTheme.mutedInk)
@@ -437,8 +437,8 @@ struct SettingsView: View {
                             } else if scheduled {
                                 let diagnostics = await NotificationManager.shared.diagnostics()
                                 notificationStatusText = settings.t(
-                                    "\(diagnostics.pendingPrayerRequests) Gebetsbenachrichtigungen sind tatsächlich bei iOS geplant.",
-                                    "\(diagnostics.pendingPrayerRequests) namaz bildirimi gerçekten iOS'ta planlandı."
+                                    "\(diagnostics.pendingPrayerRequests) Gebetsbenachrichtigungen sind geplant.",
+                                    "\(diagnostics.pendingPrayerRequests) namaz bildirimi planlandı."
                                 )
                             } else {
                                 notificationStatusText = settings.t(
@@ -631,6 +631,16 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    NavigationLink {
+                        ThirdPartyNoticesView()
+                    } label: {
+                        profileRow(
+                            icon: "info",
+                            title: settings.t("Lizenzen", "Lisanslar"),
+                            value: ""
+                        )
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 referenceSection(settings.t("Feinabstimmung", "İnce ayar")) {
@@ -787,11 +797,11 @@ struct SettingsView: View {
             ? settings.t("Zeitkritisch: AN", "Zamana duyarlı: AÇIK")
             : settings.t("Zeitkritisch: AUS", "Zamana duyarlı: KAPALI")
         let adhanFiles = diagnostics.standardAdhanInstalled && diagnostics.fajrAdhanInstalled
-            ? settings.t("Adhan-Dateien: OK", "Ezan dosyaları: OK")
-            : settings.t("Adhan-Dateien: FEHLEN", "Ezan dosyaları: EKSİK")
+            ? settings.t("Gebetsruf: verfügbar", "Ezan sesi: hazır")
+            : settings.t("Gebetsruf: nicht verfügbar", "Ezan sesi: kullanılamıyor")
         let pending = settings.t(
-            "Gebets-Requests: \(diagnostics.pendingPrayerRequests)",
-            "Namaz istekleri: \(diagnostics.pendingPrayerRequests)"
+            "Geplante Erinnerungen: \(diagnostics.pendingPrayerRequests)",
+            "Planlanan hatırlatmalar: \(diagnostics.pendingPrayerRequests)"
         )
 
         notificationSystemStatusText = [permission, alerts, sounds, timeSensitive, adhanFiles, pending]
@@ -986,5 +996,35 @@ struct SettingsView: View {
         case .notDetermined: return settings.t("Nicht gefragt", "Sorulmadı")
         @unknown default: return settings.t("Unbekannt", "Bilinmiyor")
         }
+    }
+}
+
+
+struct ThirdPartyNoticesView: View {
+    @EnvironmentObject private var settings: SettingsStore
+
+    private var notices: String? {
+        guard let url = Bundle.main.url(forResource: "ThirdPartyNotices", withExtension: "txt") else { return nil }
+        return try? String(contentsOf: url, encoding: .utf8)
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(settings.t(
+                    "SalahPath verwendet Adhan Swift zur Berechnung der Gebetszeiten. Der Lizenztext ist nachfolgend im Original wiedergegeben.",
+                    "SalahPath namaz vakitlerini hesaplamak için Adhan Swift kullanır. Lisans metni aşağıda özgün hâliyle yer almaktadır."
+                ))
+                Text(notices ?? settings.t("Lizenztext konnte nicht geladen werden.", "Lisans metni yüklenemedi."))
+                    .textSelection(.enabled)
+            }
+            .font(.body)
+            .foregroundStyle(SalahTheme.ink)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+        }
+        .background(SalahTheme.page)
+        .navigationTitle(settings.t("Lizenzen", "Lisanslar"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

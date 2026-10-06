@@ -316,7 +316,8 @@ final class SettingsStore: ObservableObject {
         self.asrOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.asrOffset) as? Int ?? 0)
         self.maghribOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.maghribOffset) as? Int ?? 0)
         self.ishaOffset = Self.sanitizedOffset(defaults.object(forKey: Keys.ishaOffset) as? Int ?? 0)
-        self.language = AppLanguage(rawValue: defaults.string(forKey: Keys.language) ?? "") ?? .german
+        self.language = AppLanguage(rawValue: defaults.string(forKey: Keys.language) ?? "")
+            ?? (Bundle.main.preferredLocalizations.first == "tr" ? .turkish : .german)
         self.prayerAudience = PrayerAudience(rawValue: defaults.string(forKey: Keys.audience) ?? "") ?? .male
         self.appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
         self.quranReciter = QuranReciter(rawValue: defaults.string(forKey: Keys.quranReciter) ?? "") ?? .alafasy

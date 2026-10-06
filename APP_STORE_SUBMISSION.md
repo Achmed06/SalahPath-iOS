@@ -1,86 +1,107 @@
-# SalahPath App Store submission checklist
+# SalahPath App Store submission
 
-Prepared for SalahPath v3.62 / build 78 / bundle identifier `com.achmed06.salahpath`.
+Reviewed: 7 October 2026. Candidate: **3.62 (79)**, `com.achmed06.salahpath`, iPhone, iOS 17 or later.
 
-## Store identity
+**Status: technical release preparation; submission is not yet verified.** A successful unsigned archive is not a signed App Store export, a TestFlight device test, or an Apple approval. See `qa/APP_STORE_READINESS_2026-10-07.md` for evidence and unresolved items.
 
-- App name: `SalahPath`
-- Suggested German subtitle: `Gebet, Quran & Qibla`
-- Suggested Turkish subtitle: `Namaz, Kur'an ve Kıble`
-- Primary category: `Lifestyle`
-- Bundle identifier: `com.achmed06.salahpath`
-- Version: `3.62`
-- Build: `78`
-- Minimum iOS version: `17.0`
+## Identity and build
 
-## Required URLs
+The Xcode project is the source of truth for version/build; packaging no longer overrides these values. Before uploading, compare build 79 with the actual App Store Connect record and choose a new build number if 79 is already used.
 
-- Privacy Policy URL: `https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md`
-- Support URL: `https://github.com/Achmed06/SalahPath-iOS/issues`
+- App name: SalahPath
+- German subtitle: Gebet, Quran & Qibla
+- Turkish subtitle: Namaz, Kur'an ve Kıble
+- Suggested primary category: Lifestyle
+- Supported app languages: German and Turkish
+- Privacy URL: https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md
+- Support URL: https://github.com/Achmed06/SalahPath-iOS/issues
 
-The Privacy Policy link is also exposed inside the app under Profile > Rechtliches & Hilfe / Yasal bilgiler & yardım.
+The app exposes both links under Profile > Rechtliches & Hilfe / Yasal bilgiler & yardım. The public support form requires a GitHub account to post; add an owner-approved private contact channel before inviting users to send sensitive support/privacy information. Do not publish personal contact details without the owner's decision.
+
+## Build and signing
+
+Apple's requirements checked on 7 October 2026 require Xcode 26 or later and the iOS 26 SDK or later. Both the local preflight and the built-bundle check enforce the relevant minimums.
+
+- `scripts/build_unsigned_ipa.sh` runs a Release **archive** and verifies the unmodified `.app` before producing `SalahPath-unsigned.ipa` for testing.
+- `scripts/archive_app_store.sh` runs the signed archive/export path on a Mac with the enrolled team and signing keychain configured. Set `SALAH_DEVELOPMENT_TEAM` to that team's identifier. This script exports locally and does not upload or submit anything.
+- Enable Time Sensitive Notifications for the App ID; the signed export checks its entitlement.
+- Signing credentials belong in the keychain/secret store, never in this repository.
+- The signed path still requires a real execution with the developer account. It has not been proven merely by the unsigned CI build.
+
+Shared `SalahZeit/Info.plist` contains the audio background mode before signing. German/Turkish location purpose strings and the Adhan Swift MIT notice are bundled in both build paths. The verifier checks metadata, actual SDK, approved Quran/Adhan hashes, permissions, privacy reasons, localization resources, and absence of internal QA markers. It does not certify legal compliance or device behavior.
 
 ## App Review notes
 
-SalahPath does not require an account or login.
+SalahPath requires no account. On first launch, choose German or Turkish, a prayer-learning profile, and optionally a location. The onboarding can be completed without granting location access. A manually selected city remains available across launches. Learning, Quran Arabic reading, and local trackers remain available without location permission.
 
-Location permission is used while the app is in use to calculate prayer times, determine Qibla direction, resolve a nearby locality label, and search for nearby mosques through Apple MapKit. Device-location updates are not intentionally retained as a location history or sent to a SalahPath-operated server. If the user chooses a city or postal code manually, the resolved latitude, longitude, and locality are stored locally so that manual selection persists until the user clears it.
+Location supports prayer-time calculation, Qibla direction, nearby place names and mosque search using Apple system services. GPS updates are not kept as a location history by SalahPath. A manually selected location is stored locally until cleared in Profile. Qibla heading requires a physical device and its current position; it is separate from a saved prayer-time city.
 
-Prayer reminders are local notifications. Build 78 adds optional 28-second custom Adhan sounds exactly at prayer time: a dedicated Fajr recording and a standard Doha recording for Dhuhr, Asr, Maghrib and Isha. Advance reminders keep the normal iOS notification sound. Both are derivatives of the Internet Archive item “Adhan Recordings from Doha, Qatar”, whose source page marks the recordings with Public Domain Mark 1.0; provenance and hashes are recorded in `AUDIO_LICENSES.md`. The Islamic calendar export opens Apple's native event editor and does not read the user's calendar.
+Prayer reminders are local notifications. Optional Adhan sounds are 28-second excerpts; they do not override the silent switch. The app refreshes a finite notification schedule when opened, so reminders are not promised indefinitely without reopening. Background audio is used only for user-started recitation/playback. Calendar export uses Apple's event editor and does not read the user's calendar.
 
-The validated Arabic Uthmani Quran corpus is bundled locally from AlQuran.cloud / Islamic Network for offline reading. Translations and recitation audio are requested from the same service and cached where supported. The app attributes the Quran sources in the reader. A dated rights audit is stored in `CONTENT_RIGHTS_AUDIT.md`.
+The complete Arabic Quran is bundled for offline reading. Translations, transliteration and recitation audio use AlQuran.cloud / Islamic Network and local caches. The reader attributes the content sources. Cache clearing does not delete the bundled Arabic text. The two-rak'ah tutorial is illustrated; other prayer forms have written instructions. Do not advertise every prayer form as illustrated.
 
-There are no ads, advertising SDKs, analytics SDKs, StoreKit purchases, subscriptions, or cross-app tracking features in the audited build.
+The audited source has no advertising, analytics SDK, login, subscription or in-app purchase implementation. Local worship records are not uploaded to a SalahPath backend. The selected reciter and translator attributions remain visible. Adhan notification audio provenance is documented in `AUDIO_LICENSES.md`; the Adhan Swift MIT notice is available offline under Profile > Lizenzen / Lisanslar.
 
-## App Privacy / privacy manifest
+## App Privacy: unresolved provider evidence
 
-The binary includes `PrivacyInfo.xcprivacy` and declares:
+`PrivacyInfo.xcprivacy` currently declares no tracking, no collected-data entries, and required reasons `CA92.1` (UserDefaults) and `C617.1` (app-container file timestamps).
 
-- Tracking: No
-- Collected data type: Device ID — used only for App Functionality; not linked to the user; not used for tracking. This is a conservative disclosure for the source IP necessarily visible to AlQuran.cloud / Islamic Network while serving Quran API/CDN requests.
-- Required Reason API: UserDefaults — `CA92.1`
-- Required Reason API: File timestamps inside the app container — `C617.1`
+**Do not treat that manifest as proof for a final “Data Not Collected” answer.** The previous checklist incorrectly said the manifest declared Device ID and prescribed that answer solely because a server sees an IP address. That did not match the file or establish how the provider uses/retains data.
 
-### Final App Store Connect privacy answer for the Quran service
+Confirmed source behavior:
 
-Apple defines data as “collected” when it is transmitted off device and retained by the developer or a third party longer than needed to service the request in real time. Apple also instructs developers who collect and store IP addresses to disclose the data category according to how the IP address is used.
+- No advertising/device identifier or account identifier is generated or transmitted by SalahPath.
+- Quran requests expose source IP and ordinary request metadata to the API/CDN. The provider's terms mention IP rate limiting.
+- The reviewed terms do not establish server-log retention, whether requests are linked across sessions, or whether IPs are used for additional purposes.
+- Quran requests do not carry device coordinates, manual-location coordinates, tracker history or bookmarks.
+- Apple handles geocoding/MapKit requests. Review those system-service practices separately from the Quran provider.
 
-AlQuran.cloud's current terms state that the API applies a per-IP rate limit. As of 23 September 2026, the public AlQuran.cloud / Islamic Network material reviewed for release still does not provide a request-log retention period. Because retention cannot be confirmed, SalahPath will not rely on the “real-time only” exception.
+**Before submission:** obtain provider evidence for retention, purposes, linkage and deletion; then update the policy, privacy manifest (where applicable) and App Store Connect answers together. Apple bases disclosure on actual off-device retention/use. Neither “Device ID” nor “not linked” should be invented to fill this gap. Do not claim “Data Not Collected” while this review remains unresolved.
 
-For App Store Connect, answer **Yes, data is collected** and disclose:
+## Export compliance and content
 
-- Category: **Identifiers → Device ID**
-- Purpose: **App Functionality**
-- Linked to the user: **No**
-- Used for tracking: **No**
+The project declares `ITSAppUsesNonExemptEncryption = NO`; audited app networking uses system HTTPS and no proprietary encryption implementation. Confirm the export questionnaire for the actual release.
 
-This is intentionally conservative: the provider receives the source IP as normal connection metadata and uses it for API rate limiting / service protection. SalahPath does not create an account identifier and does not use the IP for advertising, analytics, profiling, or cross-app tracking.
+The provider terms were checked again on 7 October 2026; the documented text/translation/recitation permissions remain present. This is provider evidence, not a transfer of underlying copyrights or an independent clearance of every rightsholder. Preserve attribution and the unchanged Quran corpus. If monetization/provider/content changes, repeat the rights review. Religious-content audit records remain in `RELIGIOUS_CONTENT_AUDIT.md`; technical checks are not religious certification.
 
-Do **not** declare Precise Location or Coarse Location for the Quran service. SalahPath does not send GPS coordinates, manually selected latitude/longitude, prayer history, fasting state, Quran bookmarks, or other local worship data to AlQuran.cloud / Islamic Network.
+## Store descriptions — match implemented features
 
-If Islamic Network later publishes a verifiable statement that API/CDN source IPs and request metadata are discarded immediately after servicing the request, the App Store Connect disclosure can be revisited.
+### Deutsch
 
-## Export compliance
+SalahPath begleitet dich mit Gebetszeiten, Qibla und Anleitungen für Gebet und Gebetswaschung. Lies den vollständigen arabischen Quran offline und ergänze bei bestehender Internetverbindung Übersetzungen, Umschrift und Rezitationen.
 
-The project declares `ITSAppUsesNonExemptEncryption = NO`. Current network encryption is provided through Apple's HTTPS networking stack; there is no proprietary cryptography in SalahPath's own source.
+Wähle Deutsch oder Türkisch, stelle die Gebetszeitberechnung passend zu deinem Ort ein und aktiviere auf Wunsch lokale Erinnerungen mit einem kurzen Gebetsruf. Ein Gebetstracker, Dhikr-Zähler, Duas und ein islamischer Kalender unterstützen dich im Alltag. Für nahegelegene Moscheen steht eine Kartensuche bereit.
 
-## Content rights and attribution
+Die bebilderte Gebetsanleitung zeigt zwei Rakʿah für Männer und Frauen; weitere Gebetsformen werden schriftlich erläutert. Die Darstellung orientiert sich überwiegend an der hanafitischen Lehrtradition. Gebetszeiten und islamische Kalenderdaten können von örtlichen Festlegungen abweichen.
 
-The dated content-rights review is in `CONTENT_RIGHTS_AUDIT.md`. The Arabic Uthmani Quran corpus is also bundled locally for offline page reading; its exact validated source hash is recorded in `qa/quran-text-hash.txt` and the app keeps visible AlQuran.cloud / Islamic Network attribution. Bundled audio provenance is recorded in `AUDIO_LICENSES.md`.
+Kein Konto erforderlich. Standortzugriff und Benachrichtigungen sind freiwillig. Einstellungen und persönliche Gebetsaufzeichnungen bleiben lokal auf deinem Gerät.
 
-The current build ships the validated AlQuran.cloud / Islamic Network Uthmani corpus locally and uses the service for translations/recitations; it visibly attributes the service, Diyanet, Bubenheim & Elyas, and the selected reciter. AlQuran.cloud's terms reviewed on 21 September 2026 support the current free/non-paywalled use while retaining the underlying rights with translators and reciters/rightsholders. If monetisation or a paywall is introduced, repeat the rights review before release.
+### Türkçe
 
-## Religious-content review
+SalahPath; namaz vakitleri, kıble yönü, namaz ve abdest anlatımlarıyla günlük ibadetlerine eşlik eder. Kur'an'ın Arapça metninin tamamını çevrimdışı okuyabilir; internet bağlantısıyla meal, Latin harfli okunuş ve tilavetlerden yararlanabilirsin.
 
-The dated religious-content audit is in `RELIGIOUS_CONTENT_AUDIT.md`. The current native source corrects or clarifies Quran excerpts, a previously incomplete Quran 3:8 display, morning/evening adhkar wording, the unsupported fixed Istighfar counter, and the Hanafi congregational Fatiha distinction.
+Almanca veya Türkçe seçebilir, namaz vakti hesaplamasını bulunduğun yere göre ayarlayabilir ve kısa ezan sesiyle yerel hatırlatmalar açabilirsin. Namaz takibi, zikir sayacı, dualar ve İslami takvim de uygulamada yer alır. Yakındaki camileri haritada arayabilirsin.
 
-## Manual items that require the Apple Developer / App Store Connect account
+Görsel namaz anlatımı erkekler ve kadınlar için iki rekâtı gösterir; diğer namaz türleri yazılı olarak açıklanır. Anlatım ağırlıklı olarak Hanefî öğretimine dayanır. Namaz vakitleri ve İslami takvim tarihleri yerel uygulamalardan farklı olabilir.
 
-- Create the App ID for `com.achmed06.salahpath`.
-- Create the App Store Connect app record.
-- Complete the age-rating questionnaire.
-- Enter App Privacy answers and the Privacy Policy URL using the final privacy decision above.
-- Upload screenshots for the required iPhone display sizes.
-- Provide the Support URL.
-- Sign/archive with the paid Apple Developer team and upload the signed build.
-- Run TestFlight device testing for location, Qibla heading, notifications, calendar export, Quran streaming/cache, and both German/Turkish UI before review submission.
+Hesap gerekmez. Konum izni ve bildirimler isteğe bağlıdır. Ayarların ve kişisel ibadet kayıtların cihazında saklanır.
+
+## Account and device checks still required
+
+- Confirm Apple Developer membership/team, App ID and App Store Connect app record; check that build 79 is unused.
+- Complete privacy review above, age-rating questionnaire and EU trader-status declaration based on the owner's actual situation.
+- Supply owner-approved support/review contact details and functioning public URLs.
+- Capture current, accurate App Store screenshots for the required display sizes; do not use mockups as evidence of runtime tests.
+- Execute signed archive/export, validate/upload in App Store Connect, and inspect Apple's processing result.
+- Test TestFlight installation and clean onboarding on a real iPhone; allow/deny/re-enable location and notifications, manual city, real compass, silent/Focus modes, lock-screen audio, calendar save/cancel, network loss, Quran caches, both languages and light/dark appearance.
+- Submit for review only after these items are complete.
+
+## Checked primary sources
+
+- https://developer.apple.com/news/upcoming-requirements/
+- https://developer.apple.com/app-store/review/guidelines/
+- https://developer.apple.com/app-store/app-privacy-details/
+- https://alquran.cloud/terms-and-conditions
+- https://github.com/batoulapps/adhan-swift/blob/1.5.0/LICENSE
+
+Kann Richtigkeit nicht garantieren – bitte verifizieren.
