@@ -24,6 +24,7 @@ Diyanet references checked include:
 - Travel distance / residence rule: https://kurul.diyanet.gov.tr/tr/kurul/karar/umreye-gidenler-seferilik-hukumleri-acisindan-mekke-ve/009d3a5e-4dc0-4a27-090b-08dd1c135351
 - Qada scope including Witr: https://kurul.diyanet.gov.tr/tr/fetva/hangi-namazlar-kaza-edilir/0193c42d-5327-7459-64e7-211baaf5ab8c
 - Sehiv-Sujud triggers and procedure: https://kurul.diyanet.gov.tr/tr/fetva/hangi-sebeplerle-sehiv-secdesi-yapmak-gerekir-sehiv-secdesi-nasil-yapilir/0193c42d-5eb1-7caa-b1ce-6346f72b89fb
+- Qawmah/Calsa ruling and school difference: https://kurul.diyanet.gov.tr/tr/fetva/namazda-kavme-ve-celsenin-hukmu-nedir-ne-kadar-beklemek/0193c42d-4f49-7ffe-d2d0-49a36f918b7c
 - Tilawah-Sajdah school classification / translation case: https://kurul.diyanet.gov.tr/tr/fetva/secde-ayetlerinin-mealini-okuyan-kisinin-tilavet-secdesi-yapmasi-gerekir-mi/0193c42d-a2b7-7c4a-6709-93c05e5c252c
 - Qunut when not memorized: https://kurul.diyanet.gov.tr/tr/fetva/kunut-duasini-bilmeyen-bir-kimse-ne-yapar/0193c42d-5d9a-7c56-51a8-e76a981e98a9
 - Eid prayer scope and procedure: https://igdir.diyanet.gov.tr/sayfalar/contentdetail.aspx?ContentId=1850&MenuCategory=Kurumsal
@@ -148,6 +149,7 @@ Hadith/adhkar reference checked:
 - Tilawah-Sajdah now states that its Wajib classification is specifically Hanafi; the other three Sunni schools classify it as Sunnah.
 - The child Janazah dua cards had appended “bi-raḥmatika yā arḥama-r-rāḥimīn” to the Diyanet boys'/girls' formula. The additional phrase is a permissible general supplication, but it is not part of the checked Diyanet child formula; it was removed so the displayed sourced text matches the reference exactly.
 - The Kerahat screen's blanket “no prayer” wording was too broad for the three severe Hanafi/Diyanet windows. It now says “generally” and records the Diyanet exceptions for a Janazah prepared during the window and a Tilawah-Sajdah triggered by a Sajdah verse recited during the window. The existing Friday-after-minbar Nafila restriction was rechecked and left unchanged.
+- The note for the sitting between the two prostrations no longer uses only the vague phrase “should not be omitted”: it now states that the quiet calsa is wajib according to the preferred Hanafi view, while the other Sunni schools classify it as fard; the optional “Rabbighfir li” wording remains clearly distinguished from the sitting itself.
 - A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass
