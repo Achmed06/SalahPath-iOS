@@ -4586,16 +4586,18 @@ struct IlmihalDirectoryView: View {
         deIntro: "Gelübde, Eide und Kaffara haben unterschiedliche Voraussetzungen. Umgangssprache und rechtlich bindende Formulierungen sind nicht automatisch dasselbe.",
         trIntro: "Adak, yemin ve kefaretin şartları farklıdır. Günlük konuşmadaki her söz fıkhen bağlayıcı yemin veya adak sayılmaz.",
         dePoints: [
-            "Zuerst klären, ob überhaupt ein religiös bindendes Gelübde oder ein Eid entstanden ist.",
-            "Ein Gelübde macht eine ursprünglich verbotene Handlung nicht erlaubt.",
-            "Kaffara hängt vom konkreten Anlass ab; Fasten-Kaffara, Eid-Kaffara und andere Fälle dürfen nicht vermischt werden.",
-            "Bei unklaren eigenen Formulierungen sollte der exakte Wortlaut fachkundig geprüft werden."
+            "Ein gültiges Adak/Gelübde betrifft eine erlaubte gottesdienstliche Handlung; ein Gelübde zu Sünde oder Ungehorsam ist nicht gültig und macht Verbotenes niemals erlaubt.",
+            "Bei einem gültigen bindenden Eid (Yemin) kommt es auf Wortlaut, Absicht und Art des Eides an. Umgangssprache wie „şart olsun“ kann je nach Absicht und regionalem Sprachgebrauch sogar unterschiedlich eingeordnet werden – deshalb nie pauschal aus einem einzelnen Satz urteilen.",
+            "Wer einen gültigen Eid bricht, leistet die in Quran 5:89 genannte Yemin-Kaffarah: zehn Bedürftige speisen oder kleiden; wer dazu nicht in der Lage ist, fastet drei Tage. In der Hanafi-Einordnung werden diese drei Tage zusammenhängend gefastet.",
+            "Ein Eid, etwas Verbotenes zu tun oder eine Pflicht zu unterlassen, darf nicht „eingehalten“ werden: Er wird gebrochen und die entsprechende Yemin-Kaffarah geleistet.",
+            "Fasten-Kaffarah, Yemin-Kaffarah, Gelübde und andere Sühnefälle sind verschiedene Rechtsfragen und dürfen nicht miteinander vermischt werden."
         ],
         trPoints: [
-            "Önce dinen bağlayıcı bir adak veya yeminin gerçekten oluşup oluşmadığı belirlenir.",
-            "Adak, haram olan bir işi helal hâle getirmez.",
-            "Kefaret sebebe göre değişir; oruç kefareti, yemin kefareti ve diğerleri karıştırılmamalıdır.",
-            "Kendi sözünün hükmü belirsizse kullanılan ifade aynen aktarılıp ehil kişiye sorulmalıdır."
+            "Geçerli adak, meşru ve ibadet niteliğindeki bir fiille ilgili olur; günah veya isyan içeren adak geçerli değildir ve haramı helal hâle getirmez.",
+            "Bağlayıcı yeminde kullanılan söz, niyet ve yemin türü önemlidir. „Şart olsun“ gibi ifadeler niyet ve yöresel kullanıma göre farklı hüküm alabilir; tek bir cümleden otomatik hüküm çıkarılmamalıdır.",
+            "Geçerli yemini bozan kimse Mâide 5:89'daki yemin kefaretini yerine getirir: on yoksulu doyurmak veya giydirmek; buna gücü yetmeyen üç gün oruç tutar. Hanefî hükümde bu üç gün peş peşe tutulur.",
+            "Haram işlemeye veya farz/vacibi terk etmeye dair yemin yerine getirilmez; yemin bozulur ve yemin kefareti verilir.",
+            "Oruç kefareti, yemin kefareti, adak ve diğer kefaretler ayrı meselelerdir; birbirine karıştırılmamalıdır."
         ]
     )
 
@@ -4605,16 +4607,18 @@ struct IlmihalDirectoryView: View {
         deIntro: "Das islamische Familienrecht behandelt Ehe, Ehehindernisse, gegenseitige Rechte, Unterhalt, Scheidung, Wartezeit und verwandte Themen.",
         trIntro: "İslâm aile hukuku nikâh, evlenme engelleri, karşılıklı haklar, nafaka, boşanma, iddet ve ilgili konuları kapsar.",
         dePoints: [
-            "Eine gültige Ehe hat definierte Voraussetzungen; kulturelle Bräuche ersetzen diese nicht automatisch.",
-            "Ehepartner haben gegenseitige Rechte und Verantwortlichkeiten; Gewalt oder Unrecht werden dadurch nicht legitimiert.",
-            "Scheidungsfragen hängen stark vom exakten Wortlaut, der Situation und der Rechtsschule ab.",
-            "Staatliches Familienrecht und religiöse Bewertung können unterschiedliche Ebenen betreffen; beides muss beachtet werden."
+            "Nikah ist ein Vertrag mit freier Zustimmung (Ijab/Qabul) zwischen heiratsfähigen Personen ohne religiöses Ehehindernis und mit den erforderlichen Zeugen. Zwang oder Drohung ersetzt die Zustimmung nicht.",
+            "Zeugen sind für die Gültigkeit relevant. In der Hanafi-Einordnung genügen zwei Männer oder ein Mann und zwei Frauen; andere sunnitische Rechtsschulen verlangen bei der Zeugenschaft zwei Männer.",
+            "Mahr ist ein Recht der Frau, das aus der Ehe entsteht. Im Hanafi-Fiqh wird ein Nikah nicht allein deshalb ungültig, weil bei Vertragsschluss kein Mahrbetrag festgelegt wurde; dadurch entfällt der Mahranspruch nicht.",
+            "Eine staatlich registrierte Eheschließung, die die religiösen Vertragsbedingungen erfüllt, kann auch religiös gültig sein. Registrierung darf wegen der Rechte der Ehepartner und Kinder nicht als unwichtig dargestellt werden.",
+            "Bei Talak/Scheidung niemals aus einem verkürzten Satz automatisch entscheiden: klare und indirekte Formulierungen, Absicht, Zeitpunkt, bereits erfolgte Scheidungen, Rechtsschule und gerichtliche Entscheidungen können das Ergebnis verändern. Solche Einzelfälle müssen fachkundig geprüft werden."
         ],
         trPoints: [
-            "Geçerli nikâhın belirli şartları vardır; kültürel adetler bu şartların yerini otomatik olarak tutmaz.",
-            "Eşlerin karşılıklı hak ve sorumlulukları vardır; bunlar şiddet veya haksızlığı meşrulaştırmaz.",
-            "Boşama hükümleri kullanılan tam ifadeye, duruma ve mezhebe göre değişebilir.",
-            "Devlet aile hukuku ile dinî değerlendirme farklı düzlemlerdir; ikisi de dikkate alınmalıdır."
+            "Nikâh; evlenme ehliyetine sahip, aralarında dinî evlenme engeli bulunmayan tarafların gerekli şahitler huzurunda hür iradeyle icap-kabul yapmasıyla kurulan akittir. Zorlama veya tehdit rızanın yerini tutmaz.",
+            "Şahitlik nikâhın geçerliliğiyle ilgilidir. Hanefî hükümde iki erkek veya bir erkek iki kadın yeterli görülür; diğer Sünnî mezheplerde iki erkek şahit şartı aranır.",
+            "Mehir kadının nikâhtan doğan hakkıdır. Hanefî fıkhında nikâh sırasında mehir miktarının belirlenmemesi nikâhı tek başına geçersiz kılmaz ve kadının mehir hakkını ortadan kaldırmaz.",
+            "Dinî şartları taşıyan resmî nikâh dinen de geçerli olabilir. Eşlerin ve çocukların haklarını koruyan resmî tescil önemsiz gösterilmemelidir.",
+            "Talâk/boşama konusunda kısa bir cümleden otomatik hüküm verilmemelidir: açık veya kinayeli söz, niyet, zaman, önceki boşamalar, mezhep ve mahkeme kararı sonucu değiştirebilir. Gerçek olayda tam ifade ehil kişiye aktarılmalıdır."
         ]
     )
 
@@ -4624,16 +4628,18 @@ struct IlmihalDirectoryView: View {
         deIntro: "Vermögensnachfolge umfasst Schulden, Testament/Vermächtnis, Erbanteile und gegebenenfalls Stiftungen. Diese Themen sind rechnerisch und rechtlich sensibel.",
         trIntro: "Malın ölüm sonrası intikali; borçlar, vasiyet, miras payları ve vakıf gibi konuları kapsar. Bu alan hem hesap hem hukuk bakımından hassastır.",
         dePoints: [
-            "Vor einer Erbverteilung werden relevante Nachlasspflichten und Schulden berücksichtigt.",
-            "Nicht jede gewünschte testamentarische Verteilung ist religiös oder staatlich ohne Weiteres wirksam.",
-            "Erbanteile hängen von der tatsächlich vorhandenen Verwandtschaftskonstellation ab.",
-            "Für einen realen Nachlass sind qualifizierte religiöse und staatlich-rechtliche Beratung sinnvoll."
+            "Reihenfolge vor der Erbverteilung: angemessene Bestattungs-/Nachlasskosten, Schulden, wirksame testamentarische Verfügungen und erst danach die Verteilung des verbleibenden Nachlasses.",
+            "Eine freiwillige Wasiyyah/Vermächtnisregelung ist grundsätzlich auf höchstens ein Drittel des nach Kosten und Schulden verbleibenden Nachlasses begrenzt. Mehr als ein Drittel hängt von der Zustimmung der Erben ab.",
+            "Eine Wasiyyah zugunsten eines ohnehin erbberechtigten Erben ist nach der dargestellten Diyanet/Hanafi-Regel grundsätzlich von der Zustimmung der übrigen Erben abhängig; sie ist nicht einfach ein Weg, Quranische Erbanteile einseitig umzuschreiben.",
+            "Erbanteile können nicht aus einer allgemeinen Prozenttabelle ohne vollständigen Familienstammbaum berechnet werden: Ehepartner, Eltern, Kinder, Geschwister und weitere Verwandte können einander in der Erbfolge beeinflussen oder ausschließen.",
+            "Staatliches Erb-, Pflichtteils- und Steuerrecht kann zusätzlich gelten. SalahPath darf bei einem echten Nachlass keine individuelle verbindliche Erbverteilung aus einer Kurzbeschreibung erzeugen."
         ],
         trPoints: [
-            "Miras paylaşımından önce ilgili tereke yükümlülükleri ve borçlar dikkate alınır.",
-            "İstenen her vasiyet düzenlemesi dinen veya hukukta otomatik olarak geçerli değildir.",
-            "Miras payları mevcut mirasçıların kim olduğuna göre değişir.",
-            "Gerçek bir tereke için hem dinî hem resmî hukuk açısından uzman desteği gerekir."
+            "Miras paylaşımından önce sıra şöyledir: uygun teçhiz/tekfin ve tereke giderleri, borçların ödenmesi, geçerli vasiyetlerin yerine getirilmesi ve bundan sonra kalan mirasın paylaştırılması.",
+            "İhtiyarî vasiyet, masraf ve borçlardan sonra kalan terekenin kural olarak en fazla üçte biriyle sınırlıdır. Üçte biri aşan kısım mirasçıların onayına bağlıdır.",
+            "Zaten mirasçı olan bir kişi lehine vasiyet, burada esas alınan Diyanet/Hanefî hükme göre diğer mirasçıların onayına bağlıdır; vasiyet Kur'an'daki miras paylarını tek taraflı değiştirme yolu değildir.",
+            "Miras payları tam aile tablosu bilinmeden genel bir yüzde listesiyle hesaplanamaz; eş, anne-baba, çocuk, kardeş ve diğer mirasçılar birbirlerinin payını veya mirasçılığını etkileyebilir.",
+            "Devletin miras, saklı pay ve vergi hukuku ayrıca uygulanabilir. SalahPath gerçek bir tereke için kısa bilgiye dayanarak bağlayıcı kişisel miras taksimi yapmamalıdır."
         ]
     )
 
