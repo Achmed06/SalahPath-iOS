@@ -256,6 +256,10 @@ for token in (
 for forbidden in (
     'Den Satz einmal beim Drehen nach rechts',
     'Rechts und anschließend links',
+    'Hanafi: Imam und allein Betender sagen dies beim Aufrichten.',
+    'Hanefî: İmam ve yalnız kılan doğrulurken bunu söyler.',
+    'Hanafi: Der Mitbetende hinter dem Imam sagt dies; der allein Betende ebenfalls nach dem Aufrichten.',
+    'Hanefî: İmama uyan bunu söyler; yalnız kılan da doğrulunca söyler.',
     'systemImage: "figure.walk"',
     'systemImage: "text.bubble.fill"',
     'SalahPath verwendet diesen Bereich',
