@@ -625,7 +625,7 @@ private enum PrayerText {
         deLabel: "Mögliche Dua zwischen den Secden", trLabel: "İki secde arasında okunabilecek dua",
         arabic: "رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir lī",
         deMeaning: "Mein Herr, vergib mir.", trMeaning: "Rabbim, beni bağışla.",
-        deNote: "Keine Pflichtformel; die kurze ruhige Sitzphase selbst soll nicht ausgelassen werden.", trNote: "Zorunlu bir söz değildir; kısa ve sakin oturuş atlanmamalıdır.")
+        deNote: "Hanafi/Diyanet: „Rabbighfir lī“ ist hier keine Pflichtformel. Die ruhige Calsa zwischen den zwei Sujūd ist nach der bevorzugten hanafitischen Auffassung wajib; andere sunnitische Rechtsschulen stufen sie als Fard ein.", trNote: "Hanefî/Diyanet: „Rabbighfir lî“ burada zorunlu bir söz değildir. İki secde arasındaki sakin celse, Hanefî mezhebinde tercih edilen görüşe göre vaciptir; diğer Sünnî mezheplerde farzdır.")
 
     static let tahiyyat = PrayerRecitation(
         deLabel: "Ettehiyyâtü / Tashahhud", trLabel: "Ettehiyyâtü / Tahiyyat",
@@ -1615,10 +1615,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Jungen:",
                     "Erkek çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("اللَّهُمَّ اجْعَلْهُ لَنَا فَرَطًا وَاجْعَلْهُ لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهُ لَنَا شَافِعًا وَمُشَفَّعًا")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhü lenâ feratan, Allâhümme'c-alhü lenâ ecran ve zuhran, Allâhümme'c-alhü lenâ şefî'an müşeffe'an. Birahmetike yâ erhamer-râhimîn.")
+                Text("Allâhümme'c-alhü lenâ feratan, vec'alhü lenâ ecran ve zuhran, vec'alhü lenâ şefî'an müşeffe'an.")
 
                 Divider()
 
@@ -1626,10 +1626,10 @@ private struct JanazahDuaView: View {
                     "Bei einem Mädchen:",
                     "Kız çocuk için:"
                 )).font(.headline)
-                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ")
+                Text("اللَّهُمَّ اجْعَلْهَا لَنَا فَرَطًا وَاجْعَلْهَا لَنَا أَجْرًا وَذُخْرًا وَاجْعَلْهَا لَنَا شَافِعَةً وَمُشَفَّعَةً")
                     .font(.title3)
                     .multilineTextAlignment(.trailing)
-                Text("Allâhümme'c-alhâ lenâ feratan, Allâhümme'c-alhâ lenâ ecran ve zuhran, Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten. Birahmetike yâ erhamer-râhimîn.")
+                Text("Allâhümme'c-alhâ lenâ feratan, vec'alhâ lenâ ecran ve zuhran, vec'alhâ lenâ şefî'aten müşeffe'aten.")
 
                 Text(settings.t(
                     "Sinngemäß: O Allah, mache dieses Kind zu einem vorausgesandten Lohn und Vorrat für uns und zu einem Fürsprecher, dessen Fürsprache angenommen wird.",
@@ -1753,8 +1753,8 @@ struct WuduGuideView: View {
                                 .foregroundStyle(SalahTheme.deepTeal)
 
                             Text(settings.t(
-                                "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh.",
-                                "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla."
+                                "Vor Schritt 1: Fasse im Herzen die Absicht, Wudu zu nehmen, und beginne mit Bismillāh. Hanafi/Diyanet: Niyyah und Bismillāh sind Sunnah; das Wudu bleibt ohne sie gültig. In den anderen drei sunnitischen Rechtsschulen ist die Niyyah für Wudu verpflichtend.",
+                                "1. adımdan önce kalben abdest almaya niyet et ve Bismillâh diyerek başla. Hanefî/Diyanet: Niyet ve besmele sünnettir; bunlar olmadan da abdest geçerlidir. Diğer üç Sünnî mezhepte ise abdest için niyet farzdır."
                             ))
                             .font(.subheadline)
                             .fixedSize(horizontal: false, vertical: true)
@@ -2469,22 +2469,22 @@ private struct PrayerMakruhTimesView: View {
                 timeRule(
                     settings.t("Nach Sonnenaufgang", "Güneş doğduktan sonra"),
                     settings.t(
-                        "Vom Sonnenaufgang bis ungefähr 40–50 Minuten danach wird kein Gebet begonnen.",
-                        "Güneş doğduktan yaklaşık 40–50 dakika sonrasına kadar namaza başlanmaz."
+                        "Vom Sonnenaufgang bis ungefähr 40–50 Minuten danach wird grundsätzlich kein Gebet begonnen.",
+                        "Güneş doğduktan yaklaşık 40–50 dakika sonrasına kadar kural olarak namaza başlanmaz."
                     )
                 )
                 timeRule(
                     settings.t("Kurz vor Dhuhr / Zeval", "Öğleden hemen önce / zeval"),
                     settings.t(
-                        "Wenn die Sonne genau im Zenit steht – in gemäßigten Regionen ungefähr die letzten 10 Minuten vor Beginn von Dhuhr – wird kein Gebet begonnen.",
-                        "Güneş tam tepe noktasındayken – mutedil bölgelerde öğle vaktinden yaklaşık son 10 dakika önce – namaza başlanmaz."
+                        "Wenn die Sonne genau im Zenit steht – in gemäßigten Regionen ungefähr die letzten 10 Minuten vor Beginn von Dhuhr – wird grundsätzlich kein Gebet begonnen.",
+                        "Güneş tam tepe noktasındayken – mutedil bölgelerde öğle vaktinden yaklaşık son 10 dakika önce – kural olarak namaza başlanmaz."
                     )
                 )
                 timeRule(
                     settings.t("Kurz vor Sonnenuntergang", "Güneş batmadan önce"),
                     settings.t(
-                        "Ungefähr 40–50 Minuten vor Sonnenuntergang bis Maghrib wird kein anderes Gebet begonnen. Ausnahme: Das Fard des aktuellen Asr-Tages darf noch gebetet werden; es ohne Entschuldigung so weit hinauszuschieben ist jedoch makruh.",
-                        "Güneş batmadan yaklaşık 40–50 dakika önce akşam vaktine kadar başka namaz başlanmaz. İstisna: O günün ikindi farzı hâlâ kılınabilir; ancak mazeretsiz olarak bu kadar geciktirmek mekruhtur."
+                        "Ungefähr 40–50 Minuten vor Sonnenuntergang bis Maghrib wird grundsätzlich kein anderes Gebet begonnen. Ausnahme: Das Fard des aktuellen Asr-Tages darf noch gebetet werden; es ohne Entschuldigung so weit hinauszuschieben ist jedoch makruh.",
+                        "Güneş batmadan yaklaşık 40–50 dakika önce akşam vaktine kadar kural olarak başka namaz başlanmaz. İstisna: O günün ikindi farzı hâlâ kılınabilir; ancak mazeretsiz olarak bu kadar geciktirmek mekruhtur."
                     )
                 )
             }
@@ -2524,6 +2524,13 @@ private struct PrayerMakruhTimesView: View {
                 Text(settings.t(
                     "Die 40–50- bzw. 10-Minuten-Angaben sind Diyanets Näherungswerte für gemäßigte Regionen. Die astronomische Situation und lokale Gebetskalender sind maßgeblich. Andere Rechtsschulen beurteilen einzelne Ausnahmen anders.",
                     "40–50 ve 10 dakikalık süreler Diyanet'in mutedil bölgeler için verdiği yaklaşık değerlerdir. Astronomik durum ve yerel namaz takvimi esas alınmalıdır. Diğer mezheplerde bazı istisnalar farklı değerlendirilir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+                Text(settings.t(
+                    "Hanafi/Diyanet-Ausnahmen in den drei starken Kerāhat-Zeiten: Eine Janazah, die erst während dieser Zeit vorbereitet wurde, darf gebetet werden; war sie schon vorher vorbereitet, wird ihr Gebet dort nicht verrichtet. Eine Tilāwah-Secde zu einer erst während dieser Zeit gelesenen Secde-Aya ist zulässig, wird aber besser auf später verschoben; für eine vorher gelesene Secde-Aya wird sie in dieser Zeit nicht verrichtet.",
+                    "Hanefî/Diyanet istisnaları: Üç ağır kerahat vaktinde, cenaze bu vakit içinde hazırlanmışsa cenaze namazı kılınabilir; daha önce hazırlanmış cenazenin namazı bu vakitte kılınmaz. Secde ayeti bu vakitte okunmuşsa tilavet secdesi yapılabilir ancak sonraya bırakmak daha faziletlidir; daha önce okunmuş bir secde ayetinin secdesi bu vakitte yapılmaz."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -2843,8 +2850,8 @@ struct PrayerCatalogView: View {
                 id: "sehiv_sajdah", group: "special",
                 deTitle: "Sehiv-Sujud · Vergesslichkeitsniederwerfung", trTitle: "Sehiv Secdesi",
                 deRuling: "Hanafi: wajib, wenn erforderlich", trRuling: "Hanefî: gerektiğinde vacip", rakaLabel: "2 Sujud",
-                deSummary: "Ausgleich am Ende des Gebets bei bestimmten versehentlichen Auslassungen, Verzögerungen oder Veränderungen eines Wajib bzw. der Reihenfolge.",
-                trSummary: "Namazda yanılarak bir vacibin terk, tehir veya değiştirilmesi gibi durumlarda namazın sonunda yapılan telafi secdesi.",
+                deSummary: "Hanafi: Ausgleich am Gebetsende, wenn versehentlich ein Rukn verzögert, wiederholt oder vorgezogen oder ein Wajib ausgelassen, verzögert oder verändert wurde.",
+                trSummary: "Hanefî: Bir rüknün yanılarak geciktirilmesi, tekrarlanması veya öne alınması ya da bir vacibin terk, tehir veya değiştirilmesi hâlinde namaz sonunda yapılan telafi secdesi.",
                 deSteps: [
                     "Im letzten Sitzen Ettehiyyâtü lesen und nach rechts Salām geben.",
                     "Ohne Unterbrechung mit Takbir in den ersten Sujud gehen, den üblichen Sujud-Dhikr sprechen, aufsetzen und einen zweiten Sujud machen.",
@@ -2877,8 +2884,16 @@ struct PrayerCatalogView: View {
                     "Öğle, ikindi ve yatsının dört rekât farzları seferî iken iki rekât kılınır. Sabah iki, akşam üç rekât olarak kalır.",
                     "Seferî kişi mukim imama uyarsa dört rekâtlı farzı imamla birlikte tam kılar."
                 ],
-                deNotes: ["Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch.", "Hanafi: Ein vier-rakʿātiges Fard, das während echter Seferîlik versäumt wurde, wird später auch als Ortsansässiger mit 2 Rakʿāt nachgeholt. Ein als Ortsansässiger versäumtes vier-rakʿātiges Fard wird dagegen auch auf Reise mit 4 Rakʿāt nachgeholt."],
-                trNotes: ["Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir.", "Hanefî: Seferî iken kazaya kalan dört rekâtlı farz daha sonra mukim olunsa da 2 rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı farz ise seferde kaza edilse bile 4 rekât kılınır."],
+                deNotes: [
+                    "Reiseregeln unterscheiden sich zwischen Rechtsschulen. Diese Darstellung ist ausdrücklich hanafitisch.",
+                    "Hanafi: Ein vier-rakʿātiges Fard, das während echter Seferîlik versäumt wurde, wird später auch als Ortsansässiger mit 2 Rakʿāt nachgeholt. Ein als Ortsansässiger versäumtes vier-rakʿātiges Fard wird dagegen auch auf Reise mit 4 Rakʿāt nachgeholt.",
+                    "Hanafi/Diyanet: Dhuhr und Asr bzw. Maghrib und Isha werden wegen einer normalen Reise nicht einfach als echtes Jamʿ zusammengelegt. Im hanafitischen Grundsatz ist echtes Jamʿ auf ʿArafāt und Muzdalifah beim Hajj beschränkt; bei erheblichem Bedarf nennt Diyanet die Möglichkeit, unter Beachtung ihrer Bedingungen einer anderen sunnitischen Rechtsschule zu folgen."
+                ],
+                trNotes: [
+                    "Seferîlik ölçüleri mezheplere göre farklıdır. Bu anlatım açıkça Hanefîdir.",
+                    "Hanefî: Seferî iken kazaya kalan dört rekâtlı farz daha sonra mukim olunsa da 2 rekât kaza edilir. Mukim iken kazaya kalan dört rekâtlı farz ise seferde kaza edilse bile 4 rekât kılınır.",
+                    "Hanefî/Diyanet: Normal yolculuk sebebiyle öğle ile ikindi veya akşam ile yatsı doğrudan hakikî cem yapılmaz. Hanefî temel hükmünde hakikî cem hacda Arafat ve Müzdelife ile sınırlıdır; ciddi ihtiyaç hâlinde Diyanet, şartlarına uyularak başka bir Sünnî mezhebin görüşüyle amel edilebileceğini belirtir."
+                ],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
@@ -2959,8 +2974,14 @@ struct PrayerCatalogView: View {
                     "Elleri kaldırmadan Allâhü ekber diyerek bir kez secdeye git; üç defa „Sübhâne rabbiye'l-a'lâ“ de ve Allâhü ekber diyerek kalk.",
                     "Ardından Ettehiyyâtü oturuşu ve selâm yoktur."
                 ],
-                deNotes: ["Wer nur die Übersetzung einer Secde-Aya liest, liest nicht den Quran-Wortlaut; Diyanet empfiehlt dennoch vorsichtshalber eine Tilāwah-Secde."],
-                trNotes: ["Secde ayetinin yalnız mealini okumak Kur'an lafzını okumak değildir; Diyanet yine de ihtiyaten tilavet secdesi yapılmasını belirtir."],
+                deNotes: [
+                    "Wer nur die Übersetzung einer Secde-Aya liest, liest nicht den Quran-Wortlaut; Diyanet empfiehlt dennoch vorsichtshalber eine Tilāwah-Secde.",
+                    "Die Wajib-Einstufung ist hanafitisch. Die anderen drei sunnitischen Rechtsschulen stufen die Tilāwah-Secde als Sunnah ein."
+                ],
+                trNotes: [
+                    "Secde ayetinin yalnız mealini okumak Kur'an lafzını okumak değildir; Diyanet yine de ihtiyaten tilavet secdesi yapılmasını belirtir.",
+                    "Vacip hükmü Hanefî mezhebine aittir. Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir."
+                ],
                 source: "Diyanet · Din İşleri Yüksek Kurulu"
             ),
             .init(
@@ -4782,6 +4803,13 @@ struct PrayerDebtTrackerView: View {
                     ))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+
+                    Text(settings.t(
+                        "Witr ist hier nach Hanafi/Diyanet enthalten: Dort ist Witr wajib und ein verpasstes Witr wird nachgeholt. Andere sunnitische Rechtsschulen stufen Witr als Sunnah ein.",
+                        "Vitir burada Hanefî/Diyanet hükmüne göre yer alır: Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir. Diğer Sünnî mezhepler vitri sünnet olarak değerlendirir."
+                    ))
+                    .font(.footnote)
+                    .foregroundStyle(SalahTheme.mutedInk)
                 }
                 .cardStyle(material: true)
 

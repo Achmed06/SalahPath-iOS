@@ -14,15 +14,24 @@ Primary factual checks use official Diyanet Din İşleri Yüksek Kurulu guidance
 Diyanet references checked include:
 
 - Wudu: https://kurul.diyanet.gov.tr/tr/fetva/abdest-nedir-ve-nasil-alinir/0193c42d-4493-7cd5-0d48-874d6be1a7d3
+- Wudu intention / school difference: https://kurul.diyanet.gov.tr/tr/fetva/abdest-alirken-niyet-etmek-farz-midir/0193c42d-44aa-7951-8b8f-d0614260c810
+- Wudu/Ghusl validity if niyyah or basmala omitted: https://kurul.diyanet.gov.tr/tr/fetva/besmele-ve-niyet-unutuldugunda-gusul-veya-abdest-sahih-olur/0193c42d-4986-703b-5544-b612ccb5abfb
 - Ghusl basics: https://kurul.diyanet.gov.tr/tr/fetva/gusul-boy-abdesti-ne-zaman-gereklidir-ve-sunnete-uygun/0193c42d-4959-7fa3-b0b7-5a3001c5f706
 - Ghusl triggers / sexual discharge wording: https://kurul.diyanet.gov.tr/tr/fetva/bir-kadinin-jinekolojik-muayene-olmasi-ya-da-rahim/0195dc3a-5579-76ec-b042-4c180f3f4e4a
 - Tayammum: https://kurul.diyanet.gov.tr/tr/fetva/teyemmum-nedir-nasil-yapilir-teyemmumu-bozan-seyler-nelerdir/0193c42d-4a83-7216-84a3-951c2fa115aa
 - Witr: https://kurul.diyanet.gov.tr/tr/fetva/vitir-namazi-nedir-nasil-kilinir/0193c42d-5d22-7a98-69e2-22aa16cc28f1
+- Travel prayer / combining prayers: https://kurul.diyanet.gov.tr/tr/fetva/namazlar-cem-edilmek-birlestirilmek-suretiyle-kilinabilir-mi/0193c42d-4df6-7e81-a5ab-dc99c59adece
+- Travel distance / residence rule: https://kurul.diyanet.gov.tr/tr/kurul/karar/umreye-gidenler-seferilik-hukumleri-acisindan-mekke-ve/009d3a5e-4dc0-4a27-090b-08dd1c135351
+- Qada scope including Witr: https://kurul.diyanet.gov.tr/tr/fetva/hangi-namazlar-kaza-edilir/0193c42d-5327-7459-64e7-211baaf5ab8c
+- Sehiv-Sujud triggers and procedure: https://kurul.diyanet.gov.tr/tr/fetva/hangi-sebeplerle-sehiv-secdesi-yapmak-gerekir-sehiv-secdesi-nasil-yapilir/0193c42d-5eb1-7caa-b1ce-6346f72b89fb
+- Qawmah/Calsa ruling and school difference: https://kurul.diyanet.gov.tr/tr/fetva/namazda-kavme-ve-celsenin-hukmu-nedir-ne-kadar-beklemek/0193c42d-4f49-7ffe-d2d0-49a36f918b7c
+- Tilawah-Sajdah school classification / translation case: https://kurul.diyanet.gov.tr/tr/fetva/secde-ayetlerinin-mealini-okuyan-kisinin-tilavet-secdesi-yapmasi-gerekir-mi/0193c42d-a2b7-7c4a-6709-93c05e5c252c
 - Qunut when not memorized: https://kurul.diyanet.gov.tr/tr/fetva/kunut-duasini-bilmeyen-bir-kimse-ne-yapar/0193c42d-5d9a-7c56-51a8-e76a981e98a9
 - Eid prayer scope and procedure: https://igdir.diyanet.gov.tr/sayfalar/contentdetail.aspx?ContentId=1850&MenuCategory=Kurumsal
 - Jumuʿah obligation / validity: https://kurul.diyanet.gov.tr/tr/fetva/cuma-namazi-ve-zuhr-i-ahir-namazinin-hukmu/f0ecca63-4fac-4234-b733-08dd1c135350
 - Jumuʿah after the khutbah has begun: https://kurul.diyanet.gov.tr/tr/fetva/mekke-ve-medinede-cuma-namazi-vaktinde-ezanin-hemen/0193f3cd-bcef-7474-9985-d1ca582d1acd
 - Janazah procedure: https://kurul.diyanet.gov.tr/tr/fetva/cenaze-namazi-nasil-kilinir/0193c42d-5ff0-7a8b-b744-96f510e9362a
+- Diyanet child Janazah dua forms: https://dijital.diyanet.gov.tr/File/Download?id=4218&path=4218_1.pdf
 - Fasting intention deadline: https://kurul.diyanet.gov.tr/tr/fetva/oruca-ne-zaman-ve-nasil-niyet-edilir/0193c42d-6bc5-745a-7532-60288956700e
 - Fatiha behind an imam: https://kurul.diyanet.gov.tr/tr/fetva/imama-uyan-bir-kimse-fatiha-okuyabilir-mi/0193c42d-58f7-7851-de88-9e1eaf349583
 - Four-rakʿah non-muʾakkadah sitting details: https://kurul.diyanet.gov.tr/tr/fetva/ikindi-namazinin-sunneti-ile-yatsi-namazinin-ilk-sunnetinin/0193c42d-547b-7b06-0e8e-33a7ee736367
@@ -69,6 +78,7 @@ Diyanet references checked include:
 - Pre-agreed excess on a loan: https://kurul.diyanet.gov.tr/tr/fetva/yardimlasma-sandigindan-borc-olarak-alinan-para-geri-odenirken-bir-fazlalik-odenmesi-caiz-midir/0193c42d-97b1-7a4f-3e1b-3925a6b498d9
 - Asr-i awwal / Asr-i thani: https://kurul.diyanet.gov.tr/tr/fetva/asr-i-evvel-ve-asr-i-sani-ne-demektir/0193c42d-4d64-7acf-2961-12b0db4e1723
 - Asr prayer time: https://kurul.diyanet.gov.tr/tr/fetva/ikindi-namazinin-vakti-ne-zaman-baslar-ve-ne-zaman-sona-erer/0193c42d-4d7a-7845-4556-cee1e1d23dd6
+- Kerahat times and their Hanafi/Diyanet exceptions: https://kurul.diyanet.gov.tr/tr/fetva/mekruh-vakitler-hangileridir-hangi-vakitlerde-kaza-ve-hangi/0193c42d-52b7-7186-d5b4-f1d3c950ad73
 
 TDV historical references checked include:
 
@@ -132,6 +142,14 @@ Hadith/adhkar reference checked:
 - The four-caliph learning section was rechecked against TDV/Diyanet historical references. Core biographical claims reviewed in this pass required no correction, and the existing neutrality warning for disputed early internal conflicts remains.
 - Ashura, six Shawwal fasts, Laylat al-Qadr, Tasbih prayer and the reviewed Hijri-calendar cautions were rechecked; no additional correction was required beyond the Eid/Tashriq changes above.
 - The remaining Swift surfaces containing religious labels or rules (PrayerModels, prayer details, notification wording, settings, root navigation and prayer-time calculation descriptions) were cross-checked for contradictory Fard/Wajib/Sunnah wording. No additional religious-content contradiction was found in that pass.
+- Second-pass delta audit after the religious-audit merge found a missing Hanafi travel qualification: the Qasr guide now states that ordinary travel does not by itself permit true Jamʿ in the Hanafi baseline; Diyanet limits true Hanafi Jamʿ to the Hajj cases at ʿArafāt/Muzdalifah while allowing reliance on another Sunni school under its conditions in serious need.
+- The Qada tracker now labels its Witr counter as Hanafi/Diyanet-specific: missed Witr is made up because Witr is wajib in the Hanafi school, while the other Sunni schools classify Witr as Sunnah.
+- The Sehiv-Sujud summary now includes the full Hanafi/Diyanet trigger pattern: accidental delay, repetition or advancement of a rukn, as well as omission, delay or alteration of a wajib; the already-correct two-sujud procedure was left unchanged.
+- Wudu opening guidance now states the material school difference for niyyah: Hanafi/Diyanet treats intention and basmala as Sunnah and the Wudu remains valid without them, while the other three Sunni schools require intention for Wudu.
+- Tilawah-Sajdah now states that its Wajib classification is specifically Hanafi; the other three Sunni schools classify it as Sunnah.
+- The child Janazah dua cards had appended “bi-raḥmatika yā arḥama-r-rāḥimīn” to the Diyanet boys'/girls' formula. The additional phrase is a permissible general supplication, but it is not part of the checked Diyanet child formula; it was removed so the displayed sourced text matches the reference exactly.
+- The Kerahat screen's blanket “no prayer” wording was too broad for the three severe Hanafi/Diyanet windows. It now says “generally” and records the Diyanet exceptions for a Janazah prepared during the window and a Tilawah-Sajdah triggered by a Sajdah verse recited during the window. The existing Friday-after-minbar Nafila restriction was rechecked and left unchanged.
+- The note for the sitting between the two prostrations no longer uses only the vague phrase “should not be omitted”: it now states that the quiet calsa is wajib according to the preferred Hanafi view, while the other Sunni schools classify it as fard; the optional “Rabbighfir li” wording remains clearly distinguished from the sitting itself.
 - A regression guard now requires unique catalogue IDs for Tahajjud, Duha, Istikhara and Tilawah-Sajdah and protects the final Tashriq, Riba and Tayammum wording.
 
 ## Areas checked without a required correction in this pass

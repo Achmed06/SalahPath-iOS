@@ -1073,6 +1073,22 @@ for token in (
     'Riba ist im Quran verboten.',
     'klassische verzinste Kredite und verzinste Termineinlagen',
     'etwas, das zur Erdsubstanz zählt, die vorgeschriebenen Wischhandlungen',
+    'wegen einer normalen Reise nicht einfach als echtes Jamʿ zusammengelegt',
+    'Witr ist hier nach Hanafi/Diyanet enthalten',
+    'Hanefî mezhebinde vitir vaciptir ve vaktinde kılınmayan vitir kaza edilir',
+    'wenn versehentlich ein Rukn verzögert, wiederholt oder vorgezogen',
+    'Bir rüknün yanılarak geciktirilmesi, tekrarlanması veya öne alınması',
+    'Niyyah und Bismillāh sind Sunnah; das Wudu bleibt ohne sie gültig',
+    'Diğer üç Sünnî mezhepte ise abdest için niyet farzdır',
+    'Die anderen drei sunnitischen Rechtsschulen stufen die Tilāwah-Secde als Sunnah ein',
+    'Diğer üç Sünnî mezhep tilavet secdesini sünnet olarak değerlendirir',
+    "Allâhümme'c-alhü lenâ feratan, vec'alhü lenâ ecran ve zuhran, vec'alhü lenâ şefî'an müşeffe'an.",
+    "Allâhümme'c-alhâ lenâ feratan, vec'alhâ lenâ ecran ve zuhran, vec'alhâ lenâ şefî'aten müşeffe'aten.",
+    'Eine Janazah, die erst während dieser Zeit vorbereitet wurde, darf gebetet werden',
+    'Secde ayeti bu vakitte okunmuşsa tilavet secdesi yapılabilir',
+    'Ab dem Zeitpunkt, an dem der Khatīb am Freitag die Minbar besteigt',
+    'Die ruhige Calsa zwischen den zwei Sujūd ist nach der bevorzugten hanafitischen Auffassung wajib',
+    'İki secde arasındaki sakin celse, Hanefî mezhebinde tercih edilen görüşe göre vaciptir',
 ):
     if token not in guide:
         fail(f"religious-content audit regression: missing {token}")
@@ -1084,6 +1100,8 @@ for forbidden in (
     'default: return "special"',
     'Opferpflicht bzw. Opfer-Sunnah',
     'erdähnlicher Oberfläche',
+    "Allâhümme'c-alhü lenâ şefî'an müşeffe'an. Birahmetike",
+    "Allâhümme'c-alhâ lenâ şefî'aten müşeffe'aten. Birahmetike",
 ):
     if forbidden in guide:
         fail(f"religious-content audit regression: duplicate adhkar session returned: {forbidden}")
