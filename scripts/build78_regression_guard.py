@@ -266,9 +266,30 @@ for forbidden in (
     'CDN-Link',
     'SalahPath Dua-Sammlung öffnen',
     'Hier findest du die täglichen Gebete',
+    'gegen Diyanet-Lehrmaterial gegengeprüft',
+    'menschliche Audioedition',
+    'insan ses kaydı',
+    'Du siehst immer nur einen Schritt. Unten wechselst du eindeutig',
+    'Her seferinde yalnız bir adım görürsün. Alttaki „Geri“ ve „Devam“',
+    '2: "Nimm Wasser mit der rechten Hand in den Mund und spüle gründlich."',
+    '5: "Wasche die rechte Hand und den rechten Arm bis einschließlich Ellenbogen vollständig."',
+    '8: "Wische die Ohren mit feuchten Fingern innen und außen vorsichtig ab."',
+    '11: "Wasche danach den linken Fuß genauso vollständig."',
 ):
     if forbidden in guide:
-        fail(f"developer/meta learning UI regression: found {forbidden}")
+        fail(f"developer/meta or duplicate learning UI regression: found {forbidden}")
+
+for token in (
+    'Folge Bild, Haltung und Rezitation Schritt für Schritt.',
+    'Görseli, duruşu ve okuyuşu adım adım takip et.',
+    'Hanafitische Qunūt-Texte für Witr. Die Umschrift dient nur als Aussprachehilfe.',
+    '2: "Verteile das Wasser im ganzen Mundraum.',
+    '5: "Wasche den Arm von allen Seiten.',
+    '8: "Fahre mit feuchten Fingern vorsichtig durch die inneren Ohrkonturen',
+    '11: "Reinige den linken Fuß genauso sorgfältig:',
+):
+    if token not in guide:
+        fail(f"clean learning copy regression: missing {token}")
 
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
