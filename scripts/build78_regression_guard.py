@@ -436,6 +436,8 @@ for forbidden in (
     if forbidden in guide:
         fail(f"internal/unfinished prayer guidance wording regression: found {forbidden}")
 
+# Scan every user-facing Swift surface so internal implementation wording cannot
+# reappear outside the primary learning view.
 release_ui_sources = "\n".join(
     read(path) for path in (
         "SalahZeit/Views/GuideView.swift",
