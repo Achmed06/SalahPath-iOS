@@ -2469,22 +2469,22 @@ private struct PrayerMakruhTimesView: View {
                 timeRule(
                     settings.t("Nach Sonnenaufgang", "Güneş doğduktan sonra"),
                     settings.t(
-                        "Vom Sonnenaufgang bis ungefähr 40–50 Minuten danach wird kein Gebet begonnen.",
-                        "Güneş doğduktan yaklaşık 40–50 dakika sonrasına kadar namaza başlanmaz."
+                        "Vom Sonnenaufgang bis ungefähr 40–50 Minuten danach wird grundsätzlich kein Gebet begonnen.",
+                        "Güneş doğduktan yaklaşık 40–50 dakika sonrasına kadar kural olarak namaza başlanmaz."
                     )
                 )
                 timeRule(
                     settings.t("Kurz vor Dhuhr / Zeval", "Öğleden hemen önce / zeval"),
                     settings.t(
-                        "Wenn die Sonne genau im Zenit steht – in gemäßigten Regionen ungefähr die letzten 10 Minuten vor Beginn von Dhuhr – wird kein Gebet begonnen.",
-                        "Güneş tam tepe noktasındayken – mutedil bölgelerde öğle vaktinden yaklaşık son 10 dakika önce – namaza başlanmaz."
+                        "Wenn die Sonne genau im Zenit steht – in gemäßigten Regionen ungefähr die letzten 10 Minuten vor Beginn von Dhuhr – wird grundsätzlich kein Gebet begonnen.",
+                        "Güneş tam tepe noktasındayken – mutedil bölgelerde öğle vaktinden yaklaşık son 10 dakika önce – kural olarak namaza başlanmaz."
                     )
                 )
                 timeRule(
                     settings.t("Kurz vor Sonnenuntergang", "Güneş batmadan önce"),
                     settings.t(
-                        "Ungefähr 40–50 Minuten vor Sonnenuntergang bis Maghrib wird kein anderes Gebet begonnen. Ausnahme: Das Fard des aktuellen Asr-Tages darf noch gebetet werden; es ohne Entschuldigung so weit hinauszuschieben ist jedoch makruh.",
-                        "Güneş batmadan yaklaşık 40–50 dakika önce akşam vaktine kadar başka namaz başlanmaz. İstisna: O günün ikindi farzı hâlâ kılınabilir; ancak mazeretsiz olarak bu kadar geciktirmek mekruhtur."
+                        "Ungefähr 40–50 Minuten vor Sonnenuntergang bis Maghrib wird grundsätzlich kein anderes Gebet begonnen. Ausnahme: Das Fard des aktuellen Asr-Tages darf noch gebetet werden; es ohne Entschuldigung so weit hinauszuschieben ist jedoch makruh.",
+                        "Güneş batmadan yaklaşık 40–50 dakika önce akşam vaktine kadar kural olarak başka namaz başlanmaz. İstisna: O günün ikindi farzı hâlâ kılınabilir; ancak mazeretsiz olarak bu kadar geciktirmek mekruhtur."
                     )
                 )
             }
@@ -2524,6 +2524,13 @@ private struct PrayerMakruhTimesView: View {
                 Text(settings.t(
                     "Die 40–50- bzw. 10-Minuten-Angaben sind Diyanets Näherungswerte für gemäßigte Regionen. Die astronomische Situation und lokale Gebetskalender sind maßgeblich. Andere Rechtsschulen beurteilen einzelne Ausnahmen anders.",
                     "40–50 ve 10 dakikalık süreler Diyanet'in mutedil bölgeler için verdiği yaklaşık değerlerdir. Astronomik durum ve yerel namaz takvimi esas alınmalıdır. Diğer mezheplerde bazı istisnalar farklı değerlendirilir."
+                ))
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+                Text(settings.t(
+                    "Hanafi/Diyanet-Ausnahmen in den drei starken Kerāhat-Zeiten: Eine Janazah, die erst während dieser Zeit vorbereitet wurde, darf gebetet werden; war sie schon vorher vorbereitet, wird ihr Gebet dort nicht verrichtet. Eine Tilāwah-Secde zu einer erst während dieser Zeit gelesenen Secde-Aya ist zulässig, wird aber besser auf später verschoben; für eine vorher gelesene Secde-Aya wird sie in dieser Zeit nicht verrichtet.",
+                    "Hanefî/Diyanet istisnaları: Üç ağır kerahat vaktinde, cenaze bu vakit içinde hazırlanmışsa cenaze namazı kılınabilir; daha önce hazırlanmış cenazenin namazı bu vakitte kılınmaz. Secde ayeti bu vakitte okunmuşsa tilavet secdesi yapılabilir ancak sonraya bırakmak daha faziletlidir; daha önce okunmuş bir secde ayetinin secdesi bu vakitte yapılmaz."
                 ))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
