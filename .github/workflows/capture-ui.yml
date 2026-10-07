@@ -295,6 +295,21 @@ jobs:
             fi
           }
 
+          # Release changes include the new offline license page in both languages
+          # and appearances. Existing B78 filenames are stable regression baselines.
+          if [ "$CAPTURE_MODE" = "full" ] || [ "$CAPTURE_MODE" = "icons" ]; then
+            for language in german turkish; do
+              xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage "$language"
+              for appearance in light dark; do
+                xcrun simctl ui "$SIM_UDID" appearance "$appearance"
+                capture licenses "SalahPath-B79-${language}-${appearance}-Licenses.png"
+                capture settings "SalahPath-B79-${language}-${appearance}-Settings.png"
+              done
+            done
+            xcrun simctl ui "$SIM_UDID" appearance light
+            xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage turkish
+          fi
+
           if [ "$CAPTURE_MODE" = "tracker" ]; then
             xcrun simctl spawn "$SIM_UDID" defaults write com.achmed06.salahpath appLanguage german
             capture prayer-tracker SalahPath-v3.62-B78-DE-PrayerTracker.png

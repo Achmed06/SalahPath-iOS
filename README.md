@@ -1,36 +1,26 @@
-# SalahPath v3
+# SalahPath iOS
 
-Private iOS prayer companion built with SwiftUI.
+Native iPhone prayer companion built with SwiftUI. Current release candidate: **3.62 (79)**.
 
-## v3
-
-- German and Turkish UI foundation
-- GPS prayer times, Qibla, countdown and notifications
-- Full daily prayer sequence with Fard, Sunnah and Witr overview
-- Separate male/female learning profiles based primarily on the Hanafi/Turkish teaching presentation, with explicit madhhab caveats
-- Child-friendly vector prayer illustrations instead of stick figures
-- Wudu guide
-- Dhikr / Tasbih counter
-- Full Quran chapter browser loaded from AlQuran.cloud
-- Arabic Quran text plus German (Bubenheim & Elyas) or Turkish (Diyanet) translation
-- Human Quran recitation via Islamic Network CDN (Mishary Rashid Alafasy)
-- Human-recorded prayer-dua streaming links with source attribution
-
-## Data and content sources
-
-- Prayer calculation: Adhan Swift (MIT)
-- Quran text, translations and Quran audio: AlQuran.cloud / Islamic Network. Keep edition attribution visible and comply with the source terms.
-- Turkish fiqh/teaching structure is based on Diyanet educational material, especially its Hanafi prayer sequence and stated male/female posture differences.
-- Prayer-dua recordings currently stream from externally hosted teaching pages and should be rights-cleared before any public App Store distribution.
+- German and Turkish interface, including localized location permission text
+- Prayer times, Qibla, local reminders and nearby mosque search
+- Illustrated two-rak'ah prayer and Wudu lessons; written guides for other prayer forms
+- Complete bundled Arabic Quran; optional translation, transliteration and recitation services
+- Local prayer/fasting trackers, Dhikr counter, Duas and Islamic calendar
+- No login, advertising SDK, analytics SDK or in-app purchase implementation
 
 ## Build
 
-Open `SalahZeit.xcodeproj` in Xcode or run:
+Open `SalahZeit.xcodeproj` in Xcode 26 or later. The project owns the app identity and shared Info.plist. Run `scripts/preflight_reference_build.sh` before building.
 
-```bash
-./scripts/build_unsigned_ipa.sh
-```
+`scripts/build_unsigned_ipa.sh` creates and checks an unsigned Release archive, then writes `SalahPath-unsigned.ipa`. This is a testing artifact and cannot be uploaded to App Store Connect as a signed distribution build.
 
-Output: `SalahPath-unsigned.ipa`.
+`scripts/archive_app_store.sh` prepares and verifies a signed local App Store export on a configured Mac. It requires `SALAH_DEVELOPMENT_TEAM` and signing credentials, and does not upload or submit the app.
 
-The IPA is unsigned and must be signed before installation on a stock iPhone.
+See `APP_STORE_SUBMISSION.md` and `qa/APP_STORE_READINESS_2026-10-07.md` for remaining release requirements. Successful CI does not establish TestFlight device behavior or App Review approval.
+
+## Sources and preservation
+
+Prayer calculation uses Adhan Swift 1.5.0 under the MIT license; its full notice is bundled and visible in Profile > Lizenzen / Lisanslar. Quran text, translations and recitation use AlQuran.cloud / Islamic Network; keep source and translator/reciter attribution visible. See `CONTENT_RIGHTS_AUDIT.md`, `AUDIO_LICENSES.md` and `RELIGIOUS_CONTENT_AUDIT.md` for evidence and limits.
+
+Approved prayer/Wudu artwork is protected by `qa/APPROVED_ASSET_POLICY.md`. Do not change it during unrelated fixes.

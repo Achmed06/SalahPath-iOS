@@ -954,8 +954,10 @@ for token in (
     if token not in guide:
         fail(f"background/continuous audio regression: missing {token}")
 
-if 'INFOPLIST_KEY_UIBackgroundModes = audio;' not in project:
-    fail("background audio mode was removed")
+import plistlib
+with (ROOT / 'SalahZeit/Info.plist').open('rb') as info_file:
+    if plistlib.load(info_file).get('UIBackgroundModes') != ['audio']:
+        fail('background audio must be configured in the shared build input')
 
 for token in (
     'static func bismillahURL(reciter: QuranReciter) -> URL?',

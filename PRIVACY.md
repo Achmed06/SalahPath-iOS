@@ -1,6 +1,6 @@
 # SalahPath Privacy Policy
 
-Last updated: 23 September 2026
+Last updated: 7 October 2026
 
 SalahPath is designed to work without an account, advertising profile, or analytics account. The app does not contain advertising SDKs or tracking SDKs.
 
@@ -34,7 +34,7 @@ The validated Arabic Uthmani Quran corpus is bundled with SalahPath and can be r
 
 SalahPath does not intentionally send your GPS coordinates, manually selected latitude/longitude, worship tracker data, Quran bookmarks, prayer history, fasting tracker state, or other local app state to these Quran services.
 
-SalahPath does not create, read, or transmit an advertising identifier or another device-level identifier. Normal HTTPS requests to Quran-content providers necessarily expose ordinary connection metadata such as the requesting IP address to those providers while the request is served. SalahPath does not receive or store those providers' server logs. Any provider-side retention is governed by the provider's own terms and must be reflected accurately in the final App Store Connect privacy answers.
+SalahPath does not create, read, or transmit an advertising identifier or another device-level identifier. Normal HTTPS requests to Quran-content providers necessarily expose ordinary connection metadata such as the requesting IP address to those providers while the request is served. SalahPath does not receive or store those providers' server logs. The provider terms reviewed on 7 October 2026 do not specify how long API/CDN request logs are retained. We therefore cannot state that all connection metadata is discarded immediately or that the provider never links requests. Provider-side data handling must be established before finalizing the App Store privacy disclosures.
 
 Provider terms: https://alquran.cloud/terms-and-conditions
 
@@ -44,7 +44,7 @@ SalahPath does not use App Tracking Transparency identifiers, advertising identi
 
 ## Retention and deletion
 
-Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. Downloaded Quran translation/transliteration cache data and audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted. A saved manual location can also be cleared from SalahPath's settings.
+Local app settings and tracker data remain on the device until changed, reset where the app provides that option, or removed with the app. The operating system may include local settings in a device backup according to your Apple backup settings; restoring such a backup can restore them. Downloaded Quran translation/transliteration cache data and audio cache files can be deleted from SalahPath's settings and are also removed when the app is deleted. A saved manual location can also be cleared from SalahPath's settings.
 
 SalahPath has no user account database from which an account needs to be deleted. Data that may be processed independently by Apple or external Quran-content providers is subject to those providers' retention policies.
 
@@ -54,6 +54,8 @@ This policy may be updated when SalahPath's features or data practices change. T
 
 ## Contact and support
 
-For privacy questions, bug reports, or support requests, use the public SalahPath support page:
+The following support page is public. Reading it does not require an account; posting an issue requires a GitHub account. Do not include private worship records, precise location, or other sensitive information in public issues. A private contact channel must be established before handling requests that require personal information.
+
+For general questions or non-sensitive bug reports:
 
 https://github.com/Achmed06/SalahPath-iOS/issues

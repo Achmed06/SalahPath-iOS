@@ -6,3 +6,5 @@ xcuserdata/
 SalahZeit-unsigned.ipa
 artifacts/
 *.ipa
+
+__pycache__/
