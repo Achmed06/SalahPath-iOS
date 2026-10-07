@@ -1,0 +1,21 @@
+{
+  "status": "owner_input_required_not_for_upload",
+  "apple_developer_membership_active": null,
+  "apple_team_id": null,
+  "app_store_connect_app_record_exists": null,
+  "app_store_connect_app_id": null,
+  "build_79_unused_in_account": null,
+  "approved_public_support_email": null,
+  "private_app_review_contact_name": null,
+  "private_app_review_contact_email": null,
+  "private_app_review_contact_phone": null,
+  "intended_countries": null,
+  "pricing_decision": null,
+  "eu_trader_status": null,
+  "age_rating_questionnaire_completed": false,
+  "provider_privacy_evidence_resolved": false,
+  "app_privacy_answers_confirmed": false,
+  "signed_export_and_apple_processing_passed": false,
+  "device_test_record_completed": false,
+  "note": "Fill locally. Do not commit private contact details, credentials, certificates or keys to the public repository."
+}

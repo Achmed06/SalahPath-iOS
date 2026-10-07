@@ -1,0 +1,99 @@
+{
+  "version": "3.62",
+  "build": "79",
+  "release_commit": "2d00fa91c3315908c062a8714cb280b954347800",
+  "reviewed_source_tree": "b0bc9c572d6513ff05f68231c1fd66140c3f0fa7",
+  "capture_head": "a61fd5e885b212cb861b401f740646beb1255408",
+  "capture_merge_commit": "a18c54198bf974990949aea1878ca41cde4db48b",
+  "capture_run": 37601611815,
+  "capture_run_url": "https://github.com/Achmed06/SalahPath-iOS/actions/runs/37601611815",
+  "capture_artifact_id": 11473653399,
+  "capture_archive_sha256": "f1e750a88a99566e244a0cb01e9bea4ecf0192c9c57b1cbf45b8e733483bbbef",
+  "capture_configuration": "Debug simulator; reviewed representative data",
+  "screenshots": [
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-Home.png",
+      "output_file": "01-start.png",
+      "sha256": "6d0b25ba09944fe869c6d815a48debbe136798bcc866e27c69feb07ee1e1cc57"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-Quran.png",
+      "output_file": "02-quran.png",
+      "sha256": "3608d7897f2d33950e98ab5e77e29d739ed36b862a54b9e23f86b052756afb87"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-Namaz.png",
+      "output_file": "03-prayer-guide.png",
+      "sha256": "c178e314578746531c3fc2ba529d9fc56cae8dcc22d47333ff1ca1d95001fbd9"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-QuranPage1.png",
+      "output_file": "04-quran-reader.png",
+      "sha256": "0d4a751bc672815b1baf75dfa3e99997a729411faca740444b3be5b11b44f2a7"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-Dhikr.png",
+      "output_file": "05-dhikr.png",
+      "sha256": "befc0c16202f6d480602b179ec671e8811f822761f9ce017868ec0ef2ff72b9b"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-v3.62-B78-DE-Wudu.png",
+      "output_file": "06-wudu.png",
+      "sha256": "6f4b7242a1179fa0bcf3520378d620b7dc6e11dd2c917be2d0fa5165390155a5"
+    },
+    {
+      "locale": "de-DE",
+      "source_file": "SalahPath-B79-german-dark-Settings.png",
+      "output_file": "07-dark-profile.png",
+      "sha256": "791874ac1599406595cde5a667b445d21402f9383c202e4cf5589f3c1a3c2036"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-Home.png",
+      "output_file": "01-start.png",
+      "sha256": "5203199102f81dc0f6e9632d584c1e13ebb0f0c215076e444159bd16f2482411"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-Quran.png",
+      "output_file": "02-quran.png",
+      "sha256": "33940e07d73813b6af6fce5f357a1242ed63e0e5221696a4d5abe6f3fb98f690"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-Namaz.png",
+      "output_file": "03-prayer-guide.png",
+      "sha256": "c7748fb946280fd297293c24c1c7c3f35445df01a8abc42b10701144a0ab81a3"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-QuranPage1.png",
+      "output_file": "04-quran-reader.png",
+      "sha256": "f689c2e2168dc377ae06ca5d1d4d9dfedb53d38b03962a88339284c22c554629"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-Dhikr.png",
+      "output_file": "05-dhikr.png",
+      "sha256": "0db5303d22b4d49fafdf91b95eb77583102b6c6ded768fbe7acf9d469f8b16ea"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-v3.62-B78-TR-Wudu.png",
+      "output_file": "06-wudu.png",
+      "sha256": "78ea84a76e56d808d5bbb4d7143cc52073a7257ce278da878d985076910a5ce6"
+    },
+    {
+      "locale": "tr",
+      "source_file": "SalahPath-B79-turkish-dark-Settings.png",
+      "output_file": "07-dark-profile.png",
+      "sha256": "66f3ef19a710a8b95970ca2c0331ae420d711b3bd8b4ea0fb9cb048d92e570a6"
+    }
+  ]
+}

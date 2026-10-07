@@ -1,0 +1,11 @@
+SalahPath is an iPhone app in German and Turkish. No account or sign-in is required. On first launch, choose a language and a prayer-learning profile. Location permission is optional; setup can be completed without it. A manually selected city in Profile can be used for prayer times.
+
+The full Arabic Quran is bundled for offline reading. Optional translations, transliteration and recitation audio use AlQuran.cloud and the Islamic Network CDN and are cached locally. Removing downloaded caches does not remove the bundled Arabic Quran.
+
+Qibla heading and nearby mosque search need the current device location. A manual prayer-time city is separate from the live compass location. Denying location permission does not block offline reading, learning or local trackers.
+
+Prayer reminders are local notifications. Optional Adhan sounds are 28-second excerpts and do not override the silent switch. The notification schedule is finite and refreshed when the app opens. Background audio is used for recitation playback started by the user. The calendar feature opens Apple's event editor and does not read calendar contents.
+
+The illustrated prayer guide covers two rak'ah for men and women. Other prayer forms have written instructions. The explanations mainly follow the Hanafi tradition, and locally adopted prayer times or calendar dates may differ.
+
+Profile contains links to privacy information and support, cache controls and an offline Adhan Swift license notice. The audited source contains no advertising or analytics SDK, account system, subscription or in-app purchase implementation.

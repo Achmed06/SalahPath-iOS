@@ -1,0 +1,16 @@
+{
+  "de-DE": {
+    "name": "SalahPath",
+    "subtitle": "Gebet, Quran & Qibla",
+    "promotional_text": "Gebetszeiten, Quran und Gebetsanleitungen auf Deutsch und Türkisch. Arabischen Quran offline lesen, Duas lernen und den eigenen Gebetsalltag begleiten.",
+    "keywords": "gebetszeiten,islam,namaz,wudu,abdest,dhikr,dua,adhan,fasten,moschee,ramadan",
+    "description": "SalahPath begleitet dich mit Gebetszeiten, Qibla und Anleitungen für Gebet und Gebetswaschung. Lies den vollständigen arabischen Quran offline und ergänze bei bestehender Internetverbindung Übersetzungen, Umschrift und Rezitationen.\n\nWähle Deutsch oder Türkisch, stelle die Gebetszeitberechnung passend zu deinem Ort ein und aktiviere auf Wunsch lokale Erinnerungen mit einem kurzen Gebetsruf. Ein Gebetstracker, Dhikr-Zähler, Duas und ein islamischer Kalender unterstützen dich im Alltag. Für nahegelegene Moscheen steht eine Kartensuche bereit.\n\nDie bebilderte Gebetsanleitung zeigt zwei Rakʿah für Männer und Frauen; weitere Gebetsformen werden schriftlich erläutert. Die Darstellung orientiert sich überwiegend an der hanafitischen Lehrtradition. Gebetszeiten und islamische Kalenderdaten können von örtlichen Festlegungen abweichen.\n\nKein Konto erforderlich. Standortzugriff und Benachrichtigungen sind freiwillig. Einstellungen und persönliche Gebetsaufzeichnungen bleiben lokal auf deinem Gerät."
+  },
+  "tr": {
+    "name": "SalahPath",
+    "subtitle": "Namaz, Kur'an ve Kıble",
+    "promotional_text": "Namaz vakitleri, Kur'an ve ibadet anlatımları Almanca ve Türkçe. Arapça metni çevrimdışı oku, duaları öğren ve günlük ibadetlerini takip et.",
+    "keywords": "vakitler,abdest,ezan,meal,zikir,dua,tesbih,oruç,ramazan,cami",
+    "description": "SalahPath; namaz vakitleri, kıble yönü, namaz ve abdest anlatımlarıyla günlük ibadetlerine eşlik eder. Kur'an'ın Arapça metninin tamamını çevrimdışı okuyabilir; internet bağlantısıyla meal, Latin harfli okunuş ve tilavetlerden yararlanabilirsin.\n\nAlmanca veya Türkçe seçebilir, namaz vakti hesaplamasını bulunduğun yere göre ayarlayabilir ve kısa ezan sesiyle yerel hatırlatmalar açabilirsin. Namaz takibi, zikir sayacı, dualar ve İslami takvim de uygulamada yer alır. Yakındaki camileri haritada arayabilirsin.\n\nGörsel namaz anlatımı erkekler ve kadınlar için iki rekâtı gösterir; diğer namaz türleri yazılı olarak açıklanır. Anlatım ağırlıklı olarak Hanefî öğretimine dayanır. Namaz vakitleri ve İslami takvim tarihleri yerel uygulamalardan farklı olabilir.\n\nHesap gerekmez. Konum izni ve bildirimler isteğe bağlıdır. Ayarların ve kişisel ibadet kayıtların cihazında saklanır."
+  }
+}
