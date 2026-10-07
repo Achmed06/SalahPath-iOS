@@ -32,8 +32,8 @@
 ## Remaining release gates
 
 1. **External Quran provider privacy:** reviewed terms do not establish retention, linkage and full use of API/CDN request metadata. Resolve and align policy/manifest/App Store privacy answers before submission. Do not guess a data category.
-2. **Owner contact:** current support is public GitHub Issues. A private owner-approved support/privacy contact is not established. Do not put sensitive requests into public issues.
-3. **Developer account/signing:** team/App ID, distribution signing, Time Sensitive entitlement, unused upload build number, App Store record and Apple's validation/processing remain unverified. The new signed export script is preparation, not proof of successful signing.
+2. **Owner contact — resolved for public support/privacy:** on 7 October 2026 the owner approved publication of `Muhammed_Y@outlook.de`. It is now in SUPPORT.md and PRIVACY.md. Separate App Review contact fields remain open. Do not put sensitive requests into public issues.
+3. **Developer account/signing:** the owner reports enrollment as **pending** on 7 October 2026. Team/App ID, distribution signing, Time Sensitive entitlement, unused upload build number, App Store record and Apple's validation/processing remain unverified. The new signed export script is preparation, not proof of successful signing.
 4. **Actual iPhone/TestFlight:** clean install, permission denial/recovery, manual location, compass, local notifications under Focus/silent modes, lock-screen audio, calendar save/cancel and network-loss behavior need device evidence.
 5. **Store metadata:** current screenshots, age rating, EU trader status, review contact and final privacy answers must be completed in the actual account. Avoid claiming all prayer forms are illustrated.
 

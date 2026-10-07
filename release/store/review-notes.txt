@@ -9,3 +9,5 @@ Prayer reminders are local notifications. Optional Adhan sounds are 28-second ex
 The illustrated prayer guide covers two rak'ah for men and women. Other prayer forms have written instructions. The explanations mainly follow the Hanafi tradition, and locally adopted prayer times or calendar dates may differ.
 
 Profile contains links to privacy information and support, cache controls and an offline Adhan Swift license notice. The audited source contains no advertising or analytics SDK, account system, subscription or in-app purchase implementation.
+
+Public support and privacy contact: Muhammed_Y@outlook.de.

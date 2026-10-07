@@ -4,7 +4,11 @@ SalahPath is a native iPhone prayer, Quran, Qibla, and Islamic learning app.
 
 ## Get help
 
-For non-sensitive issues, open a public support request here (a GitHub account is required to post):
+For support or privacy questions, email [Muhammed_Y@outlook.de](mailto:Muhammed_Y@outlook.de). You do not need a GitHub account to contact us by email.
+
+Support und Datenschutz / Destek ve gizlilik: **Muhammed_Y@outlook.de**.
+
+For non-sensitive issues, you can also open a public support request here (a GitHub account is required to post):
 
 https://github.com/Achmed06/SalahPath-iOS/issues
 

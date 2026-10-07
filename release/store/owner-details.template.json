@@ -1,11 +1,15 @@
 {
-  "status": "owner_input_required_not_for_upload",
+  "status": "owner_details_partially_confirmed_not_for_upload",
+  "owner_update_date": "2026-10-07",
+  "apple_developer_enrollment_status": "pending",
+  "apple_developer_status_source": "owner_reported_not_independently_verified",
   "apple_developer_membership_active": null,
   "apple_team_id": null,
   "app_store_connect_app_record_exists": null,
   "app_store_connect_app_id": null,
   "build_79_unused_in_account": null,
-  "approved_public_support_email": null,
+  "approved_public_support_email": "Muhammed_Y@outlook.de",
+  "approved_public_privacy_email": "Muhammed_Y@outlook.de",
   "private_app_review_contact_name": null,
   "private_app_review_contact_email": null,
   "private_app_review_contact_phone": null,
@@ -17,5 +21,5 @@
   "app_privacy_answers_confirmed": false,
   "signed_export_and_apple_processing_passed": false,
   "device_test_record_completed": false,
-  "note": "Fill locally. Do not commit private contact details, credentials, certificates or keys to the public repository."
+  "note": "The owner approved publication of the support/privacy email. Complete the remaining fields locally. Do not commit private review contact details, credentials, certificates or keys to the public repository."
 }
