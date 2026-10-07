@@ -8,6 +8,8 @@ Eigentümerangaben vom 7. Oktober 2026: Die Apple-Developer-Anmeldung ist noch *
 
 ## Dateien verwenden
 
+Zum Einstieg **`START-HIER.md`** öffnen. `app-store-connect-fields.md` ordnet die vorbereiteten Werte den Apple-Feldern zu. `signing-setup.md` erklärt den manuell startbaren GitHub-Ablauf für einen signierten Export und optionalen TestFlight-Upload. `testflight-de.txt` und `testflight-tr.txt` enthalten die vorbereiteten Beta-Texte. Dieser Ablauf wurde noch nicht mit echten Apple-Zugangsdaten ausgeführt.
+
 1. `metadata/de-DE/` enthält die deutschen Texte, `metadata/tr/` die türkischen Texte. Die TXT-Dateien sind Klartext zum Kopieren. `metadata-validation.json` enthält die geprüften Textlängen. Keywords werden vorsichtshalber sowohl auf Zeichen als auch auf UTF-8-Bytes begrenzt.
 2. `screenshots/de-DE/` und `screenshots/tr/` enthalten jeweils sieben Bilder in der vorgeschlagenen Reihenfolge. Die ersten Bilder zeigen Start, Quran und Gebetsanleitung; ein weiteres Bild zeigt den dunklen Modus. Alle Bilder sind PNGs mit 1206 × 2622 Pixeln und ohne Alphakanal. Beim Export wird ausschließlich der vollständig deckende Alphakanal entfernt; die RGB-Pixel werden danach exakt verglichen.
 3. `review-notes.txt` enthält englische Erläuterungen für App Review. Kein Testkonto ist erforderlich. Die persönlichen Kontaktdaten für App Review müssen separat ergänzt werden.

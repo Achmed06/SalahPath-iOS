@@ -1,0 +1,14 @@
+Beta-App-Beschreibung
+
+SalahPath unterstützt dich mit Gebetszeiten, Qibla, Quran, Gebets- und Wudu-Anleitungen sowie lokalen Gebetsaufzeichnungen. Die App ist auf Deutsch und Türkisch verfügbar. Kein Konto erforderlich; Standort und Benachrichtigungen sind freiwillig. Der vollständige arabische Quran ist offline enthalten. Übersetzungen, Umschrift und Rezitationen benötigen Internet oder bereits geladene Inhalte.
+
+Was soll getestet werden?
+
+Bitte teste einen frischen Start, beide Sprachen und hellen sowie dunklen Modus. Verweigere Standort und Mitteilungen zunächst und aktiviere sie später in den iPhone-Einstellungen. Prüfe manuelle Stadtwahl, Qibla am echten Standort, lokale Erinnerungen, den kurzen Gebetsruf bei verschiedenen Lautlos-/Fokus-Einstellungen und selbst gestartete Audio-Wiedergabe bei gesperrtem Bildschirm.
+
+Prüfe auch Offline-Quran, Verbindungsabbrüche, Cache-Löschen, Lesezeichen, Gebetstracker, Kalenderexport mit Speichern/Abbrechen sowie Wischen und Navigation in Gebets- und Wudu-Anleitungen. Die bebilderte Gebetsanleitung umfasst zwei Rakʿah; weitere Gebetsformen sind schriftlich beschrieben.
+
+Melde Probleme mit iPhone-Modell, iOS-Version, App-Version/Build und kurzen Schritten zum Nachstellen über TestFlight-Feedback oder Muhammed_Y@outlook.de. Entferne persönliche Gebetsaufzeichnungen und genaue Standortangaben aus Screenshots, sofern sie für die Fehlermeldung nicht nötig sind.
+
+Feedback-E-Mail: Muhammed_Y@outlook.de
+Kein Benutzername oder Passwort erforderlich.

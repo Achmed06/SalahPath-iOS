@@ -1,0 +1,65 @@
+name: App Store signed export
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_commit:
+        description: 'Full main commit SHA to sign (40 characters)'
+        required: true
+        type: string
+      upload_to_testflight:
+        description: 'Also validate and upload this build to Apple (no App Review submission)'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-store-release
+  cancel-in-progress: false
+
+jobs:
+  signed-export:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Check requested source
+        env:
+          EXPECTED_COMMIT: ${{ inputs.expected_commit }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_COMMIT" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test "$GITHUB_SHA" = "$EXPECTED_COMMIT"
+          test -z "$(git status --porcelain)"
+      - name: Sign, verify and optionally upload
+        env:
+          SALAH_DEVELOPMENT_TEAM: ${{ vars.SALAH_DEVELOPMENT_TEAM }}
+          SALAH_CERTIFICATE_BASE64: ${{ secrets.SALAH_CERTIFICATE_BASE64 }}
+          SALAH_CERTIFICATE_PASSWORD: ${{ secrets.SALAH_CERTIFICATE_PASSWORD }}
+          SALAH_PROFILE_BASE64: ${{ secrets.SALAH_PROFILE_BASE64 }}
+          SALAH_ASC_KEY_BASE64: ${{ secrets.SALAH_ASC_KEY_BASE64 }}
+          SALAH_ASC_KEY_ID: ${{ secrets.SALAH_ASC_KEY_ID }}
+          SALAH_ASC_ISSUER_ID: ${{ secrets.SALAH_ASC_ISSUER_ID }}
+          SALAH_UPLOAD_TO_TESTFLIGHT: ${{ inputs.upload_to_testflight }}
+        run: bash scripts/ci_app_store_release.sh
+      - name: Preserve verified export
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: SalahPath-AppStore-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: error
+          path: |
+            build/app-store/export/SalahPath.ipa
+            build/app-store/SalahPath-signed.provenance.json
+            build/app-store/archive-verification.json
+            build/app-store/export-verification.json
+            build/app-store/signing-verification.json
+            build/app-store/apple-upload-status.json
