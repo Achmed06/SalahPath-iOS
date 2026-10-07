@@ -30,6 +30,20 @@ jobs:
       - name: Run release preflight
         run: ./scripts/preflight_reference_build.sh
 
+      - name: Check prepared signing tools without credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          for script in scripts/archive_app_store.sh scripts/ci_app_store_release.sh; do
+            bash -n "$script"
+          done
+          python3 scripts/test_store_signing.py
+          xcrun altool --help > "$RUNNER_TEMP/salahpath-altool-help.txt" 2>&1
+          for flag in --validate-app --upload-app --apiKey --apiIssuer; do
+            grep -q -- "$flag" "$RUNNER_TEMP/salahpath-altool-help.txt"
+          done
+          grep -q 'private_keys' "$RUNNER_TEMP/salahpath-altool-help.txt"
+
       - name: Resolve Swift packages
         run: |
           xcodebuild -resolvePackageDependencies \

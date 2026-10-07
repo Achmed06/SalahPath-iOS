@@ -31,6 +31,8 @@
 
 ## Remaining release gates
 
+Additional launch preparation: a manual main-only GitHub workflow now prepares a signed App Store export and optional TestFlight upload, with source-SHA checks, profile/certificate validation and temporary credential cleanup. Store field mapping and localized TestFlight notes are included in the package. Synthetic signing tests and tool availability checks are part of unsigned CI; they do not establish that real signing or Apple processing has succeeded.
+
 1. **External Quran provider privacy:** reviewed terms do not establish retention, linkage and full use of API/CDN request metadata. Resolve and align policy/manifest/App Store privacy answers before submission. Do not guess a data category.
 2. **Owner contact — resolved for public support/privacy:** on 7 October 2026 the owner approved publication of `Muhammed_Y@outlook.de`. It is now in SUPPORT.md and PRIVACY.md. Separate App Review contact fields remain open. Do not put sensitive requests into public issues.
 3. **Developer account/signing:** the owner reports enrollment as **pending** on 7 October 2026. Team/App ID, distribution signing, Time Sensitive entitlement, unused upload build number, App Store record and Apple's validation/processing remain unverified. The new signed export script is preparation, not proof of successful signing.

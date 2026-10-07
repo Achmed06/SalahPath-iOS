@@ -16,7 +16,9 @@ SOURCE = ROOT / "release/store"
 TEXT_LIMITS = {"name": 30, "subtitle": 30, "promotional_text": 170,
                "keywords": 100, "description": 4000}
 DOCUMENTS = ("README.md", "review-notes.txt", "device-test-checklist.md",
-             "owner-details.template.json", "provider-privacy-request.txt", "provider-evidence.md")
+             "owner-details.template.json", "provider-privacy-request.txt", "provider-evidence.md",
+             "START-HIER.md", "app-store-connect-fields.md", "signing-setup.md",
+             "testflight-de.txt", "testflight-tr.txt")
 
 
 def require(condition: bool, message: str) -> None:

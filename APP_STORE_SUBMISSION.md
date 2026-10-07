@@ -33,6 +33,8 @@ Apple's requirements checked on 7 October 2026 require Xcode 26 or later and the
 - Signing credentials belong in the keychain/secret store, never in this repository.
 - The signed path still requires a real execution with the developer account. It has not been proven merely by the unsigned CI build.
 
+For a setup without local Xcode, `.github/workflows/app-store-release.yml` provides a manual, main-only signed export. It requires an exact source SHA and preconfigured distribution credentials; its optional Apple upload defaults to off. `scripts/ci_app_store_release.sh` installs credentials on an ephemeral GitHub-hosted Mac, validates profile/team/certificate consistency, and cleans up. The export helper supports automatic local signing and manual CI signing. The first credentialed run, Apple processing and TestFlight device tests remain unexecuted. Start with `release/store/START-HIER.md` and `release/store/signing-setup.md`.
+
 Shared `SalahZeit/Info.plist` contains the audio background mode before signing. German/Turkish location purpose strings and the Adhan Swift MIT notice are bundled in both build paths. The verifier checks metadata, actual SDK, approved Quran/Adhan hashes, permissions, privacy reasons, localization resources, and absence of internal QA markers. It does not certify legal compliance or device behavior.
 
 ## App Review notes

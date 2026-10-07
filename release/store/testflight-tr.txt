@@ -1,0 +1,14 @@
+Beta uygulama açıklaması
+
+SalahPath; namaz vakitleri, kıble, Kur'an, namaz ve abdest anlatımları ile cihazda tutulan namaz kayıtlarını bir araya getirir. Uygulama Almanca ve Türkçe kullanılabilir. Hesap gerekmez; konum ve bildirim izinleri isteğe bağlıdır. Kur'an'ın Arapça metninin tamamı çevrimdışı bulunur. Meal, Latin harfli okunuş ve tilavet için internet veya önceden yüklenmiş içerik gerekir.
+
+Neler test edilmeli?
+
+İlk açılışı, iki dili, açık ve koyu görünümü test et. Konum ve bildirim izinlerini önce reddet, ardından iPhone ayarlarından aç. Elle şehir seçimini, gerçek konumda kıbleyi, yerel hatırlatmaları, farklı sessiz mod ve Odak ayarlarında kısa ezan sesini ve ekran kilitliyken başlattığın sesin çalmasını kontrol et.
+
+Çevrimdışı Kur'an okuma, bağlantı kesilmesi, önbelleği temizleme, yer imleri, namaz takibi, takvime kaydetme/iptal etme ve namaz-abdest anlatımlarında kaydırma/gezinme de kontrol edilmeli. Görsel namaz anlatımı iki rekâtı kapsar; diğer namaz türleri yazılı olarak açıklanır.
+
+Sorunları iPhone modeli, iOS sürümü, uygulama sürümü/yapı numarası ve yeniden oluşturma adımlarıyla TestFlight üzerinden veya Muhammed_Y@outlook.de adresine bildir. Gerekli değilse ekran görüntülerinden kişisel ibadet kayıtlarını ve tam konum bilgilerini çıkar.
+
+Geri bildirim e-postası: Muhammed_Y@outlook.de
+Kullanıcı adı veya parola gerekmez.
