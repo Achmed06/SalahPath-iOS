@@ -54,7 +54,11 @@ This policy may be updated when SalahPath's features or data practices change. T
 
 ## Contact and support
 
-The following support page is public. Reading it does not require an account; posting an issue requires a GitHub account. Do not include private worship records, precise location, or other sensitive information in public issues. A private contact channel must be established before handling requests that require personal information.
+For privacy questions or requests, email [Muhammed_Y@outlook.de](mailto:Muhammed_Y@outlook.de). The same address is available for app support. A GitHub account is not required for email contact. Include only the information needed to explain your request.
+
+Support information: https://github.com/Achmed06/SalahPath-iOS/blob/main/SUPPORT.md
+
+The issue tracker below is public. Reading it does not require an account; posting an issue requires a GitHub account. Do not include private worship records, precise location, or other sensitive information in public issues. Use email for questions that should not be posted publicly.
 
 For general questions or non-sensitive bug reports:
 

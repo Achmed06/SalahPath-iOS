@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
-import shutil
+import os
 import subprocess
 import zipfile
 from pathlib import Path
@@ -27,8 +28,19 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def write_json(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+def json_bytes(value: object) -> bytes:
+    return (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def write_atomic(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".partial")
+    with temporary.open("xb") as file:
+        require(file.write(data) == len(data), f"Incomplete write: {path.name}")
+        file.flush()
+        os.fsync(file.fileno())
+    temporary.replace(path)
+    require(path.read_bytes() == data, f"Stored file differs from validated bytes: {path.name}")
 
 
 def validate_metadata() -> tuple[dict, dict]:
@@ -66,10 +78,13 @@ def export_materials(screenshots: Path, output: Path, metadata: dict, lengths: d
                              "scripts/verify_release_bundle.py"], cwd=ROOT, check=False)
     require(result.returncode == 0, "App/build sources differ from the reviewed release; capture new screenshots")
     archive = output.with_name(output.name + ".zip")
-    require(not output.exists() and not archive.exists(), "Output already exists; choose a new directory")
+    staging_archive = archive.with_name(archive.name + ".partial")
+    require(not output.exists() and not archive.exists() and not staging_archive.exists(),
+            "Output already exists; choose a new directory")
     entries = manifest["screenshots"]
     require({entry["locale"] for entry in entries} == set(metadata), "Screenshot languages do not match")
     destinations = set()
+    source_bytes = {}
     # Validate the complete input before creating any output.
     for locale in metadata:
         require(1 <= sum(entry["locale"] == locale for entry in entries) <= 10,
@@ -82,64 +97,68 @@ def export_materials(screenshots: Path, output: Path, metadata: dict, lengths: d
         require(destination not in destinations, "Duplicate output screenshot")
         destinations.add(destination)
         source = screenshots / entry["source_file"]
-        require(digest(source) == entry["sha256"], f"Unreviewed screenshot: {source.name}")
-        with Image.open(source) as image:
+        data = source.read_bytes()
+        require(hashlib.sha256(data).hexdigest() == entry["sha256"], f"Unreviewed screenshot: {source.name}")
+        source_bytes[entry["source_file"]] = data
+        with Image.open(io.BytesIO(data)) as image:
             require(image.format == "PNG" and image.size == (1206, 2622), "Unexpected native screenshot size")
             require(image.mode in {"RGB", "RGBA"}, "Unexpected screenshot color mode")
             require("transparency" not in image.info, "Unexpected PNG transparency")
             if image.mode == "RGBA":
                 require(image.getchannel("A").getextrema() == (255, 255), "Non-opaque screenshot; do not flatten")
 
-    output.mkdir(parents=True)
-    for document in DOCUMENTS:
-        shutil.copyfile(SOURCE / document, output / document)
-    write_json(output / "metadata-validation.json", lengths)
+    payloads = {document: (SOURCE / document).read_bytes() for document in DOCUMENTS}
+    for document in ("SUPPORT.md", "PRIVACY.md"):
+        payloads[document] = (ROOT / document).read_bytes()
+    payloads["metadata-validation.json"] = json_bytes(lengths)
     for locale, fields in metadata.items():
-        folder = output / "metadata" / locale
-        folder.mkdir(parents=True)
         for name, value in fields.items():
-            (folder / f"{name}.txt").write_text(value + "\n", encoding="utf-8")
+            payloads[f"metadata/{locale}/{name}.txt"] = (value + "\n").encode("utf-8")
     for entry in entries:
-        source = screenshots / entry["source_file"]
-        destination = output / "screenshots" / entry["locale"] / entry["output_file"]
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        with Image.open(source) as image:
+        relative_path = f"screenshots/{entry['locale']}/{entry['output_file']}"
+        with Image.open(io.BytesIO(source_bytes[entry["source_file"]])) as image:
             rgb = image.convert("RGB")
             color_metadata = PngImagePlugin.PngInfo()
             if "srgb" in image.info:
                 color_metadata.add(b"sRGB", bytes([image.info["srgb"]]))
-            rgb.save(destination, format="PNG", optimize=True, pnginfo=color_metadata,
+            buffer = io.BytesIO()
+            rgb.save(buffer, format="PNG", optimize=True, pnginfo=color_metadata,
                      icc_profile=image.info.get("icc_profile"))
-            with Image.open(destination) as exported:
+            data = buffer.getvalue()
+            with Image.open(io.BytesIO(data)) as exported:
                 require(exported.mode == "RGB" and exported.size == image.size,
                         "Exported screenshot format changed")
                 require(exported.tobytes() == rgb.tobytes(), "Visible screenshot pixels changed")
                 require("transparency" not in exported.info, "Export introduced transparency")
                 for key in ("srgb", "icc_profile"):
                     require(exported.info.get(key) == image.info.get(key), "Screenshot color profile changed")
-        entry["output_sha256"] = digest(destination)
-        entry["output_relative_path"] = str(destination.relative_to(output))
+        payloads[relative_path] = data
+        entry["output_sha256"] = hashlib.sha256(data).hexdigest()
+        entry["output_relative_path"] = relative_path
         entry["rgb_pixels_unchanged"] = True
     manifest["status"] = "prepared_materials_not_uploaded_or_approved"
     manifest["text_validation"] = "passed"
     manifest["screenshot_export"] = "opaque RGB PNG; original dimensions and RGB pixels preserved"
-    write_json(output / "provenance.json", manifest)
-    files = sorted(path for path in output.rglob("*") if path.is_file())
-    (output / "checksums.sha256").write_text("".join(
-        f"{digest(path)}  {path.relative_to(output).as_posix()}\n" for path in files), encoding="utf-8")
-    with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
-        for path in sorted(output.rglob("*")):
-            if path.is_file():
-                info = zipfile.ZipInfo(path.relative_to(output).as_posix(), date_time=(2026, 10, 7, 0, 0, 0))
-                info.compress_type = zipfile.ZIP_DEFLATED
-                info.external_attr = 0o100644 << 16
-                bundle.writestr(info, path.read_bytes())
-    with zipfile.ZipFile(archive) as bundle:
+    payloads["provenance.json"] = json_bytes(manifest)
+    payloads["checksums.sha256"] = "".join(
+        f"{hashlib.sha256(data).hexdigest()}  {name}\n" for name, data in sorted(payloads.items())
+    ).encode("utf-8")
+    output.mkdir(parents=True)
+    for name, data in payloads.items():
+        write_atomic(output / name, data)
+    # Package the exact validated bytes, without re-reading mutable intermediate images.
+    with zipfile.ZipFile(staging_archive, "x", zipfile.ZIP_DEFLATED) as bundle:
+        for name, data in sorted(payloads.items()):
+            info = zipfile.ZipInfo(name, date_time=(2026, 10, 7, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            bundle.writestr(info, data)
+    with zipfile.ZipFile(staging_archive) as bundle:
         require(bundle.testzip() is None, "ZIP integrity check failed")
-        for entry in entries:
-            data = bundle.read(entry["output_relative_path"])
-            require(hashlib.sha256(data).hexdigest() == entry["output_sha256"],
-                    f"Screenshot changed during packaging: {entry['output_relative_path']}")
+        require(set(bundle.namelist()) == set(payloads), "Unexpected ZIP entries")
+        for name, data in payloads.items():
+            require(bundle.read(name) == data, f"File changed during packaging: {name}")
+    staging_archive.replace(archive)
     return archive
 
 

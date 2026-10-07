@@ -16,11 +16,14 @@ The Xcode project is the source of truth for version/build; packaging no longer 
 - Suggested primary category: Lifestyle
 - Supported app languages: German and Turkish
 - Privacy URL: https://github.com/Achmed06/SalahPath-iOS/blob/main/PRIVACY.md
-- Support URL: https://github.com/Achmed06/SalahPath-iOS/issues
+- Support URL: https://github.com/Achmed06/SalahPath-iOS/blob/main/SUPPORT.md
+- Owner-approved public support and privacy email: Muhammed_Y@outlook.de
 
-The app exposes both links under Profile > Rechtliches & Hilfe / Yasal bilgiler & yardım. The public support form requires a GitHub account to post; add an owner-approved private contact channel before inviting users to send sensitive support/privacy information. Do not publish personal contact details without the owner's decision.
+The app links to the privacy policy and public issue tracker under Profile > Rechtliches & Hilfe / Yasal bilgiler & yardım. The linked privacy policy and the Support URL above provide the approved email contact. Email does not require a GitHub account; public issue posting does. The owner approved publication of this address on 7 October 2026. App Review's separate contact fields remain to be completed.
 
 ## Build and signing
+
+Owner-reported status on 7 October 2026: Apple Developer enrollment is **pending**. Account approval, team access and signed distribution have not been independently verified. Do not mark enrollment or signing as complete based on the unsigned builds.
 
 Apple's requirements checked on 7 October 2026 require Xcode 26 or later and the iOS 26 SDK or later. Both the local preflight and the built-bundle check enforce the relevant minimums.
 
@@ -93,7 +96,7 @@ Hesap gerekmez. Konum izni ve bildirimler isteğe bağlıdır. Ayarların ve ki�
 
 - Confirm Apple Developer membership/team, App ID and App Store Connect app record; check that build 79 is unused.
 - Complete privacy review above, age-rating questionnaire and EU trader-status declaration based on the owner's actual situation.
-- Supply owner-approved support/review contact details and functioning public URLs.
+- Public support/privacy email is confirmed above. Complete the separate App Review contact details and verify the final public URLs in the actual account.
 - Capture current, accurate App Store screenshots for the required display sizes; do not use mockups as evidence of runtime tests.
 - Execute signed archive/export, validate/upload in App Store Connect, and inspect Apple's processing result.
 - Test TestFlight installation and clean onboarding on a real iPhone; allow/deny/re-enable location and notifications, manual city, real compass, silent/Focus modes, lock-screen audio, calendar save/cancel, network loss, Quran caches, both languages and light/dark appearance.
