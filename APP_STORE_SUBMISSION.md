@@ -4,6 +4,8 @@ Reviewed: 7 October 2026. Candidate: **3.62 (79)**, `com.achmed06.salahpath`, iP
 
 **Status: technical release preparation; submission is not yet verified.** A successful unsigned archive is not a signed App Store export, a TestFlight device test, or an Apple approval. See `qa/APP_STORE_READINESS_2026-10-07.md` for evidence and unresolved items.
 
+Prepared Store material is in `release/store/`: localized metadata, review notes, a real-device test record, an owner-details template and an unsent provider-privacy inquiry. `scripts/prepare_store_materials.py` exports the reviewed CI screenshots as opaque RGB PNGs with unchanged visible pixels, validates metadata limits and packages the material with provenance. The current screenshot set covers 1206 × 2622; check the actual media slots in App Store Connect for any additional required sizes. None of this performs an upload.
+
 ## Identity and build
 
 The Xcode project is the source of truth for version/build; packaging no longer overrides these values. Before uploading, compare build 79 with the actual App Store Connect record and choose a new build number if 79 is already used.
@@ -53,6 +55,7 @@ Confirmed source behavior:
 - No advertising/device identifier or account identifier is generated or transmitted by SalahPath.
 - Quran requests expose source IP and ordinary request metadata to the API/CDN. The provider's terms mention IP rate limiting.
 - The reviewed terms do not establish server-log retention, whether requests are linked across sessions, or whether IPs are used for additional purposes.
+- Additional hosting-policy and community evidence is recorded in `release/store/provider-evidence.md`. Its scope does not establish Quran API/CDN handling, so it is not treated as a final answer.
 - Quran requests do not carry device coordinates, manual-location coordinates, tracker history or bookmarks.
 - Apple handles geocoding/MapKit requests. Review those system-service practices separately from the Quran provider.
 

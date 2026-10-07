@@ -1,0 +1,21 @@
+UNSENT DRAFT — review before sending through the provider's published contact route:
+https://islamic.network/contact.html
+
+Subject: Privacy clarification for AlQuran.cloud API and Islamic Network audio CDN
+
+As-salamu alaykum,
+
+I am preparing SalahPath, an iPhone prayer and Quran app, for App Store submission. The app uses AlQuran.cloud for optional translation/transliteration data and the Islamic Network media CDN for recitation audio. Arabic Quran text is bundled locally. SalahPath does not send coordinates, prayer records, bookmarks, account identifiers or advertising identifiers to these services.
+
+Could you please clarify the current handling of requests to api.alquran.cloud and cdn.islamic.network, including any relevant gateways, security providers or CDN operators?
+
+1. Which request data is retained after serving a response (for example IP addresses, timestamps, request paths, query parameters, user-agent or other headers)?
+2. What are the purposes and maximum retention periods for each API/CDN log category, including backups and security/rate-limit logs?
+3. Are IP addresses truncated, hashed or otherwise anonymised, and at what stage? Can requests be linked across sessions, services or other identifiers?
+4. Is request data used for analytics, approximate location, profiling, advertising, or shared with other parties? If so, for which purposes and recipients?
+5. Which entity controls this processing, and where can app users find the applicable privacy policy and a route for access/deletion requests?
+6. Do the Bahriya platform privacy policy and the community discussion about /timings/ server logs apply to these specific Quran API/CDN endpoints? Please distinguish any differences.
+
+A public policy link or a written response that we may cite in our privacy review would be very helpful. We want the app's privacy policy and App Store disclosures to reflect the actual processing, rather than assume data is discarded immediately.
+
+Thank you.
