@@ -323,6 +323,85 @@ for token in (
     if token not in home:
         fail(f"Home content icon regression: missing {token}")
 
+# 4c) Decorative/content icons must stay inside the SalahPath artwork system.
+qibla_source = read("SalahZeit/Views/QiblaView.swift")
+settings_source = read("SalahZeit/Views/SettingsView.swift")
+prayer_detail_source = read("SalahZeit/Views/PrayerDetailView.swift")
+
+for token in (
+    'case "qibla", "qibla_calibration", "location", "compass", "route":',
+    'case "mosques", "map":',
+    'default:\n            return "feature_info"',
+):
+    if token not in root_tab:
+        fail(f"shared content icon fallback regression: missing {token}")
+
+if 'default: return "square.dashed"' in root_tab:
+    fail("generic square.dashed content icon fallback returned")
+
+for token in (
+    'SalahFeatureIconLabel(\n                        title: isTodaySelected',
+    'SalahFeatureIcon(kind: "qibla")\n                        .frame(width: 13, height: 13)',
+    'private struct ReferenceTriangle: Shape',
+):
+    if token not in home:
+        fail(f"Home decorative icon regression: missing {token}")
+
+for forbidden in (
+    'Image(systemName: "mappin")',
+    'Image(systemName: "location.north.fill")',
+    'Image(systemName: "triangle.fill")',
+):
+    if forbidden in home:
+        fail(f"Home decorative SF Symbol regression: found {forbidden}")
+
+for forbidden in (
+    'Image(systemName: "location.slash.fill")',
+    'Image(systemName: "exclamationmark.triangle.fill")',
+):
+    if forbidden in qibla_source:
+        fail(f"Qibla decorative SF Symbol regression: found {forbidden}")
+
+for token in (
+    'SalahFeatureIconLabel(title: settings.t("Standard testen", "Standart test"), kind: "audio", iconSize: 18)',
+    'SalahFeatureIconLabel(title: settings.t("Fajr testen", "Sabah test"), kind: "fajr", iconSize: 18)',
+    'kind: "reminder",\n                                iconSize: 18',
+    'kind: "settings",\n                                iconSize: 18',
+    'SalahFeatureIcon(kind: "refresh")',
+):
+    if token not in settings_source:
+        fail(f"Settings content icon regression: missing {token}")
+
+for forbidden in (
+    'Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")',
+    'Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")',
+    'Image(systemName: "arrow.clockwise.circle.fill")',
+):
+    if forbidden in settings_source:
+        fail(f"Settings decorative SF Symbol regression: found {forbidden}")
+
+if 'systemImage: isCompleted ? "checkmark.circle.fill" : "circle"' in prayer_detail_source:
+    fail("Prayer detail tracker returned to generic content glyphs")
+
+for token in (
+    'SalahFeatureIcon(kind: "checkmark")\n                                .frame(width: 22, height: 22)',
+    'SalahFeatureIconLabel(\n                        title: settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"),',
+    'SalahFeatureIcon(kind: "checkmark")\n                    .frame(width: 54, height: 54)',
+):
+    if token not in app_source:
+        fail(f"Onboarding content icon regression: missing {token}")
+
+for token in (
+    'SalahFeatureIconLabel(\n                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),',
+    'SalahFeatureIconLabel(\n                title: settings.t("In Apple Kalender eintragen", "Apple Takvim\'e ekle"),',
+    'SalahFeatureIcon(kind: "checkmark")\n                        .frame(width: 20, height: 20)',
+    'SalahFeatureIconLabel(\n                title: settings.t("Nicht verwechseln", "Karıştırma"),',
+    'SalahFeatureIcon(kind: "bookmarks")\n                                            .frame(width: 36, height: 36)',
+    'case "square.and.pencil":\n                    SalahFeatureIcon(kind: "quran")',
+):
+    if token not in guide:
+        fail(f"Guide decorative icon regression: missing {token}")
+
 # 5) Prayer/Wudu illustration system must stay unified and direction-safe.
 if '.replacingOccurrences(of: "male_", with: "")' in guide:
     fail("female prayer pose routing regression: male_ substring stripping breaks female_ assets")

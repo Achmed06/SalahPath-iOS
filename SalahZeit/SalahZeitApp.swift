@@ -508,7 +508,9 @@ private struct OnboardingFlowView: View {
                             Text(audience.title(settings.language))
                                 .font(.headline)
                             Spacer()
-                            Image(systemName: settings.prayerAudience == audience ? "checkmark.circle.fill" : "circle")
+                            SalahFeatureIcon(kind: "checkmark")
+                                .frame(width: 22, height: 22)
+                                .opacity(settings.prayerAudience == audience ? 1 : 0.18)
                         }
                         .padding(12)
                     }
@@ -547,7 +549,11 @@ private struct OnboardingFlowView: View {
                     locationError = nil
                     locationManager.useDeviceLocation()
                 } label: {
-                    Label(settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"), systemImage: "location.fill")
+                    SalahFeatureIconLabel(
+                        title: settings.t("Aktuellen Standort verwenden", "Mevcut konumu kullan"),
+                        kind: "qibla",
+                        iconSize: 22
+                    )
                         .font(.headline.bold())
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -626,9 +632,8 @@ private struct OnboardingFlowView: View {
     private var readyStep: some View {
         setupCard {
             VStack(spacing: 14) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 50))
-                    .foregroundStyle(SalahTheme.teal)
+                SalahFeatureIcon(kind: "checkmark")
+                    .frame(width: 54, height: 54)
 
                 Text(settings.t("Fertig eingerichtet", "Kurulum tamam"))
                     .font(.title2.bold())
@@ -637,9 +642,10 @@ private struct OnboardingFlowView: View {
                 VStack(alignment: .leading, spacing: 7) {
                     SalahFeatureIconLabel(title: settings.language.title, kind: "language")
                     SalahFeatureIconLabel(title: settings.prayerAudience.title(settings.language), kind: "profile")
-                    Label(
-                        locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
-                        systemImage: locationManager.location == nil ? "location.slash" : "location.fill"
+                    SalahFeatureIconLabel(
+                        title: locationManager.locality ?? settings.t("Standort übersprungen", "Konum atlandı"),
+                        kind: "qibla",
+                        iconSize: 20
                     )
                 }
                 .font(.subheadline.weight(.semibold))

@@ -7052,9 +7052,10 @@ struct FastingTrackerView: View {
                     refresh &+= 1
                 }
             )) {
-                Label(
-                    settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
-                    systemImage: "checkmark.circle"
+                SalahFeatureIconLabel(
+                    title: settings.t("Heute als Fastentag markieren", "Bugünü oruç günü olarak işaretle"),
+                    kind: "checkmark",
+                    iconSize: 20
                 )
             }
 
@@ -7508,9 +7509,10 @@ private struct IslamicCalendarEventDetailView: View {
                 )
             )
         } label: {
-            Label(
-                settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"),
-                systemImage: "calendar.badge.plus"
+            SalahFeatureIconLabel(
+                title: settings.t("In Apple Kalender eintragen", "Apple Takvim'e ekle"),
+                kind: "calendar",
+                iconSize: 22
             )
             .font(.headline.bold())
             .frame(maxWidth: .infinity)
@@ -7542,8 +7544,8 @@ private struct IslamicCalendarEventDetailView: View {
 
             ForEach(items.indices, id: \.self) { index in
                 HStack(alignment: .top, spacing: 9) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(SalahTheme.teal)
+                    SalahFeatureIcon(kind: "checkmark")
+                        .frame(width: 20, height: 20)
                     Text(items[index])
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -7554,9 +7556,10 @@ private struct IslamicCalendarEventDetailView: View {
 
     private var eventCautionCard: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Label(
-                settings.t("Nicht verwechseln", "Karıştırma"),
-                systemImage: "exclamationmark.triangle.fill"
+            SalahFeatureIconLabel(
+                title: settings.t("Nicht verwechseln", "Karıştırma"),
+                kind: "info",
+                iconSize: 22
             )
             .font(.headline)
             .foregroundStyle(SalahTheme.gold)
@@ -8022,11 +8025,12 @@ private struct IslamLearningLessonView: View {
             IslamLearningStore.toggle(lesson.id)
             refresh &+= 1
         } label: {
-            Label(
-                completed
+            SalahFeatureIconLabel(
+                title: completed
                     ? settings.t("Als gelernt markiert", "Öğrenildi olarak işaretli")
                     : settings.t("Als gelernt markieren", "Öğrendim olarak işaretle"),
-                systemImage: completed ? "checkmark.seal.fill" : "checkmark.seal"
+                kind: "checkmark",
+                iconSize: 22
             )
             .font(.headline.bold())
             .frame(maxWidth: .infinity)
@@ -8399,8 +8403,13 @@ struct IslamLearningHubView: View {
 
             Spacer(minLength: 6)
 
-            Image(systemName: IslamLearningStore.isCompleted(lesson.id) ? "checkmark.circle.fill" : "chevron.right")
-                .foregroundStyle(IslamLearningStore.isCompleted(lesson.id) ? .green : SalahTheme.teal)
+            if IslamLearningStore.isCompleted(lesson.id) {
+                SalahFeatureIcon(kind: "checkmark")
+                    .frame(width: 22, height: 22)
+            } else {
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(SalahTheme.teal)
+            }
         }
         .padding(13)
         .background(SalahTheme.cream, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
@@ -8769,10 +8778,8 @@ struct DhikrView: View {
 
     private func dhikrRowBody(icon: String, title: String, subtitle: String) -> some View {
         HStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(SalahTheme.teal)
-                .accessibilityHidden(true)
+            SalahFeatureIcon(kind: "checkmark")
+                .frame(width: 19, height: 19)
 
             Text(title)
                 .font(.custom("AvenirNext-DemiBold", size: 13.1))
@@ -9602,9 +9609,9 @@ struct QuranView: View {
                             } label: {
                                 VStack(alignment: .leading, spacing: 10) {
                                     HStack(spacing: 12) {
-                                        Image(systemName: "bookmark.fill")
-                                            .font(.system(size: 18, weight: .bold))
-                                            .foregroundStyle(SalahTheme.gold)
+                                        SalahFeatureIcon(kind: "bookmarks")
+                                            .frame(width: 36, height: 36)
+                                            .padding(3)
                                             .frame(width: 42, height: 42)
                                             .background(SalahTheme.navigationTeal, in: Circle())
 
@@ -10007,9 +10014,22 @@ struct QuranView: View {
 
     private func quranAction(icon: String, title: String) -> some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 17, weight: .medium))
-                .foregroundStyle(SalahTheme.teal)
+            Group {
+                switch icon {
+                case "square.and.pencil":
+                    SalahFeatureIcon(kind: "quran")
+                case "heart":
+                    SalahFeatureIcon(kind: "bookmarks")
+                case "text.book.closed":
+                    SalahFeatureIcon(kind: "quran")
+                default:
+                    Image(systemName: icon)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(SalahTheme.teal)
+                }
+            }
+            .frame(width: 21, height: 21)
+
             Text(title)
                 .font(.custom("AvenirNext-DemiBold", size: 9.2))
                 .foregroundStyle(SalahTheme.ink)

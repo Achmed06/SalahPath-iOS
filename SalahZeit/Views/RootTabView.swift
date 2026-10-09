@@ -23,7 +23,7 @@ struct SalahFeatureIcon: View {
             return "feature_checkmark"
         case "calendar":
             return "feature_calendar"
-        case "qibla", "qibla_calibration":
+        case "qibla", "qibla_calibration", "location", "compass", "route":
             return "feature_qibla"
         case "settings", "prayer_settings":
             return "feature_settings"
@@ -41,21 +41,21 @@ struct SalahFeatureIcon: View {
             return "feature_maghrib"
         case "isha":
             return "feature_isha"
-        case "times", "prayer_schedule":
+        case "times", "prayer_schedule", "history", "refresh", "sync":
             return "feature_times"
         case "list":
             return "feature_list"
-        case "reminder", "notifications":
+        case "reminder", "notifications", "bell":
             return "feature_reminder"
         case "mute":
             return "feature_mute"
-        case "sound", "quran_audio":
+        case "sound", "quran_audio", "audio", "play", "videos":
             return "feature_quran_audio"
         case "bookmarks", "favorites":
             return "feature_bookmarks"
         case "dhikr", "duas":
             return "feature_dhikr"
-        case "info", "knowledge", "islamic_knowledge", "hadith":
+        case "info", "knowledge", "islamic_knowledge", "hadith", "articles", "courses", "warning", "error":
             return "feature_info"
         case "community", "forum":
             return "feature_community"
@@ -63,14 +63,24 @@ struct SalahFeatureIcon: View {
             return "feature_moon"
         case "language":
             return "feature_language"
-        case "more":
+        case "more", "downloads":
             return "feature_more"
-        case "sparkles":
+        case "sparkles", "backgrounds", "mindfulness":
             return "feature_sparkles"
-        case "mosques":
+        case "mosques", "map":
             return "home_mosque"
-        default:
+        case "donations":
+            return "feature_community"
+        case "light_mode":
+            return "feature_moon"
+        case "font_size":
+            return "feature_quran"
+        case "backup":
+            return "feature_settings"
+        case "back", "forward":
             return nil
+        default:
+            return "feature_info"
         }
     }
 
@@ -96,7 +106,7 @@ struct SalahFeatureIcon: View {
         case "sync": return "arrow.triangle.2.circlepath"
         case "back": return "chevron.left"
         case "forward": return "chevron.right"
-        default: return "square.dashed"
+        default: return "info.circle.fill"
         }
     }
 
@@ -615,9 +625,9 @@ struct NearbyMosquesView: View {
 
                 if usableLocation == nil {
                     VStack(spacing: 10) {
-                        Image(systemName: "location.slash")
-                            .font(.system(size: 30))
-                            .foregroundStyle(SalahTheme.mutedInk)
+                        SalahFeatureIcon(kind: "qibla")
+                            .frame(width: 34, height: 34)
+                            .opacity(0.72)
 
                         Text(settings.t(
                             "Für Moscheen in deiner Nähe wird dein aktueller Gerätestandort benötigt.",
@@ -661,9 +671,8 @@ struct NearbyMosquesView: View {
                         .frame(maxWidth: .infinity)
                 } else if store.searchFailed && store.mapItems.isEmpty {
                     VStack(spacing: 10) {
-                        Image(systemName: "wifi.exclamationmark")
-                            .font(.system(size: 30))
-                            .foregroundStyle(SalahTheme.gold)
+                        SalahFeatureIcon(kind: "info")
+                            .frame(width: 34, height: 34)
 
                         Text(settings.t(
                             "Apple Karten konnte die Moscheensuche gerade nicht laden. Bitte prüfe deine Verbindung und versuche es erneut.",
@@ -876,7 +885,7 @@ struct NearbyMosquesView: View {
                 Button {
                     openRoute(to: item)
                 } label: {
-                    Label(settings.t("Route", "Rota"), systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                    SalahFeatureIconLabel(title: settings.t("Route", "Rota"), kind: "route", iconSize: 19)
                         .font(.subheadline.bold())
                         .frame(maxWidth: .infinity)
                 }
@@ -886,7 +895,7 @@ struct NearbyMosquesView: View {
                 Button {
                     item.openInMaps()
                 } label: {
-                    Label(settings.t("Karte", "Harita"), systemImage: "map.fill")
+                    SalahFeatureIconLabel(title: settings.t("Karte", "Harita"), kind: "map", iconSize: 19)
                         .font(.subheadline.bold())
                         .frame(maxWidth: .infinity)
                 }

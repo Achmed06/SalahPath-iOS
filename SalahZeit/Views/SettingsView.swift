@@ -261,7 +261,7 @@ struct SettingsView: View {
                                 ? settings.t("Standard-Gebetsruf wird direkt abgespielt.", "Standart ezan doğrudan çalıyor.")
                                 : settings.t("Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Ezan ses dosyası oynatılamadı.")
                         } label: {
-                            Label(settings.t("Standard testen", "Standart test"), systemImage: "play.circle.fill")
+                            SalahFeatureIconLabel(title: settings.t("Standard testen", "Standart test"), kind: "audio", iconSize: 18)
                                 .font(.system(size: 10.5, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 9)
@@ -274,7 +274,7 @@ struct SettingsView: View {
                                 ? settings.t("Fajr-Gebetsruf wird direkt abgespielt.", "Sabah ezanı doğrudan çalıyor.")
                                 : settings.t("Fajr-Gebetsruf-Audiodatei konnte nicht abgespielt werden.", "Sabah ezanı ses dosyası oynatılamadı.")
                         } label: {
-                            Label(settings.t("Fajr testen", "Sabah test"), systemImage: "sun.horizon.fill")
+                            SalahFeatureIconLabel(title: settings.t("Fajr testen", "Sabah test"), kind: "fajr", iconSize: 18)
                                 .font(.system(size: 10.5, weight: .bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 9)
@@ -302,9 +302,10 @@ struct SettingsView: View {
                                 await refreshNotificationDiagnostics()
                             }
                         } label: {
-                            Label(
-                                settings.t("iOS-Mitteilung testen · 5 s", "iOS bildirimini test et · 5 sn"),
-                                systemImage: "bell.badge.fill"
+                            SalahFeatureIconLabel(
+                                title: settings.t("iOS-Mitteilung testen · 5 s", "iOS bildirimini test et · 5 sn"),
+                                kind: "reminder",
+                                iconSize: 18
                             )
                             .font(.system(size: 10.5, weight: .bold))
                             .frame(maxWidth: .infinity)
@@ -327,9 +328,10 @@ struct SettingsView: View {
                                 await refreshNotificationDiagnostics()
                             }
                         } label: {
-                            Label(
-                                settings.t("Adhan · 5 s", "Ezan · 5 sn"),
-                                systemImage: "speaker.wave.3.fill"
+                            SalahFeatureIconLabel(
+                                title: settings.t("Adhan · 5 s", "Ezan · 5 sn"),
+                                kind: "audio",
+                                iconSize: 18
                             )
                             .font(.system(size: 10.5, weight: .bold))
                             .frame(maxWidth: .infinity)
@@ -361,9 +363,10 @@ struct SettingsView: View {
                             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
                             UIApplication.shared.open(url)
                         } label: {
-                            Label(
-                                settings.t("iPhone-Benachrichtigungseinstellungen öffnen", "iPhone bildirim ayarlarını aç"),
-                                systemImage: "gear"
+                            SalahFeatureIconLabel(
+                                title: settings.t("iPhone-Benachrichtigungseinstellungen öffnen", "iPhone bildirim ayarlarını aç"),
+                                kind: "settings",
+                                iconSize: 18
                             )
                             .font(.system(size: 10.5, weight: .bold))
                             .frame(maxWidth: .infinity)
@@ -450,7 +453,8 @@ struct SettingsView: View {
                         }
                     } label: {
                         HStack {
-                            Image(systemName: "arrow.clockwise.circle.fill")
+                            SalahFeatureIcon(kind: "refresh")
+                                .frame(width: 22, height: 22)
                             Text(settings.t("Benachrichtigungen aktualisieren", "Bildirimleri güncelle"))
                                 .font(.system(size: 11.5, weight: .bold))
                             Spacer()

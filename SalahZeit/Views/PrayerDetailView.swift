@@ -49,12 +49,14 @@ struct PrayerDetailView: View {
                             trackerRefresh &+= 1
                         } label: {
                             HStack {
-                                Label(
-                                    isCompleted
+                                SalahFeatureIconLabel(
+                                    title: isCompleted
                                         ? settings.t("Als gebetet markiert", "Kılındı olarak işaretlendi")
                                         : settings.t("Als gebetet markieren", "Kılındı olarak işaretle"),
-                                    systemImage: isCompleted ? "checkmark.circle.fill" : "circle"
+                                    kind: "checkmark",
+                                    iconSize: 20
                                 )
+                                .opacity(isCompleted ? 1 : 0.72)
                                 Spacer()
                                 Text(isCompleted ? settings.t("Erledigt", "Tamam") : settings.t("Offen", "Açık"))
                                     .font(.caption.bold())
